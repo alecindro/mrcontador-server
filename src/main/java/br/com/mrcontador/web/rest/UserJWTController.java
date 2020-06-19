@@ -1,10 +1,6 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.security.jwt.JWTFilter;
-import br.com.mrcontador.security.jwt.TokenProvider;
-import br.com.mrcontador.web.rest.vm.LoginVM;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,9 +9,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import br.com.mrcontador.config.tenant.TenantInterceptor;
+import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.security.jwt.JWTFilter;
+import br.com.mrcontador.security.jwt.TokenProvider;
+import br.com.mrcontador.web.rest.vm.LoginVM;
 
 /**
  * Controller to authenticate users.
@@ -45,6 +50,7 @@ public class UserJWTController {
         String jwt = tokenProvider.createToken(authentication, rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        httpHeaders.add(TenantInterceptor.TENANT_HEADER, SecurityUtils.getTenantHeader(authentication));
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
     /**

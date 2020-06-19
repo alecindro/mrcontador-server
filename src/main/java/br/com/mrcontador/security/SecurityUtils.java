@@ -1,13 +1,15 @@
 package br.com.mrcontador.security;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Utility class for Spring Security.
@@ -22,6 +24,8 @@ public final class SecurityUtils {
      *
      * @return the login of the current user.
      */
+    public static final String DS_PREFIX = "DS_";
+    
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
@@ -80,6 +84,14 @@ public final class SecurityUtils {
     private static Stream<String> getAuthorities(Authentication authentication) {
         return authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority);
+    }
+    
+    public static List<String> getAuthorities(){
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	return getAuthorities(authentication).collect(Collectors.toList());
+    }
+    public static String getTenantHeader(Authentication authentication) {
+    	return getAuthorities(authentication).filter(auth -> auth.startsWith(DS_PREFIX)).findFirst().get();
     }
 
 }
