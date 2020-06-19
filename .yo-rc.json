@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "br.com.mrcontador",
+      "nativeLanguage": "pt-br"
+    },
+    "jhipsterVersion": "6.9.1",
+    "applicationType": "monolith",
+    "baseName": "mrcontador_server",
+    "packageName": "br.com.mrcontador",
+    "packageFolder": "br/com/mrcontador",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "caffeine",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "M2JmZjhiYzk0NzJmYjZkYWNmOWMyNDg0MzIzNzExOGIzNGJiMDllOGMwNDE5Y2MwNGM3OGZiN2RjMzZiYTNkNTgwYTllNGRlMzc5MTZhZjQ3MmJmOWE0ZTg4NGYxMzlhMWE4MGQxMzI0NDhhODRkZGY4OWYxYmQ0ZjgyZmZlNjQ=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1592576499559,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "nativeLanguage": "pt-br",
+    "languages": ["pt-br"],
+    "blueprints": [],
+    "skipClient": true
+  }
+}
