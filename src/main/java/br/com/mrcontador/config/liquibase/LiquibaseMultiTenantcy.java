@@ -59,10 +59,11 @@ public class LiquibaseMultiTenantcy extends SpringLiquibase {
 		getSchemas().add(SecurityUtils.DEFAULT_TENANT);
 	}
 
-	public String createSchema(String schema) throws Exception {
+	public String createSchema(String schema,DataSource dataSource) throws Exception {
 		schema = schema.toLowerCase();
+		setDataSource(dataSource);
 		String defaultSchema = getDefaultSchema();
-		verifySchema(getDataSource(), schema);
+		verifySchema(dataSource, schema);
 		getSchemas().add(schema);
 		afterPropertiesSet();
 		setDefaultSchema(defaultSchema);

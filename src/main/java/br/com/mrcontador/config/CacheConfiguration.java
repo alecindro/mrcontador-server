@@ -47,6 +47,7 @@ public class CacheConfiguration {
             createCache(cm, br.com.mrcontador.domain.User.class.getName());
             createCache(cm, br.com.mrcontador.domain.Authority.class.getName());
             createCache(cm, br.com.mrcontador.domain.User.class.getName() + ".authorities");
+            createCache(cm, br.com.mrcontador.domain.Contador.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }
