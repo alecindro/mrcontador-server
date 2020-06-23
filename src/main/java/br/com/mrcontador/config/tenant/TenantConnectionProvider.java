@@ -10,12 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import br.com.mrcontador.security.SecurityUtils;
+
 @Component
 public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = LoggerFactory.getLogger(TenantConnectionProvider.class);
-	public static final String DEFAULT_TENANT = "DS_MRCONTADOR";
 	private DataSource datasource;
 
 	public TenantConnectionProvider(DataSource dataSource) {
@@ -43,7 +44,7 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 	@Override
 	public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
 		logger.debug("Release connection for tenant {}", tenantIdentifier);
-		connection.setSchema(DEFAULT_TENANT);
+		connection.setSchema(SecurityUtils.DEFAULT_TENANT);
 		releaseAnyConnection(connection);
 	}
 

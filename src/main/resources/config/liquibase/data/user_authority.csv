@@ -3,6 +3,9 @@ user_id;authority_name
 1;ROLE_USER
 3;ROLE_ADMIN
 3;ROLE_USER
-3;DS_MRCONTADOR
+3;ds_mrcontador
 4;ROLE_USER
-4;DS_TESTE
+4;ds_teste
+
+insert into jhi_user_authority values(2,'ROLE_ADMIN'),(2,'ROLE_USER'),
+(2,'ds_mrcontador'),(3,'ROLE_USER'),(3,'ds_teste');

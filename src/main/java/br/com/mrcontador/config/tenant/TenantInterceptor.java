@@ -23,6 +23,10 @@ public class TenantInterceptor extends HandlerInterceptorAdapter{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		 String tenantUuid = request.getHeader(TENANT_HEADER);
+		 if(tenantUuid == null) {
+			 TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+			 return super.preHandle(request, response, handler);
+		 }
 		 List<String> roles = SecurityUtils.getAuthorities();
 		 boolean permit = roles.stream().anyMatch(role -> role.equalsIgnoreCase(tenantUuid));
 		 if(!permit) {

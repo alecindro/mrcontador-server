@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.config.tenant.TenantInterceptor;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.security.jwt.JWTFilter;
@@ -43,7 +44,7 @@ public class UserJWTController {
 
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
-
+        System.out.println("Tenant: "+TenantContext.getTenantSchema());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();

@@ -133,8 +133,8 @@ jhipster:
     from: mrcontador_server@localhost
   swagger:
     default-include-pattern: /api/.*
-    title: mrcontador_server API
-    description: mrcontador_server API documentation
+    title: Mr. Contador API
+    description: Mr. Contador API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

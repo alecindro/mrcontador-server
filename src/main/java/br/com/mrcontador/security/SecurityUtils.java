@@ -24,7 +24,8 @@ public final class SecurityUtils {
      *
      * @return the login of the current user.
      */
-    public static final String DS_PREFIX = "DS_";
+    public static final String DS_PREFIX = "ds_";
+    public static final String DEFAULT_TENANT = "ds_mrcontador";
     
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();

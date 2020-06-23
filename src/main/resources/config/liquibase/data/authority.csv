@@ -3,3 +3,6 @@ ROLE_ADMIN
 ROLE_USER
 DS_MRCONTADOR
 DS_TESTE
+
+insert into jhi_authority values('ROLE_ADMIN'),('ROLE_USER'),('ds_mrcontador'),('ds_teste')
+
