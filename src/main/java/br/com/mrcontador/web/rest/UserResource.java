@@ -1,9 +1,11 @@
 package br.com.mrcontador.web.rest;
 
 import br.com.mrcontador.config.Constants;
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.User;
 import br.com.mrcontador.repository.UserRepository;
 import br.com.mrcontador.security.AuthoritiesConstants;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.MailService;
 import br.com.mrcontador.service.UserService;
 import br.com.mrcontador.service.dto.UserDTO;
@@ -92,6 +94,7 @@ public class UserResource {
     @PostMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         log.debug("REST request to save User : {}", userDTO);
 
         if (userDTO.getId() != null) {
@@ -121,6 +124,7 @@ public class UserResource {
     @PutMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         log.debug("REST request to update User : {}", userDTO);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
@@ -144,7 +148,8 @@ public class UserResource {
      */
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
-        final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+    	final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -156,6 +161,7 @@ public class UserResource {
     @GetMapping("/users/authorities")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public List<String> getAuthorities() {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         return userService.getAuthorities();
     }
 
@@ -165,8 +171,9 @@ public class UserResource {
      * @param login the login of the user to find.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
+    @GetMapping("/users/{login:" + Constants.EMAIL_REGEX + "}")
     public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(
             userService.getUserWithAuthoritiesByLogin(login)
@@ -179,9 +186,10 @@ public class UserResource {
      * @param login the login of the user to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
+    @DeleteMapping("/users/{login:" + Constants.EMAIL_REGEX + "}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName,  "userManagement.deleted", login)).build();

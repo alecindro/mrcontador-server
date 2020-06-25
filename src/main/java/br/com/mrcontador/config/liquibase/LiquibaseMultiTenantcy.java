@@ -55,7 +55,8 @@ public class LiquibaseMultiTenantcy extends SpringLiquibase {
 		schemas = schemas.stream().filter(schema -> !schema.equalsIgnoreCase(SecurityUtils.DEFAULT_TENANT)).collect(Collectors.toSet());
 	}
 	
-	public void updateSchemaDefault(){
+	public void updateSchemaDefault() throws Exception{
+		verifySchema(dataSource, SecurityUtils.DEFAULT_TENANT);
 		getSchemas().add(SecurityUtils.DEFAULT_TENANT);
 	}
 

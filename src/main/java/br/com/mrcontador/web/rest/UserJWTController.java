@@ -49,10 +49,10 @@ public class UserJWTController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
         String jwt = tokenProvider.createToken(authentication, rememberMe);
+        String tenantUuid = SecurityUtils.getTenantHeader(authentication);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        httpHeaders.add(TenantInterceptor.TENANT_HEADER, SecurityUtils.getTenantHeader(authentication));
-        return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new JWTToken(jwt,tenantUuid), httpHeaders, HttpStatus.OK);
     }
     /**
      * Object to return as body in JWT Authentication.
@@ -60,9 +60,11 @@ public class UserJWTController {
     static class JWTToken {
 
         private String idToken;
+        private String tenantUuid;
 
-        JWTToken(String idToken) {
+        JWTToken(String idToken,String tenantUuid) {
             this.idToken = idToken;
+            this.tenantUuid = tenantUuid;
         }
 
         @JsonProperty("id_token")
@@ -73,5 +75,15 @@ public class UserJWTController {
         void setIdToken(String idToken) {
             this.idToken = idToken;
         }
+
+		@JsonProperty("tenant_uuid")
+        String getTenantUuid() {
+			return tenantUuid;
+		}
+
+		void setTenantUuid(String tenantUuid) {
+			this.tenantUuid = tenantUuid;
+		}
+        
     }
 }

@@ -7,7 +7,10 @@ import java.io.Serializable;
  */
 public class ContadorDTO implements Serializable {
     
-    private Long id;
+    
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private String razao;
 
@@ -26,6 +29,10 @@ public class ContadorDTO implements Serializable {
     private String cep;
 
     private String email;
+    
+    private String crc;
+    
+    private String sistema;
 
     
     public Long getId() {
@@ -108,7 +115,23 @@ public class ContadorDTO implements Serializable {
         this.email = email;
     }
 
-    @Override
+    public String getCrc() {
+		return crc;
+	}
+
+	public void setCrc(String crc) {
+		this.crc = crc;
+	}
+	
+	public String getSistema() {
+		return sistema;
+	}
+
+	public void setSistema(String sistema) {
+		this.sistema = sistema;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

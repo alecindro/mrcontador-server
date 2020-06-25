@@ -1,8 +1,13 @@
 package br.com.mrcontador.web.rest;
 
+import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Authority;
 import br.com.mrcontador.domain.User;
+import br.com.mrcontador.repository.AuthorityRepository;
 import br.com.mrcontador.repository.UserRepository;
+import br.com.mrcontador.security.AuthoritiesConstants;
 import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.AuthorityService;
 import br.com.mrcontador.service.MailService;
 import br.com.mrcontador.service.UserService;
 import br.com.mrcontador.service.dto.PasswordChangeDTO;
@@ -44,12 +49,15 @@ public class AccountResource {
     private final UserService userService;
 
     private final MailService mailService;
+    
+    private final AuthorityService authorityService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, AuthorityService authorityService) {
 
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.authorityService = authorityService;
     }
 
     /**
@@ -63,10 +71,13 @@ public class AccountResource {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+    	if (!checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        Set<Authority> authorities = new HashSet<>();
+        authorityService.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        User user = userService.registerUser(authorities,managedUserVM, managedUserVM.getPassword());
         mailService.sendActivationEmail(user);
     }
 
@@ -78,7 +89,8 @@ public class AccountResource {
      */
     @GetMapping("/activate")
     public void activateAccount(@RequestParam(value = "key") String key) {
-        Optional<User> user = userService.activateRegistration(key);
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+    	Optional<User> user = userService.activateRegistration(key);
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this activation key");
         }
@@ -104,6 +116,7 @@ public class AccountResource {
      */
     @GetMapping("/account")
     public UserDTO getAccount() {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         return userService.getUserWithAuthorities()
             .map(UserDTO::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
@@ -152,7 +165,8 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/reset-password/init")
     public void requestPasswordReset(@RequestBody String mail) {
-        Optional<User> user = userService.requestPasswordReset(mail);
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+    	Optional<User> user = userService.requestPasswordReset(mail);
         if (user.isPresent()) {
             mailService.sendPasswordResetMail(user.get());
         } else {
@@ -171,7 +185,8 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/reset-password/finish")
     public void finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
-        if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+    	if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         Optional<User> user =

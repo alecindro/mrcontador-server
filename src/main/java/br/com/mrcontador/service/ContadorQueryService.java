@@ -2,8 +2,6 @@ package br.com.mrcontador.service;
 
 import java.util.List;
 
-import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,14 +10,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
 import br.com.mrcontador.domain.Contador;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Contador_;
 import br.com.mrcontador.repository.ContadorRepository;
 import br.com.mrcontador.service.dto.ContadorCriteria;
 import br.com.mrcontador.service.dto.ContadorDTO;
 import br.com.mrcontador.service.mapper.ContadorMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Contador} entities in the database.
@@ -117,6 +115,12 @@ public class ContadorQueryService extends QueryService<Contador> {
             }
             if (criteria.getEmail() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getEmail(), Contador_.email));
+            }
+            if (criteria.getCrc() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCrc(), Contador_.crc));
+            }
+            if (criteria.getSistema() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSistema(), Contador_.sistema));
             }
         }
         return specification;

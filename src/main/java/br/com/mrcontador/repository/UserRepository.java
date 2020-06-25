@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByActivationKey(String activationKey);
 
-    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
+    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBeforeAndDatasource(Instant dateTime,String dataSource);
 
     Optional<User> findOneByResetKey(String resetKey);
 
@@ -41,5 +41,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
 
-    Page<User> findAllByLoginNot(Pageable pageable, String login);
+    Page<User> findAllByLoginNotAndDatasource(Pageable pageable, String login, String datasource);
 }

@@ -26,8 +26,17 @@ public class Authority implements Serializable {
     @Id
     @Column(length = 50)
     private String name;
+    
+    public Authority() {
+    	
+    }
 
-    public String getName() {
+    public Authority(@NotNull @Size(max = 50) String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
         return name;
     }
 

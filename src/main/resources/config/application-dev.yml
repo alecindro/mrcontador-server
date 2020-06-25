@@ -37,7 +37,7 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/mrcontador
+    url: jdbc:postgresql://192.168.10.7:5432/mrcontador
     username: postgres
     password: banana2018!
     hikari:
@@ -60,10 +60,19 @@ spring:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.office365.com
+    port: 587
+    username: alecindrocastilho@hotmail.com
+    password: anelise03
+    properties.mail.smtp.port: 587
+    properties.mail.smtp.transport.protocol: smtps
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: false
+    properties.mail.smtp.timeout: 15000
+    properties.mail.smtp.connectiontimeout: 15000
+    properties.mail.smtp.socketFactory.fallback: true
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:

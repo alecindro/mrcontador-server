@@ -18,7 +18,7 @@ public class UserDTO {
     private Long id;
 
     @NotBlank
-    @Pattern(regexp = Constants.LOGIN_REGEX)
+    @Pattern(regexp = Constants.EMAIL_REGEX)
     @Size(min = 1, max = 50)
     private String login;
 
@@ -49,6 +49,10 @@ public class UserDTO {
     private Instant lastModifiedDate;
 
     private Set<String> authorities;
+    
+    private String datasource;
+    
+    private String crc;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -70,6 +74,7 @@ public class UserDTO {
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
+        this.datasource = user.getDatasource();
     }
 
     public Long getId() {
@@ -175,8 +180,24 @@ public class UserDTO {
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
     }
+    
+    public String getDatasource() {
+		return datasource;
+	}
 
-    // prettier-ignore
+	public void setDatasource(String datasource) {
+		this.datasource = datasource;
+	}
+	
+	public String getCrc() {
+		return crc;
+	}
+
+	public void setCrc(String crc) {
+		this.crc = crc;
+	}
+
+	// prettier-ignore
     @Override
     public String toString() {
         return "UserDTO{" +

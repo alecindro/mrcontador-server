@@ -1,15 +1,12 @@
 package br.com.mrcontador.service;
 
-import br.com.mrcontador.config.Constants;
-import br.com.mrcontador.domain.Authority;
-import br.com.mrcontador.domain.User;
-import br.com.mrcontador.repository.AuthorityRepository;
-import br.com.mrcontador.repository.UserRepository;
-import br.com.mrcontador.security.AuthoritiesConstants;
-import br.com.mrcontador.security.SecurityUtils;
-import br.com.mrcontador.service.dto.UserDTO;
-
-import io.github.jhipster.security.RandomUtil;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +18,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import br.com.mrcontador.config.Constants;
+import br.com.mrcontador.domain.Authority;
+import br.com.mrcontador.domain.User;
+import br.com.mrcontador.repository.AuthorityRepository;
+import br.com.mrcontador.repository.UserRepository;
+import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.dto.UserDTO;
+import io.github.jhipster.security.RandomUtil;
 
 /**
  * Service class for managing users.
@@ -42,6 +43,7 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
 
     private final CacheManager cacheManager;
+    
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
@@ -87,7 +89,7 @@ public class UserService {
             });
     }
 
-    public User registerUser(UserDTO userDTO, String password) {
+    public User registerUser(Set<Authority> authorities, UserDTO userDTO, String password) {
         userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
@@ -95,10 +97,10 @@ public class UserService {
             }
         });
         userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).ifPresent(existingUser -> {
-            boolean removed = removeNonActivatedUser(existingUser);
-            if (!removed) {
+            //boolean removed = removeNonActivatedUser(existingUser);
+            //if (!removed) {
                 throw new EmailAlreadyUsedException();
-            }
+            //}
         });
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
@@ -114,10 +116,8 @@ public class UserService {
         newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
         newUser.setActivated(false);
-        // new user gets registration key
+        newUser.setDatasource(SecurityUtils.getCurrentTenantHeader());
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
@@ -140,6 +140,7 @@ public class UserService {
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
+        user.setDatasource(SecurityUtils.getCurrentTenantHeader());
         if (userDTO.getEmail() != null) {
             user.setEmail(userDTO.getEmail().toLowerCase());
         }
@@ -175,7 +176,7 @@ public class UserService {
      * @return updated user.
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
-        return Optional.of(userRepository
+    	Optional<UserDTO> o =  Optional.of(userRepository
             .findById(userDTO.getId()))
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -202,6 +203,7 @@ public class UserService {
                 return user;
             })
             .map(UserDTO::new);
+        return o;    
     }
 
     public void deleteUser(String login) {
@@ -256,17 +258,18 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
+    	return userRepository.findAllByLoginNotAndDatasource(pageable, Constants.ANONYMOUS_USER, SecurityUtils.getCurrentTenantHeader()).map(UserDTO::new);
+    	
     }
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+    	return userRepository.findOneWithAuthoritiesByLogin(login);
     }
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+    	return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }
 
     /**
@@ -277,7 +280,7 @@ public class UserService {
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         userRepository
-            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
+            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBeforeAndDatasource(Instant.now().minus(3, ChronoUnit.DAYS), SecurityUtils.getCurrentTenantHeader())
             .forEach(user -> {
                 log.debug("Deleting not activated user {}", user.getLogin());
                 userRepository.delete(user);
@@ -291,7 +294,9 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    	List<String> list = authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    	list = list.stream().filter(auth -> !auth.startsWith(SecurityUtils.DS_PREFIX)).collect(Collectors.toList());
+        return list;
     }
 
 

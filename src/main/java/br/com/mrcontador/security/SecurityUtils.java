@@ -94,5 +94,10 @@ public final class SecurityUtils {
     public static String getTenantHeader(Authentication authentication) {
     	return getAuthorities(authentication).filter(auth -> auth.startsWith(DS_PREFIX)).findFirst().get();
     }
+    
+    public static String getCurrentTenantHeader() {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	return getAuthorities(authentication).filter(auth -> auth.startsWith(DS_PREFIX)).findFirst().get();
+    }
 
 }

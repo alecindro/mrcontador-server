@@ -2,12 +2,9 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import io.github.jhipster.service.Criteria;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
@@ -43,6 +40,10 @@ public class ContadorCriteria implements Serializable, Criteria {
     private StringFilter cep;
 
     private StringFilter email;
+    
+    private StringFilter crc;
+    
+    private StringFilter sistema;
 
     public ContadorCriteria() {
     }
@@ -58,6 +59,9 @@ public class ContadorCriteria implements Serializable, Criteria {
         this.estado = other.estado == null ? null : other.estado.copy();
         this.cep = other.cep == null ? null : other.cep.copy();
         this.email = other.email == null ? null : other.email.copy();
+        this.crc = other.crc == null ? null : other.crc.copy();
+        this.sistema = other.sistema == null ? null : other.sistema.copy();
+        
     }
 
     @Override
@@ -144,9 +148,24 @@ public class ContadorCriteria implements Serializable, Criteria {
     public void setEmail(StringFilter email) {
         this.email = email;
     }
+    
+    public StringFilter getCrc() {
+		return crc;
+	}
 
+	public void setCrc(StringFilter crc) {
+		this.crc = crc;
+	}
 
-    @Override
+	public StringFilter getSistema() {
+		return sistema;
+	}
+
+	public void setSistema(StringFilter sistema) {
+		this.sistema = sistema;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -165,7 +184,9 @@ public class ContadorCriteria implements Serializable, Criteria {
             Objects.equals(cidade, that.cidade) &&
             Objects.equals(estado, that.estado) &&
             Objects.equals(cep, that.cep) &&
-            Objects.equals(email, that.email);
+            Objects.equals(email, that.email) &&
+            Objects.equals(crc, that.crc) &&
+            Objects.equals(sistema, that.sistema);
     }
 
     @Override
@@ -180,7 +201,9 @@ public class ContadorCriteria implements Serializable, Criteria {
         cidade,
         estado,
         cep,
-        email
+        email,
+        crc,
+        sistema
         );
     }
 
@@ -198,6 +221,8 @@ public class ContadorCriteria implements Serializable, Criteria {
                 (estado != null ? "estado=" + estado + ", " : "") +
                 (cep != null ? "cep=" + cep + ", " : "") +
                 (email != null ? "email=" + email + ", " : "") +
+                (crc != null ? "crc=" + crc + ", " : "") +
+                (sistema != null ? "sistema=" + sistema + ", " : "") +
             "}";
     }
 

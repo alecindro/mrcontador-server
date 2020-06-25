@@ -3,7 +3,12 @@ package br.com.mrcontador.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import br.com.mrcontador.config.Constants;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 
@@ -21,6 +26,7 @@ public class Contador implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Column(name = "razao")
     private String razao;
 
@@ -30,10 +36,13 @@ public class Contador implements Serializable {
     @Column(name = "telefones")
     private String telefones;
 
+    @NotNull
     @Column(name = "datasource")
     private String datasource;
 
-    @Column(name = "cnpj")
+    @NotNull
+    @Size(min=14,max = 18)
+    @Column(length = 18, name = "cnpj", unique = true)
     private String cnpj;
 
     @Column(name = "cidade")
@@ -45,8 +54,19 @@ public class Contador implements Serializable {
     @Column(name = "cep")
     private String cep;
 
-    @Column(name = "email")
+    @NotNull
+    @Email(regexp = Constants.EMAIL_REGEX)
+    @Size(min = 5, max = 254)
+    @Column(length = 254, unique = true, name = "email")
     private String email;
+    
+    @NotNull
+    @Column(name = "crc", unique = true)
+    private String crc;
+    
+    @NotNull
+    @Column(name = "sistema")
+    private String sistema;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -173,9 +193,39 @@ public class Contador implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
+    public String getCrc() {
+		return crc;
+	}
+
+	public void setCrc(String crc) {
+		this.crc = crc;
+	}
+	
+    public Contador crc(String crc) {
+        this.crc = crc;
+        return this;
+    }
+
+	public String getSistema() {
+		return sistema;
+	}
+
+	public void setSistema(String sistema) {
+		this.sistema = sistema;
+	}
+	
+	 public Contador sistema(String sistema) {
+	        this.sistema = sistema;
+	        return this;
+	    }
+	
+	
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 
@@ -30,7 +31,7 @@ public class LiquibaseConfiguration {
 	public LiquibaseConfiguration() {
 	}
 	
-	@Bean
+	@Bean @Primary
 	public SpringLiquibase liquibase(@Lazy @Qualifier("dataSource") DataSource dataSource, LiquibaseProperties liquibaseProperties) {
 		LiquibaseMultiTenantcy liquibase = new LiquibaseMultiTenantcy();
 		liquibase.setDataSource(dataSource);
@@ -60,7 +61,11 @@ public class LiquibaseConfiguration {
 		liquibase.setDropFirst(liquibaseProperties.isDropFirst());
 		liquibase.setShouldRun(liquibaseProperties.isEnabled());
 		log.debug("Configuring Liquibase");
-		liquibase.updateSchemaDefault();
+		try {
+			liquibase.updateSchemaDefault();
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
 		return liquibase;
 	}
 	
