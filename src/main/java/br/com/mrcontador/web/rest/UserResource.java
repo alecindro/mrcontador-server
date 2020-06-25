@@ -94,6 +94,8 @@ public class UserResource {
     @PostMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
+    	userDTO.getAuthorities().add(SecurityUtils.getCurrentTenantHeader());
+    	userDTO.setDatasource(SecurityUtils.getCurrentTenantHeader());
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         log.debug("REST request to save User : {}", userDTO);
 
@@ -171,7 +173,7 @@ public class UserResource {
      * @param login the login of the user to find.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/users/{login:" + Constants.EMAIL_REGEX + "}")
+    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         log.debug("REST request to get User : {}", login);
@@ -186,7 +188,7 @@ public class UserResource {
      * @param login the login of the user to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/users/{login:" + Constants.EMAIL_REGEX + "}")
+    @DeleteMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);

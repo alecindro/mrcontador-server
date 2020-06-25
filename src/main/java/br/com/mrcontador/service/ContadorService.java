@@ -1,8 +1,6 @@
 package br.com.mrcontador.service;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -73,25 +71,23 @@ public class ContadorService {
      * @throws Exception 
      */
     public ContadorDTO save(ContadorDTO contadorDTO) throws Exception {
-    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
     	log.debug("Request to save Contador : {}", contadorDTO);
         Contador contador = contadorMapper.toEntity(contadorDTO);
         String datasource = SecurityUtils.DS_PREFIX.concat(contador.getCnpj().replaceAll("\\D", ""));
         contador.setDatasource(datasource);
         contador = contadorRepository.save(contador);
         springLiquibase.createSchema(contador.getDatasource(), dataSource);
-        Authority dsContador = authorityRepository.save(new Authority(contador.getDatasource()));
-        Set<Authority> authorities = new HashSet<>();
-        authorities.add(dsContador);
+        authorityRepository.save(new Authority(contador.getDatasource()));
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(contador.getEmail());
         userDTO.setLogin(contador.getEmail());
         userDTO.setFirstName("administrador");
         userDTO.setLangKey("pt-br");
         userDTO.setDatasource(contador.getDatasource());
-        authorityRepository.findById(AuthoritiesConstants.ADMIN).ifPresent(authorities::add);
-        User user = userService.registerUser(authorities,userDTO, dsContador.getName().split("_")[1]);
-        mailService.sendActivationEmail(user);
+        userDTO.getAuthorities().add(contador.getDatasource());
+        userDTO.getAuthorities().add(AuthoritiesConstants.ADMIN);
+        User user = userService.createUser(userDTO);
+        mailService.sendCreationEmail(user);
         return contadorMapper.toDto(contador);
     }
     

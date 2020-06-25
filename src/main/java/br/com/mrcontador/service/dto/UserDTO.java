@@ -7,6 +7,7 @@ import br.com.mrcontador.domain.User;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -174,6 +175,9 @@ public class UserDTO {
     }
 
     public Set<String> getAuthorities() {
+    	if(authorities == null) {
+    		authorities = new HashSet<String>();
+    	}
         return authorities;
     }
 
