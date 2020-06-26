@@ -26,9 +26,14 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ContadorQueryService;
 import br.com.mrcontador.service.ContadorService;
+import br.com.mrcontador.service.EmailAlreadyUsedException;
+import br.com.mrcontador.service.UserService;
 import br.com.mrcontador.service.dto.ContadorCriteria;
 import br.com.mrcontador.service.dto.ContadorDTO;
+import br.com.mrcontador.util.CnpjUtil;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import br.com.mrcontador.web.rest.errors.CnpjAlreadyExistException;
+import br.com.mrcontador.web.rest.errors.LoginAlreadyUsedException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -48,12 +53,15 @@ public class ContadorResource {
     private String applicationName;
 
     private final ContadorService contadorService;
+    
+    private final UserService userService;
 
     private final ContadorQueryService contadorQueryService;
 
-    public ContadorResource(ContadorService contadorService, ContadorQueryService contadorQueryService) {
+    public ContadorResource(ContadorService contadorService, ContadorQueryService contadorQueryService, UserService userService) {
         this.contadorService = contadorService;
         this.contadorQueryService = contadorQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -70,12 +78,18 @@ public class ContadorResource {
         if (contadorDTO.getId() != null) {
             throw new BadRequestAlertException("A new contador cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if(contadorService.findOneByCnpjOrCrc(CnpjUtil.parseCnpj(contadorDTO.getCnpj()), contadorDTO.getCrc()).isPresent()) {
+        	throw new CnpjAlreadyExistException();
+        }
+        
+        if(userService.findOneByLogin(contadorDTO.getEmail().toLowerCase()).isPresent()) {
+            throw new EmailAlreadyUsedException();
+        }
         ContadorDTO result = null;
 		try {
 			result = contadorService.save(contadorDTO);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new BadRequestAlertException("Ocorre um erro ao salvar o contador", e.getMessage(), "contador.save");
 		}
         return ResponseEntity.created(new URI("/api/contadors/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

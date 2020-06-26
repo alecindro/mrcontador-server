@@ -138,4 +138,8 @@ public class ContadorService {
         log.debug("Request to delete Contador : {}", id);
         contadorRepository.deleteById(id);
     }
+    
+    public Optional<Contador> findOneByCnpjOrCrc(String cnpj, String crc){
+    	return contadorRepository.findOneByCnpjOrCrc(cnpj, crc);
+    }
 }

@@ -1,9 +1,12 @@
 package br.com.mrcontador.repository;
 
-import br.com.mrcontador.domain.Contador;
+import java.util.Optional;
 
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+
+import br.com.mrcontador.domain.Contador;
 
 /**
  * Spring Data  repository for the Contador entity.
@@ -11,4 +14,6 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ContadorRepository extends JpaRepository<Contador, Long>, JpaSpecificationExecutor<Contador> {
+	
+	Optional<Contador> findOneByCnpjOrCrc(String cnpj, String crc);
 }

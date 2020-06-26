@@ -4,6 +4,7 @@ package br.com.mrcontador.service.mapper;
 import br.com.mrcontador.domain.*;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.ContadorDTO;
+import br.com.mrcontador.util.CnpjUtil;
 
 import org.mapstruct.*;
 
@@ -21,7 +22,7 @@ public interface ContadorMapper extends EntityMapper<ContadorDTO, Contador> {
         }
         Contador contador = new Contador();
         contador.setId(id);
-        String datasource = SecurityUtils.DS_PREFIX.concat(contador.getCnpj().replaceAll("\\D", ""));
+        String datasource = SecurityUtils.DS_PREFIX.concat(CnpjUtil.parseCnpj(contador.getCnpj()));
         contador.setDatasource(datasource);
         return contador;
     }

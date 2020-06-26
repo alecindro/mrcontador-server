@@ -306,4 +306,8 @@ public class UserService {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
     }
+    
+    public Optional<User> findOneByLogin(String login){
+    	return userRepository.findOneByLogin(login);
+    }
 }
