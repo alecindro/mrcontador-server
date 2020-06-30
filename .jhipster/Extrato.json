@@ -1,0 +1,69 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "extrato"
+    },
+    {
+      "relationshipName": "agenciabancaria",
+      "otherEntityName": "agenciabancaria",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "extrato"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "ext_datalancamento",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "ext_historico",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "90"
+    },
+    {
+      "fieldName": "ext_numerodocumento",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "ext_numerocontrole",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "ext_debito",
+      "fieldType": "BigDecimal",
+    },
+    {
+      "fieldName": "ext_credito",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "ext_descricao",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    }
+  ],
+  "changelogDate": "20200627211731",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "extrato",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

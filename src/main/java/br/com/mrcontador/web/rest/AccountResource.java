@@ -1,9 +1,27 @@
 package br.com.mrcontador.web.rest;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Authority;
 import br.com.mrcontador.domain.User;
-import br.com.mrcontador.repository.AuthorityRepository;
 import br.com.mrcontador.repository.UserRepository;
 import br.com.mrcontador.security.AuthoritiesConstants;
 import br.com.mrcontador.security.SecurityUtils;
@@ -12,19 +30,11 @@ import br.com.mrcontador.service.MailService;
 import br.com.mrcontador.service.UserService;
 import br.com.mrcontador.service.dto.PasswordChangeDTO;
 import br.com.mrcontador.service.dto.UserDTO;
-import br.com.mrcontador.web.rest.errors.*;
+import br.com.mrcontador.web.rest.errors.EmailAlreadyUsedException;
+import br.com.mrcontador.web.rest.errors.InvalidPasswordException;
+import br.com.mrcontador.web.rest.errors.LoginAlreadyUsedException;
 import br.com.mrcontador.web.rest.vm.KeyAndPasswordVM;
 import br.com.mrcontador.web.rest.vm.ManagedUserVM;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
 
 /**
  * REST controller for managing the current user's account.

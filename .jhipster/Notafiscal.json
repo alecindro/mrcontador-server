@@ -1,0 +1,73 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "notafiscal"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "not_numero",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "not_descricao",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "not_cnpj",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "18"
+    },
+    {
+      "fieldName": "not_empresa",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "60"
+    },
+    {
+      "fieldName": "not_datasaida",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "not_valornota",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "not_dataparcela",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "not_valorparcela",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "tno_codigo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "not_parcela",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "10"
+    }
+  ],
+  "changelogDate": "20200627212233",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "notafiscal",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

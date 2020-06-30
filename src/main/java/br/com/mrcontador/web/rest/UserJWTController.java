@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.mrcontador.config.tenant.TenantContext;
-import br.com.mrcontador.config.tenant.TenantInterceptor;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.security.jwt.JWTFilter;
 import br.com.mrcontador.security.jwt.TokenProvider;

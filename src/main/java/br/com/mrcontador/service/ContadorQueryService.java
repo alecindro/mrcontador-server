@@ -122,6 +122,13 @@ public class ContadorQueryService extends QueryService<Contador> {
             if (criteria.getSistema() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getSistema(), Contador_.sistema));
             }
+            if (criteria.getLogradouro() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLogradouro(), Contador_.logradouro));
+            }
+            if (criteria.getPessoafisica() != null) {
+                specification = specification.and(buildSpecification(criteria.getPessoafisica(), Contador_.pessoafisica));
+            }
+            
         }
         return specification;
     }

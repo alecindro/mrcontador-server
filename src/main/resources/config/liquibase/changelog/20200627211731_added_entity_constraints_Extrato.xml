@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Extrato.
+    -->
+    <changeSet id="20200627211731-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="parceiro_id"
+                                 baseTableName="extrato"
+                                 constraintName="fk_extrato_parceiro_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="parceiro"/>
+
+        <addForeignKeyConstraint baseColumnNames="agenciabancaria_id"
+                                 baseTableName="extrato"
+                                 constraintName="fk_extrato_agenciabancaria_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="agenciabancaria"/>
+
+    </changeSet>
+</databaseChangeLog>

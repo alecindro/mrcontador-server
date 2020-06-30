@@ -1,0 +1,56 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "conta"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "con_conta",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "con_classificacao",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "con_tipo",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1"
+    },
+    {
+      "fieldName": "con_descricao",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "60"
+    },
+    {
+      "fieldName": "con_cnpj",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "18"
+    },
+    {
+      "fieldName": "con_grau",
+      "fieldType": "Integer"
+    }
+  ],
+  "changelogDate": "20200627211409",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "conta",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

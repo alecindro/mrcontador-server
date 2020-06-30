@@ -1,0 +1,64 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "par_codigo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "age_codigo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "com_cnpj",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "18"
+    },
+    {
+      "fieldName": "com_beneficiario",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "60"
+    },
+    {
+      "fieldName": "com_documento",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "com_datavencimento",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "com_datapagamento",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "com_valordocumento",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "com_valorpagamento",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "com_observacao",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "90"
+    }
+  ],
+  "changelogDate": "20200627203927",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "comprovante",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

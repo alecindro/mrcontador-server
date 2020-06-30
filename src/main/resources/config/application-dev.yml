@@ -36,15 +36,20 @@ spring:
     serialization:
       indent-output: true
   datasource:
+    platform: postgres
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/mrcontador
+    url: jdbc:postgresql://192.168.10.7:5432/demo
     username: postgres
     password: banana2018!
+    driverClassName: org.postgresql.Driver
     hikari:
       poolName: Hikari
       auto-commit: false
+      connectionTimeout: 20000
+      maximumPoolSize: 5
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL95Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    #database-platform: io.github.jhipster.domain.util.FixedPostgreSQL95Dialect
     database: POSTGRESQL
     show-sql: true
     open-in-view: false

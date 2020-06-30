@@ -33,6 +33,10 @@ public class ContadorDTO implements Serializable {
     private String crc;
     
     private String sistema;
+    
+    private Boolean pessoafisica;
+    
+    private String logradouro;
 
     
     public Long getId() {
@@ -129,6 +133,24 @@ public class ContadorDTO implements Serializable {
 
 	public void setSistema(String sistema) {
 		this.sistema = sistema;
+	}
+	
+	
+
+	public Boolean getPessoafisica() {
+		return pessoafisica;
+	}
+
+	public void setPessoafisica(Boolean pessoafisica) {
+		this.pessoafisica = pessoafisica;
+	}
+
+	public String getLogradouro() {
+		return logradouro;
+	}
+
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 
 	@Override

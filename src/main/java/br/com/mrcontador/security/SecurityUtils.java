@@ -26,6 +26,7 @@ public final class SecurityUtils {
      */
     public static final String DS_PREFIX = "ds_";
     public static final String DEFAULT_TENANT = "ds_mrcontador";
+    public static final String DEMO_TENANT = "ds_demo";
     
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();

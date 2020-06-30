@@ -1,0 +1,73 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "notaservico"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nse_numero",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "nse_descricao",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "nse_cnpj",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "18"
+    },
+    {
+      "fieldName": "nse_empresa",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "60"
+    },
+    {
+      "fieldName": "nse_datasaida",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "nse_valornota",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "nse_dataparcela",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "nse_valorparcela",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "tno_codigo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "nse_parcela",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "10"
+    }
+  ],
+  "changelogDate": "20200627212616",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "notaservico",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

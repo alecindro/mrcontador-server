@@ -86,6 +86,7 @@ public class ContadorService {
         userDTO.setDatasource(contador.getDatasource());
         userDTO.getAuthorities().add(contador.getDatasource());
         userDTO.getAuthorities().add(AuthoritiesConstants.ADMIN);
+        userDTO.getAuthorities().add(AuthoritiesConstants.USER);
         User user = userService.createUser(userDTO);
         mailService.sendCreationEmail(user);
         return contadorMapper.toDto(contador);

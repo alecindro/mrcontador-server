@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.mrcontador.config.tenant.TenantConnectionProvider;
 import br.com.mrcontador.security.SecurityUtils;
 import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringLiquibase;
@@ -50,9 +49,11 @@ public class LiquibaseMultiTenantcy extends SpringLiquibase {
 		return schemas;
 	}
 	
-	public void updateSchema(){
+	public void updateSchema() throws Exception{
 		schemas = getAllSchemas(dataSource);
 		schemas = schemas.stream().filter(schema -> !schema.equalsIgnoreCase(SecurityUtils.DEFAULT_TENANT)).collect(Collectors.toSet());
+		verifySchema(dataSource, SecurityUtils.DEMO_TENANT);
+		schemas.add(SecurityUtils.DEMO_TENANT);
 	}
 	
 	public void updateSchemaDefault() throws Exception{

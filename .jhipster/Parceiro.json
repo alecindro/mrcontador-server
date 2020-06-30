@@ -1,0 +1,123 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "par_descricao",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "par_razaosocial",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "70"
+    },
+    {
+      "fieldName": "par_tipopessoa",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1"
+    },
+    {
+      "fieldName": "par_cnpjcpf",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "par_rgie",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "par_obs",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "par_datacadastro",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "spa_codigo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "logradouro",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cep",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "8"
+    },
+    {
+      "fieldName": "cidade",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "area_atuacao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "comercio",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nfc_e",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "danfe",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "servico",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "nfs_e",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "transportadora",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "conhec_transporte",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "industria",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "ct",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "outras",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20200627211010",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "parceiro",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

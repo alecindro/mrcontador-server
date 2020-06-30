@@ -53,6 +53,9 @@ public class Contador implements Serializable {
 
     @Column(name = "cep")
     private String cep;
+    
+    @Column(name= "logradouro")
+    private String logradouro;
 
     @NotNull
     @Email(regexp = Constants.EMAIL_REGEX)
@@ -67,6 +70,10 @@ public class Contador implements Serializable {
     @NotNull
     @Column(name = "sistema")
     private String sistema;
+    
+    @NotNull
+    @Column(name = "pessoa_fisica")
+    private Boolean pessoafisica;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -221,9 +228,34 @@ public class Contador implements Serializable {
 	 public Contador sistema(String sistema) {
 	        this.sistema = sistema;
 	        return this;
-	    }
+	 }
+
+	public String getLogradouro() {
+		return logradouro;
+	}
+
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
+	}
 	
+	 public Contador logradouro(String logradouro) {
+	        this.logradouro = logradouro;
+	        return this;
+	 }
+
+	public Boolean getPessoafisica() {
+		return pessoafisica;
+	}
+
+	public void setPessoafisica(Boolean pessoafisica) {
+		this.pessoafisica = pessoafisica;
+	}
 	
+	 public Contador pessoafisica(Boolean pessoafisica) {
+	        this.pessoafisica = pessoafisica;
+	        return this;
+	 }
+
 
 	@Override
     public boolean equals(Object o) {

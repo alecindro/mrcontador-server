@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import io.github.jhipster.service.Criteria;
+import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -38,6 +39,10 @@ public class ContadorCriteria implements Serializable, Criteria {
     private StringFilter estado;
 
     private StringFilter cep;
+    
+    private StringFilter logradouro;
+    
+    private BooleanFilter pessoafisica;
 
     private StringFilter email;
     
@@ -61,6 +66,8 @@ public class ContadorCriteria implements Serializable, Criteria {
         this.email = other.email == null ? null : other.email.copy();
         this.crc = other.crc == null ? null : other.crc.copy();
         this.sistema = other.sistema == null ? null : other.sistema.copy();
+        this.pessoafisica = other.pessoafisica == null ? null : other.pessoafisica;
+        this.logradouro = other.logradouro == null ? null : other.logradouro;
         
     }
 
@@ -163,6 +170,23 @@ public class ContadorCriteria implements Serializable, Criteria {
 
 	public void setSistema(StringFilter sistema) {
 		this.sistema = sistema;
+	}	
+	
+
+	public StringFilter getLogradouro() {
+		return logradouro;
+	}
+
+	public void setLogradouro(StringFilter logradouro) {
+		this.logradouro = logradouro;
+	}
+
+	public BooleanFilter getPessoafisica() {
+		return pessoafisica;
+	}
+
+	public void setPessoafisica(BooleanFilter pessoafisica) {
+		this.pessoafisica = pessoafisica;
 	}
 
 	@Override
@@ -186,7 +210,9 @@ public class ContadorCriteria implements Serializable, Criteria {
             Objects.equals(cep, that.cep) &&
             Objects.equals(email, that.email) &&
             Objects.equals(crc, that.crc) &&
-            Objects.equals(sistema, that.sistema);
+            Objects.equals(sistema, that.sistema) &&
+            Objects.equals(pessoafisica, that.pessoafisica) &&
+            Objects.equals(logradouro, that.logradouro);
     }
 
     @Override
@@ -203,7 +229,9 @@ public class ContadorCriteria implements Serializable, Criteria {
         cep,
         email,
         crc,
-        sistema
+        sistema,
+        logradouro,
+        pessoafisica
         );
     }
 
@@ -223,6 +251,8 @@ public class ContadorCriteria implements Serializable, Criteria {
                 (email != null ? "email=" + email + ", " : "") +
                 (crc != null ? "crc=" + crc + ", " : "") +
                 (sistema != null ? "sistema=" + sistema + ", " : "") +
+                (pessoafisica != null ? "pessoafisica=" + pessoafisica+ ", " : "") +
+                (logradouro != null ? "logradouro=" + logradouro + ", " : "") +
             "}";
     }
 

@@ -33,7 +33,6 @@ import br.com.mrcontador.service.dto.ContadorDTO;
 import br.com.mrcontador.util.CnpjUtil;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import br.com.mrcontador.web.rest.errors.CnpjAlreadyExistException;
-import br.com.mrcontador.web.rest.errors.LoginAlreadyUsedException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -92,7 +91,7 @@ public class ContadorResource {
 			throw new BadRequestAlertException("Ocorre um erro ao salvar o contador", e.getMessage(), "contador.save");
 		}
         return ResponseEntity.created(new URI("/api/contadors/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getRazao()))
             .body(result);
     }
 
@@ -113,7 +112,7 @@ public class ContadorResource {
         }
         ContadorDTO result = contadorService.update(contadorDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, contadorDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, contadorDTO.getRazao()))
             .body(result);
     }
 

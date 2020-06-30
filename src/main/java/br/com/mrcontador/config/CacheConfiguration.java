@@ -48,6 +48,15 @@ public class CacheConfiguration {
             createCache(cm, br.com.mrcontador.domain.Authority.class.getName());
             createCache(cm, br.com.mrcontador.domain.User.class.getName() + ".authorities");
             createCache(cm, br.com.mrcontador.domain.Contador.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Banco.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Agenciabancaria.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Comprovante.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Parceiro.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Regra.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Conta.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Extrato.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Notafiscal.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Notaservico.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

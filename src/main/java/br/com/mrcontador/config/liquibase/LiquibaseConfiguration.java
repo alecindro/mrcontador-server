@@ -45,7 +45,11 @@ public class LiquibaseConfiguration {
 		} else {
 			liquibase.setShouldRun(liquibaseProperties.isEnabled());
 			log.debug("Configuring Liquibase");
-			liquibase.updateSchema();
+			try {
+				liquibase.updateSchema();
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(),e);
+			}
 			
 		}
 		return liquibase;

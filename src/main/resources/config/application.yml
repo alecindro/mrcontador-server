@@ -120,7 +120,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'mrcontadorServerApp'
+    name: 'mrcontadorFrontApp'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #     allowed-origins: "*"

@@ -93,6 +93,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "reset_date")
     private Instant resetDate = null;
     
+    @Column(name = "funcao", length = 200)
+    private String funcao;
+    
     @NotNull
     @Column(name = "datasource")
     private String datasource;
@@ -219,6 +222,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
 	public void setDatasource(String datasource) {
 		this.datasource = datasource;
+	}
+	
+	public String getFuncao() {
+		return funcao;
+	}
+
+	public void setFuncao(String funcao) {
+		this.funcao = funcao;
 	}
 
 	@Override

@@ -54,6 +54,8 @@ public class UserDTO {
     private String datasource;
     
     private String crc;
+    
+    private String funcao;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -76,6 +78,7 @@ public class UserDTO {
             .map(Authority::getName)
             .collect(Collectors.toSet());
         this.datasource = user.getDatasource();
+        this.funcao = user.getFuncao();
     }
 
     public Long getId() {
@@ -199,6 +202,14 @@ public class UserDTO {
 
 	public void setCrc(String crc) {
 		this.crc = crc;
+	}
+	
+	public String getFuncao() {
+		return funcao;
+	}
+
+	public void setFuncao(String funcao) {
+		this.funcao = funcao;
 	}
 
 	// prettier-ignore
