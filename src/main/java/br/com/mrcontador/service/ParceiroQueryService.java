@@ -95,13 +95,13 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
                 specification = specification.and(buildStringSpecification(criteria.getPar_descricao(), Parceiro_.par_descricao));
             }
             if (criteria.getPar_razaosocial() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPar_razaosocial(), Parceiro_.par_razaosocial));
+                specification = specification.or(buildStringSpecification(criteria.getPar_razaosocial(), Parceiro_.par_razaosocial));
             }
             if (criteria.getPar_tipopessoa() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getPar_tipopessoa(), Parceiro_.par_tipopessoa));
             }
             if (criteria.getPar_cnpjcpf() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPar_cnpjcpf(), Parceiro_.par_cnpjcpf));
+                specification = specification.or(buildStringSpecification(criteria.getPar_cnpjcpf(), Parceiro_.par_cnpjcpf));
             }
             if (criteria.getPar_rgie() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getPar_rgie(), Parceiro_.par_rgie));

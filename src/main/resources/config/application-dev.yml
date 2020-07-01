@@ -38,7 +38,7 @@ spring:
   datasource:
     platform: postgres
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://192.168.10.7:5432/demo
+    url: jdbc:postgresql://localhost:5432/demo
     username: postgres
     password: banana2018!
     driverClassName: org.postgresql.Driver

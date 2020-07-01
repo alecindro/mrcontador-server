@@ -48,10 +48,10 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<AgenciabancariaDTO> findByCriteria(AgenciabancariaCriteria criteria) {
+    public List<Agenciabancaria> findByCriteria(AgenciabancariaCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Agenciabancaria> specification = createSpecification(criteria);
-        return agenciabancariaMapper.toDto(agenciabancariaRepository.findAll(specification));
+        return agenciabancariaRepository.findAll(specification);
     }
 
     /**
@@ -61,11 +61,10 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<AgenciabancariaDTO> findByCriteria(AgenciabancariaCriteria criteria, Pageable page) {
+    public Page<Agenciabancaria> findByCriteria(AgenciabancariaCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Agenciabancaria> specification = createSpecification(criteria);
-        return agenciabancariaRepository.findAll(specification, page)
-            .map(agenciabancariaMapper::toDto);
+        return agenciabancariaRepository.findAll(specification, page);
     }
 
     /**

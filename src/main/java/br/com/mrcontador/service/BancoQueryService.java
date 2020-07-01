@@ -92,10 +92,10 @@ public class BancoQueryService extends QueryService<Banco> {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Banco_.id));
             }
             if (criteria.getBan_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getBan_descricao(), Banco_.ban_descricao));
+                specification = specification.or(buildStringSpecification(criteria.getBan_descricao(), Banco_.ban_descricao));
             }
             if (criteria.getBan_codigobancario() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getBan_codigobancario(), Banco_.ban_codigobancario));
+                specification = specification.or(buildRangeSpecification(criteria.getBan_codigobancario(), Banco_.ban_codigobancario));
             }
             if (criteria.getBan_sigla() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getBan_sigla(), Banco_.ban_sigla));

@@ -66,10 +66,9 @@ public class AgenciabancariaService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<AgenciabancariaDTO> findOne(Long id) {
+    public Optional<Agenciabancaria> findOne(Long id) {
         log.debug("Request to get Agenciabancaria : {}", id);
-        return agenciabancariaRepository.findById(id)
-            .map(agenciabancariaMapper::toDto);
+        return agenciabancariaRepository.findById(id);
     }
 
     /**
