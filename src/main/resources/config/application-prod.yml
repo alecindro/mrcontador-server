@@ -33,7 +33,7 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://mrcontadordb.cd4all6waihc.us-east-1.rds.amazonaws.com:5432/mrcontadordb
+    url: jdbc:postgresql://mrcontadordb.cd4all6waihc.us-east-1.rds.amazonaws.com:5432/mrcontadordb
     username: postgres
     password: mrcontador2018!
     driverClassName: org.postgresql.Driver
