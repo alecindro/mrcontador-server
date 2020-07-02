@@ -38,7 +38,7 @@ spring:
   datasource:
     platform: postgres
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/demo
+    url: jdbc:postgresql://localhost:5432/mrcontador
     username: postgres
     password: banana2018!
     driverClassName: org.postgresql.Driver
@@ -64,20 +64,6 @@ spring:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
-  mail:
-    host: smtp.office365.com
-    port: 587
-    username: alecindrocastilho@hotmail.com
-    password: anelise03
-    properties.mail.smtp.port: 587
-    properties.mail.smtp.transport.protocol: smtps
-    properties.mail.smtp.auth: true
-    properties.mail.smtp.starttls.enable: true
-    properties.mail.smtp.starttls.required: true
-    properties.mail.smtp.ssl.enable: false
-    properties.mail.smtp.timeout: 15000
-    properties.mail.smtp.connectiontimeout: 15000
-    properties.mail.smtp.socketFactory.fallback: true
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
@@ -114,7 +100,7 @@ jhipster:
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: http://127.0.0.1:8080
+    base-url: http://127.0.0.1:9000
   metrics:
     logs: # Reports metrics in the logs
       enabled: false
