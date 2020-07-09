@@ -53,25 +53,43 @@ public class ParceiroCriteria implements Serializable, Criteria {
 
     private StringFilter area_atuacao;
 
-    private BooleanFilter comercio;
+    private StringFilter numero;
 
-    private BooleanFilter nfc_e;
+    private StringFilter bairro;
 
-    private BooleanFilter danfe;
+    private StringFilter porte;
 
-    private BooleanFilter servico;
+    private StringFilter abertura;
 
-    private BooleanFilter nfs_e;
+    private StringFilter natureza_juridica;
 
-    private BooleanFilter transportadora;
+    private StringFilter ultimaAtualizacao;
 
-    private BooleanFilter conhec_transporte;
+    private StringFilter status;
 
-    private BooleanFilter industria;
+    private StringFilter tipo;
 
-    private BooleanFilter ct;
+    private StringFilter complemento;
 
-    private StringFilter outras;
+    private StringFilter email;
+
+    private StringFilter telefone;
+
+    private StringFilter data_situacao;
+
+    private StringFilter efr;
+
+    private StringFilter motivo_situacao;
+
+    private StringFilter situacao_especial;
+
+    private StringFilter data_situacao_especial;
+
+    private StringFilter capital_social;
+
+    private LongFilter atividadeId;
+
+    private LongFilter socioId;
 
     public ParceiroCriteria() {
     }
@@ -91,16 +109,25 @@ public class ParceiroCriteria implements Serializable, Criteria {
         this.cidade = other.cidade == null ? null : other.cidade.copy();
         this.estado = other.estado == null ? null : other.estado.copy();
         this.area_atuacao = other.area_atuacao == null ? null : other.area_atuacao.copy();
-        this.comercio = other.comercio == null ? null : other.comercio.copy();
-        this.nfc_e = other.nfc_e == null ? null : other.nfc_e.copy();
-        this.danfe = other.danfe == null ? null : other.danfe.copy();
-        this.servico = other.servico == null ? null : other.servico.copy();
-        this.nfs_e = other.nfs_e == null ? null : other.nfs_e.copy();
-        this.transportadora = other.transportadora == null ? null : other.transportadora.copy();
-        this.conhec_transporte = other.conhec_transporte == null ? null : other.conhec_transporte.copy();
-        this.industria = other.industria == null ? null : other.industria.copy();
-        this.ct = other.ct == null ? null : other.ct.copy();
-        this.outras = other.outras == null ? null : other.outras.copy();
+        this.numero = other.numero == null ? null : other.numero.copy();
+        this.bairro = other.bairro == null ? null : other.bairro.copy();
+        this.porte = other.porte == null ? null : other.porte.copy();
+        this.abertura = other.abertura == null ? null : other.abertura.copy();
+        this.natureza_juridica = other.natureza_juridica == null ? null : other.natureza_juridica.copy();
+        this.ultimaAtualizacao = other.ultimaAtualizacao == null ? null : other.ultimaAtualizacao.copy();
+        this.status = other.status == null ? null : other.status.copy();
+        this.tipo = other.tipo == null ? null : other.tipo.copy();
+        this.complemento = other.complemento == null ? null : other.complemento.copy();
+        this.email = other.email == null ? null : other.email.copy();
+        this.telefone = other.telefone == null ? null : other.telefone.copy();
+        this.data_situacao = other.data_situacao == null ? null : other.data_situacao.copy();
+        this.efr = other.efr == null ? null : other.efr.copy();
+        this.motivo_situacao = other.motivo_situacao == null ? null : other.motivo_situacao.copy();
+        this.situacao_especial = other.situacao_especial == null ? null : other.situacao_especial.copy();
+        this.data_situacao_especial = other.data_situacao_especial == null ? null : other.data_situacao_especial.copy();
+        this.capital_social = other.capital_social == null ? null : other.capital_social.copy();
+        this.atividadeId = other.atividadeId == null ? null : other.atividadeId.copy();
+        this.socioId = other.socioId == null ? null : other.socioId.copy();
     }
 
     @Override
@@ -220,84 +247,156 @@ public class ParceiroCriteria implements Serializable, Criteria {
         this.area_atuacao = area_atuacao;
     }
 
-    public BooleanFilter getComercio() {
-        return comercio;
+    public StringFilter getNumero() {
+        return numero;
     }
 
-    public void setComercio(BooleanFilter comercio) {
-        this.comercio = comercio;
+    public void setNumero(StringFilter numero) {
+        this.numero = numero;
     }
 
-    public BooleanFilter getNfc_e() {
-        return nfc_e;
+    public StringFilter getBairro() {
+        return bairro;
     }
 
-    public void setNfc_e(BooleanFilter nfc_e) {
-        this.nfc_e = nfc_e;
+    public void setBairro(StringFilter bairro) {
+        this.bairro = bairro;
     }
 
-    public BooleanFilter getDanfe() {
-        return danfe;
+    public StringFilter getPorte() {
+        return porte;
     }
 
-    public void setDanfe(BooleanFilter danfe) {
-        this.danfe = danfe;
+    public void setPorte(StringFilter porte) {
+        this.porte = porte;
     }
 
-    public BooleanFilter getServico() {
-        return servico;
+    public StringFilter getAbertura() {
+        return abertura;
     }
 
-    public void setServico(BooleanFilter servico) {
-        this.servico = servico;
+    public void setAbertura(StringFilter abertura) {
+        this.abertura = abertura;
     }
 
-    public BooleanFilter getNfs_e() {
-        return nfs_e;
+    public StringFilter getNatureza_juridica() {
+        return natureza_juridica;
     }
 
-    public void setNfs_e(BooleanFilter nfs_e) {
-        this.nfs_e = nfs_e;
+    public void setNatureza_juridica(StringFilter natureza_juridica) {
+        this.natureza_juridica = natureza_juridica;
     }
 
-    public BooleanFilter getTransportadora() {
-        return transportadora;
+    public StringFilter getUltimaAtualizacao() {
+        return ultimaAtualizacao;
     }
 
-    public void setTransportadora(BooleanFilter transportadora) {
-        this.transportadora = transportadora;
+    public void setUltimaAtualizacao(StringFilter ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
     }
 
-    public BooleanFilter getConhec_transporte() {
-        return conhec_transporte;
+    public StringFilter getStatus() {
+        return status;
     }
 
-    public void setConhec_transporte(BooleanFilter conhec_transporte) {
-        this.conhec_transporte = conhec_transporte;
+    public void setStatus(StringFilter status) {
+        this.status = status;
     }
 
-    public BooleanFilter getIndustria() {
-        return industria;
+    public StringFilter getTipo() {
+        return tipo;
     }
 
-    public void setIndustria(BooleanFilter industria) {
-        this.industria = industria;
+    public void setTipo(StringFilter tipo) {
+        this.tipo = tipo;
     }
 
-    public BooleanFilter getCt() {
-        return ct;
+    public StringFilter getComplemento() {
+        return complemento;
     }
 
-    public void setCt(BooleanFilter ct) {
-        this.ct = ct;
+    public void setComplemento(StringFilter complemento) {
+        this.complemento = complemento;
     }
 
-    public StringFilter getOutras() {
-        return outras;
+    public StringFilter getEmail() {
+        return email;
     }
 
-    public void setOutras(StringFilter outras) {
-        this.outras = outras;
+    public void setEmail(StringFilter email) {
+        this.email = email;
+    }
+
+    public StringFilter getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(StringFilter telefone) {
+        this.telefone = telefone;
+    }
+
+    public StringFilter getData_situacao() {
+        return data_situacao;
+    }
+
+    public void setData_situacao(StringFilter data_situacao) {
+        this.data_situacao = data_situacao;
+    }
+
+    public StringFilter getEfr() {
+        return efr;
+    }
+
+    public void setEfr(StringFilter efr) {
+        this.efr = efr;
+    }
+
+    public StringFilter getMotivo_situacao() {
+        return motivo_situacao;
+    }
+
+    public void setMotivo_situacao(StringFilter motivo_situacao) {
+        this.motivo_situacao = motivo_situacao;
+    }
+
+    public StringFilter getSituacao_especial() {
+        return situacao_especial;
+    }
+
+    public void setSituacao_especial(StringFilter situacao_especial) {
+        this.situacao_especial = situacao_especial;
+    }
+
+    public StringFilter getData_situacao_especial() {
+        return data_situacao_especial;
+    }
+
+    public void setData_situacao_especial(StringFilter data_situacao_especial) {
+        this.data_situacao_especial = data_situacao_especial;
+    }
+
+    public StringFilter getCapital_social() {
+        return capital_social;
+    }
+
+    public void setCapital_social(StringFilter capital_social) {
+        this.capital_social = capital_social;
+    }
+
+    public LongFilter getAtividadeId() {
+        return atividadeId;
+    }
+
+    public void setAtividadeId(LongFilter atividadeId) {
+        this.atividadeId = atividadeId;
+    }
+
+    public LongFilter getSocioId() {
+        return socioId;
+    }
+
+    public void setSocioId(LongFilter socioId) {
+        this.socioId = socioId;
     }
 
 
@@ -325,16 +424,25 @@ public class ParceiroCriteria implements Serializable, Criteria {
             Objects.equals(cidade, that.cidade) &&
             Objects.equals(estado, that.estado) &&
             Objects.equals(area_atuacao, that.area_atuacao) &&
-            Objects.equals(comercio, that.comercio) &&
-            Objects.equals(nfc_e, that.nfc_e) &&
-            Objects.equals(danfe, that.danfe) &&
-            Objects.equals(servico, that.servico) &&
-            Objects.equals(nfs_e, that.nfs_e) &&
-            Objects.equals(transportadora, that.transportadora) &&
-            Objects.equals(conhec_transporte, that.conhec_transporte) &&
-            Objects.equals(industria, that.industria) &&
-            Objects.equals(ct, that.ct) &&
-            Objects.equals(outras, that.outras);
+            Objects.equals(numero, that.numero) &&
+            Objects.equals(bairro, that.bairro) &&
+            Objects.equals(porte, that.porte) &&
+            Objects.equals(abertura, that.abertura) &&
+            Objects.equals(natureza_juridica, that.natureza_juridica) &&
+            Objects.equals(ultimaAtualizacao, that.ultimaAtualizacao) &&
+            Objects.equals(status, that.status) &&
+            Objects.equals(tipo, that.tipo) &&
+            Objects.equals(complemento, that.complemento) &&
+            Objects.equals(email, that.email) &&
+            Objects.equals(telefone, that.telefone) &&
+            Objects.equals(data_situacao, that.data_situacao) &&
+            Objects.equals(efr, that.efr) &&
+            Objects.equals(motivo_situacao, that.motivo_situacao) &&
+            Objects.equals(situacao_especial, that.situacao_especial) &&
+            Objects.equals(data_situacao_especial, that.data_situacao_especial) &&
+            Objects.equals(capital_social, that.capital_social) &&
+            Objects.equals(atividadeId, that.atividadeId) &&
+            Objects.equals(socioId, that.socioId);
     }
 
     @Override
@@ -354,16 +462,25 @@ public class ParceiroCriteria implements Serializable, Criteria {
         cidade,
         estado,
         area_atuacao,
-        comercio,
-        nfc_e,
-        danfe,
-        servico,
-        nfs_e,
-        transportadora,
-        conhec_transporte,
-        industria,
-        ct,
-        outras
+        numero,
+        bairro,
+        porte,
+        abertura,
+        natureza_juridica,
+        ultimaAtualizacao,
+        status,
+        tipo,
+        complemento,
+        email,
+        telefone,
+        data_situacao,
+        efr,
+        motivo_situacao,
+        situacao_especial,
+        data_situacao_especial,
+        capital_social,
+        atividadeId,
+        socioId
         );
     }
 
@@ -385,16 +502,25 @@ public class ParceiroCriteria implements Serializable, Criteria {
                 (cidade != null ? "cidade=" + cidade + ", " : "") +
                 (estado != null ? "estado=" + estado + ", " : "") +
                 (area_atuacao != null ? "area_atuacao=" + area_atuacao + ", " : "") +
-                (comercio != null ? "comercio=" + comercio + ", " : "") +
-                (nfc_e != null ? "nfc_e=" + nfc_e + ", " : "") +
-                (danfe != null ? "danfe=" + danfe + ", " : "") +
-                (servico != null ? "servico=" + servico + ", " : "") +
-                (nfs_e != null ? "nfs_e=" + nfs_e + ", " : "") +
-                (transportadora != null ? "transportadora=" + transportadora + ", " : "") +
-                (conhec_transporte != null ? "conhec_transporte=" + conhec_transporte + ", " : "") +
-                (industria != null ? "industria=" + industria + ", " : "") +
-                (ct != null ? "ct=" + ct + ", " : "") +
-                (outras != null ? "outras=" + outras + ", " : "") +
+                (numero != null ? "numero=" + numero + ", " : "") +
+                (bairro != null ? "bairro=" + bairro + ", " : "") +
+                (porte != null ? "porte=" + porte + ", " : "") +
+                (abertura != null ? "abertura=" + abertura + ", " : "") +
+                (natureza_juridica != null ? "natureza_juridica=" + natureza_juridica + ", " : "") +
+                (ultimaAtualizacao != null ? "ultimaAtualizacao=" + ultimaAtualizacao + ", " : "") +
+                (status != null ? "status=" + status + ", " : "") +
+                (tipo != null ? "tipo=" + tipo + ", " : "") +
+                (complemento != null ? "complemento=" + complemento + ", " : "") +
+                (email != null ? "email=" + email + ", " : "") +
+                (telefone != null ? "telefone=" + telefone + ", " : "") +
+                (data_situacao != null ? "data_situacao=" + data_situacao + ", " : "") +
+                (efr != null ? "efr=" + efr + ", " : "") +
+                (motivo_situacao != null ? "motivo_situacao=" + motivo_situacao + ", " : "") +
+                (situacao_especial != null ? "situacao_especial=" + situacao_especial + ", " : "") +
+                (data_situacao_especial != null ? "data_situacao_especial=" + data_situacao_especial + ", " : "") +
+                (capital_social != null ? "capital_social=" + capital_social + ", " : "") +
+                (atividadeId != null ? "atividadeId=" + atividadeId + ", " : "") +
+                (socioId != null ? "socioId=" + socioId + ", " : "") +
             "}";
     }
 

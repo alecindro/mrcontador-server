@@ -13,6 +13,11 @@ import org.mapstruct.*;
 public interface ParceiroMapper extends EntityMapper<ParceiroDTO, Parceiro> {
 
 
+    @Mapping(target = "atividades", ignore = true)
+    @Mapping(target = "removeAtividade", ignore = true)
+    @Mapping(target = "socios", ignore = true)
+    @Mapping(target = "removeSocio", ignore = true)
+    Parceiro toEntity(ParceiroDTO parceiroDTO);
 
     default Parceiro fromId(Long id) {
         if (id == null) {

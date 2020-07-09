@@ -23,6 +23,8 @@
     <include file="config/liquibase/changelog/extrato.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/notaservico.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/regra.sql" relativeToChangelogFile="false"/>
+     <include file="config/liquibase/changelog/atividade.sql" relativeToChangelogFile="false"/>
+      <include file="config/liquibase/changelog/socio.sql" relativeToChangelogFile="false"/>
 	<include file="config/liquibase/changelog/data.sql" relativeToChangelogFile="false"/>
 
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->

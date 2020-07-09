@@ -74,8 +74,10 @@ spring:
   jpa:
     open-in-view: false
     properties:
+      javax.persistence.validation.mode: none
       hibernate.jdbc.time_zone: UTC
     hibernate:
+      hibernate.hbm2ddl.auto: none
       ddl-auto: none
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -166,3 +168,6 @@ jhipster:
 # ===================================================================
 
 # application:
+client:
+  cnpj:
+    url: https://www.receitaws.com.br/v1/cnpj/{0}

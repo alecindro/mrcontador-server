@@ -1,7 +1,20 @@
 {
   "fluentMethods": true,
   "clientRootFolder": "",
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipName": "atividade",
+      "otherEntityName": "atividade",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "parceiro"
+    },
+    {
+      "relationshipName": "socio",
+      "otherEntityName": "socio",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "parceiro"
+    }
+  ],
   "fields": [
     {
       "fieldName": "par_descricao",
@@ -70,44 +83,71 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "comercio",
-      "fieldType": "Boolean",
-      "fieldValidateRules": ["required"]
+      "fieldName": "numero",
+      "fieldType": "String"
     },
     {
-      "fieldName": "nfc_e",
-      "fieldType": "Boolean"
+      "fieldName": "bairro",
+      "fieldType": "String"
     },
     {
-      "fieldName": "danfe",
-      "fieldType": "Boolean"
+      "fieldName": "porte",
+      "fieldType": "String"
     },
     {
-      "fieldName": "servico",
-      "fieldType": "Boolean"
+      "fieldName": "abertura",
+      "fieldType": "String"
     },
     {
-      "fieldName": "nfs_e",
-      "fieldType": "Boolean"
+      "fieldName": "natureza_juridica",
+      "fieldType": "String"
     },
     {
-      "fieldName": "transportadora",
-      "fieldType": "Boolean"
+      "fieldName": "ultimaAtualizacao",
+      "fieldType": "String"
     },
     {
-      "fieldName": "conhec_transporte",
-      "fieldType": "Boolean"
+      "fieldName": "status",
+      "fieldType": "String"
     },
     {
-      "fieldName": "industria",
-      "fieldType": "Boolean"
+      "fieldName": "tipo",
+      "fieldType": "String"
     },
     {
-      "fieldName": "ct",
-      "fieldType": "Boolean"
+      "fieldName": "complemento",
+      "fieldType": "String"
     },
     {
-      "fieldName": "outras",
+      "fieldName": "email",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "data_situacao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "efr",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "motivo_situacao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "situacao_especial",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "data_situacao_especial",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "capital_social",
       "fieldType": "String"
     }
   ],

@@ -1,37 +1,40 @@
 package br.com.mrcontador.service.dto;
 
-import java.time.ZonedDateTime;
-import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
+
+import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link br.com.mrcontador.domain.Parceiro} entity.
  */
 public class ParceiroDTO implements Serializable {
-    
-    private Long id;
+ 
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     @Size(max = 50)
-    private String par_descricao;
+    private String parDescricao;
 
     @Size(max = 70)
-    private String par_razaosocial;
+    private String parRazaosocial;
 
     @Size(max = 1)
-    private String par_tipopessoa;
+    private String parTipopessoa;
 
     @Size(max = 20)
-    private String par_cnpjcpf;
+    private String parCnpjcpf;
 
     @Size(max = 20)
-    private String par_rgie;
+    private String parRgie;
 
     @Size(max = 200)
-    private String par_obs;
+    private String parObs;
 
-    private ZonedDateTime par_datacadastro;
+    private ZonedDateTime parDatacadastro;
 
-    private Integer spa_codigo;
+    private Integer spaCodigo;
 
     private String logradouro;
 
@@ -42,28 +45,41 @@ public class ParceiroDTO implements Serializable {
 
     private String estado;
 
-    private String area_atuacao;
+    private String areAtuacao;
 
-    @NotNull
-    private Boolean comercio;
+    private String numero;
 
-    private Boolean nfc_e;
+    private String bairro;
 
-    private Boolean danfe;
+    private String porte;
 
-    private Boolean servico;
+    private String abertura;
 
-    private Boolean nfs_e;
+    private String naturezaJuridica;
 
-    private Boolean transportadora;
+    private String ultimaAtualizacao;
 
-    private Boolean conhec_transporte;
+    private String status;
 
-    private Boolean industria;
+    private String tipo;
 
-    private Boolean ct;
+    private String complemento;
 
-    private String outras;
+    private String email;
+
+    private String telefone;
+
+    private String dataSituacao;
+
+    private String efr;
+
+    private String motivoSituacao;
+
+    private String situacaoEspecial;
+
+    private String dataSituacaoEspecial;
+
+    private String capitalSocial;
 
     
     public Long getId() {
@@ -72,70 +88,6 @@ public class ParceiroDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getPar_descricao() {
-        return par_descricao;
-    }
-
-    public void setPar_descricao(String par_descricao) {
-        this.par_descricao = par_descricao;
-    }
-
-    public String getPar_razaosocial() {
-        return par_razaosocial;
-    }
-
-    public void setPar_razaosocial(String par_razaosocial) {
-        this.par_razaosocial = par_razaosocial;
-    }
-
-    public String getPar_tipopessoa() {
-        return par_tipopessoa;
-    }
-
-    public void setPar_tipopessoa(String par_tipopessoa) {
-        this.par_tipopessoa = par_tipopessoa;
-    }
-
-    public String getPar_cnpjcpf() {
-        return par_cnpjcpf;
-    }
-
-    public void setPar_cnpjcpf(String par_cnpjcpf) {
-        this.par_cnpjcpf = par_cnpjcpf;
-    }
-
-    public String getPar_rgie() {
-        return par_rgie;
-    }
-
-    public void setPar_rgie(String par_rgie) {
-        this.par_rgie = par_rgie;
-    }
-
-    public String getPar_obs() {
-        return par_obs;
-    }
-
-    public void setPar_obs(String par_obs) {
-        this.par_obs = par_obs;
-    }
-
-    public ZonedDateTime getPar_datacadastro() {
-        return par_datacadastro;
-    }
-
-    public void setPar_datacadastro(ZonedDateTime par_datacadastro) {
-        this.par_datacadastro = par_datacadastro;
-    }
-
-    public Integer getSpa_codigo() {
-        return spa_codigo;
-    }
-
-    public void setSpa_codigo(Integer spa_codigo) {
-        this.spa_codigo = spa_codigo;
     }
 
     public String getLogradouro() {
@@ -170,95 +122,215 @@ public class ParceiroDTO implements Serializable {
         this.estado = estado;
     }
 
-    public String getArea_atuacao() {
-        return area_atuacao;
+    public String getNumero() {
+        return numero;
     }
 
-    public void setArea_atuacao(String area_atuacao) {
-        this.area_atuacao = area_atuacao;
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 
-    public Boolean isComercio() {
-        return comercio;
+    public String getBairro() {
+        return bairro;
     }
 
-    public void setComercio(Boolean comercio) {
-        this.comercio = comercio;
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
     }
 
-    public Boolean isNfc_e() {
-        return nfc_e;
+    public String getPorte() {
+        return porte;
     }
 
-    public void setNfc_e(Boolean nfc_e) {
-        this.nfc_e = nfc_e;
+    public void setPorte(String porte) {
+        this.porte = porte;
     }
 
-    public Boolean isDanfe() {
-        return danfe;
+    public String getAbertura() {
+        return abertura;
     }
 
-    public void setDanfe(Boolean danfe) {
-        this.danfe = danfe;
+    public void setAbertura(String abertura) {
+        this.abertura = abertura;
     }
 
-    public Boolean isServico() {
-        return servico;
+    public String getUltimaAtualizacao() {
+        return ultimaAtualizacao;
     }
 
-    public void setServico(Boolean servico) {
-        this.servico = servico;
+    public void setUltimaAtualizacao(String ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
     }
 
-    public Boolean isNfs_e() {
-        return nfs_e;
+    public String getStatus() {
+        return status;
     }
 
-    public void setNfs_e(Boolean nfs_e) {
-        this.nfs_e = nfs_e;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Boolean isTransportadora() {
-        return transportadora;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setTransportadora(Boolean transportadora) {
-        this.transportadora = transportadora;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
-    public Boolean isConhec_transporte() {
-        return conhec_transporte;
+    public String getComplemento() {
+        return complemento;
     }
 
-    public void setConhec_transporte(Boolean conhec_transporte) {
-        this.conhec_transporte = conhec_transporte;
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
     }
 
-    public Boolean isIndustria() {
-        return industria;
+    public String getEmail() {
+        return email;
     }
 
-    public void setIndustria(Boolean industria) {
-        this.industria = industria;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Boolean isCt() {
-        return ct;
+    public String getTelefone() {
+        return telefone;
     }
 
-    public void setCt(Boolean ct) {
-        this.ct = ct;
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
-    public String getOutras() {
-        return outras;
+     public String getEfr() {
+        return efr;
     }
 
-    public void setOutras(String outras) {
-        this.outras = outras;
+    public void setEfr(String efr) {
+        this.efr = efr;
     }
+     
+    public String getParDescricao() {
+		return parDescricao;
+	}
 
-    @Override
+	public void setParDescricao(String parDescricao) {
+		this.parDescricao = parDescricao;
+	}
+
+	public String getParRazaosocial() {
+		return parRazaosocial;
+	}
+
+	public void setParRazaosocial(String parRazaosocial) {
+		this.parRazaosocial = parRazaosocial;
+	}
+
+	public String getParTipopessoa() {
+		return parTipopessoa;
+	}
+
+	public void setParTipopessoa(String parTipopessoa) {
+		this.parTipopessoa = parTipopessoa;
+	}
+
+	public String getParCnpjcpf() {
+		return parCnpjcpf;
+	}
+
+	public void setParCnpjcpf(String parCnpjcpf) {
+		this.parCnpjcpf = parCnpjcpf;
+	}
+
+	public String getParRgie() {
+		return parRgie;
+	}
+
+	public void setParRgie(String parRgie) {
+		this.parRgie = parRgie;
+	}
+
+	public String getParObs() {
+		return parObs;
+	}
+
+	public void setParObs(String parObs) {
+		this.parObs = parObs;
+	}
+
+	public ZonedDateTime getParDatacadastro() {
+		return parDatacadastro;
+	}
+
+	public void setParDatacadastro(ZonedDateTime parDatacadastro) {
+		this.parDatacadastro = parDatacadastro;
+	}
+
+	public Integer getSpaCodigo() {
+		return spaCodigo;
+	}
+
+	public void setSpaCodigo(Integer spaCodigo) {
+		this.spaCodigo = spaCodigo;
+	}
+
+	public String getAreAtuacao() {
+		return areAtuacao;
+	}
+
+	public void setAreAtuacao(String areAtuacao) {
+		this.areAtuacao = areAtuacao;
+	}
+
+	public String getNaturezaJuridica() {
+		return naturezaJuridica;
+	}
+
+	public void setNaturezaJuridica(String naturezaJuridica) {
+		this.naturezaJuridica = naturezaJuridica;
+	}
+
+	public String getDataSituacao() {
+		return dataSituacao;
+	}
+
+	public void setDataSituacao(String dataSituacao) {
+		this.dataSituacao = dataSituacao;
+	}
+
+	public String getMotivoSituacao() {
+		return motivoSituacao;
+	}
+
+	public void setMotivoSituacao(String motivoSituacao) {
+		this.motivoSituacao = motivoSituacao;
+	}
+
+	public String getSituacaoEspecial() {
+		return situacaoEspecial;
+	}
+
+	public void setSituacaoEspecial(String situacaoEspecial) {
+		this.situacaoEspecial = situacaoEspecial;
+	}
+
+	public String getDataSituacaoEspecial() {
+		return dataSituacaoEspecial;
+	}
+
+	public void setDataSituacaoEspecial(String dataSituacaoEspecial) {
+		this.dataSituacaoEspecial = dataSituacaoEspecial;
+	}
+
+	public String getCapitalSocial() {
+		return capitalSocial;
+	}
+
+	public void setCapitalSocial(String capitalSocial) {
+		this.capitalSocial = capitalSocial;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -275,34 +347,19 @@ public class ParceiroDTO implements Serializable {
         return 31;
     }
 
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "ParceiroDTO{" +
-            "id=" + getId() +
-            ", par_descricao='" + getPar_descricao() + "'" +
-            ", par_razaosocial='" + getPar_razaosocial() + "'" +
-            ", par_tipopessoa='" + getPar_tipopessoa() + "'" +
-            ", par_cnpjcpf='" + getPar_cnpjcpf() + "'" +
-            ", par_rgie='" + getPar_rgie() + "'" +
-            ", par_obs='" + getPar_obs() + "'" +
-            ", par_datacadastro='" + getPar_datacadastro() + "'" +
-            ", spa_codigo=" + getSpa_codigo() +
-            ", logradouro='" + getLogradouro() + "'" +
-            ", cep='" + getCep() + "'" +
-            ", cidade='" + getCidade() + "'" +
-            ", estado='" + getEstado() + "'" +
-            ", area_atuacao='" + getArea_atuacao() + "'" +
-            ", comercio='" + isComercio() + "'" +
-            ", nfc_e='" + isNfc_e() + "'" +
-            ", danfe='" + isDanfe() + "'" +
-            ", servico='" + isServico() + "'" +
-            ", nfs_e='" + isNfs_e() + "'" +
-            ", transportadora='" + isTransportadora() + "'" +
-            ", conhec_transporte='" + isConhec_transporte() + "'" +
-            ", industria='" + isIndustria() + "'" +
-            ", ct='" + isCt() + "'" +
-            ", outras='" + getOutras() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "ParceiroDTO [id=" + id + ", parDescricao=" + parDescricao + ", parRazaosocial=" + parRazaosocial
+				+ ", parTipopessoa=" + parTipopessoa + ", parCnpjcpf=" + parCnpjcpf + ", parRgie=" + parRgie
+				+ ", parObs=" + parObs + ", parDatacadastro=" + parDatacadastro + ", spaCodigo=" + spaCodigo
+				+ ", logradouro=" + logradouro + ", cep=" + cep + ", cidade=" + cidade + ", estado=" + estado
+				+ ", areAtuacao=" + areAtuacao + ", numero=" + numero + ", bairro=" + bairro + ", porte=" + porte
+				+ ", abertura=" + abertura + ", naturezaJuridica=" + naturezaJuridica + ", ultimaAtualizacao="
+				+ ultimaAtualizacao + ", status=" + status + ", tipo=" + tipo + ", complemento=" + complemento
+				+ ", email=" + email + ", telefone=" + telefone + ", dataSituacao=" + dataSituacao + ", efr=" + efr
+				+ ", motivoSituacao=" + motivoSituacao + ", situacaoEspecial=" + situacaoEspecial
+				+ ", dataSituacaoEspecial=" + dataSituacaoEspecial + ", capitalSocial=" + capitalSocial + "]";
+	}
+
+  
 }

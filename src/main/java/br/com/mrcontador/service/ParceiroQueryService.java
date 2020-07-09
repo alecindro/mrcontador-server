@@ -92,28 +92,28 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Parceiro_.id));
             }
             if (criteria.getPar_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPar_descricao(), Parceiro_.par_descricao));
+                specification = specification.and(buildStringSpecification(criteria.getPar_descricao(), Parceiro_.parDescricao));
             }
             if (criteria.getPar_razaosocial() != null) {
-                specification = specification.or(buildStringSpecification(criteria.getPar_razaosocial(), Parceiro_.par_razaosocial));
+                specification = specification.and(buildStringSpecification(criteria.getPar_razaosocial(), Parceiro_.parRazaosocial));
             }
             if (criteria.getPar_tipopessoa() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPar_tipopessoa(), Parceiro_.par_tipopessoa));
+                specification = specification.and(buildStringSpecification(criteria.getPar_tipopessoa(), Parceiro_.parTipopessoa));
             }
             if (criteria.getPar_cnpjcpf() != null) {
-                specification = specification.or(buildStringSpecification(criteria.getPar_cnpjcpf(), Parceiro_.par_cnpjcpf));
+                specification = specification.and(buildStringSpecification(criteria.getPar_cnpjcpf(), Parceiro_.parCnpjcpf));
             }
             if (criteria.getPar_rgie() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPar_rgie(), Parceiro_.par_rgie));
+                specification = specification.and(buildStringSpecification(criteria.getPar_rgie(), Parceiro_.parRgie));
             }
             if (criteria.getPar_obs() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPar_obs(), Parceiro_.par_obs));
+                specification = specification.and(buildStringSpecification(criteria.getPar_obs(), Parceiro_.parObs));
             }
             if (criteria.getPar_datacadastro() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getPar_datacadastro(), Parceiro_.par_datacadastro));
+                specification = specification.and(buildRangeSpecification(criteria.getPar_datacadastro(), Parceiro_.parDatacadastro));
             }
             if (criteria.getSpa_codigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getSpa_codigo(), Parceiro_.spa_codigo));
+                specification = specification.and(buildRangeSpecification(criteria.getSpa_codigo(), Parceiro_.spaCodigo));
             }
             if (criteria.getLogradouro() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLogradouro(), Parceiro_.logradouro));
@@ -128,37 +128,66 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
                 specification = specification.and(buildStringSpecification(criteria.getEstado(), Parceiro_.estado));
             }
             if (criteria.getArea_atuacao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getArea_atuacao(), Parceiro_.area_atuacao));
+                specification = specification.and(buildStringSpecification(criteria.getArea_atuacao(), Parceiro_.areAtuacao));
             }
-            if (criteria.getComercio() != null) {
-                specification = specification.and(buildSpecification(criteria.getComercio(), Parceiro_.comercio));
+            if (criteria.getNumero() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNumero(), Parceiro_.numero));
             }
-            if (criteria.getNfc_e() != null) {
-                specification = specification.and(buildSpecification(criteria.getNfc_e(), Parceiro_.nfc_e));
+            if (criteria.getBairro() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getBairro(), Parceiro_.bairro));
             }
-            if (criteria.getDanfe() != null) {
-                specification = specification.and(buildSpecification(criteria.getDanfe(), Parceiro_.danfe));
+            if (criteria.getPorte() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getPorte(), Parceiro_.porte));
             }
-            if (criteria.getServico() != null) {
-                specification = specification.and(buildSpecification(criteria.getServico(), Parceiro_.servico));
+            if (criteria.getAbertura() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getAbertura(), Parceiro_.abertura));
             }
-            if (criteria.getNfs_e() != null) {
-                specification = specification.and(buildSpecification(criteria.getNfs_e(), Parceiro_.nfs_e));
+            if (criteria.getNatureza_juridica() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNatureza_juridica(), Parceiro_.naturezaJuridica));
             }
-            if (criteria.getTransportadora() != null) {
-                specification = specification.and(buildSpecification(criteria.getTransportadora(), Parceiro_.transportadora));
+            if (criteria.getUltimaAtualizacao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getUltimaAtualizacao(), Parceiro_.ultimaAtualizacao));
             }
-            if (criteria.getConhec_transporte() != null) {
-                specification = specification.and(buildSpecification(criteria.getConhec_transporte(), Parceiro_.conhec_transporte));
+            if (criteria.getStatus() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getStatus(), Parceiro_.status));
             }
-            if (criteria.getIndustria() != null) {
-                specification = specification.and(buildSpecification(criteria.getIndustria(), Parceiro_.industria));
+            if (criteria.getTipo() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getTipo(), Parceiro_.tipo));
             }
-            if (criteria.getCt() != null) {
-                specification = specification.and(buildSpecification(criteria.getCt(), Parceiro_.ct));
+            if (criteria.getComplemento() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getComplemento(), Parceiro_.complemento));
             }
-            if (criteria.getOutras() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getOutras(), Parceiro_.outras));
+            if (criteria.getEmail() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getEmail(), Parceiro_.email));
+            }
+            if (criteria.getTelefone() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getTelefone(), Parceiro_.telefone));
+            }
+            if (criteria.getData_situacao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getData_situacao(), Parceiro_.dataSituacao));
+            }
+            if (criteria.getEfr() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getEfr(), Parceiro_.efr));
+            }
+            if (criteria.getMotivo_situacao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getMotivo_situacao(), Parceiro_.motivoSituacao));
+            }
+            if (criteria.getSituacao_especial() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSituacao_especial(), Parceiro_.situacaoEspecial));
+            }
+            if (criteria.getData_situacao_especial() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getData_situacao_especial(), Parceiro_.dataSituacaoEspecial));
+            }
+            if (criteria.getCapital_social() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCapital_social(), Parceiro_.capitalSocial));
+            }
+            if (criteria.getAtividadeId() != null) {
+                specification = specification.and(buildSpecification(criteria.getAtividadeId(),
+                    root -> root.join(Parceiro_.atividades, JoinType.LEFT).get(Atividade_.id)));
+            }
+            if (criteria.getSocioId() != null) {
+                specification = specification.and(buildSpecification(criteria.getSocioId(),
+                    root -> root.join(Parceiro_.socios, JoinType.LEFT).get(Socio_.id)));
             }
         }
         return specification;

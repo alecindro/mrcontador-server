@@ -8,6 +8,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Parceiro.
@@ -25,33 +27,34 @@ public class Parceiro implements Serializable {
 
     @Size(max = 50)
     @Column(name = "par_descricao", length = 50)
-    private String par_descricao;
+    private String parDescricao;
 
     @Size(max = 70)
     @Column(name = "par_razaosocial", length = 70)
-    private String par_razaosocial;
+    private String parRazaosocial;
 
     @Size(max = 1)
     @Column(name = "par_tipopessoa", length = 1)
-    private String par_tipopessoa;
+    private String parTipopessoa;
 
     @Size(max = 20)
-    @Column(name = "par_cnpjcpf", length = 20)
-    private String par_cnpjcpf;
+    @NotNull
+    @Column(name = "par_cnpjcpf", length = 20, unique = true)
+    private String parCnpjcpf;
 
     @Size(max = 20)
     @Column(name = "par_rgie", length = 20)
-    private String par_rgie;
+    private String parRgie;
 
     @Size(max = 200)
     @Column(name = "par_obs", length = 200)
-    private String par_obs;
+    private String parObs;
 
     @Column(name = "par_datacadastro")
-    private ZonedDateTime par_datacadastro;
+    private ZonedDateTime parDatacadastro;
 
     @Column(name = "spa_codigo")
-    private Integer spa_codigo;
+    private Integer spaCodigo;
 
     @Column(name = "logradouro")
     private String logradouro;
@@ -67,38 +70,66 @@ public class Parceiro implements Serializable {
     private String estado;
 
     @Column(name = "area_atuacao")
-    private String area_atuacao;
+    private String areAtuacao;
 
-    @NotNull
-    @Column(name = "comercio", nullable = false)
-    private Boolean comercio;
+    @Column(name = "numero")
+    private String numero;
 
-    @Column(name = "nfc_e")
-    private Boolean nfc_e;
+    @Column(name = "bairro")
+    private String bairro;
 
-    @Column(name = "danfe")
-    private Boolean danfe;
+    @Column(name = "porte")
+    private String porte;
 
-    @Column(name = "servico")
-    private Boolean servico;
+    @Column(name = "abertura")
+    private String abertura;
 
-    @Column(name = "nfs_e")
-    private Boolean nfs_e;
+    @Column(name = "natureza_juridica")
+    private String naturezaJuridica;
 
-    @Column(name = "transportadora")
-    private Boolean transportadora;
+    @Column(name = "ultima_atualizacao")
+    private String ultimaAtualizacao;
 
-    @Column(name = "conhec_transporte")
-    private Boolean conhec_transporte;
+    @Column(name = "status")
+    private String status;
 
-    @Column(name = "industria")
-    private Boolean industria;
+    @Column(name = "tipo")
+    private String tipo;
 
-    @Column(name = "ct")
-    private Boolean ct;
+    @Column(name = "complemento")
+    private String complemento;
 
-    @Column(name = "outras")
-    private String outras;
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "telefone")
+    private String telefone;
+
+    @Column(name = "data_situacao")
+    private String dataSituacao;
+
+    @Column(name = "efr")
+    private String efr;
+
+    @Column(name = "motivo_situacao")
+    private String motivoSituacao;
+
+    @Column(name = "situacao_especial")
+    private String situacaoEspecial;
+
+    @Column(name = "data_situacao_especial")
+    private String dataSituacaoEspecial;
+
+    @Column(name = "capital_social")
+    private String capitalSocial;
+
+    @OneToMany(mappedBy = "parceiro")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Atividade> atividades = new HashSet<>();
+
+    @OneToMany(mappedBy = "parceiro")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Socio> socios = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -109,108 +140,65 @@ public class Parceiro implements Serializable {
         this.id = id;
     }
 
-    public String getPar_descricao() {
-        return par_descricao;
+    public String getParDescricao() {
+        return parDescricao;
     }
 
-    public Parceiro par_descricao(String par_descricao) {
-        this.par_descricao = par_descricao;
+    public Parceiro parDescricao(String parDescricao) {
+        this.parDescricao = parDescricao;
         return this;
     }
 
-    public void setPar_descricao(String par_descricao) {
-        this.par_descricao = par_descricao;
+    public void setParDescricao(String parDescricao) {
+        this.parDescricao = parDescricao;
     }
 
-    public String getPar_razaosocial() {
-        return par_razaosocial;
+    public String getParRazaosocial() {
+        return parRazaosocial;
     }
 
-    public Parceiro par_razaosocial(String par_razaosocial) {
-        this.par_razaosocial = par_razaosocial;
+    public Parceiro parRazaosocial(String parRazaosocial) {
+        this.parRazaosocial = parRazaosocial;
         return this;
     }
 
-    public void setPar_razaosocial(String par_razaosocial) {
-        this.par_razaosocial = par_razaosocial;
+    public void setParRazaosocial(String parRazaosocial) {
+        this.parRazaosocial = parRazaosocial;
     }
 
-    public String getPar_tipopessoa() {
-        return par_tipopessoa;
+    public String getParTipopessoa() {
+        return parTipopessoa;
     }
 
-    public Parceiro par_tipopessoa(String par_tipopessoa) {
-        this.par_tipopessoa = par_tipopessoa;
+    public Parceiro parTipopessoa(String parTipopessoa) {
+        this.parTipopessoa = parTipopessoa;
         return this;
     }
 
-    public void setPar_tipopessoa(String par_tipopessoa) {
-        this.par_tipopessoa = par_tipopessoa;
-    }
-
-    public String getPar_cnpjcpf() {
-        return par_cnpjcpf;
-    }
-
-    public Parceiro par_cnpjcpf(String par_cnpjcpf) {
-        this.par_cnpjcpf = par_cnpjcpf;
+    public Parceiro parCnpjcpf(String parCnpjcpf) {
+        this.parCnpjcpf = parCnpjcpf;
         return this;
     }
 
-    public void setPar_cnpjcpf(String par_cnpjcpf) {
-        this.par_cnpjcpf = par_cnpjcpf;
-    }
-
-    public String getPar_rgie() {
-        return par_rgie;
-    }
-
-    public Parceiro par_rgie(String par_rgie) {
-        this.par_rgie = par_rgie;
+    public Parceiro parRgie(String parRgie) {
+        this.parRgie = parRgie;
         return this;
     }
 
-    public void setPar_rgie(String par_rgie) {
-        this.par_rgie = par_rgie;
-    }
-
-    public String getPar_obs() {
-        return par_obs;
-    }
-
-    public Parceiro par_obs(String par_obs) {
-        this.par_obs = par_obs;
+    public Parceiro parObs(String parObs) {
+        this.parObs = parObs;
         return this;
     }
 
-    public void setPar_obs(String par_obs) {
-        this.par_obs = par_obs;
-    }
-
-    public ZonedDateTime getPar_datacadastro() {
-        return par_datacadastro;
-    }
-
-    public Parceiro par_datacadastro(ZonedDateTime par_datacadastro) {
-        this.par_datacadastro = par_datacadastro;
+    public Parceiro parDatacadastro(ZonedDateTime parDatacadastro) {
+        this.parDatacadastro = parDatacadastro;
         return this;
     }
 
-    public void setPar_datacadastro(ZonedDateTime par_datacadastro) {
-        this.par_datacadastro = par_datacadastro;
-    }
-
-    public Integer getSpa_codigo() {
-        return spa_codigo;
-    }
-
-    public Parceiro spa_codigo(Integer spa_codigo) {
-        this.spa_codigo = spa_codigo;
+    
+    public Parceiro spaCodigo(Integer spaCodigo) {
+        this.spaCodigo = spaCodigo;
         return this;
-    }
-
-    public void setSpa_codigo(Integer spa_codigo) {
-        this.spa_codigo = spa_codigo;
     }
 
     public String getLogradouro() {
@@ -265,151 +253,348 @@ public class Parceiro implements Serializable {
         this.estado = estado;
     }
 
-    public String getArea_atuacao() {
-        return area_atuacao;
-    }
-
-    public Parceiro area_atuacao(String area_atuacao) {
-        this.area_atuacao = area_atuacao;
+       public Parceiro areAtuacao(String areAtuacao) {
+        this.areAtuacao = areAtuacao;
         return this;
     }
 
-    public void setArea_atuacao(String area_atuacao) {
-        this.area_atuacao = area_atuacao;
+    public String getNumero() {
+        return numero;
     }
 
-    public Boolean isComercio() {
-        return comercio;
-    }
-
-    public Parceiro comercio(Boolean comercio) {
-        this.comercio = comercio;
+    public Parceiro numero(String numero) {
+        this.numero = numero;
         return this;
     }
 
-    public void setComercio(Boolean comercio) {
-        this.comercio = comercio;
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 
-    public Boolean isNfc_e() {
-        return nfc_e;
+    public String getBairro() {
+        return bairro;
     }
 
-    public Parceiro nfc_e(Boolean nfc_e) {
-        this.nfc_e = nfc_e;
+    public Parceiro bairro(String bairro) {
+        this.bairro = bairro;
         return this;
     }
 
-    public void setNfc_e(Boolean nfc_e) {
-        this.nfc_e = nfc_e;
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
     }
 
-    public Boolean isDanfe() {
-        return danfe;
+    public String getPorte() {
+        return porte;
     }
 
-    public Parceiro danfe(Boolean danfe) {
-        this.danfe = danfe;
+    public Parceiro porte(String porte) {
+        this.porte = porte;
         return this;
     }
 
-    public void setDanfe(Boolean danfe) {
-        this.danfe = danfe;
+    public void setPorte(String porte) {
+        this.porte = porte;
     }
 
-    public Boolean isServico() {
-        return servico;
+    public String getAbertura() {
+        return abertura;
     }
 
-    public Parceiro servico(Boolean servico) {
-        this.servico = servico;
+    public Parceiro abertura(String abertura) {
+        this.abertura = abertura;
         return this;
     }
 
-    public void setServico(Boolean servico) {
-        this.servico = servico;
+    public void setAbertura(String abertura) {
+        this.abertura = abertura;
     }
 
-    public Boolean isNfs_e() {
-        return nfs_e;
-    }
 
-    public Parceiro nfs_e(Boolean nfs_e) {
-        this.nfs_e = nfs_e;
+    public Parceiro naturezaJuridica(String naturezaJuridica) {
+        this.naturezaJuridica = naturezaJuridica;
         return this;
     }
 
-    public void setNfs_e(Boolean nfs_e) {
-        this.nfs_e = nfs_e;
+
+    public String getUltimaAtualizacao() {
+        return ultimaAtualizacao;
     }
 
-    public Boolean isTransportadora() {
-        return transportadora;
-    }
-
-    public Parceiro transportadora(Boolean transportadora) {
-        this.transportadora = transportadora;
+    public Parceiro ultimaAtualizacao(String ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
         return this;
     }
 
-    public void setTransportadora(Boolean transportadora) {
-        this.transportadora = transportadora;
+    public void setUltimaAtualizacao(String ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
     }
 
-    public Boolean isConhec_transporte() {
-        return conhec_transporte;
+    public String getStatus() {
+        return status;
     }
 
-    public Parceiro conhec_transporte(Boolean conhec_transporte) {
-        this.conhec_transporte = conhec_transporte;
+    public Parceiro status(String status) {
+        this.status = status;
         return this;
     }
 
-    public void setConhec_transporte(Boolean conhec_transporte) {
-        this.conhec_transporte = conhec_transporte;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Boolean isIndustria() {
-        return industria;
+    public String getTipo() {
+        return tipo;
     }
 
-    public Parceiro industria(Boolean industria) {
-        this.industria = industria;
+    public Parceiro tipo(String tipo) {
+        this.tipo = tipo;
         return this;
     }
 
-    public void setIndustria(Boolean industria) {
-        this.industria = industria;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
-    public Boolean isCt() {
-        return ct;
+    public String getComplemento() {
+        return complemento;
     }
 
-    public Parceiro ct(Boolean ct) {
-        this.ct = ct;
+    public Parceiro complemento(String complemento) {
+        this.complemento = complemento;
         return this;
     }
 
-    public void setCt(Boolean ct) {
-        this.ct = ct;
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
     }
 
-    public String getOutras() {
-        return outras;
+    public String getEmail() {
+        return email;
     }
 
-    public Parceiro outras(String outras) {
-        this.outras = outras;
+    public Parceiro email(String email) {
+        this.email = email;
         return this;
     }
 
-    public void setOutras(String outras) {
-        this.outras = outras;
+    public void setEmail(String email) {
+        this.email = email;
     }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public Parceiro telefone(String telefone) {
+        this.telefone = telefone;
+        return this;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public Parceiro dataSituacao(String dataSituacao) {
+        this.dataSituacao = dataSituacao;
+        return this;
+    }
+
+    public String getEfr() {
+        return efr;
+    }
+
+    public Parceiro efr(String efr) {
+        this.efr = efr;
+        return this;
+    }
+
+    public void setEfr(String efr) {
+        this.efr = efr;
+    }
+
+    public String getMotivoSituacao() {
+        return motivoSituacao;
+    }
+
+    public Parceiro motivoSituacao(String motivoSituacao) {
+        this.motivoSituacao = motivoSituacao;
+        return this;
+    }
+
+    public Parceiro situacaoEspecial(String situacaoEspecial) {
+        this.situacaoEspecial = situacaoEspecial;
+        return this;
+    }
+
+    public Parceiro dataSituacaoEspecial(String dataSituacaoEspecial) {
+        this.dataSituacaoEspecial = dataSituacaoEspecial;
+        return this;
+    }
+
+  
+    public Parceiro capitalSocial(String capitalSocial) {
+        this.capitalSocial = capitalSocial;
+        return this;
+    }
+
+  
+    public Set<Atividade> getAtividades() {
+    	if(atividades == null) {
+    		atividades = new HashSet<>();
+    	}
+        return atividades;
+    }
+
+    public Parceiro atividades(Set<Atividade> atividades) {
+        this.atividades = atividades;
+        return this;
+    }
+
+    public Parceiro addAtividade(Atividade atividade) {
+        this.atividades.add(atividade);
+        atividade.setParceiro(this);
+        return this;
+    }
+
+    public Parceiro removeAtividade(Atividade atividade) {
+        this.atividades.remove(atividade);
+        atividade.setParceiro(null);
+        return this;
+    }
+
+    public void setAtividades(Set<Atividade> atividades) {
+        this.atividades = atividades;
+    }
+
+    public Set<Socio> getSocios() {
+    	if(socios == null) {
+    		socios = new HashSet<>();
+    	}
+        return socios;
+    }
+
+    public Parceiro socios(Set<Socio> socios) {
+        this.socios = socios;
+        return this;
+    }
+
+    public Parceiro addSocio(Socio socio) {
+        this.socios.add(socio);
+        socio.setParceiro(this);
+        return this;
+    }
+
+    public Parceiro removeSocio(Socio socio) {
+        this.socios.remove(socio);
+        socio.setParceiro(null);
+        return this;
+    }
+
+    public void setSocios(Set<Socio> socios) {
+        this.socios = socios;
+    }
+    
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
+    public String getParCnpjcpf() {
+		return parCnpjcpf;
+	}
+
+	public void setParCnpjcpf(String parCnpjcpf) {
+		this.parCnpjcpf = parCnpjcpf;
+	}
+
+	public String getParRgie() {
+		return parRgie;
+	}
+
+	public void setParRgie(String parRgie) {
+		this.parRgie = parRgie;
+	}
+
+	public String getParObs() {
+		return parObs;
+	}
+
+	public void setParObs(String parObs) {
+		this.parObs = parObs;
+	}
+
+	public ZonedDateTime getParDatacadastro() {
+		return parDatacadastro;
+	}
+
+	public void setParDatacadastro(ZonedDateTime parDatacadastro) {
+		this.parDatacadastro = parDatacadastro;
+	}
+
+	public Integer getSpaCodigo() {
+		return spaCodigo;
+	}
+
+	public void setSpaCodigo(Integer spaCodigo) {
+		this.spaCodigo = spaCodigo;
+	}
+
+	public String getAreAtuacao() {
+		return areAtuacao;
+	}
+
+	public void setAreAtuacao(String areAtuacao) {
+		this.areAtuacao = areAtuacao;
+	}
+
+	public String getNaturezaJuridica() {
+		return naturezaJuridica;
+	}
+
+	public void setNaturezaJuridica(String naturezaJuridica) {
+		this.naturezaJuridica = naturezaJuridica;
+	}
+
+	public String getDataSituacao() {
+		return dataSituacao;
+	}
+
+	public void setDataSituacao(String dataSituacao) {
+		this.dataSituacao = dataSituacao;
+	}
+
+	public String getSituacaoEspecial() {
+		return situacaoEspecial;
+	}
+
+	public void setSituacaoEspecial(String situacaoEspecial) {
+		this.situacaoEspecial = situacaoEspecial;
+	}
+
+	public String getDataSituacaoEspecial() {
+		return dataSituacaoEspecial;
+	}
+
+	public void setDataSituacaoEspecial(String dataSituacaoEspecial) {
+		this.dataSituacaoEspecial = dataSituacaoEspecial;
+	}
+
+	public String getCapitalSocial() {
+		return capitalSocial;
+	}
+
+	public void setCapitalSocial(String capitalSocial) {
+		this.capitalSocial = capitalSocial;
+	}
+
+	public void setParTipopessoa(String parTipopessoa) {
+		this.parTipopessoa = parTipopessoa;
+	}
+
+	public void setMotivoSituacao(String motivoSituacao) {
+		this.motivoSituacao = motivoSituacao;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -425,34 +610,21 @@ public class Parceiro implements Serializable {
         return 31;
     }
 
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "Parceiro{" +
-            "id=" + getId() +
-            ", par_descricao='" + getPar_descricao() + "'" +
-            ", par_razaosocial='" + getPar_razaosocial() + "'" +
-            ", par_tipopessoa='" + getPar_tipopessoa() + "'" +
-            ", par_cnpjcpf='" + getPar_cnpjcpf() + "'" +
-            ", par_rgie='" + getPar_rgie() + "'" +
-            ", par_obs='" + getPar_obs() + "'" +
-            ", par_datacadastro='" + getPar_datacadastro() + "'" +
-            ", spa_codigo=" + getSpa_codigo() +
-            ", logradouro='" + getLogradouro() + "'" +
-            ", cep='" + getCep() + "'" +
-            ", cidade='" + getCidade() + "'" +
-            ", estado='" + getEstado() + "'" +
-            ", area_atuacao='" + getArea_atuacao() + "'" +
-            ", comercio='" + isComercio() + "'" +
-            ", nfc_e='" + isNfc_e() + "'" +
-            ", danfe='" + isDanfe() + "'" +
-            ", servico='" + isServico() + "'" +
-            ", nfs_e='" + isNfs_e() + "'" +
-            ", transportadora='" + isTransportadora() + "'" +
-            ", conhec_transporte='" + isConhec_transporte() + "'" +
-            ", industria='" + isIndustria() + "'" +
-            ", ct='" + isCt() + "'" +
-            ", outras='" + getOutras() + "'" +
-            "}";
-    }
-}
+	@Override
+	public String toString() {
+		return "Parceiro [id=" + id + ", parDescricao=" + parDescricao + ", parRazaosocial=" + parRazaosocial
+				+ ", parTipopessoa=" + parTipopessoa + ", parCnpjcpf=" + parCnpjcpf + ", parRgie=" + parRgie
+				+ ", parObs=" + parObs + ", parDatacadastro=" + parDatacadastro + ", spaCodigo=" + spaCodigo
+				+ ", logradouro=" + logradouro + ", cep=" + cep + ", cidade=" + cidade + ", estado=" + estado
+				+ ", areAtuacao=" + areAtuacao + ", numero=" + numero + ", bairro=" + bairro + ", porte=" + porte
+				+ ", abertura=" + abertura + ", naturezaJuridica=" + naturezaJuridica + ", ultimaAtualizacao="
+				+ ultimaAtualizacao + ", status=" + status + ", tipo=" + tipo + ", complemento=" + complemento
+				+ ", email=" + email + ", telefone=" + telefone + ", dataSituacao=" + dataSituacao + ", efr=" + efr
+				+ ", motivoSituacao=" + motivoSituacao + ", situacaoEspecial=" + situacaoEspecial
+				+ ", dataSituacaoEspecial=" + dataSituacaoEspecial + ", capitalSocial=" + capitalSocial
+				+ ", atividades=" + atividades + ", socios=" + socios + "]";
+	}
+    
+    
+
+  }

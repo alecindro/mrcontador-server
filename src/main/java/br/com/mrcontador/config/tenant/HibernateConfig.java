@@ -3,6 +3,7 @@ package br.com.mrcontador.config.tenant;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 
 import org.hibernate.MultiTenancyStrategy;
@@ -39,6 +40,7 @@ public class HibernateConfig {
 		em.setDataSource(dataSource);
 		em.setPackagesToScan(MrcontadorServerApp.class.getPackage().getName());
 		em.setJpaVendorAdapter(this.jpaVendorAdapter());
+		em.setValidationMode(ValidationMode.NONE);
 
 		Map<String, Object> jpaPropertiesMap = new HashMap<>(jpaProperties.getProperties());
 		jpaPropertiesMap.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);

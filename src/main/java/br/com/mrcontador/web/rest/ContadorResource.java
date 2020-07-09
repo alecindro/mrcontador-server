@@ -30,7 +30,7 @@ import br.com.mrcontador.service.EmailAlreadyUsedException;
 import br.com.mrcontador.service.UserService;
 import br.com.mrcontador.service.dto.ContadorCriteria;
 import br.com.mrcontador.service.dto.ContadorDTO;
-import br.com.mrcontador.util.CnpjUtil;
+import br.com.mrcontador.util.MrContadorUtil;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import br.com.mrcontador.web.rest.errors.CnpjAlreadyExistException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -77,7 +77,7 @@ public class ContadorResource {
         if (contadorDTO.getId() != null) {
             throw new BadRequestAlertException("A new contador cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        if(contadorService.findOneByCnpjOrCrc(CnpjUtil.parseCnpj(contadorDTO.getCnpj()), contadorDTO.getCrc()).isPresent()) {
+        if(contadorService.findOneByCnpjOrCrc(MrContadorUtil.onlyNumbers(contadorDTO.getCnpj()), contadorDTO.getCrc()).isPresent()) {
         	throw new CnpjAlreadyExistException();
         }
         

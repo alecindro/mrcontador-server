@@ -57,6 +57,10 @@ public class CacheConfiguration {
             createCache(cm, br.com.mrcontador.domain.Extrato.class.getName());
             createCache(cm, br.com.mrcontador.domain.Notafiscal.class.getName());
             createCache(cm, br.com.mrcontador.domain.Notaservico.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Atividade.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Socio.class.getName());
+            createCache(cm, br.com.mrcontador.domain.Parceiro.class.getName() + ".atividades");
+            createCache(cm, br.com.mrcontador.domain.Parceiro.class.getName() + ".socios");
             // jhipster-needle-caffeine-add-entry
         };
     }
