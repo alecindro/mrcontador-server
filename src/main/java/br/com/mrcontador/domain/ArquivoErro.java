@@ -31,10 +31,10 @@ public class ArquivoErro implements Serializable {
     @Column(name = "tipo_arquivo")
     private String tipoArquivo;
 
-    @Column(name = "s_3_url")
+    @Column(name = "s3_url")
     private String s3Url;
 
-    @Column(name = "s_3_dir")
+    @Column(name = "s3_dir")
     private String s3Dir;
 
     @Column(name = "data_cadastro")

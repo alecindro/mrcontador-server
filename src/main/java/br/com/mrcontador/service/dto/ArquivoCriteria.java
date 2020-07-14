@@ -45,6 +45,8 @@ public class ArquivoCriteria implements Serializable, Criteria {
 
     private StringFilter etag;
 
+    private StringFilter usuario;
+
     private LongFilter parceiroId;
 
     public ArquivoCriteria() {
@@ -61,6 +63,7 @@ public class ArquivoCriteria implements Serializable, Criteria {
         this.s3Dir = other.s3Dir == null ? null : other.s3Dir.copy();
         this.tamanho = other.tamanho == null ? null : other.tamanho.copy();
         this.etag = other.etag == null ? null : other.etag.copy();
+        this.usuario = other.usuario == null ? null : other.usuario.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
     }
 
@@ -149,6 +152,14 @@ public class ArquivoCriteria implements Serializable, Criteria {
         this.etag = etag;
     }
 
+    public StringFilter getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(StringFilter usuario) {
+        this.usuario = usuario;
+    }
+
     public LongFilter getParceiroId() {
         return parceiroId;
     }
@@ -178,6 +189,7 @@ public class ArquivoCriteria implements Serializable, Criteria {
             Objects.equals(s3Dir, that.s3Dir) &&
             Objects.equals(tamanho, that.tamanho) &&
             Objects.equals(etag, that.etag) &&
+            Objects.equals(usuario, that.usuario) &&
             Objects.equals(parceiroId, that.parceiroId);
     }
 
@@ -194,6 +206,7 @@ public class ArquivoCriteria implements Serializable, Criteria {
         s3Dir,
         tamanho,
         etag,
+        usuario,
         parceiroId
         );
     }
@@ -212,6 +225,7 @@ public class ArquivoCriteria implements Serializable, Criteria {
                 (s3Dir != null ? "s3Dir=" + s3Dir + ", " : "") +
                 (tamanho != null ? "tamanho=" + tamanho + ", " : "") +
                 (etag != null ? "etag=" + etag + ", " : "") +
+                (usuario != null ? "usuario=" + usuario + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
             "}";
     }

@@ -4,22 +4,22 @@ public class MrContadorException extends RuntimeException{
 	
 	private static final long serialVersionUID = 1L;
 	private String errorKey;
-	private String defaultMesasge;
+	private String defaultMessasge;
 	
 	public MrContadorException(String errorKey, String message, Throwable e) {
-		super(errorKey+" - "+message,e);
-		this.defaultMesasge = message;
+		super(message,e);
+		this.defaultMessasge = message;
 		this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey, Throwable e) {
-		super(errorKey, e);
+		super(e);
 		this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey, String message) {
-		super(errorKey+" - "+message);
-		this.defaultMesasge = message;
+		super(message);
+		this.defaultMessasge = message;
 		this.errorKey = errorKey;
 	}
 	
@@ -31,8 +31,8 @@ public class MrContadorException extends RuntimeException{
 		return errorKey;
 	}
 
-	public String getDefaultMesasge() {
-		return defaultMesasge;
+	public String getDefaultMessasge() {
+		return defaultMessasge;
 	}
 
 }

@@ -47,6 +47,10 @@
     {
       "fieldName": "etag",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "usuario",
+      "fieldType": "String"
     }
   ],
   "changelogDate": "20200711150918",

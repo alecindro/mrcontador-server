@@ -21,6 +21,7 @@ public class ArquivoMapper implements EntityMapper<FileDTO,Arquivo>{
 		arquivo.setTamanho(dto.getSize());
 		arquivo.setTipoArquivo(dto.getContentType());
 		arquivo.setTipoDoc(dto.getTipoDocumento().getTipoDoc());
+		arquivo.setUsuario(dto.getUsuario());
 		return arquivo;
 	}
 

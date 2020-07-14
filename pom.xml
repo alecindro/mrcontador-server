@@ -85,7 +85,7 @@
 		<junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
 		<tika.version>1.24.1</tika.version>
 		<awssdk-s3.version>2.13.52</awssdk-s3.version>
-		<nfe.version>3.0.13-SNAPSHOT</nfe.version>
+		<nfe.version>3.0.12</nfe.version>
 		<!-- jhipster-needle-maven-property -->
 	</properties>
 

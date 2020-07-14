@@ -9,8 +9,6 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Arquivo.
@@ -26,45 +24,40 @@ public class Arquivo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome", length = 255)
-    @NotNull
+    @Column(name = "nome")
     private String nome;
 
-    @Column(name = "nome_original", length = 255)
+    @Column(name = "nome_original")
     private String nomeOriginal;
 
-    @NotNull
     @Column(name = "data_cadastro")
     private ZonedDateTime dataCadastro;
 
-    @Column(name = "tipo_arquivo", length = 100)
+    @Column(name = "tipo_arquivo")
     private String tipoArquivo;
 
-    @NotNull
-    @Column(name = "tipo_doc", length = 100)
+    @Column(name = "tipo_doc")
     private String tipoDoc;
 
-    @Column(name = "s3_url", length = 255)
+    @Column(name = "s3_url")
     private String s3Url;
 
-    @Column(name = "s3_dir", length = 255)
+    @Column(name = "s3_dir")
     private String s3Dir;
 
     @Column(name = "tamanho")
     private Long tamanho;
 
-    @Column(name = "etag", length = 255)
+    @Column(name = "etag")
     private String etag;
+
+    @Column(name = "usuario")
+    private String usuario;
 
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "arquivos", allowSetters = true)
-    @JoinColumn(name="parceiro_id", nullable=false)
     private Parceiro parceiro;
-    
-    @OneToMany(mappedBy = "arquivo", cascade = CascadeType.ALL)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Notafiscal> notas;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -192,6 +185,19 @@ public class Arquivo implements Serializable {
         this.etag = etag;
     }
 
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public Arquivo usuario(String usuario) {
+        this.usuario = usuario;
+        return this;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
     public Parceiro getParceiro() {
         return parceiro;
     }
@@ -204,24 +210,9 @@ public class Arquivo implements Serializable {
     public void setParceiro(Parceiro parceiro) {
         this.parceiro = parceiro;
     }
-    
-    public Set<Notafiscal> getNotas() {
-    	if(notas == null) {
-    		 notas = new HashSet<>();
-    	}
-		return notas;
-	}
-
-	public void setNotas(Set<Notafiscal> notas) {
-		this.notas = notas;
-	}
-    
-    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-
-
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -251,6 +242,7 @@ public class Arquivo implements Serializable {
             ", s3Dir='" + gets3Dir() + "'" +
             ", tamanho=" + getTamanho() +
             ", etag='" + getEtag() + "'" +
+            ", usuario='" + getUsuario() + "'" +
             "}";
     }
 }

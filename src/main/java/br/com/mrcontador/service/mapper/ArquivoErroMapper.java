@@ -1,14 +1,13 @@
 package br.com.mrcontador.service.mapper;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 import br.com.mrcontador.domain.ArquivoErro;
 import br.com.mrcontador.service.dto.FileDTO;
 
-public class ArquivoErroMapper implements EntityMapper<FileDTO,ArquivoErro>{
+public class ArquivoErroMapper{
 
-	@Override
+	
 	public ArquivoErro toEntity(FileDTO dto) {
 		ArquivoErro arquivo = new ArquivoErro();
 		arquivo.setDataCadastro(ZonedDateTime.now());
@@ -22,23 +21,4 @@ public class ArquivoErroMapper implements EntityMapper<FileDTO,ArquivoErro>{
 		arquivo.setUsuario(arquivo.getUsuario());
 		return arquivo;
 	}
-
-	@Override
-	public FileDTO toDto(ArquivoErro entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ArquivoErro> toEntity(List<FileDTO> dtoList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<FileDTO> toDto(List<ArquivoErro> entityList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

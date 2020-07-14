@@ -68,7 +68,7 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 			for(String key : mapHeader.keySet()) {
 				Header header = mapHeader.get(key);				
 				String value = line.substring(header.getBegin(), header.getEnd()>maxRowSize?maxRowSize:header.getEnd()).trim();
-				switch (key) {
+				switch (key.trim()) {
 				case CLASSIFICACAO:
 					planoContaDetail.setClassificacao(value);
 					break;

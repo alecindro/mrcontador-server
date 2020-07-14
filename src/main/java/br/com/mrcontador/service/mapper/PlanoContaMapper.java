@@ -20,7 +20,7 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 		if (StringUtils.isNumeric(dto.getCodigo().trim())) {
 			conta.setCon_conta(Integer.valueOf(dto.getCodigo().trim()));
 		}
-		if (StringUtils.isNumeric(dto.getGrau().trim())) {
+		if (dto.getGrau() != null && StringUtils.isNumeric(dto.getGrau().trim())) {
 			conta.setCon_grau(Integer.valueOf(dto.getGrau().trim()));
 		}
 		conta.setCon_tipo(StringUtils.normalizeSpace(dto.getT()));

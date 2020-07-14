@@ -2,6 +2,8 @@ package br.com.mrcontador.service;
 
 import br.com.mrcontador.domain.ArquivoErro;
 import br.com.mrcontador.repository.ArquivoErroRepository;
+import br.com.mrcontador.service.file.S3Service;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +24,15 @@ public class ArquivoErroService {
     private final Logger log = LoggerFactory.getLogger(ArquivoErroService.class);
 
     private final ArquivoErroRepository arquivoErroRepository;
+    
+    private final S3Service s3Service;
 
-    public ArquivoErroService(ArquivoErroRepository arquivoErroRepository) {
+    public ArquivoErroService(ArquivoErroRepository arquivoErroRepository,S3Service s3Service) {
         this.arquivoErroRepository = arquivoErroRepository;
+        this.s3Service = s3Service;
     }
+    
+    
 
     /**
      * Save a arquivoErro.

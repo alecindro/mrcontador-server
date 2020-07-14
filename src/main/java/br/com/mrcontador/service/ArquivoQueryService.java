@@ -112,6 +112,9 @@ public class ArquivoQueryService extends QueryService<Arquivo> {
             if (criteria.getEtag() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getEtag(), Arquivo_.etag));
             }
+            if (criteria.getUsuario() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getUsuario(), Arquivo_.usuario));
+            }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
                     root -> root.join(Arquivo_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
