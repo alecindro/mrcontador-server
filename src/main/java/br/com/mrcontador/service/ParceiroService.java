@@ -81,4 +81,8 @@ public class ParceiroService {
         log.debug("Request to delete Parceiro : {}", id);
         parceiroRepository.deleteById(id);
     }
+    
+    public Optional<Parceiro> findByParCnpjcpf(String parCnpjcpf){
+    	return parceiroRepository.findByParCnpjcpf(parCnpjcpf);
+    }
 }

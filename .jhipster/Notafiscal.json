@@ -9,12 +9,20 @@
       "relationshipValidateRules": ["required"],
       "otherEntityField": "id",
       "otherEntityRelationshipName": "notafiscal"
+    },
+    {
+      "relationshipName": "arquivo",
+      "otherEntityName": "arquivo",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "notafiscal"
     }
   ],
   "fields": [
     {
       "fieldName": "not_numero",
-      "fieldType": "Integer"
+      "fieldType": "String"
     },
     {
       "fieldName": "not_descricao",
@@ -44,7 +52,7 @@
     },
     {
       "fieldName": "not_dataparcela",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "LocalDate"
     },
     {
       "fieldName": "not_valorparcela",

@@ -1,4 +1,4 @@
-package br.com.mrcontador.service;
+package br.com.mrcontador.service.file;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +16,7 @@ import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.dto.PlanoConta;
 import br.com.mrcontador.repository.ContaRepository;
 import br.com.mrcontador.repository.ParceiroRepository;
+import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.mapper.ParceiroPJMapper;
 import br.com.mrcontador.service.mapper.PlanoContaMapper;
 import br.com.mrcontador.util.MrContadorUtil;
@@ -32,7 +33,7 @@ public class PlanoContaService {
 
 	private Logger log = LoggerFactory.getLogger(PlanoContaService.class);
 
-	public void save(PlanoConta planoConta) {
+	public void save(PlanoConta planoConta, FileDTO dto) {
 		Parceiro parceiro = null;
 		Optional<Parceiro> oParceiro = findParceiro(planoConta.getCnpjCliente());
 		if (oParceiro.isPresent()) {
@@ -43,7 +44,8 @@ public class PlanoContaService {
 		} else {
 			PessoaJuridica pessoaJuridica = getPessoa(planoConta.getCnpjCliente());
 			parceiro = saveParceiro(pessoaJuridica);
-		}		
+		}
+		dto.setParceiro(parceiro);
 		PlanoContaMapper mapper = new PlanoContaMapper();
 		List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro);
 		contaRepository.saveAll(contas);
@@ -58,6 +60,7 @@ public class PlanoContaService {
 	private Parceiro saveParceiro(PessoaJuridica pessoaJuridica) {
 		ParceiroPJMapper mapper = new ParceiroPJMapper();
 		Parceiro parceiro = mapper.toEntity(pessoaJuridica);
+		parceiro.setEnabled(true);
 		return parceiroRepository.save(parceiro);
 	}
 

@@ -61,6 +61,8 @@ public class CacheConfiguration {
             createCache(cm, br.com.mrcontador.domain.Socio.class.getName());
             createCache(cm, br.com.mrcontador.domain.Parceiro.class.getName() + ".atividades");
             createCache(cm, br.com.mrcontador.domain.Parceiro.class.getName() + ".socios");
+            createCache(cm, br.com.mrcontador.domain.Arquivo.class.getName());
+            createCache(cm, br.com.mrcontador.domain.ArquivoErro.class.getName());
             // jhipster-needle-caffeine-add-entry
         };
     }

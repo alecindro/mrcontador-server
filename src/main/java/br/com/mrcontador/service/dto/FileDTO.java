@@ -2,6 +2,9 @@ package br.com.mrcontador.service.dto;
 
 import java.io.InputStream;
 
+import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.file.TipoDocumento;
+
 public class FileDTO {
 	
 	private byte[] bytes;
@@ -15,6 +18,10 @@ public class FileDTO {
 	private String bucket;
 	private String s3Url;
 	private String s3Dir;
+	private String contador;
+	private String usuario;
+	private Parceiro parceiro;
+	private TipoDocumento tipoDocumento;
 	
 	
 	public byte[] getBytes() {
@@ -83,6 +90,33 @@ public class FileDTO {
 	}
 	public void setS3Dir(String s3Dir) {
 		this.s3Dir = s3Dir;
+	}	
+	
+	public Parceiro getParceiro() {
+		return parceiro;
+	}
+	public void setParceiro(Parceiro parceiro) {
+		this.parceiro = parceiro;
+	}
+	
+	public String getContador() {
+		return contador;
+	}
+	public void setContador(String contador) {
+		this.contador = contador;
+	}
+	public TipoDocumento getTipoDocumento() {
+		return tipoDocumento;
+	}
+	public void setTipoDocumento(TipoDocumento tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+	
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 	@Override
 	public int hashCode() {

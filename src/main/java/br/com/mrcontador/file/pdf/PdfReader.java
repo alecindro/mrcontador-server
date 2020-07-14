@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-import br.com.mrcontador.service.PlanoContaService;
+import br.com.mrcontador.file.dto.PlanoConta;
 
 public interface PdfReader {
 
 	
-	public void process(List<PDDocument> pages, PlanoContaService service) throws IOException;
+	public PlanoConta process(List<PDDocument> pages) throws IOException;
 }

@@ -91,35 +91,35 @@ public class NotafiscalQueryService extends QueryService<Notafiscal> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Notafiscal_.id));
             }
-            if (criteria.getNot_numero() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNot_numero(), Notafiscal_.not_numero));
+            if (criteria.getNotNumero() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNotNumero(), Notafiscal_.notNumero));
             }
-            if (criteria.getNot_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNot_descricao(), Notafiscal_.not_descricao));
+            if (criteria.getNotDescricao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNotDescricao(), Notafiscal_.notDescricao));
             }
-            if (criteria.getNot_cnpj() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNot_cnpj(), Notafiscal_.not_cnpj));
+            if (criteria.getNotCnpj() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNotCnpj(), Notafiscal_.notCnpj));
             }
-            if (criteria.getNot_empresa() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNot_empresa(), Notafiscal_.not_empresa));
+            if (criteria.getNotEmpresa() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNotEmpresa(), Notafiscal_.notEmpresa));
             }
-            if (criteria.getNot_datasaida() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNot_datasaida(), Notafiscal_.not_datasaida));
+            if (criteria.getNotDatasaida() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNotDatasaida(), Notafiscal_.notDatasaida));
             }
-            if (criteria.getNot_valornota() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNot_valornota(), Notafiscal_.not_valornota));
+            if (criteria.getNotValornota() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNotValornota(), Notafiscal_.notValornota));
             }
-            if (criteria.getNot_dataparcela() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNot_dataparcela(), Notafiscal_.not_dataparcela));
+            if (criteria.getNotDataparcela() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNotDataparcela(), Notafiscal_.notDataparcela));
             }
-            if (criteria.getNot_valorparcela() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNot_valorparcela(), Notafiscal_.not_valorparcela));
+            if (criteria.getNotValorparcela() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNotValorparcela(), Notafiscal_.notValorparcela));
             }
-            if (criteria.getTno_codigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getTno_codigo(), Notafiscal_.tno_codigo));
+            if (criteria.getTnoCodigo() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getTnoCodigo(), Notafiscal_.tnoCodigo));
             }
-            if (criteria.getNot_parcela() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNot_parcela(), Notafiscal_.not_parcela));
+            if (criteria.getNotParcela() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNotParcela(), Notafiscal_.notParcela));
             }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),

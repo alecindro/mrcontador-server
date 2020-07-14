@@ -1,18 +1,23 @@
 package br.com.mrcontador.service;
 
-import br.com.mrcontador.domain.Notafiscal;
-import br.com.mrcontador.repository.NotafiscalRepository;
-import br.com.mrcontador.service.dto.NotafiscalDTO;
-import br.com.mrcontador.service.mapper.NotafiscalMapper;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import br.com.mrcontador.domain.Arquivo;
+import br.com.mrcontador.domain.Notafiscal;
+import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.repository.NotafiscalRepository;
+import br.com.mrcontador.service.dto.NotafiscalDTO;
+import br.com.mrcontador.service.mapper.NotafiscalMapper;
+import br.com.mrcontador.service.mapper.NotafiscalNfe310Mapper;
+import br.com.mrcontador.service.mapper.NotafiscalNfe400Mapper;
 
 /**
  * Service Implementation for managing {@link Notafiscal}.
@@ -26,6 +31,8 @@ public class NotafiscalService {
     private final NotafiscalRepository notafiscalRepository;
 
     private final NotafiscalMapper notafiscalMapper;
+    
+
 
     public NotafiscalService(NotafiscalRepository notafiscalRepository, NotafiscalMapper notafiscalMapper) {
         this.notafiscalRepository = notafiscalRepository;
@@ -81,4 +88,18 @@ public class NotafiscalService {
         log.debug("Request to delete Notafiscal : {}", id);
         notafiscalRepository.deleteById(id);
     }
+    
+    public void process(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo) {
+    	NotafiscalNfe400Mapper mapper = new NotafiscalNfe400Mapper();
+    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo);
+    	notafiscalRepository.saveAll(list);
+    	
+    }
+    public void process(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo) {
+    	NotafiscalNfe310Mapper mapper = new NotafiscalNfe310Mapper();
+    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo);
+    	notafiscalRepository.saveAll(list);
+    }
+    
+   
 }

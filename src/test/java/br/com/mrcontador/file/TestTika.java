@@ -1,25 +1,26 @@
 package br.com.mrcontador.file;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.time.LocalDateTime;
 
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.parser.microsoft.OfficeParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import javax.mail.internet.ContentType;
+import javax.mail.internet.ParseException;
 
 public class TestTika {
+	//planoconta_2020-07-11T19%3A01%3A42.709967.pdf
 	
-	
-	public static void main(final String[] args) throws IOException, TikaException, SAXException {
-	      
-	      //detecting the file type
-	      DefaultHandler handler = new BodyContentHandler(-1);
+	public static void main(final String[] args) throws ParseException {
+		LocalDateTime z = LocalDateTime.now();
+		ContentType tupe = new ContentType("application/pdf");
+		tupe.getBaseType();
+		tupe.getPrimaryType();
+		tupe.getSubType();
+		com.google.common.net.MediaType media = com.google.common.net.MediaType.parse("application/pdf");
+		String value = z.getYear()+"_"+z.getMonthValue()+"_"+z.getDayOfMonth()+"_"+z.getHour()+"_"+z.getMinute()+"_"+z.getSecond();
+		System.out.println(value);
+	}
+/*	
+	private void test() throws IOException, SAXException, TikaException {
+		 DefaultHandler handler = new BodyContentHandler(-1);
 	      Metadata metadata = new Metadata();
 	      FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/Plano de Contas - Mercado dassoler.xls"));
 	      ParseContext pcontext = new ParseContext();
@@ -34,5 +35,5 @@ public class TestTika {
 	      for(String name : metadataNames) {
 	         System.out.println(name + ": " + metadata.get(name));
 	      }
-	   }
+	}*/
 }

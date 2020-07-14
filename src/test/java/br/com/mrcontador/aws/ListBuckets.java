@@ -47,14 +47,14 @@ public class ListBuckets {
 	
 	@Test
 	public void upload() {
-		String folder = "C:\\Users\\alecindro.castilho\\Downloads\\Plano de Contas - mercado dassoler.pdf";
+		String folder = "/home/alecindro/Documents/drcontabil/docs/Plano de Contas - mercado dassoler.pdf";
 		File initialFile = new File(folder);
 		Long size = initialFile.length();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
 	   
 		PutObjectResponse response = s3Client.putObject(PutObjectRequest.builder()
-                .bucket(bucketName).key("planoconta/plano_de_contas_mercado_dassoler.pdf")
+                .bucket(bucketName).key("ds_demo/planocontas/6/planoconta_2020_7_11_20_10_10.pdf")
                 .build(),
         RequestBody.fromInputStream(stream, size));
 		System.out.println(response.eTag());

@@ -149,6 +149,10 @@
     {
       "fieldName": "capital_social",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "enabled",
+      "fieldType": "Boolean"
     }
   ],
   "changelogDate": "20200627211010",

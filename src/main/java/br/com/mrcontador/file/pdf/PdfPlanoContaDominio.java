@@ -11,7 +11,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.dto.PlanoConta;
 import br.com.mrcontador.file.dto.PlanoContaDetail;
-import br.com.mrcontador.service.PlanoContaService;
 
 public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 
@@ -32,7 +31,7 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 
 
 	@Override
-	public void process(List<PDDocument> pages,PlanoContaService service) throws IOException {
+	public PlanoConta process(List<PDDocument> pages) throws IOException {
 		if(pages.isEmpty()) {
 			throw new FileException("error.pdf.empty");
 		}
@@ -56,7 +55,7 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 			}
 			parseBody(lines);
 		}
-		service.save(planoConta);
+		return planoConta;
 		
 		
 	}

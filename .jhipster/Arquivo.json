@@ -1,0 +1,61 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "arquivo"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nomeOriginal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dataCadastro",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "tipoArquivo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoDoc",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "s3Url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "s3Dir",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tamanho",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "etag",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20200711150918",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "arquivo",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

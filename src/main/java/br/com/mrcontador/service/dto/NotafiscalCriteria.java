@@ -2,15 +2,14 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import io.github.jhipster.service.Criteria;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
+import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
@@ -28,25 +27,25 @@ public class NotafiscalCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private IntegerFilter not_numero;
+    private StringFilter notNumero;
 
-    private StringFilter not_descricao;
+    private StringFilter notDescricao;
 
-    private StringFilter not_cnpj;
+    private StringFilter notCnpj;
 
-    private StringFilter not_empresa;
+    private StringFilter notEmpresa;
 
-    private ZonedDateTimeFilter not_datasaida;
+    private ZonedDateTimeFilter notDatasaida;
 
-    private BigDecimalFilter not_valornota;
+    private BigDecimalFilter notValornota;
 
-    private ZonedDateTimeFilter not_dataparcela;
+    private LocalDateFilter notDataparcela;
 
-    private BigDecimalFilter not_valorparcela;
+    private BigDecimalFilter notValorparcela;
 
-    private IntegerFilter tno_codigo;
+    private IntegerFilter tnoCodigo;
 
-    private StringFilter not_parcela;
+    private StringFilter notParcela;
 
     private LongFilter parceiroId;
 
@@ -55,16 +54,16 @@ public class NotafiscalCriteria implements Serializable, Criteria {
 
     public NotafiscalCriteria(NotafiscalCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.not_numero = other.not_numero == null ? null : other.not_numero.copy();
-        this.not_descricao = other.not_descricao == null ? null : other.not_descricao.copy();
-        this.not_cnpj = other.not_cnpj == null ? null : other.not_cnpj.copy();
-        this.not_empresa = other.not_empresa == null ? null : other.not_empresa.copy();
-        this.not_datasaida = other.not_datasaida == null ? null : other.not_datasaida.copy();
-        this.not_valornota = other.not_valornota == null ? null : other.not_valornota.copy();
-        this.not_dataparcela = other.not_dataparcela == null ? null : other.not_dataparcela.copy();
-        this.not_valorparcela = other.not_valorparcela == null ? null : other.not_valorparcela.copy();
-        this.tno_codigo = other.tno_codigo == null ? null : other.tno_codigo.copy();
-        this.not_parcela = other.not_parcela == null ? null : other.not_parcela.copy();
+        this.notNumero = other.notNumero == null ? null : other.notNumero.copy();
+        this.notDescricao = other.notDescricao == null ? null : other.notDescricao.copy();
+        this.notCnpj = other.notCnpj == null ? null : other.notCnpj.copy();
+        this.notEmpresa = other.notEmpresa == null ? null : other.notEmpresa.copy();
+        this.notDatasaida = other.notDatasaida == null ? null : other.notDatasaida.copy();
+        this.notValornota = other.notValornota == null ? null : other.notValornota.copy();
+        this.notDataparcela = other.notDataparcela == null ? null : other.notDataparcela.copy();
+        this.notValorparcela = other.notValorparcela == null ? null : other.notValorparcela.copy();
+        this.tnoCodigo = other.tnoCodigo == null ? null : other.tnoCodigo.copy();
+        this.notParcela = other.notParcela == null ? null : other.notParcela.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
     }
 
@@ -73,104 +72,106 @@ public class NotafiscalCriteria implements Serializable, Criteria {
         return new NotafiscalCriteria(this);
     }
 
+
+
+
     public LongFilter getId() {
-        return id;
-    }
+		return id;
+	}
 
-    public void setId(LongFilter id) {
-        this.id = id;
-    }
+	public void setId(LongFilter id) {
+		this.id = id;
+	}
 
-    public IntegerFilter getNot_numero() {
-        return not_numero;
-    }
+	public StringFilter getNotNumero() {
+		return notNumero;
+	}
 
-    public void setNot_numero(IntegerFilter not_numero) {
-        this.not_numero = not_numero;
-    }
+	public void setNotNumero(StringFilter notNumero) {
+		this.notNumero = notNumero;
+	}
 
-    public StringFilter getNot_descricao() {
-        return not_descricao;
-    }
+	public StringFilter getNotDescricao() {
+		return notDescricao;
+	}
 
-    public void setNot_descricao(StringFilter not_descricao) {
-        this.not_descricao = not_descricao;
-    }
+	public void setNotDescricao(StringFilter notDescricao) {
+		this.notDescricao = notDescricao;
+	}
 
-    public StringFilter getNot_cnpj() {
-        return not_cnpj;
-    }
+	public StringFilter getNotCnpj() {
+		return notCnpj;
+	}
 
-    public void setNot_cnpj(StringFilter not_cnpj) {
-        this.not_cnpj = not_cnpj;
-    }
+	public void setNotCnpj(StringFilter notCnpj) {
+		this.notCnpj = notCnpj;
+	}
 
-    public StringFilter getNot_empresa() {
-        return not_empresa;
-    }
+	public StringFilter getNotEmpresa() {
+		return notEmpresa;
+	}
 
-    public void setNot_empresa(StringFilter not_empresa) {
-        this.not_empresa = not_empresa;
-    }
+	public void setNotEmpresa(StringFilter notEmpresa) {
+		this.notEmpresa = notEmpresa;
+	}
 
-    public ZonedDateTimeFilter getNot_datasaida() {
-        return not_datasaida;
-    }
+	public ZonedDateTimeFilter getNotDatasaida() {
+		return notDatasaida;
+	}
 
-    public void setNot_datasaida(ZonedDateTimeFilter not_datasaida) {
-        this.not_datasaida = not_datasaida;
-    }
+	public void setNotDatasaida(ZonedDateTimeFilter notDatasaida) {
+		this.notDatasaida = notDatasaida;
+	}
 
-    public BigDecimalFilter getNot_valornota() {
-        return not_valornota;
-    }
+	public BigDecimalFilter getNotValornota() {
+		return notValornota;
+	}
 
-    public void setNot_valornota(BigDecimalFilter not_valornota) {
-        this.not_valornota = not_valornota;
-    }
+	public void setNotValornota(BigDecimalFilter notValornota) {
+		this.notValornota = notValornota;
+	}
 
-    public ZonedDateTimeFilter getNot_dataparcela() {
-        return not_dataparcela;
-    }
+	public LocalDateFilter getNotDataparcela() {
+		return notDataparcela;
+	}
 
-    public void setNot_dataparcela(ZonedDateTimeFilter not_dataparcela) {
-        this.not_dataparcela = not_dataparcela;
-    }
+	public void setNotDataparcela(LocalDateFilter notDataparcela) {
+		this.notDataparcela = notDataparcela;
+	}
 
-    public BigDecimalFilter getNot_valorparcela() {
-        return not_valorparcela;
-    }
+	public BigDecimalFilter getNotValorparcela() {
+		return notValorparcela;
+	}
 
-    public void setNot_valorparcela(BigDecimalFilter not_valorparcela) {
-        this.not_valorparcela = not_valorparcela;
-    }
+	public void setNotValorparcela(BigDecimalFilter notValorparcela) {
+		this.notValorparcela = notValorparcela;
+	}
 
-    public IntegerFilter getTno_codigo() {
-        return tno_codigo;
-    }
+	public IntegerFilter getTnoCodigo() {
+		return tnoCodigo;
+	}
 
-    public void setTno_codigo(IntegerFilter tno_codigo) {
-        this.tno_codigo = tno_codigo;
-    }
+	public void setTnoCodigo(IntegerFilter tnoCodigo) {
+		this.tnoCodigo = tnoCodigo;
+	}
 
-    public StringFilter getNot_parcela() {
-        return not_parcela;
-    }
+	public StringFilter getNotParcela() {
+		return notParcela;
+	}
 
-    public void setNot_parcela(StringFilter not_parcela) {
-        this.not_parcela = not_parcela;
-    }
+	public void setNotParcela(StringFilter notParcela) {
+		this.notParcela = notParcela;
+	}
 
-    public LongFilter getParceiroId() {
-        return parceiroId;
-    }
+	public LongFilter getParceiroId() {
+		return parceiroId;
+	}
 
-    public void setParceiroId(LongFilter parceiroId) {
-        this.parceiroId = parceiroId;
-    }
+	public void setParceiroId(LongFilter parceiroId) {
+		this.parceiroId = parceiroId;
+	}
 
-
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -181,16 +182,16 @@ public class NotafiscalCriteria implements Serializable, Criteria {
         final NotafiscalCriteria that = (NotafiscalCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(not_numero, that.not_numero) &&
-            Objects.equals(not_descricao, that.not_descricao) &&
-            Objects.equals(not_cnpj, that.not_cnpj) &&
-            Objects.equals(not_empresa, that.not_empresa) &&
-            Objects.equals(not_datasaida, that.not_datasaida) &&
-            Objects.equals(not_valornota, that.not_valornota) &&
-            Objects.equals(not_dataparcela, that.not_dataparcela) &&
-            Objects.equals(not_valorparcela, that.not_valorparcela) &&
-            Objects.equals(tno_codigo, that.tno_codigo) &&
-            Objects.equals(not_parcela, that.not_parcela) &&
+            Objects.equals(notNumero, that.notNumero) &&
+            Objects.equals(notDescricao, that.notDescricao) &&
+            Objects.equals(notCnpj, that.notCnpj) &&
+            Objects.equals(notEmpresa, that.notEmpresa) &&
+            Objects.equals(notDatasaida, that.notDatasaida) &&
+            Objects.equals(notValornota, that.notValornota) &&
+            Objects.equals(notDataparcela, that.notDataparcela) &&
+            Objects.equals(notValorparcela, that.notValorparcela) &&
+            Objects.equals(tnoCodigo, that.tnoCodigo) &&
+            Objects.equals(notParcela, that.notParcela) &&
             Objects.equals(parceiroId, that.parceiroId);
     }
 
@@ -198,16 +199,16 @@ public class NotafiscalCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
         id,
-        not_numero,
-        not_descricao,
-        not_cnpj,
-        not_empresa,
-        not_datasaida,
-        not_valornota,
-        not_dataparcela,
-        not_valorparcela,
-        tno_codigo,
-        not_parcela,
+        notNumero,
+        notDescricao,
+        notCnpj,
+        notEmpresa,
+        notDatasaida,
+        notValornota,
+        notDataparcela,
+        notValorparcela,
+        tnoCodigo,
+        notParcela,
         parceiroId
         );
     }
@@ -217,16 +218,16 @@ public class NotafiscalCriteria implements Serializable, Criteria {
     public String toString() {
         return "NotafiscalCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (not_numero != null ? "not_numero=" + not_numero + ", " : "") +
-                (not_descricao != null ? "not_descricao=" + not_descricao + ", " : "") +
-                (not_cnpj != null ? "not_cnpj=" + not_cnpj + ", " : "") +
-                (not_empresa != null ? "not_empresa=" + not_empresa + ", " : "") +
-                (not_datasaida != null ? "not_datasaida=" + not_datasaida + ", " : "") +
-                (not_valornota != null ? "not_valornota=" + not_valornota + ", " : "") +
-                (not_dataparcela != null ? "not_dataparcela=" + not_dataparcela + ", " : "") +
-                (not_valorparcela != null ? "not_valorparcela=" + not_valorparcela + ", " : "") +
-                (tno_codigo != null ? "tno_codigo=" + tno_codigo + ", " : "") +
-                (not_parcela != null ? "not_parcela=" + not_parcela + ", " : "") +
+                (notNumero != null ? "not_numero=" + notNumero + ", " : "") +
+                (notDescricao != null ? "not_descricao=" + notDescricao + ", " : "") +
+                (notCnpj != null ? "not_cnpj=" + notCnpj + ", " : "") +
+                (notEmpresa != null ? "not_empresa=" + notEmpresa + ", " : "") +
+                (notDatasaida != null ? "not_datasaida=" + notDatasaida + ", " : "") +
+                (notValornota != null ? "not_valornota=" + notValornota + ", " : "") +
+                (notDataparcela != null ? "not_dataparcela=" + notDataparcela + ", " : "") +
+                (notValorparcela != null ? "not_valorparcela=" + notValorparcela + ", " : "") +
+                (tnoCodigo != null ? "tno_codigo=" + tnoCodigo + ", " : "") +
+                (notParcela != null ? "not_parcela=" + notParcela + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
             "}";
     }

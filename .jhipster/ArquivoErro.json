@@ -1,0 +1,52 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "nome",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nomeOriginal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoArquivo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "s3Url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "s3Dir",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dataCadastro",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "usuario",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "contador",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tamanho",
+      "fieldType": "Long"
+    }
+  ],
+  "changelogDate": "20200711152545",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "arquivo_erro",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

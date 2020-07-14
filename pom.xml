@@ -23,7 +23,7 @@
 	<properties>
 		<!-- Build properties -->
 		<maven.version>3.3.9</maven.version>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
@@ -85,6 +85,7 @@
 		<junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
 		<tika.version>1.24.1</tika.version>
 		<awssdk-s3.version>2.13.52</awssdk-s3.version>
+		<nfe.version>3.0.13-SNAPSHOT</nfe.version>
 		<!-- jhipster-needle-maven-property -->
 	</properties>
 
@@ -341,7 +342,11 @@
     <artifactId>s3</artifactId>
     <version>${awssdk-s3.version}</version>
 </dependency>
-
+<dependency>
+  <groupId>com.github.wmixvideo</groupId>
+  <artifactId>nfe</artifactId>
+  <version>${nfe.version}</version>
+</dependency>
 		<!-- jhipster-needle-maven-add-dependency -->
 	</dependencies>
 

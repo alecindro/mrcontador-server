@@ -1,15 +1,23 @@
 package br.com.mrcontador.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Notafiscal.
@@ -26,39 +34,44 @@ public class Notafiscal implements Serializable {
     private Long id;
 
     @Column(name = "not_numero")
-    private Integer not_numero;
+    private String notNumero;
 
     @Column(name = "not_descricao", length = 50)
-    private String not_descricao;
+    private String notDescricao;
 
     @Column(name = "not_cnpj", length = 20)
-    private String not_cnpj;
+    private String notCnpj;
 
     @Column(name = "not_empresa", length = 60)
-    private String not_empresa;
+    private String notEmpresa;
 
     @Column(name = "not_datasaida")
-    private ZonedDateTime not_datasaida;
+    private ZonedDateTime notDatasaida;
 
     @Column(name = "not_valornota", precision = 21, scale = 2)
-    private BigDecimal not_valornota;
+    private BigDecimal notValornota;
 
     @Column(name = "not_dataparcela")
-    private ZonedDateTime not_dataparcela;
+    private LocalDate notDataparcela;
 
     @Column(name = "not_valorparcela", precision = 21, scale = 2)
-    private BigDecimal not_valorparcela;
+    private BigDecimal notValorparcela;
 
     @Column(name = "tno_codigo")
-    private Integer tno_codigo;
+    private Integer tnoCodigo;
 
     @Column(name = "not_parcela", length = 10)
-    private String not_parcela;
+    private String notParcela;
 
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "notafiscals", allowSetters = true)
     private Parceiro parceiro;
+    
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "notas", allowSetters = true)
+    private Arquivo arquivo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -69,136 +82,63 @@ public class Notafiscal implements Serializable {
         this.id = id;
     }
 
-    public Integer getNot_numero() {
-        return not_numero;
+    public String getNotNumero() {
+        return notNumero;
     }
 
-    public Notafiscal not_numero(Integer not_numero) {
-        this.not_numero = not_numero;
+    public Notafiscal notNumero(String notNumero) {
+        this.notNumero = notNumero;
         return this;
     }
 
-    public void setNot_numero(Integer not_numero) {
-        this.not_numero = not_numero;
-    }
-
-    public String getNot_descricao() {
-        return not_descricao;
-    }
-
-    public Notafiscal not_descricao(String not_descricao) {
-        this.not_descricao = not_descricao;
+    public Notafiscal notDescricao(String notDescricao) {
+        this.notDescricao = notDescricao;
         return this;
     }
 
-    public void setNot_descricao(String not_descricao) {
-        this.not_descricao = not_descricao;
-    }
 
-    public String getNot_cnpj() {
-        return not_cnpj;
-    }
-
-    public Notafiscal not_cnpj(String not_cnpj) {
-        this.not_cnpj = not_cnpj;
+    public Notafiscal notCnpj(String notCnpj) {
+        this.notCnpj = notCnpj;
         return this;
     }
 
-    public void setNot_cnpj(String not_cnpj) {
-        this.not_cnpj = not_cnpj;
-    }
-
-    public String getNot_empresa() {
-        return not_empresa;
-    }
-
-    public Notafiscal not_empresa(String not_empresa) {
-        this.not_empresa = not_empresa;
+    public Notafiscal notEmpresa(String notEmpresa) {
+        this.notEmpresa = notEmpresa;
         return this;
     }
 
-    public void setNot_empresa(String not_empresa) {
-        this.not_empresa = not_empresa;
-    }
-
-    public ZonedDateTime getNot_datasaida() {
-        return not_datasaida;
-    }
-
-    public Notafiscal not_datasaida(ZonedDateTime not_datasaida) {
-        this.not_datasaida = not_datasaida;
+    public Notafiscal notDatasaida(ZonedDateTime notDatasaida) {
+        this.notDatasaida = notDatasaida;
         return this;
     }
 
-    public void setNot_datasaida(ZonedDateTime not_datasaida) {
-        this.not_datasaida = not_datasaida;
+    public void setNotDatasaida(ZonedDateTime notDatasaida) {
+        this.notDatasaida = notDatasaida;
     }
 
-    public BigDecimal getNot_valornota() {
-        return not_valornota;
-    }
-
-    public Notafiscal not_valornota(BigDecimal not_valornota) {
-        this.not_valornota = not_valornota;
+    public Notafiscal notValornota(BigDecimal notValornota) {
+        this.notValornota = notValornota;
         return this;
     }
 
-    public void setNot_valornota(BigDecimal not_valornota) {
-        this.not_valornota = not_valornota;
-    }
-
-    public ZonedDateTime getNot_dataparcela() {
-        return not_dataparcela;
-    }
-
-    public Notafiscal not_dataparcela(ZonedDateTime not_dataparcela) {
-        this.not_dataparcela = not_dataparcela;
+    public Notafiscal notDataparcela(LocalDate notDataparcela) {
+        this.notDataparcela = notDataparcela;
         return this;
     }
 
-    public void setNot_dataparcela(ZonedDateTime not_dataparcela) {
-        this.not_dataparcela = not_dataparcela;
+    public Notafiscal notValorparcela(BigDecimal notValorparcela) {
+        this.notValorparcela = notValorparcela;
+        return this;
     }
-
-    public BigDecimal getNot_valorparcela() {
-        return not_valorparcela;
-    }
-
-    public Notafiscal not_valorparcela(BigDecimal not_valorparcela) {
-        this.not_valorparcela = not_valorparcela;
+    public Notafiscal tnoCodigo(Integer tnoCodigo) {
+        this.tnoCodigo = tnoCodigo;
         return this;
     }
 
-    public void setNot_valorparcela(BigDecimal not_valorparcela) {
-        this.not_valorparcela = not_valorparcela;
-    }
-
-    public Integer getTno_codigo() {
-        return tno_codigo;
-    }
-
-    public Notafiscal tno_codigo(Integer tno_codigo) {
-        this.tno_codigo = tno_codigo;
+    public Notafiscal notParcela(String notParcela) {
+        this.notParcela = notParcela;
         return this;
     }
-
-    public void setTno_codigo(Integer tno_codigo) {
-        this.tno_codigo = tno_codigo;
-    }
-
-    public String getNot_parcela() {
-        return not_parcela;
-    }
-
-    public Notafiscal not_parcela(String not_parcela) {
-        this.not_parcela = not_parcela;
-        return this;
-    }
-
-    public void setNot_parcela(String not_parcela) {
-        this.not_parcela = not_parcela;
-    }
-
     public Parceiro getParceiro() {
         return parceiro;
     }
@@ -211,9 +151,93 @@ public class Notafiscal implements Serializable {
     public void setParceiro(Parceiro parceiro) {
         this.parceiro = parceiro;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+  
+    public String getNotDescricao() {
+		return notDescricao;
+	}
 
-    @Override
+	public void setNotDescricao(String notDescricao) {
+		this.notDescricao = notDescricao;
+	}
+
+	public String getNotCnpj() {
+		return notCnpj;
+	}
+
+	public void setNotCnpj(String notCnpj) {
+		this.notCnpj = notCnpj;
+	}
+
+	public String getNotEmpresa() {
+		return notEmpresa;
+	}
+
+	public void setNotEmpresa(String notEmpresa) {
+		this.notEmpresa = notEmpresa;
+	}
+
+	public BigDecimal getNotValornota() {
+		return notValornota;
+	}
+
+	public void setNotValornota(BigDecimal notValornota) {
+		this.notValornota = notValornota;
+	}
+
+	public LocalDate getNotDataparcela() {
+		return notDataparcela;
+	}
+
+	public void setNotDataparcela(LocalDate notDataparcela) {
+		this.notDataparcela = notDataparcela;
+	}
+
+	public BigDecimal getNotValorparcela() {
+		return notValorparcela;
+	}
+
+	public void setNotValorparcela(BigDecimal notValorparcela) {
+		this.notValorparcela = notValorparcela;
+	}
+
+	public Integer getTnoCodigo() {
+		return tnoCodigo;
+	}
+
+	public void setTnoCodigo(Integer tnoCodigo) {
+		this.tnoCodigo = tnoCodigo;
+	}
+
+	public String getNotParcela() {
+		return notParcela;
+	}
+
+	public void setNotParcela(String notParcela) {
+		this.notParcela = notParcela;
+	}
+
+	public ZonedDateTime getNotDatasaida() {
+		return notDatasaida;
+	}
+
+	public void setNotNumero(String notNumero) {
+		this.notNumero = notNumero;
+	}
+	
+	public Arquivo getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(Arquivo arquivo) {
+		this.arquivo = arquivo;
+	}
+	
+	  // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+
+	
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -229,21 +253,14 @@ public class Notafiscal implements Serializable {
         return 31;
     }
 
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "Notafiscal{" +
-            "id=" + getId() +
-            ", not_numero=" + getNot_numero() +
-            ", not_descricao='" + getNot_descricao() + "'" +
-            ", not_cnpj='" + getNot_cnpj() + "'" +
-            ", not_empresa='" + getNot_empresa() + "'" +
-            ", not_datasaida='" + getNot_datasaida() + "'" +
-            ", not_valornota=" + getNot_valornota() +
-            ", not_dataparcela='" + getNot_dataparcela() + "'" +
-            ", not_valorparcela=" + getNot_valorparcela() +
-            ", tno_codigo=" + getTno_codigo() +
-            ", not_parcela='" + getNot_parcela() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "Notafiscal [id=" + id + ", notNumero=" + notNumero + ", notDescricao=" + notDescricao + ", notCnpj="
+				+ notCnpj + ", notEmpresa=" + notEmpresa + ", notDatasaida=" + notDatasaida + ", notValornota="
+				+ notValornota + ", notDataparcela=" + notDataparcela + ", notValorparcela=" + notValorparcela
+				+ ", tnoCodigo=" + tnoCodigo + ", notParcela=" + notParcela + ", parceiro=" + parceiro + "]";
+	}
+    
+    
+
 }

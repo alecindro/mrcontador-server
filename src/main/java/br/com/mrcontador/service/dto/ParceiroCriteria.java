@@ -87,6 +87,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
 
     private StringFilter capital_social;
 
+    private BooleanFilter enabled;
+
     private LongFilter atividadeId;
 
     private LongFilter socioId;
@@ -126,6 +128,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
         this.situacao_especial = other.situacao_especial == null ? null : other.situacao_especial.copy();
         this.data_situacao_especial = other.data_situacao_especial == null ? null : other.data_situacao_especial.copy();
         this.capital_social = other.capital_social == null ? null : other.capital_social.copy();
+        this.enabled = other.enabled == null ? null : other.enabled.copy();
         this.atividadeId = other.atividadeId == null ? null : other.atividadeId.copy();
         this.socioId = other.socioId == null ? null : other.socioId.copy();
     }
@@ -383,6 +386,14 @@ public class ParceiroCriteria implements Serializable, Criteria {
         this.capital_social = capital_social;
     }
 
+    public BooleanFilter getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(BooleanFilter enabled) {
+        this.enabled = enabled;
+    }
+
     public LongFilter getAtividadeId() {
         return atividadeId;
     }
@@ -441,6 +452,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
             Objects.equals(situacao_especial, that.situacao_especial) &&
             Objects.equals(data_situacao_especial, that.data_situacao_especial) &&
             Objects.equals(capital_social, that.capital_social) &&
+            Objects.equals(enabled, that.enabled) &&
             Objects.equals(atividadeId, that.atividadeId) &&
             Objects.equals(socioId, that.socioId);
     }
@@ -479,6 +491,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
         situacao_especial,
         data_situacao_especial,
         capital_social,
+        enabled,
         atividadeId,
         socioId
         );
@@ -519,6 +532,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
                 (situacao_especial != null ? "situacao_especial=" + situacao_especial + ", " : "") +
                 (data_situacao_especial != null ? "data_situacao_especial=" + data_situacao_especial + ", " : "") +
                 (capital_social != null ? "capital_social=" + capital_social + ", " : "") +
+                (enabled != null ? "enabled=" + enabled + ", " : "") +
                 (atividadeId != null ? "atividadeId=" + atividadeId + ", " : "") +
                 (socioId != null ? "socioId=" + socioId + ", " : "") +
             "}";

@@ -38,8 +38,8 @@ spring:
   datasource:
     platform: postgres
     type: com.zaxxer.hikari.HikariDataSource
-    #url: jdbc:postgresql://192.168.10.4:5432/mrcontador
-    url: jdbc:postgresql://localhost:5432/mrcontador
+    url: jdbc:postgresql://192.168.10.6:5432/mrcontador
+    #url: jdbc:postgresql://localhost:5432/mrcontador
     username: postgres
     password: banana2018!
     driverClassName: org.postgresql.Driver
@@ -63,7 +63,7 @@ spring:
       hibernate.generate_statistics: false
       hibernate.show_sql: true
       hibernate.format_sql: true
-      hibernate.hbm2ddl.auto: none      
+      hibernate.hbm2ddl.auto: none
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
@@ -131,3 +131,10 @@ jhipster:
 client:
   cnpj:
     url: https://www.receitaws.com.br/v1/cnpj/{0}
+s3:
+  bucketName: mrcontador-files
+  planoContaFolder: '{0}/{1}/planocontas'
+  notaFolder: '{0}/{1}/notas'
+  errorFolder: mrcontador/error
+  comprovanteFolder: '{0}/{1}/comprovantes'
+  urlS3: https://mrcontador-files.s3.amazonaws.com

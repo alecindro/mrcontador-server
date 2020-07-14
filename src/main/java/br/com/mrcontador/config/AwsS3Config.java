@@ -14,6 +14,7 @@ public class AwsS3Config {
 	public S3Client s3Client() {
 		SystemPropertyCredentialsProvider credentials = SystemPropertyCredentialsProvider.create();
 		S3Client client = S3Client.builder().credentialsProvider(credentials).region(Region.US_EAST_1).build();
+		
 		return client;
 	}
 

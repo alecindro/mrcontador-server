@@ -38,8 +38,7 @@ public class Parceiro implements Serializable {
     private String parTipopessoa;
 
     @Size(max = 20)
-    @NotNull
-    @Column(name = "par_cnpjcpf", length = 20, unique = true)
+    @Column(name = "par_cnpjcpf", length = 20)
     private String parCnpjcpf;
 
     @Size(max = 20)
@@ -70,7 +69,7 @@ public class Parceiro implements Serializable {
     private String estado;
 
     @Column(name = "area_atuacao")
-    private String areAtuacao;
+    private String areaAtuacao;
 
     @Column(name = "numero")
     private String numero;
@@ -123,11 +122,14 @@ public class Parceiro implements Serializable {
     @Column(name = "capital_social")
     private String capitalSocial;
 
-    @OneToMany(mappedBy = "parceiro")
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Atividade> atividades = new HashSet<>();
 
-    @OneToMany(mappedBy = "parceiro")
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Socio> socios = new HashSet<>();
 
@@ -140,34 +142,17 @@ public class Parceiro implements Serializable {
         this.id = id;
     }
 
-    public String getParDescricao() {
-        return parDescricao;
-    }
+    
 
     public Parceiro parDescricao(String parDescricao) {
         this.parDescricao = parDescricao;
         return this;
     }
 
-    public void setParDescricao(String parDescricao) {
-        this.parDescricao = parDescricao;
-    }
-
-    public String getParRazaosocial() {
-        return parRazaosocial;
-    }
-
+    
     public Parceiro parRazaosocial(String parRazaosocial) {
         this.parRazaosocial = parRazaosocial;
         return this;
-    }
-
-    public void setParRazaosocial(String parRazaosocial) {
-        this.parRazaosocial = parRazaosocial;
-    }
-
-    public String getParTipopessoa() {
-        return parTipopessoa;
     }
 
     public Parceiro parTipopessoa(String parTipopessoa) {
@@ -175,31 +160,36 @@ public class Parceiro implements Serializable {
         return this;
     }
 
+
     public Parceiro parCnpjcpf(String parCnpjcpf) {
         this.parCnpjcpf = parCnpjcpf;
         return this;
     }
+
 
     public Parceiro parRgie(String parRgie) {
         this.parRgie = parRgie;
         return this;
     }
 
+
     public Parceiro parObs(String parObs) {
         this.parObs = parObs;
         return this;
     }
+
 
     public Parceiro parDatacadastro(ZonedDateTime parDatacadastro) {
         this.parDatacadastro = parDatacadastro;
         return this;
     }
 
-    
+
     public Parceiro spaCodigo(Integer spaCodigo) {
         this.spaCodigo = spaCodigo;
         return this;
     }
+
 
     public String getLogradouro() {
         return logradouro;
@@ -253,9 +243,13 @@ public class Parceiro implements Serializable {
         this.estado = estado;
     }
 
-       public Parceiro areAtuacao(String areAtuacao) {
-        this.areAtuacao = areAtuacao;
+    public Parceiro areaAtuacao(String areaAtuacao) {
+        this.areaAtuacao = areaAtuacao;
         return this;
+    }
+
+    public void setAreaAtuacao(String areaAtuacao) {
+        this.areaAtuacao = areaAtuacao;
     }
 
     public String getNumero() {
@@ -310,13 +304,13 @@ public class Parceiro implements Serializable {
         this.abertura = abertura;
     }
 
-
+    
     public Parceiro naturezaJuridica(String naturezaJuridica) {
         this.naturezaJuridica = naturezaJuridica;
         return this;
     }
 
-
+    
     public String getUltimaAtualizacao() {
         return ultimaAtualizacao;
     }
@@ -400,6 +394,10 @@ public class Parceiro implements Serializable {
         return this;
     }
 
+    public void setDataSituacao(String dataSituacao) {
+        this.dataSituacao = dataSituacao;
+    }
+
     public String getEfr() {
         return efr;
     }
@@ -427,22 +425,35 @@ public class Parceiro implements Serializable {
         return this;
     }
 
+    
     public Parceiro dataSituacaoEspecial(String dataSituacaoEspecial) {
         this.dataSituacaoEspecial = dataSituacaoEspecial;
         return this;
     }
 
-  
     public Parceiro capitalSocial(String capitalSocial) {
         this.capitalSocial = capitalSocial;
         return this;
     }
 
-  
+    public void setCapitalSocial(String capitalSocial) {
+        this.capitalSocial = capitalSocial;
+    }
+
+    public Boolean isEnabled() {
+        return enabled;
+    }
+
+    public Parceiro enabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Set<Atividade> getAtividades() {
-    	if(atividades == null) {
-    		atividades = new HashSet<>();
-    	}
         return atividades;
     }
 
@@ -468,9 +479,6 @@ public class Parceiro implements Serializable {
     }
 
     public Set<Socio> getSocios() {
-    	if(socios == null) {
-    		socios = new HashSet<>();
-    	}
         return socios;
     }
 
@@ -498,7 +506,31 @@ public class Parceiro implements Serializable {
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    public String getParCnpjcpf() {
+    public String getParDescricao() {
+		return parDescricao;
+	}
+
+	public void setParDescricao(String parDescricao) {
+		this.parDescricao = parDescricao;
+	}
+
+	public String getParRazaosocial() {
+		return parRazaosocial;
+	}
+
+	public void setParRazaosocial(String parRazaosocial) {
+		this.parRazaosocial = parRazaosocial;
+	}
+
+	public String getParTipopessoa() {
+		return parTipopessoa;
+	}
+
+	public void setParTipopessoa(String parTipopessoa) {
+		this.parTipopessoa = parTipopessoa;
+	}
+
+	public String getParCnpjcpf() {
 		return parCnpjcpf;
 	}
 
@@ -538,28 +570,12 @@ public class Parceiro implements Serializable {
 		this.spaCodigo = spaCodigo;
 	}
 
-	public String getAreAtuacao() {
-		return areAtuacao;
-	}
-
-	public void setAreAtuacao(String areAtuacao) {
-		this.areAtuacao = areAtuacao;
-	}
-
 	public String getNaturezaJuridica() {
 		return naturezaJuridica;
 	}
 
 	public void setNaturezaJuridica(String naturezaJuridica) {
 		this.naturezaJuridica = naturezaJuridica;
-	}
-
-	public String getDataSituacao() {
-		return dataSituacao;
-	}
-
-	public void setDataSituacao(String dataSituacao) {
-		this.dataSituacao = dataSituacao;
 	}
 
 	public String getSituacaoEspecial() {
@@ -578,16 +594,20 @@ public class Parceiro implements Serializable {
 		this.dataSituacaoEspecial = dataSituacaoEspecial;
 	}
 
+	public String getAreaAtuacao() {
+		return areaAtuacao;
+	}
+
+	public String getDataSituacao() {
+		return dataSituacao;
+	}
+
 	public String getCapitalSocial() {
 		return capitalSocial;
 	}
 
-	public void setCapitalSocial(String capitalSocial) {
-		this.capitalSocial = capitalSocial;
-	}
-
-	public void setParTipopessoa(String parTipopessoa) {
-		this.parTipopessoa = parTipopessoa;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
 	public void setMotivoSituacao(String motivoSituacao) {
@@ -616,15 +636,16 @@ public class Parceiro implements Serializable {
 				+ ", parTipopessoa=" + parTipopessoa + ", parCnpjcpf=" + parCnpjcpf + ", parRgie=" + parRgie
 				+ ", parObs=" + parObs + ", parDatacadastro=" + parDatacadastro + ", spaCodigo=" + spaCodigo
 				+ ", logradouro=" + logradouro + ", cep=" + cep + ", cidade=" + cidade + ", estado=" + estado
-				+ ", areAtuacao=" + areAtuacao + ", numero=" + numero + ", bairro=" + bairro + ", porte=" + porte
+				+ ", areaAtuacao=" + areaAtuacao + ", numero=" + numero + ", bairro=" + bairro + ", porte=" + porte
 				+ ", abertura=" + abertura + ", naturezaJuridica=" + naturezaJuridica + ", ultimaAtualizacao="
 				+ ultimaAtualizacao + ", status=" + status + ", tipo=" + tipo + ", complemento=" + complemento
 				+ ", email=" + email + ", telefone=" + telefone + ", dataSituacao=" + dataSituacao + ", efr=" + efr
 				+ ", motivoSituacao=" + motivoSituacao + ", situacaoEspecial=" + situacaoEspecial
-				+ ", dataSituacaoEspecial=" + dataSituacaoEspecial + ", capitalSocial=" + capitalSocial
-				+ ", atividades=" + atividades + ", socios=" + socios + "]";
+				+ ", dataSituacaoEspecial=" + dataSituacaoEspecial + ", capitalSocial=" + capitalSocial + ", enabled="
+				+ enabled + ", atividades=" + atividades + ", socios=" + socios + "]";
 	}
     
     
 
-  }
+    
+}

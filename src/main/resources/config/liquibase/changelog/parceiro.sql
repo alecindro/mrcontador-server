@@ -34,7 +34,8 @@ CREATE TABLE ${schema}.parceiro (
 	situacao_especial varchar(255) NULL,
 	data_situacao_especial varchar(25) NULL,
     capital_social varchar(255) NULL,
-    outras varchar(255) NULL,	
+    outras varchar(255) NULL,
+    enabled bool NOT NULL DEFAULT true,	
 	CONSTRAINT parceiro_pkey PRIMARY KEY (id)
 );
 CREATE INDEX fki_parceiro_razao ON ${schema}.parceiro USING btree (par_razaosocial);

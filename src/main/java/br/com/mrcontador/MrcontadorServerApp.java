@@ -1,7 +1,7 @@
 package br.com.mrcontador;
 
 import br.com.mrcontador.config.ApplicationProperties;
-
+import br.com.mrcontador.config.S3Properties;
 import io.github.jhipster.config.DefaultProfileUtil;
 import io.github.jhipster.config.JHipsterConstants;
 
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication
-@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
+@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class, S3Properties.class})
 public class MrcontadorServerApp {
 
     private static final Logger log = LoggerFactory.getLogger(MrcontadorServerApp.class);

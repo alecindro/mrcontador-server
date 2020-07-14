@@ -12,8 +12,6 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {})
 public interface ComprovanteMapper extends EntityMapper<ComprovanteDTO, Comprovante> {
 
-
-
     default Comprovante fromId(Long id) {
         if (id == null) {
             return null;

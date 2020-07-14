@@ -28,8 +28,8 @@ public class ParceiroPJMapper implements EntityMapper<PessoaJuridica,Parceiro> {
 	public Parceiro toEntity(PessoaJuridica entity) {
 		Parceiro parceiro = new Parceiro();
 		parceiro.setAbertura(entity.getAbertura());
-		parceiro.getAtividades().addAll(toAtividade(entity.getAtividadePrincipal()));
-		parceiro.getAtividades().addAll(toAtividadeSecundaria(entity.getAtividadesSecundarias()));
+		toAtividade(entity.getAtividadePrincipal()).forEach(atividade -> parceiro.addAtividade(atividade));
+		toAtividadeSecundaria(entity.getAtividadesSecundarias()).forEach(atividade -> parceiro.addAtividade(atividade));
 		parceiro.setBairro(entity.getBairro());
 		parceiro.setCapitalSocial(entity.getCapitalSocial());
 		parceiro.setCep(MrContadorUtil.onlyNumbers(entity.getCep()));
@@ -51,11 +51,12 @@ public class ParceiroPJMapper implements EntityMapper<PessoaJuridica,Parceiro> {
 		parceiro.setParTipopessoa(TipoPessoa.JURIDICA.getValue());
 		parceiro.setPorte(entity.getPorte());
 		parceiro.setSituacaoEspecial(entity.getSituacaoEspecial());
-		parceiro.getSocios().addAll(toSocio(entity.getQsa()));
+		toSocio(entity.getQsa()).forEach(socio -> parceiro.addSocio(socio));
 		parceiro.setStatus(entity.getStatus());
 		parceiro.setTelefone(entity.getTelefone());
 		parceiro.setTipo(entity.getTipo());
 		parceiro.setUltimaAtualizacao(entity.getUltimaAtualizacao());
+		
 		return parceiro;
 	}
 

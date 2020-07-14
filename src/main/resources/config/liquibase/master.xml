@@ -15,6 +15,7 @@
 
     <include file="config/liquibase/changelog/sql01.sql" relativeToChangelogFile="false" />
        <include file="config/liquibase/changelog/parceiro.sql" relativeToChangelogFile="false"/>
+        <include file="config/liquibase/changelog/arquivo.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/banco.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/comprovante.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/conta.sql" relativeToChangelogFile="false"/>

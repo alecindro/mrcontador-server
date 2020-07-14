@@ -128,7 +128,7 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
                 specification = specification.and(buildStringSpecification(criteria.getEstado(), Parceiro_.estado));
             }
             if (criteria.getArea_atuacao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getArea_atuacao(), Parceiro_.areAtuacao));
+                specification = specification.and(buildStringSpecification(criteria.getArea_atuacao(), Parceiro_.areaAtuacao));
             }
             if (criteria.getNumero() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNumero(), Parceiro_.numero));
@@ -180,6 +180,9 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
             }
             if (criteria.getCapital_social() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getCapital_social(), Parceiro_.capitalSocial));
+            }
+            if (criteria.getEnabled() != null) {
+                specification = specification.and(buildSpecification(criteria.getEnabled(), Parceiro_.enabled));
             }
             if (criteria.getAtividadeId() != null) {
                 specification = specification.and(buildSpecification(criteria.getAtividadeId(),
