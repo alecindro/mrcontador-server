@@ -9,13 +9,15 @@ import java.util.List;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.mrcontador.file.FileException;
+import br.com.mrcontador.domain.Arquivo;
+import br.com.mrcontador.domain.Conta;
+import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileParser;
 import br.com.mrcontador.file.dto.PlanoConta;
+import br.com.mrcontador.service.ContaService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.PlanoContaService;
 import br.com.mrcontador.service.file.S3Service;
@@ -29,7 +31,7 @@ public class PdfParserDefault implements FileParser{
 	@Autowired
 	private S3Service s3Service;
 	@Autowired
-	BeanFactory beanFactory;
+	private ContaService contaService;
 	
 
 	public void process(FileDTO dto) {
@@ -46,20 +48,19 @@ public class PdfParserDefault implements FileParser{
 			Splitter splitter = new Splitter();
 	    	List<PDDocument> pages = splitter.split(document);
 	    	PlanoConta planoConta = reader.process(pages);
-	    	service.save(planoConta, dto);
+	    	List<Conta> contas =  service.save(planoConta, dto);
 	    	dto.setInputStream(second);
-	    	s3Service.uploadPlanoConta(dto);
+	    	Arquivo arquivo = s3Service.uploadPlanoConta(dto);
+	    	contas.forEach(conta -> conta.setArquivo(arquivo));
+	    	contaService.save(contas);
 		} catch (IOException e) {
 			dto.setInputStream(new ByteArrayInputStream(baos.toByteArray()));
-			throw new FileException("pdf.parse.error", e.getMessage(), e);
+			throw new MrContadorException("pdf.parse.error", e.getMessage(), e);
 		}finally {
 			try {
 				baos.close();
 				if(first != null) {
 					first.close();
-				}
-				if(second != null) {
-					second.close();
 				}
 			} catch (IOException e) {
 				

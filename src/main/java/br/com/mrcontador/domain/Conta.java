@@ -1,13 +1,21 @@
 package br.com.mrcontador.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Conta.
@@ -45,6 +53,10 @@ public class Conta implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "contas", allowSetters = true)
     private Parceiro parceiro;
+    
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Arquivo arquivo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -145,9 +157,18 @@ public class Conta implements Serializable {
     public void setParceiro(Parceiro parceiro) {
         this.parceiro = parceiro;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
+    public Arquivo getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(Arquivo arquivo) {
+		this.arquivo = arquivo;
+	}
+	
+	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

@@ -1,18 +1,16 @@
 package br.com.mrcontador.service;
 
-import br.com.mrcontador.domain.ArquivoErro;
-import br.com.mrcontador.repository.ArquivoErroRepository;
-import br.com.mrcontador.service.file.S3Service;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import br.com.mrcontador.domain.ArquivoErro;
+import br.com.mrcontador.repository.ArquivoErroRepository;
 
 /**
  * Service Implementation for managing {@link ArquivoErro}.
@@ -25,11 +23,10 @@ public class ArquivoErroService {
 
     private final ArquivoErroRepository arquivoErroRepository;
     
-    private final S3Service s3Service;
 
-    public ArquivoErroService(ArquivoErroRepository arquivoErroRepository,S3Service s3Service) {
+
+    public ArquivoErroService(ArquivoErroRepository arquivoErroRepository) {
         this.arquivoErroRepository = arquivoErroRepository;
-        this.s3Service = s3Service;
     }
     
     

@@ -12,7 +12,9 @@ CREATE TABLE ${schema}.conta (
 	con_cnpj varchar(18) NULL,
 	con_grau int4 NULL,
 	parceiro_id int8 NULL,
+	arquivo_id int8 NULL,
 	CONSTRAINT conta_pkey PRIMARY KEY (id)
 );
 
 ALTER TABLE ${schema}.conta ADD CONSTRAINT fk_conta_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
+ALTER TABLE ${schema}.conta ADD CONSTRAINT fk_conta_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);

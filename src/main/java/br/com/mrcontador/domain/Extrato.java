@@ -1,15 +1,23 @@
 package br.com.mrcontador.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Extrato.
@@ -26,25 +34,25 @@ public class Extrato implements Serializable {
     private Long id;
 
     @Column(name = "ext_datalancamento")
-    private ZonedDateTime ext_datalancamento;
+    private LocalDate extDatalancamento;
 
     @Column(name = "ext_historico", length = 90)
-    private String ext_historico;
+    private String extHistorico;
 
     @Column(name = "ext_numerodocumento", length = 30)
-    private String ext_numerodocumento;
+    private String extNumerodocumento;
 
     @Column(name = "ext_numerocontrole", length = 30)
-    private String ext_numerocontrole;
+    private String extNumerocontrole;
 
     @Column(name = "ext_debito", precision = 21, scale = 2)
-    private BigDecimal ext_debito;
+    private BigDecimal extDebito;
 
     @Column(name = "ext_credito", precision = 21, scale = 2)
-    private BigDecimal ext_credito;
+    private BigDecimal extCredito;
 
     @Column(name = "ext_descricao", length = 30)
-    private String ext_descricao;
+    private String extDescricao;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -55,6 +63,11 @@ public class Extrato implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "extratoes", allowSetters = true)
     private Agenciabancaria agenciabancaria;
+    
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @NotNull
+    @JsonIgnoreProperties(value = "notas", allowSetters = true)
+    private Arquivo arquivo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -65,98 +78,98 @@ public class Extrato implements Serializable {
         this.id = id;
     }
 
-    public ZonedDateTime getExt_datalancamento() {
-        return ext_datalancamento;
-    }
-
-    public Extrato ext_datalancamento(ZonedDateTime ext_datalancamento) {
-        this.ext_datalancamento = ext_datalancamento;
+    public Extrato extDatalancamento(LocalDate extDatalancamento) {
+        this.extDatalancamento = extDatalancamento;
         return this;
     }
 
-    public void setExt_datalancamento(ZonedDateTime ext_datalancamento) {
-        this.ext_datalancamento = ext_datalancamento;
+    public void setExtDatalancamento(LocalDate extDatalancamento) {
+        this.extDatalancamento = extDatalancamento;
     }
 
-    public String getExt_historico() {
-        return ext_historico;
+    public String getExtHistorico() {
+        return extHistorico;
     }
 
-    public Extrato ext_historico(String ext_historico) {
-        this.ext_historico = ext_historico;
+    public Extrato extHistorico(String extHistorico) {
+        this.extHistorico = extHistorico;
         return this;
     }
 
-    public void setExt_historico(String ext_historico) {
-        this.ext_historico = ext_historico;
+    public void setExtHistorico(String extHistorico) {
+        this.extHistorico = extHistorico;
     }
 
-    public String getExt_numerodocumento() {
-        return ext_numerodocumento;
+    public String getExtNumerodocumento() {
+        return extNumerodocumento;
     }
 
-    public Extrato ext_numerodocumento(String ext_numerodocumento) {
-        this.ext_numerodocumento = ext_numerodocumento;
+    public Extrato extNumerodocumento(String extNumerodocumento) {
+        this.extNumerodocumento = extNumerodocumento;
         return this;
     }
 
-    public void setExt_numerodocumento(String ext_numerodocumento) {
-        this.ext_numerodocumento = ext_numerodocumento;
-    }
-
-    public String getExt_numerocontrole() {
-        return ext_numerocontrole;
-    }
-
-    public Extrato ext_numerocontrole(String ext_numerocontrole) {
-        this.ext_numerocontrole = ext_numerocontrole;
+    public Extrato extNumerocontrole(String extNumerocontrole) {
+        this.extNumerocontrole = extNumerocontrole;
         return this;
     }
 
-    public void setExt_numerocontrole(String ext_numerocontrole) {
-        this.ext_numerocontrole = ext_numerocontrole;
-    }
-
-    public BigDecimal getExt_debito() {
-        return ext_debito;
-    }
-
-    public Extrato ext_debito(BigDecimal ext_debito) {
-        this.ext_debito = ext_debito;
+    public Extrato extDebito(BigDecimal extDebito) {
+        this.extDebito = extDebito;
         return this;
     }
 
-    public void setExt_debito(BigDecimal ext_debito) {
-        this.ext_debito = ext_debito;
-    }
-
-    public BigDecimal getExt_credito() {
-        return ext_credito;
-    }
-
-    public Extrato ext_credito(BigDecimal ext_credito) {
-        this.ext_credito = ext_credito;
+    public Extrato extCredito(BigDecimal extCredito) {
+        this.extCredito = extCredito;
         return this;
     }
 
-    public void setExt_credito(BigDecimal ext_credito) {
-        this.ext_credito = ext_credito;
-    }
-
-    public String getExt_descricao() {
-        return ext_descricao;
-    }
-
-    public Extrato ext_descricao(String ext_descricao) {
-        this.ext_descricao = ext_descricao;
+    public Extrato extDescricao(String extDescricao) {
+        this.extDescricao = extDescricao;
         return this;
     }
 
-    public void setExt_descricao(String ext_descricao) {
-        this.ext_descricao = ext_descricao;
-    }
+    public String getExtNumerocontrole() {
+		return extNumerocontrole;
+	}
 
-    public Parceiro getParceiro() {
+	public void setExtNumerocontrole(String extNumerocontrole) {
+		this.extNumerocontrole = extNumerocontrole;
+	}
+
+	public BigDecimal getExtDebito() {
+		return extDebito;
+	}
+
+	public void setExtDebito(BigDecimal extDebito) {
+		this.extDebito = extDebito;
+	}
+
+	public BigDecimal getExtCredito() {
+		return extCredito;
+	}
+
+	public void setExtCredito(BigDecimal extCredito) {
+		this.extCredito = extCredito;
+	}
+
+	public String getExtDescricao() {
+		return extDescricao;
+	}
+
+	public void setExtDescricao(String extDescricao) {
+		this.extDescricao = extDescricao;
+	}
+
+	public LocalDate getExtDatalancamento() {
+		return extDatalancamento;
+	}
+
+	public void setExtNumerodocumento(String extNumerodocumento) {
+		this.extNumerodocumento = extNumerodocumento;
+	}
+
+	public Parceiro getParceiro() {
         return parceiro;
     }
 
@@ -181,9 +194,19 @@ public class Extrato implements Serializable {
     public void setAgenciabancaria(Agenciabancaria agenciabancaria) {
         this.agenciabancaria = agenciabancaria;
     }
+    
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
+    public Arquivo getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(Arquivo arquivo) {
+		this.arquivo = arquivo;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -200,17 +223,15 @@ public class Extrato implements Serializable {
     }
 
     // prettier-ignore
-    @Override
-    public String toString() {
-        return "Extrato{" +
-            "id=" + getId() +
-            ", ext_datalancamento='" + getExt_datalancamento() + "'" +
-            ", ext_historico='" + getExt_historico() + "'" +
-            ", ext_numerodocumento='" + getExt_numerodocumento() + "'" +
-            ", ext_numerocontrole='" + getExt_numerocontrole() + "'" +
-            ", ext_debito=" + getExt_debito() +
-            ", ext_credito=" + getExt_credito() +
-            ", ext_descricao='" + getExt_descricao() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "Extrato [id=" + id + ", extDatalancamento=" + extDatalancamento + ", extHistorico=" + extHistorico
+				+ ", extNumerodocumento=" + extNumerodocumento + ", extNumerocontrole=" + extNumerocontrole
+				+ ", extDebito=" + extDebito + ", extCredito=" + extCredito + ", extDescricao=" + extDescricao
+				+ ", parceiro=" + parceiro + ", agenciabancaria=" + agenciabancaria + ", arquivo=" + arquivo + "]";
+	}
+
+  
+   
+    
 }

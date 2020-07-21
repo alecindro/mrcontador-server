@@ -2,8 +2,6 @@ package br.com.mrcontador.service;
 
 import java.util.List;
 
-import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,14 +10,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
 import br.com.mrcontador.domain.Banco;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Banco_;
 import br.com.mrcontador.repository.BancoRepository;
 import br.com.mrcontador.service.dto.BancoCriteria;
 import br.com.mrcontador.service.dto.BancoDTO;
 import br.com.mrcontador.service.mapper.BancoMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Banco} entities in the database.
@@ -52,6 +50,13 @@ public class BancoQueryService extends QueryService<Banco> {
         log.debug("find by criteria : {}", criteria);
         final Specification<Banco> specification = createSpecification(criteria);
         return bancoMapper.toDto(bancoRepository.findAll(specification));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Banco> findBancoByCriteria(BancoCriteria criteria) {
+        log.debug("find by criteria : {}", criteria);
+        final Specification<Banco> specification = createSpecification(criteria);
+        return bancoRepository.findAll(specification);
     }
 
     /**
@@ -92,16 +97,16 @@ public class BancoQueryService extends QueryService<Banco> {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Banco_.id));
             }
             if (criteria.getBan_descricao() != null) {
-                specification = specification.or(buildStringSpecification(criteria.getBan_descricao(), Banco_.ban_descricao));
-            }
-            if (criteria.getBan_codigobancario() != null) {
-                specification = specification.or(buildRangeSpecification(criteria.getBan_codigobancario(), Banco_.ban_codigobancario));
+                specification = specification.and(buildStringSpecification(criteria.getBan_descricao(), Banco_.ban_descricao));
             }
             if (criteria.getBan_sigla() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getBan_sigla(), Banco_.ban_sigla));
             }
             if (criteria.getBan_ispb() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getBan_ispb(), Banco_.ban_ispb));
+            }
+            if (criteria.getBan_codigobancario() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getBan_codigobancario(), Banco_.ban_codigobancario));
             }
         }
         return specification;

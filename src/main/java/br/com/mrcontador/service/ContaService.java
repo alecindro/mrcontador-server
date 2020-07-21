@@ -1,18 +1,19 @@
 package br.com.mrcontador.service;
 
-import br.com.mrcontador.domain.Conta;
-import br.com.mrcontador.repository.ContaRepository;
-import br.com.mrcontador.service.dto.ContaDTO;
-import br.com.mrcontador.service.mapper.ContaMapper;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import br.com.mrcontador.domain.Conta;
+import br.com.mrcontador.repository.ContaRepository;
+import br.com.mrcontador.service.dto.ContaDTO;
+import br.com.mrcontador.service.mapper.ContaMapper;
 
 /**
  * Service Implementation for managing {@link Conta}.
@@ -80,5 +81,9 @@ public class ContaService {
     public void delete(Long id) {
         log.debug("Request to delete Conta : {}", id);
         contaRepository.deleteById(id);
+    }
+    
+    public List<Conta> save(List<Conta> contas){
+    	return contaRepository.saveAll(contas);
     }
 }

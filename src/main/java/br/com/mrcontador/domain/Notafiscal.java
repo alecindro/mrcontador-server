@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -68,7 +69,7 @@ public class Notafiscal implements Serializable {
     @JsonIgnoreProperties(value = "notafiscals", allowSetters = true)
     private Parceiro parceiro;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @NotNull
     @JsonIgnoreProperties(value = "notas", allowSetters = true)
     private Arquivo arquivo;

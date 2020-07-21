@@ -22,11 +22,9 @@ public class Banco implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(max = 200)
     @Column(name = "ban_descricao", length = 200)
     private String ban_descricao;
-
-    @Column(name = "ban_codigobancario")
-    private Integer ban_codigobancario;
 
     @Size(max = 100)
     @Column(name = "ban_sigla", length = 100)
@@ -34,6 +32,11 @@ public class Banco implements Serializable {
 
     @Column(name = "ban_ispb")
     private Integer ban_ispb;
+
+    @NotNull
+    @Size(max = 5)
+    @Column(name = "ban_codigobancario", length = 5, nullable = false)
+    private String ban_codigobancario;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -55,19 +58,6 @@ public class Banco implements Serializable {
 
     public void setBan_descricao(String ban_descricao) {
         this.ban_descricao = ban_descricao;
-    }
-
-    public Integer getBan_codigobancario() {
-        return ban_codigobancario;
-    }
-
-    public Banco ban_codigobancario(Integer ban_codigobancario) {
-        this.ban_codigobancario = ban_codigobancario;
-        return this;
-    }
-
-    public void setBan_codigobancario(Integer ban_codigobancario) {
-        this.ban_codigobancario = ban_codigobancario;
     }
 
     public String getBan_sigla() {
@@ -95,6 +85,19 @@ public class Banco implements Serializable {
     public void setBan_ispb(Integer ban_ispb) {
         this.ban_ispb = ban_ispb;
     }
+
+    public String getBan_codigobancario() {
+        return ban_codigobancario;
+    }
+
+    public Banco ban_codigobancario(String ban_codigobancario) {
+        this.ban_codigobancario = ban_codigobancario;
+        return this;
+    }
+
+    public void setBan_codigobancario(String ban_codigobancario) {
+        this.ban_codigobancario = ban_codigobancario;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -119,9 +122,9 @@ public class Banco implements Serializable {
         return "Banco{" +
             "id=" + getId() +
             ", ban_descricao='" + getBan_descricao() + "'" +
-            ", ban_codigobancario=" + getBan_codigobancario() +
             ", ban_sigla='" + getBan_sigla() + "'" +
             ", ban_ispb=" + getBan_ispb() +
+            ", ban_codigobancario='" + getBan_codigobancario() + "'" +
             "}";
     }
 }

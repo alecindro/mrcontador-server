@@ -1,39 +1,32 @@
 package br.com.mrcontador.file;
 
-import java.time.LocalDateTime;
+import java.io.File;
+import java.io.IOException;
 
-import javax.mail.internet.ContentType;
-import javax.mail.internet.ParseException;
+import org.apache.tika.Tika;
 
 public class TestTika {
 	//planoconta_2020-07-11T19%3A01%3A42.709967.pdf
 	
-	public static void main(final String[] args) throws ParseException {
-		LocalDateTime z = LocalDateTime.now();
+	public static void main(final String[] args) throws IOException {
+	/*	LocalDateTime z = LocalDateTime.now();
 		ContentType tupe = new ContentType("application/pdf");
 		tupe.getBaseType();
 		tupe.getPrimaryType();
 		tupe.getSubType();
 		com.google.common.net.MediaType media = com.google.common.net.MediaType.parse("application/pdf");
 		String value = z.getYear()+"_"+z.getMonthValue()+"_"+z.getDayOfMonth()+"_"+z.getHour()+"_"+z.getMinute()+"_"+z.getSecond();
-		System.out.println(value);
+		System.out.println(value);*/
+		test();
 	}
-/*	
-	private void test() throws IOException, SAXException, TikaException {
-		 DefaultHandler handler = new BodyContentHandler(-1);
-	      Metadata metadata = new Metadata();
-	      FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/Plano de Contas - Mercado dassoler.xls"));
-	      ParseContext pcontext = new ParseContext();
+	
+	public static void test() throws IOException{
+		 
+	      File file = new File("/home/alecindro/Documents/drcontabil/docs/caixa.ofx");
+	      Tika tika = new Tika();
 	      
-	      //OOXml parser
-	      Parser parser = new OfficeParser();
-	      parser.parse(inputstream, handler, metadata,pcontext);
-	      System.out.println("Contents of the document:" + handler.toString());
-	      System.out.println("Metadata of the document:");
-	      String[] metadataNames = metadata.names();
-	      
-	      for(String name : metadataNames) {
-	         System.out.println(name + ": " + metadata.get(name));
-	      }
-	}*/
+	      //detecting the file type using detect method
+	      String filetype = tika.detect(file);
+	      System.out.println(filetype);
+	}
 }

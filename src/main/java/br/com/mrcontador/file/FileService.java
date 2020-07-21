@@ -47,7 +47,7 @@ public class FileService {
 				break;
 			}
 			default:
-				throw new MrContadorException("error.file.no.implemented", fileDTO.getContentType());
+				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
 			}
 		}catch (MrContadorException e){
 			throw e;
@@ -56,7 +56,7 @@ public class FileService {
         	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			fileDTO.setInputStream(new ByteArrayInputStream(baos.toByteArray()));
 			s3Service.uploadErro(fileDTO);
-			throw new MrContadorException("error.file.process", file.getOriginalFilename());
+			throw new MrContadorException("file.process.error", file.getOriginalFilename());
 		}
 	}
 
@@ -71,7 +71,7 @@ public class FileService {
 				break;
 			}
 			default:
-				throw new MrContadorException("error.file.no.implemented", fileDTO.getContentType());
+				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
 			}
 		
 	}

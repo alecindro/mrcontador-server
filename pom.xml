@@ -86,6 +86,8 @@
 		<tika.version>1.24.1</tika.version>
 		<awssdk-s3.version>2.13.52</awssdk-s3.version>
 		<nfe.version>3.0.12</nfe.version>
+		<ofx4j.version>1.27</ofx4j.version>
+		<diff-utils.version>4.5</diff-utils.version>
 		<!-- jhipster-needle-maven-property -->
 	</properties>
 
@@ -347,6 +349,16 @@
   <artifactId>nfe</artifactId>
   <version>${nfe.version}</version>
 </dependency>
+<dependency>
+  <groupId>com.webcohesion.ofx4j</groupId>
+  <artifactId>ofx4j</artifactId>
+  <version>${ofx4j.version}</version>
+</dependency>
+		<dependency>
+			<groupId>io.github.java-diff-utils</groupId>
+			<artifactId>java-diff-utils</artifactId>
+			<version>${diff-utils.version}</version>
+		</dependency>
 		<!-- jhipster-needle-maven-add-dependency -->
 	</dependencies>
 

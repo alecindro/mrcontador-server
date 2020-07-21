@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.dto.PlanoContaDetail;
@@ -40,10 +41,11 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 		return null;
 	}
 
-	public List<Conta> toEntity(List<PlanoContaDetail> dtoList, Parceiro parceiro) {
+	public List<Conta> toEntity(List<PlanoContaDetail> dtoList, Parceiro parceiro, Arquivo arquivo) {
 		List<Conta> contas = new ArrayList<>();
 		for(PlanoContaDetail dto : dtoList) {
 			Conta conta = toEntity(dto);
+			conta.setArquivo(arquivo);
 			conta.setParceiro(parceiro);
 			contas.add(conta);
 		}

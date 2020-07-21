@@ -12,6 +12,7 @@ public class S3Properties {
 	private String notaFolder;
 	private String errorFolder;
 	private String comprovanteFolder;
+	private String extratoFolder;
 	private String urlS3;
 	
 	
@@ -51,7 +52,11 @@ public class S3Properties {
 	public void setUrlS3(String urlS3) {
 		this.urlS3 = urlS3;
 	}
-	
-	
+	public String getExtratoFolder() {
+		return extratoFolder;
+	}
+	public void setExtratoFolder(String extratoFolder) {
+		this.extratoFolder = extratoFolder;
+	}
 	
 }

@@ -33,13 +33,13 @@ public class PlanoContaService {
 
 	private Logger log = LoggerFactory.getLogger(PlanoContaService.class);
 
-	public void save(PlanoConta planoConta, FileDTO dto) {
+	public List<Conta> save(PlanoConta planoConta, FileDTO dto) {
 		Parceiro parceiro = null;
 		Optional<Parceiro> oParceiro = findParceiro(planoConta.getCnpjCliente());
 		if (oParceiro.isPresent()) {
 			parceiro = oParceiro.get();
 			if(contaRepository.findFirstByParceiro(parceiro).isPresent()) {
-				throw new MrContadorException("error.conta.exists",parceiro.getParCnpjcpf());
+				throw new MrContadorException("conta.exists.error",parceiro.getParCnpjcpf());
 			}
 		} else {
 			PessoaJuridica pessoaJuridica = getPessoa(planoConta.getCnpjCliente());
@@ -47,11 +47,11 @@ public class PlanoContaService {
 		}
 		dto.setParceiro(parceiro);
 		PlanoContaMapper mapper = new PlanoContaMapper();
-		List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro);
-		contaRepository.saveAll(contas);
-		
-
+		List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro,planoConta.getArquivo());
+		return contaRepository.saveAll(contas);
 	}
+	
+
 
 	public Optional<Parceiro> findParceiro(String cnpj) {
 		return parceiroRepository.findByParCnpjcpf(MrContadorUtil.onlyNumbers(cnpj));
@@ -66,7 +66,7 @@ public class PlanoContaService {
 
 	private PessoaJuridica getPessoa(String cnpj) {
 		if (cnpj == null) {
-			throw new MrContadorException("planoconta.cnpj.error");
+			throw new MrContadorException("planoconta.cnpjnull.error");
 		}
 		cnpj = MrContadorUtil.onlyNumbers(cnpj);
 		try {

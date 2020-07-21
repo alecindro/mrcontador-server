@@ -23,23 +23,31 @@ public class Agenciabancaria implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(max = 20)
     @Column(name = "age_numero", length = 20)
-    private String age_numero;
+    private String ageNumero;
 
+    @Size(max = 20)
     @Column(name = "age_digito", length = 20)
-    private String age_digito;
+    private String ageDigito;
 
+    @Size(max = 6)
     @Column(name = "age_agencia", length = 6)
-    private String age_agencia;
+    private String ageAgencia;
 
+    @Size(max = 30)
     @Column(name = "age_descricao", length = 30)
-    private String age_descricao;
+    private String ageDescricao;
 
     @Column(name = "age_situacao")
-    private Boolean age_situacao;
+    private Boolean ageSituacao;
+
+    @NotNull
+    @Size(max = 5)
+    @Column(name = "ban_codigobancario", length = 5, nullable = false)
+    private String banCodigobancario;
 
     @ManyToOne(optional = false)
-    @NotNull
     @JsonIgnoreProperties(value = "agenciabancarias", allowSetters = true)
     private Banco banco;
 
@@ -57,72 +65,85 @@ public class Agenciabancaria implements Serializable {
         this.id = id;
     }
 
-    public String getAge_numero() {
-        return age_numero;
+    public Agenciabancaria ageNumero(String ageNumero) {
+        this.ageNumero = ageNumero;
+        return this;
     }
-
-    public Agenciabancaria age_numero(String age_numero) {
-        this.age_numero = age_numero;
+    
+    public Agenciabancaria ageDigito(String ageDigito) {
+        this.ageDigito = ageDigito;
         return this;
     }
 
-    public void setAge_numero(String age_numero) {
-        this.age_numero = age_numero;
-    }
-
-    public String getAge_digito() {
-        return age_digito;
-    }
-
-    public Agenciabancaria age_digito(String age_digito) {
-        this.age_digito = age_digito;
+    public Agenciabancaria ageAgencia(String ageAgencia) {
+        this.ageAgencia = ageAgencia;
         return this;
     }
 
-    public void setAge_digito(String age_digito) {
-        this.age_digito = age_digito;
-    }
-
-    public String getAge_agencia() {
-        return age_agencia;
-    }
-
-    public Agenciabancaria age_agencia(String age_agencia) {
-        this.age_agencia = age_agencia;
+    public Agenciabancaria ageDescricao(String ageDescricao) {
+        this.ageDescricao = ageDescricao;
         return this;
     }
 
-    public void setAge_agencia(String age_agencia) {
-        this.age_agencia = age_agencia;
-    }
-
-    public String getAge_descricao() {
-        return age_descricao;
-    }
-
-    public Agenciabancaria age_descricao(String age_descricao) {
-        this.age_descricao = age_descricao;
+    public Agenciabancaria ageSituacao(Boolean ageSituacao) {
+        this.ageSituacao = ageSituacao;
         return this;
     }
 
-    public void setAge_descricao(String age_descricao) {
-        this.age_descricao = age_descricao;
-    }
-
-    public Boolean isAge_situacao() {
-        return age_situacao;
-    }
-
-    public Agenciabancaria age_situacao(Boolean age_situacao) {
-        this.age_situacao = age_situacao;
+    public Agenciabancaria banCodigobancario(String banCodigobancario) {
+        this.banCodigobancario = banCodigobancario;
         return this;
     }
 
-    public void setAge_situacao(Boolean age_situacao) {
-        this.age_situacao = age_situacao;
-    }
+    public String getAgeNumero() {
+		return ageNumero;
+	}
 
-    public Banco getBanco() {
+	public void setAgeNumero(String ageNumero) {
+		this.ageNumero = ageNumero;
+	}
+
+	public String getAgeDigito() {
+		return ageDigito;
+	}
+
+	public void setAgeDigito(String ageDigito) {
+		this.ageDigito = ageDigito;
+	}
+
+	public String getAgeAgencia() {
+		return ageAgencia;
+	}
+
+	public void setAgeAgencia(String ageAgencia) {
+		this.ageAgencia = ageAgencia;
+	}
+
+	public String getAgeDescricao() {
+		return ageDescricao;
+	}
+
+	public void setAgeDescricao(String ageDescricao) {
+		this.ageDescricao = ageDescricao;
+	}
+
+	public Boolean getAgeSituacao() {
+		return ageSituacao;
+	}
+
+	public void setAgeSituacao(Boolean ageSituacao) {
+		this.ageSituacao = ageSituacao;
+	}
+
+	public String getBanCodigobancario() {
+		return banCodigobancario;
+	}
+
+	public void setBanCodigobancario(String banCodigobancario) {
+		this.banCodigobancario = banCodigobancario;
+	}
+
+	public Banco getBanco() {
         return banco;
     }
 
@@ -164,17 +185,14 @@ public class Agenciabancaria implements Serializable {
     public int hashCode() {
         return 31;
     }
-
     // prettier-ignore
-    @Override
-    public String toString() {
-        return "Agenciabancaria{" +
-            "id=" + getId() +
-            ", age_numero='" + getAge_numero() + "'" +
-            ", age_digito='" + getAge_digito() + "'" +
-            ", age_agencia='" + getAge_agencia() + "'" +
-            ", age_descricao='" + getAge_descricao() + "'" +
-            ", age_situacao='" + isAge_situacao() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "Agenciabancaria [id=" + id + ", ageNumero=" + ageNumero + ", ageDigito=" + ageDigito + ", ageAgencia="
+				+ ageAgencia + ", ageDescricao=" + ageDescricao + ", ageSituacao=" + ageSituacao
+				+ ", banCodigobancario=" + banCodigobancario + ", banco=" + banco + ", parceiro=" + parceiro + "]";
+	}
+
+   
+    
 }

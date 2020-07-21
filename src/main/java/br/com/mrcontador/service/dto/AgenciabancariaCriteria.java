@@ -26,15 +26,17 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private StringFilter age_numero;
+    private StringFilter ageNumero;
 
-    private StringFilter age_digito;
+    private StringFilter ageDigito;
 
-    private StringFilter age_agencia;
+    private StringFilter ageAgencia;
 
-    private StringFilter age_descricao;
+    private StringFilter ageDescricao;
 
-    private BooleanFilter age_situacao;
+    private BooleanFilter ageSituacao;
+
+    private StringFilter banCodigobancario;
 
     private LongFilter bancoId;
 
@@ -45,11 +47,12 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
 
     public AgenciabancariaCriteria(AgenciabancariaCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.age_numero = other.age_numero == null ? null : other.age_numero.copy();
-        this.age_digito = other.age_digito == null ? null : other.age_digito.copy();
-        this.age_agencia = other.age_agencia == null ? null : other.age_agencia.copy();
-        this.age_descricao = other.age_descricao == null ? null : other.age_descricao.copy();
-        this.age_situacao = other.age_situacao == null ? null : other.age_situacao.copy();
+        this.ageNumero = other.ageNumero == null ? null : other.ageNumero.copy();
+        this.ageDigito = other.ageDigito == null ? null : other.ageDigito.copy();
+        this.ageAgencia = other.ageAgencia == null ? null : other.ageAgencia.copy();
+        this.ageDescricao = other.ageDescricao == null ? null : other.ageDescricao.copy();
+        this.ageSituacao = other.ageSituacao == null ? null : other.ageSituacao.copy();
+        this.banCodigobancario = other.banCodigobancario == null ? null : other.banCodigobancario.copy();
         this.bancoId = other.bancoId == null ? null : other.bancoId.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
     }
@@ -67,64 +70,72 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public StringFilter getAge_numero() {
-        return age_numero;
-    }
 
-    public void setAge_numero(StringFilter age_numero) {
-        this.age_numero = age_numero;
-    }
+    public StringFilter getAgeNumero() {
+		return ageNumero;
+	}
 
-    public StringFilter getAge_digito() {
-        return age_digito;
-    }
+	public void setAgeNumero(StringFilter ageNumero) {
+		this.ageNumero = ageNumero;
+	}
 
-    public void setAge_digito(StringFilter age_digito) {
-        this.age_digito = age_digito;
-    }
+	public StringFilter getAgeDigito() {
+		return ageDigito;
+	}
 
-    public StringFilter getAge_agencia() {
-        return age_agencia;
-    }
+	public void setAgeDigito(StringFilter ageDigito) {
+		this.ageDigito = ageDigito;
+	}
 
-    public void setAge_agencia(StringFilter age_agencia) {
-        this.age_agencia = age_agencia;
-    }
+	public StringFilter getAgeAgencia() {
+		return ageAgencia;
+	}
 
-    public StringFilter getAge_descricao() {
-        return age_descricao;
-    }
+	public void setAgeAgencia(StringFilter ageAgencia) {
+		this.ageAgencia = ageAgencia;
+	}
 
-    public void setAge_descricao(StringFilter age_descricao) {
-        this.age_descricao = age_descricao;
-    }
+	public StringFilter getAgeDescricao() {
+		return ageDescricao;
+	}
 
-    public BooleanFilter getAge_situacao() {
-        return age_situacao;
-    }
+	public void setAgeDescricao(StringFilter ageDescricao) {
+		this.ageDescricao = ageDescricao;
+	}
 
-    public void setAge_situacao(BooleanFilter age_situacao) {
-        this.age_situacao = age_situacao;
-    }
+	public BooleanFilter getAgeSituacao() {
+		return ageSituacao;
+	}
 
-    public LongFilter getBancoId() {
-        return bancoId;
-    }
+	public void setAgeSituacao(BooleanFilter ageSituacao) {
+		this.ageSituacao = ageSituacao;
+	}
 
-    public void setBancoId(LongFilter bancoId) {
-        this.bancoId = bancoId;
-    }
+	public StringFilter getBanCodigobancario() {
+		return banCodigobancario;
+	}
 
-    public LongFilter getParceiroId() {
-        return parceiroId;
-    }
+	public void setBanCodigobancario(StringFilter banCodigobancario) {
+		this.banCodigobancario = banCodigobancario;
+	}
 
-    public void setParceiroId(LongFilter parceiroId) {
-        this.parceiroId = parceiroId;
-    }
+	public LongFilter getBancoId() {
+		return bancoId;
+	}
 
+	public void setBancoId(LongFilter bancoId) {
+		this.bancoId = bancoId;
+	}
 
-    @Override
+	public LongFilter getParceiroId() {
+		return parceiroId;
+	}
+
+	public void setParceiroId(LongFilter parceiroId) {
+		this.parceiroId = parceiroId;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -135,11 +146,12 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         final AgenciabancariaCriteria that = (AgenciabancariaCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(age_numero, that.age_numero) &&
-            Objects.equals(age_digito, that.age_digito) &&
-            Objects.equals(age_agencia, that.age_agencia) &&
-            Objects.equals(age_descricao, that.age_descricao) &&
-            Objects.equals(age_situacao, that.age_situacao) &&
+            Objects.equals(ageNumero, that.ageNumero) &&
+            Objects.equals(ageDigito, that.ageDigito) &&
+            Objects.equals(ageAgencia, that.ageAgencia) &&
+            Objects.equals(ageDescricao, that.ageDescricao) &&
+            Objects.equals(ageSituacao, that.ageSituacao) &&
+            Objects.equals(banCodigobancario, that.banCodigobancario) &&
             Objects.equals(bancoId, that.bancoId) &&
             Objects.equals(parceiroId, that.parceiroId);
     }
@@ -148,11 +160,12 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
         id,
-        age_numero,
-        age_digito,
-        age_agencia,
-        age_descricao,
-        age_situacao,
+        ageNumero,
+        ageDigito,
+        ageAgencia,
+        ageDescricao,
+        ageSituacao,
+        banCodigobancario,
         bancoId,
         parceiroId
         );
@@ -163,11 +176,12 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
     public String toString() {
         return "AgenciabancariaCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (age_numero != null ? "age_numero=" + age_numero + ", " : "") +
-                (age_digito != null ? "age_digito=" + age_digito + ", " : "") +
-                (age_agencia != null ? "age_agencia=" + age_agencia + ", " : "") +
-                (age_descricao != null ? "age_descricao=" + age_descricao + ", " : "") +
-                (age_situacao != null ? "age_situacao=" + age_situacao + ", " : "") +
+                (ageNumero != null ? "age_numero=" + ageNumero + ", " : "") +
+                (ageDigito != null ? "age_digito=" + ageDigito + ", " : "") +
+                (ageAgencia != null ? "age_agencia=" + ageAgencia + ", " : "") +
+                (ageDescricao != null ? "age_descricao=" + ageDescricao + ", " : "") +
+                (ageSituacao != null ? "age_situacao=" + ageSituacao + ", " : "") +
+                (banCodigobancario != null ? "ban_codigobancario=" + banCodigobancario + ", " : "") +
                 (bancoId != null ? "bancoId=" + bancoId + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
             "}";

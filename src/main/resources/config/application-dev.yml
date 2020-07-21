@@ -38,7 +38,7 @@ spring:
   datasource:
     platform: postgres
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://192.168.10.6:5432/mrcontador
+    url: jdbc:postgresql://192.168.10.5:5432/mrcontador
     #url: jdbc:postgresql://localhost:5432/mrcontador
     username: postgres
     password: banana2018!
@@ -135,6 +135,7 @@ s3:
   bucketName: mrcontador-files
   planoContaFolder: '{0}/{1}/planocontas'
   notaFolder: '{0}/{1}/notas'
+  extratoFolder: '{0}/{1}/extratos'
   errorFolder: mrcontador/error
   comprovanteFolder: '{0}/{1}/comprovantes'
   urlS3: https://mrcontador-files.s3.amazonaws.com

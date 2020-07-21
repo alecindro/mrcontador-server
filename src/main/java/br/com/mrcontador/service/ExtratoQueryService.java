@@ -91,26 +91,26 @@ public class ExtratoQueryService extends QueryService<Extrato> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Extrato_.id));
             }
-            if (criteria.getExt_datalancamento() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getExt_datalancamento(), Extrato_.ext_datalancamento));
+            if (criteria.getExtDatalancamento() != null) {
+            	specification = specification.and(buildRangeSpecification(criteria.getExtDatalancamento(), Extrato_.extDatalancamento));
             }
-            if (criteria.getExt_historico() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getExt_historico(), Extrato_.ext_historico));
+            if (criteria.getExtHistorico() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getExtHistorico(), Extrato_.extHistorico));
             }
-            if (criteria.getExt_numerodocumento() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getExt_numerodocumento(), Extrato_.ext_numerodocumento));
+            if (criteria.getExtNumerodocumento() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getExtNumerodocumento(), Extrato_.extNumerodocumento));
             }
-            if (criteria.getExt_numerocontrole() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getExt_numerocontrole(), Extrato_.ext_numerocontrole));
+            if (criteria.getExtNumerocontrole() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getExtNumerocontrole(), Extrato_.extNumerocontrole));
             }
-            if (criteria.getExt_debito() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getExt_debito(), Extrato_.ext_debito));
+            if (criteria.getExtDebito() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getExtDebito(), Extrato_.extDebito));
             }
-            if (criteria.getExt_credito() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getExt_credito(), Extrato_.ext_credito));
+            if (criteria.getExtCredito() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getExtCredito(), Extrato_.extCredito));
             }
-            if (criteria.getExt_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getExt_descricao(), Extrato_.ext_descricao));
+            if (criteria.getExtDescricao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getExtDescricao(), Extrato_.extDescricao));
             }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),

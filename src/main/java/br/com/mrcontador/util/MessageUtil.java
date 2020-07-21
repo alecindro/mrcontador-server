@@ -11,7 +11,7 @@ public class MessageUtil {
 	
 	
 	public static HttpHeaders generate(String applicationName, MrContadorException e ) {
-		return HeaderUtil.createFailureAlert(applicationName, true, e.getDefaultMessasge(), e.getErrorKey(), e.getMessage());
+		return HeaderUtil.createFailureAlert(applicationName, true, e.getMessage(), e.getErrorKey(), e.getDefaultMessasge());
 	}
 
 

@@ -2,8 +2,6 @@ package br.com.mrcontador.service;
 
 import java.util.List;
 
-import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,14 +10,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
 import br.com.mrcontador.domain.Comprovante;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Comprovante_;
 import br.com.mrcontador.repository.ComprovanteRepository;
 import br.com.mrcontador.service.dto.ComprovanteCriteria;
 import br.com.mrcontador.service.dto.ComprovanteDTO;
 import br.com.mrcontador.service.mapper.ComprovanteMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Comprovante} entities in the database.

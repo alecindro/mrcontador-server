@@ -48,7 +48,14 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<Agenciabancaria> findByCriteria(AgenciabancariaCriteria criteria) {
+    public List<AgenciabancariaDTO> findByCriteria(AgenciabancariaCriteria criteria) {
+        log.debug("find by criteria : {}", criteria);
+        final Specification<Agenciabancaria> specification = createSpecification(criteria);
+        return agenciabancariaMapper.toDto(agenciabancariaRepository.findAll(specification));
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Agenciabancaria> findAgenciaByCriteria(AgenciabancariaCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Agenciabancaria> specification = createSpecification(criteria);
         return agenciabancariaRepository.findAll(specification);
@@ -61,10 +68,11 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<Agenciabancaria> findByCriteria(AgenciabancariaCriteria criteria, Pageable page) {
+    public Page<AgenciabancariaDTO> findByCriteria(AgenciabancariaCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Agenciabancaria> specification = createSpecification(criteria);
-        return agenciabancariaRepository.findAll(specification, page);
+        return agenciabancariaRepository.findAll(specification, page)
+            .map(agenciabancariaMapper::toDto);
     }
 
     /**
@@ -90,20 +98,23 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Agenciabancaria_.id));
             }
-            if (criteria.getAge_numero() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getAge_numero(), Agenciabancaria_.age_numero));
+            if (criteria.getAgeNumero() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getAgeNumero(), Agenciabancaria_.ageNumero));
             }
-            if (criteria.getAge_digito() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getAge_digito(), Agenciabancaria_.age_digito));
+            if (criteria.getAgeDigito() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getAgeDigito(), Agenciabancaria_.ageDigito));
             }
-            if (criteria.getAge_agencia() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getAge_agencia(), Agenciabancaria_.age_agencia));
+            if (criteria.getAgeAgencia() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getAgeAgencia(), Agenciabancaria_.ageAgencia));
             }
-            if (criteria.getAge_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getAge_descricao(), Agenciabancaria_.age_descricao));
+            if (criteria.getAgeDescricao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getAgeDescricao(), Agenciabancaria_.ageDescricao));
             }
-            if (criteria.getAge_situacao() != null) {
-                specification = specification.and(buildSpecification(criteria.getAge_situacao(), Agenciabancaria_.age_situacao));
+            if (criteria.getAgeSituacao() != null) {
+                specification = specification.and(buildSpecification(criteria.getAgeSituacao(), Agenciabancaria_.ageSituacao));
+            }
+            if (criteria.getBanCodigobancario() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getBanCodigobancario(), Agenciabancaria_.banCodigobancario));
             }
             if (criteria.getBancoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getBancoId(),

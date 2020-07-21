@@ -10,14 +10,17 @@ public class BancoDTO implements Serializable {
     
     private Long id;
 
+    @Size(max = 200)
     private String ban_descricao;
-
-    private Integer ban_codigobancario;
 
     @Size(max = 100)
     private String ban_sigla;
 
     private Integer ban_ispb;
+
+    @NotNull
+    @Size(max = 5)
+    private String ban_codigobancario;
 
     
     public Long getId() {
@@ -36,14 +39,6 @@ public class BancoDTO implements Serializable {
         this.ban_descricao = ban_descricao;
     }
 
-    public Integer getBan_codigobancario() {
-        return ban_codigobancario;
-    }
-
-    public void setBan_codigobancario(Integer ban_codigobancario) {
-        this.ban_codigobancario = ban_codigobancario;
-    }
-
     public String getBan_sigla() {
         return ban_sigla;
     }
@@ -58,6 +53,14 @@ public class BancoDTO implements Serializable {
 
     public void setBan_ispb(Integer ban_ispb) {
         this.ban_ispb = ban_ispb;
+    }
+
+    public String getBan_codigobancario() {
+        return ban_codigobancario;
+    }
+
+    public void setBan_codigobancario(String ban_codigobancario) {
+        this.ban_codigobancario = ban_codigobancario;
     }
 
     @Override
@@ -83,9 +86,9 @@ public class BancoDTO implements Serializable {
         return "BancoDTO{" +
             "id=" + getId() +
             ", ban_descricao='" + getBan_descricao() + "'" +
-            ", ban_codigobancario=" + getBan_codigobancario() +
             ", ban_sigla='" + getBan_sigla() + "'" +
             ", ban_ispb=" + getBan_ispb() +
+            ", ban_codigobancario='" + getBan_codigobancario() + "'" +
             "}";
     }
 }

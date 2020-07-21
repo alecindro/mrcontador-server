@@ -44,6 +44,11 @@ public class AgenciabancariaService {
         agenciabancaria = agenciabancariaRepository.save(agenciabancaria);
         return agenciabancariaMapper.toDto(agenciabancaria);
     }
+    
+    public Agenciabancaria save(Agenciabancaria agenciabancaria) {
+        log.debug("Request to save Agenciabancaria : {}", agenciabancaria);
+        return  agenciabancariaRepository.save(agenciabancaria);
+    }
 
     /**
      * Get all the agenciabancarias.
@@ -66,9 +71,10 @@ public class AgenciabancariaService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<Agenciabancaria> findOne(Long id) {
+    public Optional<AgenciabancariaDTO> findOne(Long id) {
         log.debug("Request to get Agenciabancaria : {}", id);
-        return agenciabancariaRepository.findById(id);
+        return agenciabancariaRepository.findById(id)
+            .map(agenciabancariaMapper::toDto);
     }
 
     /**

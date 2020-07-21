@@ -7,7 +7,7 @@ CREATE TABLE ${schema}.banco (
 	id serial,
 	ban_descricao varchar(200) NULL,
 	ban_sigla varchar(100) NULL,
-	ban_codigobancario int4 NULL,
+	ban_codigobancario varchar(5) NOT NULL,
 	ban_ispb int4 NULL,	
 	CONSTRAINT banco_pkey PRIMARY KEY (id)
 );

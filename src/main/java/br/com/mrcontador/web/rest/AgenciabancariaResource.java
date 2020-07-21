@@ -1,38 +1,30 @@
 package br.com.mrcontador.web.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import br.com.mrcontador.service.AgenciabancariaService;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import br.com.mrcontador.service.dto.AgenciabancariaDTO;
+import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
+import br.com.mrcontador.service.AgenciabancariaQueryService;
 
-import javax.validation.Valid;
-
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.mrcontador.domain.Agenciabancaria;
-import br.com.mrcontador.service.AgenciabancariaQueryService;
-import br.com.mrcontador.service.AgenciabancariaService;
-import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
-import br.com.mrcontador.service.dto.AgenciabancariaDTO;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link br.com.mrcontador.domain.Agenciabancaria}.
@@ -105,9 +97,9 @@ public class AgenciabancariaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of agenciabancarias in body.
      */
     @GetMapping("/agenciabancarias")
-    public ResponseEntity<List<Agenciabancaria>> getAllAgenciabancarias(AgenciabancariaCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<AgenciabancariaDTO>> getAllAgenciabancarias(AgenciabancariaCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Agenciabancarias by criteria: {}", criteria);
-        Page<Agenciabancaria> page = agenciabancariaQueryService.findByCriteria(criteria, pageable);
+        Page<AgenciabancariaDTO> page = agenciabancariaQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -131,10 +123,10 @@ public class AgenciabancariaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the agenciabancariaDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/agenciabancarias/{id}")
-    public ResponseEntity<Agenciabancaria> getAgenciabancaria(@PathVariable Long id) {
+    public ResponseEntity<AgenciabancariaDTO> getAgenciabancaria(@PathVariable Long id) {
         log.debug("REST request to get Agenciabancaria : {}", id);
-        Optional<Agenciabancaria> agenciabancaria = agenciabancariaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(agenciabancaria);
+        Optional<AgenciabancariaDTO> agenciabancariaDTO = agenciabancariaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(agenciabancariaDTO);
     }
 
     /**

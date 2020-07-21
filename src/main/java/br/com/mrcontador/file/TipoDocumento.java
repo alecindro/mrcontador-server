@@ -4,7 +4,8 @@ public enum TipoDocumento {
 
 	PLANO_DE_CONTA("Plano de conta", "planoconta"),
 	NOTA("Nota","nota"),
-	COMPROVANTE("Comprovante","comprovante");
+	COMPROVANTE("Comprovante","comprovante"),
+	EXTRATO("Extrato","extrato");
 	
 	private String indexName;
 	

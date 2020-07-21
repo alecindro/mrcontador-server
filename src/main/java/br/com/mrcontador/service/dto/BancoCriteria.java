@@ -28,11 +28,11 @@ public class BancoCriteria implements Serializable, Criteria {
 
     private StringFilter ban_descricao;
 
-    private IntegerFilter ban_codigobancario;
-
     private StringFilter ban_sigla;
 
     private IntegerFilter ban_ispb;
+
+    private StringFilter ban_codigobancario;
 
     public BancoCriteria() {
     }
@@ -40,9 +40,9 @@ public class BancoCriteria implements Serializable, Criteria {
     public BancoCriteria(BancoCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.ban_descricao = other.ban_descricao == null ? null : other.ban_descricao.copy();
-        this.ban_codigobancario = other.ban_codigobancario == null ? null : other.ban_codigobancario.copy();
         this.ban_sigla = other.ban_sigla == null ? null : other.ban_sigla.copy();
         this.ban_ispb = other.ban_ispb == null ? null : other.ban_ispb.copy();
+        this.ban_codigobancario = other.ban_codigobancario == null ? null : other.ban_codigobancario.copy();
     }
 
     @Override
@@ -66,14 +66,6 @@ public class BancoCriteria implements Serializable, Criteria {
         this.ban_descricao = ban_descricao;
     }
 
-    public IntegerFilter getBan_codigobancario() {
-        return ban_codigobancario;
-    }
-
-    public void setBan_codigobancario(IntegerFilter ban_codigobancario) {
-        this.ban_codigobancario = ban_codigobancario;
-    }
-
     public StringFilter getBan_sigla() {
         return ban_sigla;
     }
@@ -90,6 +82,14 @@ public class BancoCriteria implements Serializable, Criteria {
         this.ban_ispb = ban_ispb;
     }
 
+    public StringFilter getBan_codigobancario() {
+        return ban_codigobancario;
+    }
+
+    public void setBan_codigobancario(StringFilter ban_codigobancario) {
+        this.ban_codigobancario = ban_codigobancario;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -103,9 +103,9 @@ public class BancoCriteria implements Serializable, Criteria {
         return
             Objects.equals(id, that.id) &&
             Objects.equals(ban_descricao, that.ban_descricao) &&
-            Objects.equals(ban_codigobancario, that.ban_codigobancario) &&
             Objects.equals(ban_sigla, that.ban_sigla) &&
-            Objects.equals(ban_ispb, that.ban_ispb);
+            Objects.equals(ban_ispb, that.ban_ispb) &&
+            Objects.equals(ban_codigobancario, that.ban_codigobancario);
     }
 
     @Override
@@ -113,9 +113,9 @@ public class BancoCriteria implements Serializable, Criteria {
         return Objects.hash(
         id,
         ban_descricao,
-        ban_codigobancario,
         ban_sigla,
-        ban_ispb
+        ban_ispb,
+        ban_codigobancario
         );
     }
 
@@ -125,9 +125,9 @@ public class BancoCriteria implements Serializable, Criteria {
         return "BancoCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (ban_descricao != null ? "ban_descricao=" + ban_descricao + ", " : "") +
-                (ban_codigobancario != null ? "ban_codigobancario=" + ban_codigobancario + ", " : "") +
                 (ban_sigla != null ? "ban_sigla=" + ban_sigla + ", " : "") +
                 (ban_ispb != null ? "ban_ispb=" + ban_ispb + ", " : "") +
+                (ban_codigobancario != null ? "ban_codigobancario=" + ban_codigobancario + ", " : "") +
             "}";
     }
 

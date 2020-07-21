@@ -3,11 +3,14 @@ package br.com.mrcontador.file.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.mrcontador.domain.Arquivo;
+
 public class PlanoConta {
 
 	private List<PlanoContaDetail> planoContaDetails;
 	private String cnpjCliente;
 	private String dataPlanoDeContas;
+	private Arquivo arquivo;
 
 	public void addPlanoContaDetail(PlanoContaDetail planoContaDetail) {
 		getPlanoContaDetails().add(planoContaDetail);
@@ -39,5 +42,15 @@ public class PlanoConta {
 	public void setDataPlanoDeContas(String dataPlanoDeContas) {
 		this.dataPlanoDeContas = dataPlanoDeContas;
 	}
+
+	public Arquivo getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(Arquivo arquivo) {
+		this.arquivo = arquivo;
+	}
+	
+	
 
 }

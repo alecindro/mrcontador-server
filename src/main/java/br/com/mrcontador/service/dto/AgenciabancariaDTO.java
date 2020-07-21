@@ -10,15 +10,23 @@ public class AgenciabancariaDTO implements Serializable {
     
     private Long id;
 
+    @Size(max = 20)
     private String age_numero;
 
+    @Size(max = 20)
     private String age_digito;
 
+    @Size(max = 6)
     private String age_agencia;
 
+    @Size(max = 30)
     private String age_descricao;
 
     private Boolean age_situacao;
+
+    @NotNull
+    @Size(max = 5)
+    private String ban_codigobancario;
 
 
     private Long bancoId;
@@ -73,6 +81,14 @@ public class AgenciabancariaDTO implements Serializable {
         this.age_situacao = age_situacao;
     }
 
+    public String getBan_codigobancario() {
+        return ban_codigobancario;
+    }
+
+    public void setBan_codigobancario(String ban_codigobancario) {
+        this.ban_codigobancario = ban_codigobancario;
+    }
+
     public Long getBancoId() {
         return bancoId;
     }
@@ -116,6 +132,7 @@ public class AgenciabancariaDTO implements Serializable {
             ", age_agencia='" + getAge_agencia() + "'" +
             ", age_descricao='" + getAge_descricao() + "'" +
             ", age_situacao='" + isAge_situacao() + "'" +
+            ", ban_codigobancario='" + getBan_codigobancario() + "'" +
             ", bancoId=" + getBancoId() +
             ", parceiroId=" + getParceiroId() +
             "}";

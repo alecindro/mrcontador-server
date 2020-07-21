@@ -62,7 +62,7 @@ public class S3Service {
 	public ArquivoErro uploadErro(FileDTO dto) {
 		String dir = properties.getErrorFolder();
 		String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());
-		log.info("Carregando arquivo: {0}",filename);
+		log.info("Carregando arquivo: {}",filename);
 		String eTag = "";
 		if (dto.getSize() != null && dto.getInputStream() != null) {
 			eTag = uploadS3Stream(filename, dir, dto.getSize(), dto.getInputStream());
@@ -79,7 +79,7 @@ public class S3Service {
 	}
 	
 	private Arquivo saveArquivo(FileDTO dto) {
-		log.info("Salvando arquivo: {0}",dto.getName());
+		log.info("Salvando arquivo: {}",dto.getName());
 		ArquivoMapper mapper = new ArquivoMapper();
 		Arquivo arquivo = mapper.toEntity(dto);
 		arquivo = arquivoService.save(arquivo);
@@ -87,7 +87,7 @@ public class S3Service {
 	}
 	
 	private ArquivoErro saveArquivoErro(FileDTO dto) {
-		log.info("Salvando arquivo: {0}",dto.getName());
+		log.info("Salvando arquivo: {}",dto.getName());
 		ArquivoErroMapper mapper = new ArquivoErroMapper();
 		ArquivoErro arquivoErro = mapper.toEntity(dto);
 		arquivoErro = arquivoErroService.save(arquivoErro);
@@ -97,7 +97,15 @@ public class S3Service {
 	public Arquivo uploadNota(FileDTO dto) {
 		dto.setTipoDocumento(TipoDocumento.NOTA);
 		upload(properties.getNotaFolder(), dto);
-		return saveArquivo(dto);
+		ArquivoMapper mapper = new ArquivoMapper();
+		return mapper.toEntity(dto);
+	}
+	
+	public Arquivo uploadExtrato(FileDTO dto) {
+		dto.setTipoDocumento(TipoDocumento.EXTRATO);
+		upload(properties.getExtratoFolder(), dto);
+		ArquivoMapper mapper = new ArquivoMapper();
+		return mapper.toEntity(dto);
 	}
 
 	public Arquivo uploadComprovante(FileDTO dto) {
@@ -116,7 +124,7 @@ public class S3Service {
 		String dir = MrContadorUtil.getFolder(dto.getContador(), String.valueOf(dto.getParceiro().getId()), type);
 		String eTag = "";
 		String filename = MrContadorUtil.genFileName(dto.getTipoDocumento(), dto.getContentType());
-		log.info("Carregando arquivo: {0}",filename);
+		log.info("Carregando arquivo: {}",filename);
 		if (dto.getSize() != null && dto.getInputStream() != null) {
 			eTag = uploadS3Stream(filename, dir, dto.getSize(), dto.getInputStream());
 		} else {
@@ -138,7 +146,7 @@ public class S3Service {
 				RequestBody.fromBytes(bytes));
 		return response.eTag();
 		}catch(Exception e) {
-			throw new MrContadorException("error.upload.aws",e);
+			throw new MrContadorException("upload.aws.error",e);
 		}
 	}
 
@@ -149,7 +157,7 @@ public class S3Service {
 				RequestBody.fromInputStream(stream, size));
 		return response.eTag();
 		}catch(Exception e) {
-			throw new MrContadorException("error.upload.aws",e);
+			throw new MrContadorException("upload.aws.error",e);
 		}
 	}
 

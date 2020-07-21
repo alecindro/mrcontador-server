@@ -10,10 +10,6 @@
       "fieldValidateRulesMaxlength": "200"
     },
     {
-      "fieldName": "ban_codigobancario",
-      "fieldType": "Integer"
-    },
-    {
       "fieldName": "ban_sigla",
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
@@ -22,6 +18,12 @@
     {
       "fieldName": "ban_ispb",
       "fieldType": "Integer"
+    },
+    {
+      "fieldName": "ban_codigobancario",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "5"
     }
   ],
   "changelogDate": "20200627203120",

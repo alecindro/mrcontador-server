@@ -47,6 +47,12 @@
     {
       "fieldName": "age_situacao",
       "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "ban_codigobancario",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "5"
     }
   ],
   "changelogDate": "20200627203421",
