@@ -14,17 +14,17 @@ public class ContaDTO implements Serializable {
 
 	private Long id;
 
-    private Integer con_conta;
+    private Integer conConta;
 
-    private String con_classificacao;
+    private String conClassificacao;
 
-    private String con_tipo;
+    private String conTipo;
 
-    private String con_descricao;
+    private String conDescricao;
 
-    private String con_cnpj;
+    private String conCnpj;
 
-    private Integer con_grau;
+    private Integer conGrau;
 
 
     private Long parceiroId;
@@ -36,56 +36,56 @@ public class ContaDTO implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public Integer getConConta() {
+		return conConta;
+	}
 
-    public Integer getCon_conta() {
-        return con_conta;
-    }
+	public void setConConta(Integer conConta) {
+		this.conConta = conConta;
+	}
 
-    public void setCon_conta(Integer con_conta) {
-        this.con_conta = con_conta;
-    }
+	public String getConClassificacao() {
+		return conClassificacao;
+	}
 
-    public String getCon_classificacao() {
-        return con_classificacao;
-    }
+	public void setConClassificacao(String conClassificacao) {
+		this.conClassificacao = conClassificacao;
+	}
 
-    public void setCon_classificacao(String con_classificacao) {
-        this.con_classificacao = con_classificacao;
-    }
+	public String getConTipo() {
+		return conTipo;
+	}
 
-    public String getCon_tipo() {
-        return con_tipo;
-    }
+	public void setConTipo(String conTipo) {
+		this.conTipo = conTipo;
+	}
 
-    public void setCon_tipo(String con_tipo) {
-        this.con_tipo = con_tipo;
-    }
+	public String getConDescricao() {
+		return conDescricao;
+	}
 
-    public String getCon_descricao() {
-        return con_descricao;
-    }
+	public void setConDescricao(String conDescricao) {
+		this.conDescricao = conDescricao;
+	}
 
-    public void setCon_descricao(String con_descricao) {
-        this.con_descricao = con_descricao;
-    }
+	public String getConCnpj() {
+		return conCnpj;
+	}
 
-    public String getCon_cnpj() {
-        return con_cnpj;
-    }
+	public void setConCnpj(String conCnpj) {
+		this.conCnpj = conCnpj;
+	}
 
-    public void setCon_cnpj(String con_cnpj) {
-        this.con_cnpj = con_cnpj;
-    }
+	public Integer getConGrau() {
+		return conGrau;
+	}
 
-    public Integer getCon_grau() {
-        return con_grau;
-    }
+	public void setConGrau(Integer conGrau) {
+		this.conGrau = conGrau;
+	}
 
-    public void setCon_grau(Integer con_grau) {
-        this.con_grau = con_grau;
-    }
-
-    public Long getParceiroId() {
+	public Long getParceiroId() {
         return parceiroId;
     }
 
@@ -115,12 +115,12 @@ public class ContaDTO implements Serializable {
     public String toString() {
         return "ContaDTO{" +
             "id=" + getId() +
-            ", con_conta=" + getCon_conta() +
-            ", con_classificacao='" + getCon_classificacao() + "'" +
-            ", con_tipo='" + getCon_tipo() + "'" +
-            ", con_descricao='" + getCon_descricao() + "'" +
-            ", con_cnpj='" + getCon_cnpj() + "'" +
-            ", con_grau=" + getCon_grau() +
+            ", con_conta=" + getConConta() +
+            ", con_classificacao='" + getConClassificacao() + "'" +
+            ", con_tipo='" + getConTipo() + "'" +
+            ", con_descricao='" + getConDescricao() + "'" +
+            ", con_cnpj='" + getConCnpj() + "'" +
+            ", con_grau=" + getConGrau() +
             ", parceiroId=" + getParceiroId() +
             "}";
     }

@@ -32,22 +32,22 @@ public class Conta implements Serializable {
     private Long id;
 
     @Column(name = "con_conta")
-    private Integer con_conta;
+    private Integer conConta;
 
     @Column(name = "con_classificacao", length = 20)
-    private String con_classificacao;
+    private String conClassificacao;
 
     @Column(name = "con_tipo", length = 1)
-    private String con_tipo;
+    private String conTipo;
 
     @Column(name = "con_descricao", length = 60)
-    private String con_descricao;
+    private String conDescricao;
 
     @Column(name = "con_cnpj", length = 18)
-    private String con_cnpj;
+    private String conCnpj;
 
     @Column(name = "con_grau")
-    private Integer con_grau;
+    private Integer conGrau;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -67,82 +67,42 @@ public class Conta implements Serializable {
         this.id = id;
     }
 
-    public Integer getCon_conta() {
-        return con_conta;
-    }
-
-    public Conta con_conta(Integer con_conta) {
-        this.con_conta = con_conta;
+    public Conta conConta(Integer conConta) {
+        this.conConta = conConta;
         return this;
     }
 
-    public void setCon_conta(Integer con_conta) {
-        this.con_conta = con_conta;
+    public String getConClassificacao() {
+        return conClassificacao;
     }
 
-    public String getCon_classificacao() {
-        return con_classificacao;
-    }
-
-    public Conta con_classificacao(String con_classificacao) {
-        this.con_classificacao = con_classificacao;
+    public Conta conClassificacao(String conClassificacao) {
+        this.conClassificacao = conClassificacao;
         return this;
     }
 
-    public void setCon_classificacao(String con_classificacao) {
-        this.con_classificacao = con_classificacao;
+    public void setConClassificacao(String conClassificacao) {
+        this.conClassificacao = conClassificacao;
     }
 
-    public String getCon_tipo() {
-        return con_tipo;
-    }
-
-    public Conta con_tipo(String con_tipo) {
-        this.con_tipo = con_tipo;
+    public Conta conTipo(String conTipo) {
+        this.conTipo = conTipo;
         return this;
     }
 
-    public void setCon_tipo(String con_tipo) {
-        this.con_tipo = con_tipo;
-    }
-
-    public String getCon_descricao() {
-        return con_descricao;
-    }
-
-    public Conta con_descricao(String con_descricao) {
-        this.con_descricao = con_descricao;
+    public Conta conDescricao(String conDescricao) {
+        this.conDescricao = conDescricao;
         return this;
     }
 
-    public void setCon_descricao(String con_descricao) {
-        this.con_descricao = con_descricao;
-    }
-
-    public String getCon_cnpj() {
-        return con_cnpj;
-    }
-
-    public Conta con_cnpj(String con_cnpj) {
-        this.con_cnpj = con_cnpj;
+    public Conta conCnpj(String conCnpj) {
+        this.conCnpj = conCnpj;
         return this;
     }
 
-    public void setCon_cnpj(String con_cnpj) {
-        this.con_cnpj = con_cnpj;
-    }
-
-    public Integer getCon_grau() {
-        return con_grau;
-    }
-
-    public Conta con_grau(Integer con_grau) {
-        this.con_grau = con_grau;
+    public Conta conGrau(Integer conGrau) {
+        this.conGrau = conGrau;
         return this;
-    }
-
-    public void setCon_grau(Integer con_grau) {
-        this.con_grau = con_grau;
     }
 
     public Parceiro getParceiro() {
@@ -166,8 +126,48 @@ public class Conta implements Serializable {
 		this.arquivo = arquivo;
 	}
 	
-	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+	public Integer getConConta() {
+		return conConta;
+	}
 
+	public void setConConta(Integer conConta) {
+		this.conConta = conConta;
+	}
+
+	public String getConTipo() {
+		return conTipo;
+	}
+
+	public void setConTipo(String conTipo) {
+		this.conTipo = conTipo;
+	}
+
+	public String getConDescricao() {
+		return conDescricao;
+	}
+
+	public void setConDescricao(String conDescricao) {
+		this.conDescricao = conDescricao;
+	}
+
+	public String getConCnpj() {
+		return conCnpj;
+	}
+
+	public void setConCnpj(String conCnpj) {
+		this.conCnpj = conCnpj;
+	}
+
+	public Integer getConGrau() {
+		return conGrau;
+	}
+
+	public void setConGrau(Integer conGrau) {
+		this.conGrau = conGrau;
+	}
+
+	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+	
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -189,12 +189,12 @@ public class Conta implements Serializable {
     public String toString() {
         return "Conta{" +
             "id=" + getId() +
-            ", con_conta=" + getCon_conta() +
-            ", con_classificacao='" + getCon_classificacao() + "'" +
-            ", con_tipo='" + getCon_tipo() + "'" +
-            ", con_descricao='" + getCon_descricao() + "'" +
-            ", con_cnpj='" + getCon_cnpj() + "'" +
-            ", con_grau=" + getCon_grau() +
+            ", con_conta=" + getConConta() +
+            ", con_classificacao='" + getConClassificacao() + "'" +
+            ", con_tipo='" + getConTipo() + "'" +
+            ", con_descricao='" + getConDescricao() + "'" +
+            ", con_cnpj='" + getConCnpj() + "'" +
+            ", con_grau=" + getConGrau() +
             "}";
     }
 }

@@ -56,17 +56,17 @@ public class Extrato implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "extratoes", allowSetters = true)
+    @JsonIgnoreProperties(value = "extratos", allowSetters = true)
     private Parceiro parceiro;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "extratoes", allowSetters = true)
+    @JsonIgnoreProperties(value = "extratos", allowSetters = true)
     private Agenciabancaria agenciabancaria;
     
     @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @NotNull
-    @JsonIgnoreProperties(value = "notas", allowSetters = true)
+    @JsonIgnoreProperties(value = "extratos", allowSetters = true)
     private Arquivo arquivo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

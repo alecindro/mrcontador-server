@@ -16,16 +16,16 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 	@Override
 	public Conta toEntity(PlanoContaDetail dto) {
 		Conta conta = new Conta();
-		conta.setCon_classificacao(StringUtils.normalizeSpace(dto.getClassificacao()));
-		conta.setCon_cnpj(MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getCnpj())));
+		conta.setConClassificacao(StringUtils.normalizeSpace(dto.getClassificacao()));
+		conta.setConCnpj(MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getCnpj())));
 		if (StringUtils.isNumeric(dto.getCodigo().trim())) {
-			conta.setCon_conta(Integer.valueOf(dto.getCodigo().trim()));
+			conta.setConConta(Integer.valueOf(dto.getCodigo().trim()));
 		}
 		if (dto.getGrau() != null && StringUtils.isNumeric(dto.getGrau().trim())) {
-			conta.setCon_grau(Integer.valueOf(dto.getGrau().trim()));
+			conta.setConGrau(Integer.valueOf(dto.getGrau().trim()));
 		}
-		conta.setCon_tipo(StringUtils.normalizeSpace(dto.getT()));
-		conta.setCon_descricao(StringUtils.normalizeSpace(dto.getDescricao()));
+		conta.setConTipo(StringUtils.normalizeSpace(dto.getT()));
+		conta.setConDescricao(StringUtils.normalizeSpace(dto.getDescricao()));
 		return conta;
 	}
 

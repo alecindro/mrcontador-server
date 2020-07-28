@@ -26,17 +26,17 @@ public class ContaCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private IntegerFilter con_conta;
+    private IntegerFilter conConta;
 
-    private StringFilter con_classificacao;
+    private StringFilter conClassificacao;
 
-    private StringFilter con_tipo;
+    private StringFilter conTipo;
 
-    private StringFilter con_descricao;
+    private StringFilter conDescricao;
 
-    private StringFilter con_cnpj;
+    private StringFilter conCnpj;
 
-    private IntegerFilter con_grau;
+    private IntegerFilter conGrau;
 
     private LongFilter parceiroId;
 
@@ -45,12 +45,12 @@ public class ContaCriteria implements Serializable, Criteria {
 
     public ContaCriteria(ContaCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.con_conta = other.con_conta == null ? null : other.con_conta.copy();
-        this.con_classificacao = other.con_classificacao == null ? null : other.con_classificacao.copy();
-        this.con_tipo = other.con_tipo == null ? null : other.con_tipo.copy();
-        this.con_descricao = other.con_descricao == null ? null : other.con_descricao.copy();
-        this.con_cnpj = other.con_cnpj == null ? null : other.con_cnpj.copy();
-        this.con_grau = other.con_grau == null ? null : other.con_grau.copy();
+        this.conConta = other.conConta == null ? null : other.conConta.copy();
+        this.conClassificacao = other.conClassificacao == null ? null : other.conClassificacao.copy();
+        this.conTipo = other.conTipo == null ? null : other.conTipo.copy();
+        this.conDescricao = other.conDescricao == null ? null : other.conDescricao.copy();
+        this.conCnpj = other.conCnpj == null ? null : other.conCnpj.copy();
+        this.conGrau = other.conGrau == null ? null : other.conGrau.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
     }
 
@@ -67,55 +67,55 @@ public class ContaCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public IntegerFilter getCon_conta() {
-        return con_conta;
-    }
+    public IntegerFilter getConConta() {
+		return conConta;
+	}
 
-    public void setCon_conta(IntegerFilter con_conta) {
-        this.con_conta = con_conta;
-    }
+	public void setConConta(IntegerFilter conConta) {
+		this.conConta = conConta;
+	}
 
-    public StringFilter getCon_classificacao() {
-        return con_classificacao;
-    }
+	public StringFilter getConClassificacao() {
+		return conClassificacao;
+	}
 
-    public void setCon_classificacao(StringFilter con_classificacao) {
-        this.con_classificacao = con_classificacao;
-    }
+	public void setConClassificacao(StringFilter conClassificacao) {
+		this.conClassificacao = conClassificacao;
+	}
 
-    public StringFilter getCon_tipo() {
-        return con_tipo;
-    }
+	public StringFilter getConTipo() {
+		return conTipo;
+	}
 
-    public void setCon_tipo(StringFilter con_tipo) {
-        this.con_tipo = con_tipo;
-    }
+	public void setConTipo(StringFilter conTipo) {
+		this.conTipo = conTipo;
+	}
 
-    public StringFilter getCon_descricao() {
-        return con_descricao;
-    }
+	public StringFilter getConDescricao() {
+		return conDescricao;
+	}
 
-    public void setCon_descricao(StringFilter con_descricao) {
-        this.con_descricao = con_descricao;
-    }
+	public void setConDescricao(StringFilter conDescricao) {
+		this.conDescricao = conDescricao;
+	}
 
-    public StringFilter getCon_cnpj() {
-        return con_cnpj;
-    }
+	public StringFilter getConCnpj() {
+		return conCnpj;
+	}
 
-    public void setCon_cnpj(StringFilter con_cnpj) {
-        this.con_cnpj = con_cnpj;
-    }
+	public void setConCnpj(StringFilter conCnpj) {
+		this.conCnpj = conCnpj;
+	}
 
-    public IntegerFilter getCon_grau() {
-        return con_grau;
-    }
+	public IntegerFilter getConGrau() {
+		return conGrau;
+	}
 
-    public void setCon_grau(IntegerFilter con_grau) {
-        this.con_grau = con_grau;
-    }
+	public void setConGrau(IntegerFilter conGrau) {
+		this.conGrau = conGrau;
+	}
 
-    public LongFilter getParceiroId() {
+	public LongFilter getParceiroId() {
         return parceiroId;
     }
 
@@ -135,12 +135,12 @@ public class ContaCriteria implements Serializable, Criteria {
         final ContaCriteria that = (ContaCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(con_conta, that.con_conta) &&
-            Objects.equals(con_classificacao, that.con_classificacao) &&
-            Objects.equals(con_tipo, that.con_tipo) &&
-            Objects.equals(con_descricao, that.con_descricao) &&
-            Objects.equals(con_cnpj, that.con_cnpj) &&
-            Objects.equals(con_grau, that.con_grau) &&
+            Objects.equals(conConta, that.conConta) &&
+            Objects.equals(conClassificacao, that.conClassificacao) &&
+            Objects.equals(conTipo, that.conTipo) &&
+            Objects.equals(conDescricao, that.conDescricao) &&
+            Objects.equals(conCnpj, that.conCnpj) &&
+            Objects.equals(conGrau, that.conGrau) &&
             Objects.equals(parceiroId, that.parceiroId);
     }
 
@@ -148,12 +148,12 @@ public class ContaCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
         id,
-        con_conta,
-        con_classificacao,
-        con_tipo,
-        con_descricao,
-        con_cnpj,
-        con_grau,
+        conConta,
+        conClassificacao,
+        conTipo,
+        conDescricao,
+        conCnpj,
+        conGrau,
         parceiroId
         );
     }
@@ -163,12 +163,12 @@ public class ContaCriteria implements Serializable, Criteria {
     public String toString() {
         return "ContaCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (con_conta != null ? "con_conta=" + con_conta + ", " : "") +
-                (con_classificacao != null ? "con_classificacao=" + con_classificacao + ", " : "") +
-                (con_tipo != null ? "con_tipo=" + con_tipo + ", " : "") +
-                (con_descricao != null ? "con_descricao=" + con_descricao + ", " : "") +
-                (con_cnpj != null ? "con_cnpj=" + con_cnpj + ", " : "") +
-                (con_grau != null ? "con_grau=" + con_grau + ", " : "") +
+                (conConta != null ? "conConta=" + conConta + ", " : "") +
+                (conClassificacao != null ? "conClassificacao=" + conClassificacao + ", " : "") +
+                (conTipo != null ? "conTipo=" + conTipo + ", " : "") +
+                (conDescricao != null ? "conDescricao=" + conDescricao + ", " : "") +
+                (conCnpj != null ? "conCnpj=" + conCnpj + ", " : "") +
+                (conGrau != null ? "conGrau=" + conGrau + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
             "}";
     }

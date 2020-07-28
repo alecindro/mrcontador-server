@@ -91,23 +91,23 @@ public class ContaQueryService extends QueryService<Conta> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Conta_.id));
             }
-            if (criteria.getCon_conta() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCon_conta(), Conta_.con_conta));
+            if (criteria.getConConta() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getConConta(), Conta_.conConta));
             }
-            if (criteria.getCon_classificacao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCon_classificacao(), Conta_.con_classificacao));
+            if (criteria.getConClassificacao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getConClassificacao(), Conta_.conClassificacao));
             }
-            if (criteria.getCon_tipo() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCon_tipo(), Conta_.con_tipo));
+            if (criteria.getConTipo() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getConTipo(), Conta_.conTipo));
             }
-            if (criteria.getCon_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCon_descricao(), Conta_.con_descricao));
+            if (criteria.getConDescricao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getConDescricao(), Conta_.conDescricao));
             }
-            if (criteria.getCon_cnpj() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCon_cnpj(), Conta_.con_cnpj));
+            if (criteria.getConCnpj() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getConCnpj(), Conta_.conCnpj));
             }
-            if (criteria.getCon_grau() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCon_grau(), Conta_.con_grau));
+            if (criteria.getConGrau() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getConGrau(), Conta_.conGrau));
             }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
