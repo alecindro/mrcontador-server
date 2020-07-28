@@ -38,7 +38,7 @@ public class TestNFE {
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());
 			dto.setUsuario("SYSTEM");
-			fileService.process(dto);
+			fileService.processNFE(dto);
 	} catch(Exception e) {
 		e.printStackTrace();
 	}

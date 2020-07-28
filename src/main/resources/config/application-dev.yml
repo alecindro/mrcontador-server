@@ -38,7 +38,7 @@ spring:
   datasource:
     platform: postgres
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://192.168.10.5:5432/mrcontador
+    url: jdbc:postgresql://192.168.10.4:5432/mrcontador
     #url: jdbc:postgresql://localhost:5432/mrcontador
     username: postgres
     password: banana2018!
@@ -64,6 +64,10 @@ spring:
       hibernate.show_sql: true
       hibernate.format_sql: true
       hibernate.hbm2ddl.auto: none
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+      hibernate.jdbc.batch_size: 100
+
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker

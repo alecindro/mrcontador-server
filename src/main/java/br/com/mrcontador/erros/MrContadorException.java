@@ -1,29 +1,33 @@
 package br.com.mrcontador.erros;
 
-public class MrContadorException extends RuntimeException{
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import br.com.mrcontador.web.rest.errors.ErrorConstants;
+
+public class MrContadorException extends BadRequestAlertException{
 	
 	private static final long serialVersionUID = 1L;
 	private String errorKey;
 	private String defaultMessasge;
 	
 	public MrContadorException(String errorKey, String message, Throwable e) {
-		super(message,e);
+		 super(ErrorConstants.DEFAULT_TYPE, e.getMessage(), message, errorKey);
 		this.defaultMessasge = message;
 		this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey, Throwable e) {
-		super(e);
+		 super(ErrorConstants.DEFAULT_TYPE, e.getMessage(), e.getMessage(), errorKey);
 		this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey, String message) {
-		super(message);
+		 super(ErrorConstants.DEFAULT_TYPE, message, message, errorKey);
 		this.defaultMessasge = message;
 		this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey) {
+		 super(ErrorConstants.DEFAULT_TYPE, "", "", errorKey);
 		this.errorKey = errorKey;
 	}
 	

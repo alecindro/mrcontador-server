@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
+import br.com.mrcontador.file.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.util.MessageUtil;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -35,14 +37,13 @@ public class UploadFileResource {
 		this.fileService = fileService;
 	}
 
-	@PostMapping("/uploadFile")
-	public ResponseEntity<Void> uploadFile(@RequestParam("file") MultipartFile file, HttpRequest request) throws Exception{
+	@PostMapping("/upload/planoconta")
+	public ResponseEntity<Parceiro> uploadPlanoConta(@RequestParam("file") MultipartFile file, HttpRequest request) throws Exception{
 		log.info("Processando arquivo: {}. Cliente: {}",file.getName(), SecurityUtils.getCurrentTenantHeader());
 		try {
-		fileService.process(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader());
-		 return ResponseEntity.created(new URI("/api/uploadFile/"))
-	                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadFile", file.getName()))
-	                .build();
+			Parceiro parceiro = fileService.processPlanoConta(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(),SistemaPlanoConta.DOMINIO_SISTEMAS);
+		 return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
+	                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName())).body(parceiro);
 		} catch (MrContadorException e) {
 	    	   return ResponseEntity.badRequest().headers(MessageUtil.generate(applicationName, e)).build();
 	       }

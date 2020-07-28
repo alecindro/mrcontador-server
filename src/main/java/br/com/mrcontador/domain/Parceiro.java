@@ -1,15 +1,24 @@
 package br.com.mrcontador.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Parceiro.
@@ -127,11 +136,18 @@ public class Parceiro implements Serializable {
 
     @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Atividade> atividades = new HashSet<>();
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Set<Atividade> atividades;
 
     @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Socio> socios = new HashSet<>();
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Set<Socio> socios;
+    
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Set<Agenciabancaria> agenciabancarias;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -454,6 +470,9 @@ public class Parceiro implements Serializable {
     }
 
     public Set<Atividade> getAtividades() {
+    	if(atividades == null) {
+    		atividades =  new HashSet<>();
+    	}
         return atividades;
     }
 
@@ -463,13 +482,13 @@ public class Parceiro implements Serializable {
     }
 
     public Parceiro addAtividade(Atividade atividade) {
-        this.atividades.add(atividade);
+        this.getAtividades().add(atividade);
         atividade.setParceiro(this);
         return this;
     }
 
     public Parceiro removeAtividade(Atividade atividade) {
-        this.atividades.remove(atividade);
+        this.getAtividades().remove(atividade);
         atividade.setParceiro(null);
         return this;
     }
@@ -479,6 +498,9 @@ public class Parceiro implements Serializable {
     }
 
     public Set<Socio> getSocios() {
+    	if(socios == null) {
+    		socios = new HashSet<>();
+    	}
         return socios;
     }
 
@@ -488,13 +510,13 @@ public class Parceiro implements Serializable {
     }
 
     public Parceiro addSocio(Socio socio) {
-        this.socios.add(socio);
+        this.getSocios().add(socio);
         socio.setParceiro(this);
         return this;
     }
 
     public Parceiro removeSocio(Socio socio) {
-        this.socios.remove(socio);
+        this.getSocios().remove(socio);
         socio.setParceiro(null);
         return this;
     }
@@ -503,9 +525,34 @@ public class Parceiro implements Serializable {
         this.socios = socios;
     }
     
-    
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public Set<Agenciabancaria> getAgenciabancarias() {
+    	if(agenciabancarias == null) {
+    		agenciabancarias =  new HashSet<>();
+    	}
+        return agenciabancarias;
+    }
 
+    public Parceiro agenciabancarias(Set<Agenciabancaria> agenciabancarias) {
+        this.agenciabancarias = agenciabancarias;
+        return this;
+    }
+
+    public Parceiro addAgenciabancaria(Agenciabancaria agenciabancaria) {
+        this.getAgenciabancarias().add(agenciabancaria);
+        agenciabancaria.setParceiro(this);
+        return this;
+    }
+
+    public Parceiro removeAgenciabancaria(Agenciabancaria agenciabancaria) {
+        this.getAgenciabancarias().remove(agenciabancaria);
+        agenciabancaria.setParceiro(null);
+        return this;
+    }
+
+    public void setAgenciabancarias(Set<Agenciabancaria> agenciabancarias) {
+        this.agenciabancarias = agenciabancarias;
+    }
+    
     public String getParDescricao() {
 		return parDescricao;
 	}
@@ -613,6 +660,9 @@ public class Parceiro implements Serializable {
 	public void setMotivoSituacao(String motivoSituacao) {
 		this.motivoSituacao = motivoSituacao;
 	}
+	
+  // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
 
 	@Override
     public boolean equals(Object o) {

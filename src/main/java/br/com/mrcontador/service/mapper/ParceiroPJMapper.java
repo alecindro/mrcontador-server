@@ -56,7 +56,7 @@ public class ParceiroPJMapper implements EntityMapper<PessoaJuridica,Parceiro> {
 		parceiro.setTelefone(entity.getTelefone());
 		parceiro.setTipo(entity.getTipo());
 		parceiro.setUltimaAtualizacao(entity.getUltimaAtualizacao());
-		
+		parceiro.setEnabled(true);		
 		return parceiro;
 	}
 

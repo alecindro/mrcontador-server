@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mrcontador.domain.Conta;
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.repository.ContaRepository;
 import br.com.mrcontador.service.dto.ContaDTO;
 import br.com.mrcontador.service.mapper.ContaMapper;
@@ -86,4 +87,9 @@ public class ContaService {
     public List<Conta> save(List<Conta> contas){
     	return contaRepository.saveAll(contas);
     }
+    
+    public Optional<Conta> findFirstByParceiro(Parceiro parceiro){
+    	return contaRepository.findFirstByParceiro(parceiro);
+    }
+    
 }

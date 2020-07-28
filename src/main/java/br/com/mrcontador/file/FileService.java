@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.pdf.PdfParserDefault;
+import br.com.mrcontador.file.pdf.PdfParserPlanoConta;
 import br.com.mrcontador.file.xml.XmlParserDefault;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -20,35 +21,40 @@ import br.com.mrcontador.service.file.S3Service;
 public class FileService {
 
 	@Autowired
-	private PdfParserDefault pdfParserDefault;
+	private PdfParserPlanoConta pdfParserPlanoConta;
 	@Autowired
 	private XmlParserDefault xmlParserDefault;
 	@Autowired
 	private S3Service s3Service;
+	
+	public Parceiro processPlanoConta(MultipartFile file, Optional<String> usuario, String contador, SistemaPlanoConta sistemaPlanoConta) {
+		FileDTO dto = getFileDTO(file, usuario, contador);
+		return pdfParserPlanoConta.process(dto, sistemaPlanoConta);
+	}
 
-	public void process(MultipartFile file, Optional<String> usuario, String contador) {
+	
+	private FileDTO getFileDTO(MultipartFile file, Optional<String> usuario, String contador) {
 		FileDTO fileDTO = new FileDTO();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
+			file.getInputStream().transferTo(baos);
+			String media = com.google.common.net.MediaType.parse(file.getContentType()).subtype();
+			switch (media) {
+			case "pdf":
+				break;
+			case "xml": {
+				break;
+			}
+			default:
+				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
+			}
 			fileDTO.setContentType(file.getContentType());
 			fileDTO.setOriginalFilename(file.getOriginalFilename());
 			fileDTO.setSize(file.getSize());
 			fileDTO.setUsuario(usuario.isPresent()?usuario.get():"");
 			fileDTO.setContador(contador);
 			fileDTO.setInputStream(file.getInputStream());
-			file.getInputStream().transferTo(baos);
-			String media = com.google.common.net.MediaType.parse(fileDTO.getContentType()).subtype();
-			switch (media) {
-			case "pdf":
-				pdfParserDefault.process(fileDTO);
-				break;
-			case "xml": {
-				xmlParserDefault.process(fileDTO);
-				break;
-			}
-			default:
-				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
-			}
+			return fileDTO;
 		}catch (MrContadorException e){
 			throw e;
 		}
@@ -59,21 +65,21 @@ public class FileService {
 			throw new MrContadorException("file.process.error", file.getOriginalFilename());
 		}
 	}
-
-	public void process(FileDTO fileDTO) {
-			String media = com.google.common.net.MediaType.parse(fileDTO.getContentType()).subtype();
-			switch (media) {
-			case "pdf":
-				pdfParserDefault.process(fileDTO);
-				break;
-			case "xml": {
-				xmlParserDefault.process(fileDTO);
-				break;
-			}
-			default:
-				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
-			}
+	public void processNFE(FileDTO fileDTO) {
+		xmlParserDefault.process(fileDTO);
 		
 	}
+	
+	public void processNFE(MultipartFile file, Optional<String> usuario, String contador) {
+		FileDTO fileDTO = getFileDTO(file, usuario, contador);
+		xmlParserDefault.process(fileDTO);
+		
+	}
+	
+	public void processPlanoConta(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
+		pdfParserPlanoConta.process(dto, sistemaPlanoConta);
+	}
+
+
 
 }

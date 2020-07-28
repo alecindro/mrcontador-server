@@ -26,57 +26,16 @@ public class PlanoContaService {
 
 	@Autowired
 	private ParceiroRepository parceiroRepository;
-	@Autowired
-	private CnpjClient cnpjClient;
+
 	@Autowired
 	private ContaRepository contaRepository;
 
 	private Logger log = LoggerFactory.getLogger(PlanoContaService.class);
 
-	public List<Conta> save(PlanoConta planoConta, FileDTO dto) {
-		Parceiro parceiro = null;
-		Optional<Parceiro> oParceiro = findParceiro(planoConta.getCnpjCliente());
-		if (oParceiro.isPresent()) {
-			parceiro = oParceiro.get();
-			if(contaRepository.findFirstByParceiro(parceiro).isPresent()) {
-				throw new MrContadorException("conta.exists.error",parceiro.getParCnpjcpf());
-			}
-		} else {
-			PessoaJuridica pessoaJuridica = getPessoa(planoConta.getCnpjCliente());
-			parceiro = saveParceiro(pessoaJuridica);
-		}
-		dto.setParceiro(parceiro);
-		PlanoContaMapper mapper = new PlanoContaMapper();
-		List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro,planoConta.getArquivo());
-		return contaRepository.saveAll(contas);
-	}
+
 	
 
 
-	public Optional<Parceiro> findParceiro(String cnpj) {
-		return parceiroRepository.findByParCnpjcpf(MrContadorUtil.onlyNumbers(cnpj));
-	}
-
-	private Parceiro saveParceiro(PessoaJuridica pessoaJuridica) {
-		ParceiroPJMapper mapper = new ParceiroPJMapper();
-		Parceiro parceiro = mapper.toEntity(pessoaJuridica);
-		parceiro.setEnabled(true);
-		return parceiroRepository.save(parceiro);
-	}
-
-	private PessoaJuridica getPessoa(String cnpj) {
-		if (cnpj == null) {
-			throw new MrContadorException("planoconta.cnpjnull.error");
-		}
-		cnpj = MrContadorUtil.onlyNumbers(cnpj);
-		try {
-			return cnpjClient.fromRecitaWs(cnpj);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			PessoaJuridica pessoaJuridica = new PessoaJuridica();
-			pessoaJuridica.setCnpj(cnpj);
-			return pessoaJuridica;
-		}
-	}
+	
 
 }

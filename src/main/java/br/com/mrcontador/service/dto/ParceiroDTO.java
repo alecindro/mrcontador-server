@@ -80,6 +80,8 @@ public class ParceiroDTO implements Serializable {
     private String dataSituacaoEspecial;
 
     private String capitalSocial;
+    
+    private Boolean enabled;
 
     
     public Long getId() {
@@ -328,6 +330,14 @@ public class ParceiroDTO implements Serializable {
 
 	public void setCapitalSocial(String capitalSocial) {
 		this.capitalSocial = capitalSocial;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	@Override
