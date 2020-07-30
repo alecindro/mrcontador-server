@@ -2,7 +2,6 @@ package br.com.mrcontador.web.rest;
 
 import java.net.URI;
 
-import org.apache.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,6 @@ import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
 import br.com.mrcontador.file.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
-import br.com.mrcontador.util.MessageUtil;
 import io.github.jhipster.web.util.HeaderUtil;
 
 
@@ -38,14 +36,18 @@ public class UploadFileResource {
 	}
 
 	@PostMapping("/upload/planoconta")
-	public ResponseEntity<Parceiro> uploadPlanoConta(@RequestParam("file") MultipartFile file, HttpRequest request) throws Exception{
+	public ResponseEntity<Parceiro> uploadPlanoConta(@RequestParam("file") MultipartFile file, @RequestParam(required = false,name = "parceiroCNPJ") String parceiroCnpj) throws Exception{
 		log.info("Processando arquivo: {}. Cliente: {}",file.getName(), SecurityUtils.getCurrentTenantHeader());
 		try {
-			Parceiro parceiro = fileService.processPlanoConta(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(),SistemaPlanoConta.DOMINIO_SISTEMAS);
+			Parceiro parceiro = fileService.processPlanoConta(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(),parceiroCnpj,SistemaPlanoConta.DOMINIO_SISTEMAS);
 		 return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
 	                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName())).body(parceiro);
 		} catch (MrContadorException e) {
-	    	   return ResponseEntity.badRequest().headers(MessageUtil.generate(applicationName, e)).build();
+			throw e;
+			//throw new CustomParameterizedException(e.getErrorKey(),e.getDefaultMessasge());
+
+			//  throw new BadRequestAlertException(e.getDefaultMessasge(), "arquivo", e.getErrorKey());
+	    	   //return ResponseEntity.badRequest().headers(MessageUtil.generate(applicationName, e)).build();
 	       }
 	}
 

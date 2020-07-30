@@ -31,9 +31,9 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.service.ParceiroQueryService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.ParceiroCriteria;
-import br.com.mrcontador.service.dto.ParceiroDTO;
 import br.com.mrcontador.service.mapper.ParceiroPJMapper;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -75,10 +75,10 @@ public class ParceiroResource {
 	 * @throws URISyntaxException if the Location URI syntax is incorrect.
 	 */
 	@PostMapping("/parceiros")
-	public ResponseEntity<ParceiroDTO> createParceiro(@Valid @RequestBody ParceiroDTO parceiroDTO)
+	public ResponseEntity<Parceiro> createParceiro(@Valid @RequestBody Parceiro parceiro)
 			throws URISyntaxException {
-		log.debug("REST request to save Parceiro : {}", parceiroDTO);
-		ParceiroDTO result = parceiroService.save(parceiroDTO);
+		log.debug("REST request to save Parceiro : {}", parceiro);
+		Parceiro result = parceiroService.save(parceiro);
 		return ResponseEntity
 				.created(new URI("/api/parceiros/" + result.getId())).headers(HeaderUtil
 						.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -97,15 +97,15 @@ public class ParceiroResource {
 	 * @throws URISyntaxException if the Location URI syntax is incorrect.
 	 */
 	@PutMapping("/parceiros")
-	public ResponseEntity<ParceiroDTO> updateParceiro(@Valid @RequestBody ParceiroDTO parceiroDTO)
+	public ResponseEntity<Parceiro> updateParceiro(@Valid @RequestBody Parceiro parceiro)
 			throws URISyntaxException {
-		log.debug("REST request to update Parceiro : {}", parceiroDTO);
-		if (parceiroDTO.getId() == null) {
+		log.debug("REST request to update Parceiro : {}", parceiro);
+		if (parceiro.getId() == null) {
 			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
-		ParceiroDTO result = parceiroService.save(parceiroDTO);
+		Parceiro result = parceiroService.save(parceiro);
 		return ResponseEntity.ok().headers(
-				HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, parceiroDTO.getId().toString()))
+				HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, parceiro.getId().toString()))
 				.body(result);
 	}
 
@@ -118,12 +118,17 @@ public class ParceiroResource {
 	 *         of parceiros in body.
 	 */
 	@GetMapping("/parceiros")
-	public ResponseEntity<List<ParceiroDTO>> getAllParceiros(ParceiroCriteria criteria, Pageable pageable) {
+	public ResponseEntity<List<Parceiro>> getAllParceiros(ParceiroCriteria criteria, Pageable pageable) {
 		log.debug("REST request to get Parceiros by criteria: {}", criteria);
-		Page<ParceiroDTO> page = parceiroQueryService.findByCriteria(criteria, pageable);
+		Page<Parceiro> page = parceiroQueryService.findByCriteria(criteria, pageable);
 		HttpHeaders headers = PaginationUtil
 				.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
 		return ResponseEntity.ok().headers(headers).body(page.getContent());
+	}
+	
+	@GetMapping("/parceiros/all")
+	public ResponseEntity<List<Parceiro>> getAllParceiros() {
+		return ResponseEntity.ok().body(parceiroService.findAll());
 	}
 
 	@GetMapping("/parceiros/cnpj")
@@ -168,10 +173,14 @@ public class ParceiroResource {
 	 *         the parceiroDTO, or with status {@code 404 (Not Found)}.
 	 */
 	@GetMapping("/parceiros/{id}")
-	public ResponseEntity<ParceiroDTO> getParceiro(@PathVariable Long id) {
+	public ResponseEntity<Parceiro> getParceiro(@PathVariable Long id) {
 		log.debug("REST request to get Parceiro : {}", id);
-		Optional<ParceiroDTO> parceiroDTO = parceiroService.findOne(id);
-		return ResponseUtil.wrapOrNotFound(parceiroDTO);
+		ParceiroCriteria criteria = new ParceiroCriteria();
+		LongFilter filter = new LongFilter();
+		filter.setEquals(id);
+		criteria.setId(filter);
+		Optional<Parceiro> parceiro = parceiroQueryService.findOneByCriteria(criteria);
+		return ResponseUtil.wrapOrNotFound(parceiro);
 	}
 
 	/**

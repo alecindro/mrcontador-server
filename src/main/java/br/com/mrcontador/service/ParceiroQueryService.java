@@ -1,8 +1,14 @@
 package br.com.mrcontador.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +18,17 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+import br.com.mrcontador.domain.Agenciabancaria_;
+// for static metamodels
+import br.com.mrcontador.domain.Atividade_;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Parceiro_;
+import br.com.mrcontador.domain.Socio;
+import br.com.mrcontador.domain.Socio_;
 import br.com.mrcontador.repository.ParceiroRepository;
 import br.com.mrcontador.service.dto.ParceiroCriteria;
 import br.com.mrcontador.service.dto.ParceiroDTO;
-import br.com.mrcontador.service.mapper.ParceiroMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Parceiro} entities in the database.
@@ -35,11 +44,8 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
 
     private final ParceiroRepository parceiroRepository;
 
-    private final ParceiroMapper parceiroMapper;
-
-    public ParceiroQueryService(ParceiroRepository parceiroRepository, ParceiroMapper parceiroMapper) {
+    public ParceiroQueryService(ParceiroRepository parceiroRepository) {
         this.parceiroRepository = parceiroRepository;
-        this.parceiroMapper = parceiroMapper;
     }
 
     /**
@@ -48,10 +54,19 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<ParceiroDTO> findByCriteria(ParceiroCriteria criteria) {
+    public List<Parceiro> findByCriteria(ParceiroCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
-        final Specification<Parceiro> specification = createSpecification(criteria);
-        return parceiroMapper.toDto(parceiroRepository.findAll(specification));
+        final Specification<Parceiro> specification = createSpecification(criteria,Specification.where(null));
+        return parceiroRepository.findAll(specification);
+    }
+    
+    @Transactional(readOnly = true)
+    public Optional<Parceiro> findOneByCriteria(ParceiroCriteria criteria) {
+        log.debug("find by criteria : {}", criteria);
+        
+        final Specification<Parceiro> specification = createSpecification(criteria,Specification.where(null));
+        List<Parceiro> parceiros = parceiroRepository.findAll(specification);
+        return Optional.ofNullable(parceiros.isEmpty()? null : parceiros.get(0));
     }
 
     /**
@@ -61,11 +76,10 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<ParceiroDTO> findByCriteria(ParceiroCriteria criteria, Pageable page) {
+    public Page<Parceiro> findByCriteria(ParceiroCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
-        final Specification<Parceiro> specification = createSpecification(criteria);
-        return parceiroRepository.findAll(specification, page)
-            .map(parceiroMapper::toDto);
+        final Specification<Parceiro> specification = createSpecification(criteria,Specification.where(null));
+        return parceiroRepository.findAll(specification, page);
     }
 
     /**
@@ -76,7 +90,7 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
     @Transactional(readOnly = true)
     public long countByCriteria(ParceiroCriteria criteria) {
         log.debug("count by criteria : {}", criteria);
-        final Specification<Parceiro> specification = createSpecification(criteria);
+        final Specification<Parceiro> specification = createSpecification(criteria, Specification.where(null));
         return parceiroRepository.count(specification);
     }
 
@@ -85,8 +99,7 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */
-    protected Specification<Parceiro> createSpecification(ParceiroCriteria criteria) {
-        Specification<Parceiro> specification = Specification.where(null);
+    protected Specification<Parceiro> createSpecification(ParceiroCriteria criteria, Specification<Parceiro> specification) {
         if (criteria != null) {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Parceiro_.id));
@@ -192,7 +205,20 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
                 specification = specification.and(buildSpecification(criteria.getSocioId(),
                     root -> root.join(Parceiro_.socios, JoinType.LEFT).get(Socio_.id)));
             }
+            if (criteria.getAgenciabancariaId() != null) {
+                specification = specification.and(buildSpecification(criteria.getAgenciabancariaId(),
+                    root -> root.join(Parceiro_.agenciabancarias, JoinType.LEFT).get(Agenciabancaria_.id)));
+            }
+            
+            
         }
         return specification;
     }
+    
+    private Specification<Parceiro> joinSocio() {
+    	 return (root, query, builder) -> {
+    		 return ((Join)root.fetch(Parceiro_.socios,JoinType.LEFT).getParent().fetch(Parceiro_.atividades,JoinType.LEFT).getParent().fetch(Parceiro_.agenciabancarias,JoinType.LEFT)).getOn();
+    	 };
+    }
+
 }

@@ -36,7 +36,7 @@ public class ParserComprovanteDefault {
 	public void process(InputStream stream, Banco banco, Parceiro parceiro) {
 		try {
 			List<String> comprovantes = parseComprovante(stream);
-			ComprovanteBanco parser = getParser(banco.getBan_codigobancario());
+			ComprovanteBanco parser = getParser(banco.getBanCodigobancario());
 			List<DiffPage> diffPages = new ArrayList<>();
 			int page = 1;
 			for (String comprovante : comprovantes) {

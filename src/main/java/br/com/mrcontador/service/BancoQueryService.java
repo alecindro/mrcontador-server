@@ -16,7 +16,6 @@ import br.com.mrcontador.domain.Banco_;
 import br.com.mrcontador.repository.BancoRepository;
 import br.com.mrcontador.service.dto.BancoCriteria;
 import br.com.mrcontador.service.dto.BancoDTO;
-import br.com.mrcontador.service.mapper.BancoMapper;
 import io.github.jhipster.service.QueryService;
 
 /**
@@ -33,11 +32,8 @@ public class BancoQueryService extends QueryService<Banco> {
 
     private final BancoRepository bancoRepository;
 
-    private final BancoMapper bancoMapper;
-
-    public BancoQueryService(BancoRepository bancoRepository, BancoMapper bancoMapper) {
+    public BancoQueryService(BancoRepository bancoRepository) {
         this.bancoRepository = bancoRepository;
-        this.bancoMapper = bancoMapper;
     }
 
     /**
@@ -46,10 +42,10 @@ public class BancoQueryService extends QueryService<Banco> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<BancoDTO> findByCriteria(BancoCriteria criteria) {
+    public List<Banco> findByCriteria(BancoCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Banco> specification = createSpecification(criteria);
-        return bancoMapper.toDto(bancoRepository.findAll(specification));
+        return bancoRepository.findAll(specification);
     }
     
     @Transactional(readOnly = true)
@@ -66,11 +62,10 @@ public class BancoQueryService extends QueryService<Banco> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<BancoDTO> findByCriteria(BancoCriteria criteria, Pageable page) {
+    public Page<Banco> findByCriteria(BancoCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Banco> specification = createSpecification(criteria);
-        return bancoRepository.findAll(specification, page)
-            .map(bancoMapper::toDto);
+        return bancoRepository.findAll(specification, page);
     }
 
     /**
@@ -96,17 +91,17 @@ public class BancoQueryService extends QueryService<Banco> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Banco_.id));
             }
-            if (criteria.getBan_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getBan_descricao(), Banco_.ban_descricao));
+            if (criteria.getBanDescricao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getBanDescricao(), Banco_.banDescricao));
             }
-            if (criteria.getBan_sigla() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getBan_sigla(), Banco_.ban_sigla));
+            if (criteria.getBanSigla() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getBanSigla(), Banco_.banSigla));
             }
-            if (criteria.getBan_ispb() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getBan_ispb(), Banco_.ban_ispb));
+            if (criteria.getBanIspb() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getBanIspb(), Banco_.banIspb));
             }
-            if (criteria.getBan_codigobancario() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getBan_codigobancario(), Banco_.ban_codigobancario));
+            if (criteria.getBanCodigobancario() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getBanCodigobancario(), Banco_.banCodigobancario));
             }
         }
         return specification;

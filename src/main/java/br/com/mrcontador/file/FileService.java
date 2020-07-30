@@ -27,9 +27,9 @@ public class FileService {
 	@Autowired
 	private S3Service s3Service;
 	
-	public Parceiro processPlanoConta(MultipartFile file, Optional<String> usuario, String contador, SistemaPlanoConta sistemaPlanoConta) {
+	public Parceiro processPlanoConta(MultipartFile file, Optional<String> usuario, String contador,String cnpjParceiro,  SistemaPlanoConta sistemaPlanoConta) {
 		FileDTO dto = getFileDTO(file, usuario, contador);
-		return pdfParserPlanoConta.process(dto, sistemaPlanoConta);
+		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, cnpjParceiro);
 	}
 
 	
@@ -76,10 +76,7 @@ public class FileService {
 		
 	}
 	
-	public void processPlanoConta(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
-		pdfParserPlanoConta.process(dto, sistemaPlanoConta);
-	}
-
+	
 
 
 }

@@ -27,7 +27,7 @@ public class TestComprovante {
 	@Test
 	public void testSicoob() throws FileNotFoundException {
 		Banco banco = new Banco();
-		banco.setBan_codigobancario(BancoCodigoBancario.SICOOB.getCodigoBancario());
+		banco.setBanCodigobancario(BancoCodigoBancario.SICOOB.getCodigoBancario());
 		defaultParser.process(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/sicoob.pdf"), banco, null);
 		
 	}
@@ -35,7 +35,7 @@ public class TestComprovante {
 	
 	public void testCredCrea() throws FileNotFoundException {
 		Banco banco = new Banco();
-		banco.setBan_codigobancario(BancoCodigoBancario.CREDCREA.getCodigoBancario());
+		banco.setBanCodigobancario(BancoCodigoBancario.CREDCREA.getCodigoBancario());
 		defaultParser.process(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/credcrea.pdf"), banco, null);
 		
 	}
@@ -43,14 +43,14 @@ public class TestComprovante {
 	
 	public void testSantander() throws FileNotFoundException {
 		Banco banco = new Banco();
-		banco.setBan_codigobancario(BancoCodigoBancario.SANTANDER.getCodigoBancario());
+		banco.setBanCodigobancario(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		defaultParser.process(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/santander.pdf"), banco, null);
 		
 	}
 	
 	public void testBradesco() throws FileNotFoundException {
 		Banco banco = new Banco();
-		banco.setBan_codigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
+		banco.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
 		defaultParser.process(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco.pdf"), banco, null);
 		
 	}

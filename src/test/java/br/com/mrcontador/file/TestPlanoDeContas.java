@@ -42,7 +42,7 @@ public class TestPlanoDeContas {
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());
 			dto.setUsuario("SYSTEM");
-     		fileService.processPlanoConta(dto,SistemaPlanoConta.DOMINIO_SISTEMAS);
+     		//fileService.processPlanoConta(dto,SistemaPlanoConta.DOMINIO_SISTEMAS);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

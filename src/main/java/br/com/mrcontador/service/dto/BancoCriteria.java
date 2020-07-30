@@ -2,11 +2,9 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import io.github.jhipster.service.Criteria;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -26,23 +24,23 @@ public class BancoCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private StringFilter ban_descricao;
+    private StringFilter banDescricao;
 
-    private StringFilter ban_sigla;
+    private StringFilter banSigla;
 
-    private IntegerFilter ban_ispb;
+    private IntegerFilter banIspb;
 
-    private StringFilter ban_codigobancario;
+    private StringFilter banCodigobancario;
 
     public BancoCriteria() {
     }
 
     public BancoCriteria(BancoCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.ban_descricao = other.ban_descricao == null ? null : other.ban_descricao.copy();
-        this.ban_sigla = other.ban_sigla == null ? null : other.ban_sigla.copy();
-        this.ban_ispb = other.ban_ispb == null ? null : other.ban_ispb.copy();
-        this.ban_codigobancario = other.ban_codigobancario == null ? null : other.ban_codigobancario.copy();
+        this.banDescricao = other.banDescricao == null ? null : other.banDescricao.copy();
+        this.banSigla = other.banSigla == null ? null : other.banSigla.copy();
+        this.banIspb = other.banIspb == null ? null : other.banIspb.copy();
+        this.banCodigobancario = other.banCodigobancario == null ? null : other.banCodigobancario.copy();
     }
 
     @Override
@@ -58,40 +56,39 @@ public class BancoCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public StringFilter getBan_descricao() {
-        return ban_descricao;
-    }
+    public StringFilter getBanDescricao() {
+		return banDescricao;
+	}
 
-    public void setBan_descricao(StringFilter ban_descricao) {
-        this.ban_descricao = ban_descricao;
-    }
+	public void setBanDescricao(StringFilter banDescricao) {
+		this.banDescricao = banDescricao;
+	}
 
-    public StringFilter getBan_sigla() {
-        return ban_sigla;
-    }
+	public StringFilter getBanSigla() {
+		return banSigla;
+	}
 
-    public void setBan_sigla(StringFilter ban_sigla) {
-        this.ban_sigla = ban_sigla;
-    }
+	public void setBanSigla(StringFilter banSigla) {
+		this.banSigla = banSigla;
+	}
 
-    public IntegerFilter getBan_ispb() {
-        return ban_ispb;
-    }
+	public IntegerFilter getBanIspb() {
+		return banIspb;
+	}
 
-    public void setBan_ispb(IntegerFilter ban_ispb) {
-        this.ban_ispb = ban_ispb;
-    }
+	public void setBanIspb(IntegerFilter banIspb) {
+		this.banIspb = banIspb;
+	}
 
-    public StringFilter getBan_codigobancario() {
-        return ban_codigobancario;
-    }
+	public StringFilter getBanCodigobancario() {
+		return banCodigobancario;
+	}
 
-    public void setBan_codigobancario(StringFilter ban_codigobancario) {
-        this.ban_codigobancario = ban_codigobancario;
-    }
+	public void setBanCodigobancario(StringFilter banCodigobancario) {
+		this.banCodigobancario = banCodigobancario;
+	}
 
-
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -102,20 +99,20 @@ public class BancoCriteria implements Serializable, Criteria {
         final BancoCriteria that = (BancoCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(ban_descricao, that.ban_descricao) &&
-            Objects.equals(ban_sigla, that.ban_sigla) &&
-            Objects.equals(ban_ispb, that.ban_ispb) &&
-            Objects.equals(ban_codigobancario, that.ban_codigobancario);
+            Objects.equals(banDescricao, that.banDescricao) &&
+            Objects.equals(banSigla, that.banSigla) &&
+            Objects.equals(banIspb, that.banIspb) &&
+            Objects.equals(banCodigobancario, that.banCodigobancario);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
         id,
-        ban_descricao,
-        ban_sigla,
-        ban_ispb,
-        ban_codigobancario
+        banDescricao,
+        banSigla,
+        banIspb,
+        banCodigobancario
         );
     }
 
@@ -124,10 +121,10 @@ public class BancoCriteria implements Serializable, Criteria {
     public String toString() {
         return "BancoCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (ban_descricao != null ? "ban_descricao=" + ban_descricao + ", " : "") +
-                (ban_sigla != null ? "ban_sigla=" + ban_sigla + ", " : "") +
-                (ban_ispb != null ? "ban_ispb=" + ban_ispb + ", " : "") +
-                (ban_codigobancario != null ? "ban_codigobancario=" + ban_codigobancario + ", " : "") +
+                (banDescricao != null ? "ban_descricao=" + banDescricao + ", " : "") +
+                (banSigla != null ? "ban_sigla=" + banSigla + ", " : "") +
+                (banIspb != null ? "ban_ispb=" + banIspb + ", " : "") +
+                (banCodigobancario != null ? "ban_codigobancario=" + banCodigobancario + ", " : "") +
             "}";
     }
 

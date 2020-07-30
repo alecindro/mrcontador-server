@@ -1,5 +1,6 @@
 package br.com.mrcontador.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -14,8 +15,6 @@ import br.com.mrcontador.client.dto.PessoaJuridica;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.repository.ParceiroRepository;
-import br.com.mrcontador.service.dto.ParceiroDTO;
-import br.com.mrcontador.service.mapper.ParceiroMapper;
 import br.com.mrcontador.service.mapper.ParceiroPJMapper;
 import br.com.mrcontador.util.MrContadorUtil;
 import br.com.mrcontador.web.rest.errors.CnpjAlreadyExistException;
@@ -31,14 +30,11 @@ public class ParceiroService {
 
 	private final ParceiroRepository parceiroRepository;
 
-	private final ParceiroMapper parceiroMapper;
-
 	private final CnpjClient cnpjClient;
 
-	public ParceiroService(ParceiroRepository parceiroRepository, ParceiroMapper parceiroMapper,
+	public ParceiroService(ParceiroRepository parceiroRepository, 
 			CnpjClient cnpjClient) {
 		this.parceiroRepository = parceiroRepository;
-		this.parceiroMapper = parceiroMapper;
 		this.cnpjClient = cnpjClient;
 	}
 
@@ -48,12 +44,6 @@ public class ParceiroService {
 	 * @param parceiroDTO the entity to save.
 	 * @return the persisted entity.
 	 */
-	public ParceiroDTO save(ParceiroDTO parceiroDTO) {
-		log.debug("Request to save Parceiro : {}", parceiroDTO);
-		Parceiro parceiro = parceiroMapper.toEntity(parceiroDTO);
-		parceiro = parceiroRepository.save(parceiro);
-		return parceiroMapper.toDto(parceiro);
-	}
 
 	public Parceiro save(Parceiro parceiro) {
 		return parceiroRepository.save(parceiro);
@@ -66,9 +56,15 @@ public class ParceiroService {
 	 * @return the list of entities.
 	 */
 	@Transactional(readOnly = true)
-	public Page<ParceiroDTO> findAll(Pageable pageable) {
+	public Page<Parceiro> findAll(Pageable pageable) {
 		log.debug("Request to get all Parceiros");
-		return parceiroRepository.findAll(pageable).map(parceiroMapper::toDto);
+		return parceiroRepository.findAll(pageable);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Parceiro> findAll() {
+		log.debug("Request to get all Parceiros");
+		return parceiroRepository.findAll();
 	}
 
 	/**
@@ -78,9 +74,9 @@ public class ParceiroService {
 	 * @return the entity.
 	 */
 	@Transactional(readOnly = true)
-	public Optional<ParceiroDTO> findOne(Long id) {
+	public Optional<Parceiro> findOne(Long id) {
 		log.debug("Request to get Parceiro : {}", id);
-		return parceiroRepository.findById(id).map(parceiroMapper::toDto);
+		return parceiroRepository.findById(id);
 	}
 
 	/**

@@ -1,18 +1,17 @@
 package br.com.mrcontador.service;
 
-import br.com.mrcontador.domain.Agenciabancaria;
-import br.com.mrcontador.repository.AgenciabancariaRepository;
-import br.com.mrcontador.service.dto.AgenciabancariaDTO;
-import br.com.mrcontador.service.mapper.AgenciabancariaMapper;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.repository.AgenciabancariaRepository;
+import br.com.mrcontador.service.dto.AgenciabancariaDTO;
 
 /**
  * Service Implementation for managing {@link Agenciabancaria}.
@@ -25,11 +24,9 @@ public class AgenciabancariaService {
 
     private final AgenciabancariaRepository agenciabancariaRepository;
 
-    private final AgenciabancariaMapper agenciabancariaMapper;
 
-    public AgenciabancariaService(AgenciabancariaRepository agenciabancariaRepository, AgenciabancariaMapper agenciabancariaMapper) {
+    public AgenciabancariaService(AgenciabancariaRepository agenciabancariaRepository) {
         this.agenciabancariaRepository = agenciabancariaRepository;
-        this.agenciabancariaMapper = agenciabancariaMapper;
     }
 
     /**
@@ -38,12 +35,7 @@ public class AgenciabancariaService {
      * @param agenciabancariaDTO the entity to save.
      * @return the persisted entity.
      */
-    public AgenciabancariaDTO save(AgenciabancariaDTO agenciabancariaDTO) {
-        log.debug("Request to save Agenciabancaria : {}", agenciabancariaDTO);
-        Agenciabancaria agenciabancaria = agenciabancariaMapper.toEntity(agenciabancariaDTO);
-        agenciabancaria = agenciabancariaRepository.save(agenciabancaria);
-        return agenciabancariaMapper.toDto(agenciabancaria);
-    }
+    
     
     public Agenciabancaria save(Agenciabancaria agenciabancaria) {
         log.debug("Request to save Agenciabancaria : {}", agenciabancaria);
@@ -57,10 +49,9 @@ public class AgenciabancariaService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<AgenciabancariaDTO> findAll(Pageable pageable) {
+    public Page<Agenciabancaria> findAll(Pageable pageable) {
         log.debug("Request to get all Agenciabancarias");
-        return agenciabancariaRepository.findAll(pageable)
-            .map(agenciabancariaMapper::toDto);
+        return agenciabancariaRepository.findAll(pageable);
     }
 
 
@@ -71,10 +62,9 @@ public class AgenciabancariaService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<AgenciabancariaDTO> findOne(Long id) {
+    public Optional<Agenciabancaria> findOne(Long id) {
         log.debug("Request to get Agenciabancaria : {}", id);
-        return agenciabancariaRepository.findById(id)
-            .map(agenciabancariaMapper::toDto);
+        return agenciabancariaRepository.findById(id);
     }
 
     /**

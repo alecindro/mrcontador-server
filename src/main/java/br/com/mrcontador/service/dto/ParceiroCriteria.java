@@ -92,6 +92,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
     private LongFilter atividadeId;
 
     private LongFilter socioId;
+    
+    private LongFilter agenciabancariaId;
 
     public ParceiroCriteria() {
     }
@@ -131,6 +133,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
         this.enabled = other.enabled == null ? null : other.enabled.copy();
         this.atividadeId = other.atividadeId == null ? null : other.atividadeId.copy();
         this.socioId = other.socioId == null ? null : other.socioId.copy();
+        this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
     }
 
     @Override
@@ -409,9 +412,23 @@ public class ParceiroCriteria implements Serializable, Criteria {
     public void setSocioId(LongFilter socioId) {
         this.socioId = socioId;
     }
+    
+    
 
 
-    @Override
+    public LongFilter getAgenciabancariaId() {
+		return agenciabancariaId;
+	}
+
+	public void setAgenciabancariaId(LongFilter agenciabancariaId) {
+		this.agenciabancariaId = agenciabancariaId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -454,7 +471,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
             Objects.equals(capital_social, that.capital_social) &&
             Objects.equals(enabled, that.enabled) &&
             Objects.equals(atividadeId, that.atividadeId) &&
-            Objects.equals(socioId, that.socioId);
+            Objects.equals(socioId, that.socioId) &&
+            Objects.equals(agenciabancariaId, that.agenciabancariaId);
     }
 
     @Override
@@ -493,7 +511,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
         capital_social,
         enabled,
         atividadeId,
-        socioId
+        socioId,
+        agenciabancariaId
         );
     }
 
@@ -535,6 +554,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
                 (enabled != null ? "enabled=" + enabled + ", " : "") +
                 (atividadeId != null ? "atividadeId=" + atividadeId + ", " : "") +
                 (socioId != null ? "socioId=" + socioId + ", " : "") +
+                (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
             "}";
     }
 

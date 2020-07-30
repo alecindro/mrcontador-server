@@ -1,18 +1,18 @@
 package br.com.mrcontador.service;
 
-import br.com.mrcontador.domain.Banco;
-import br.com.mrcontador.repository.BancoRepository;
-import br.com.mrcontador.service.dto.BancoDTO;
-import br.com.mrcontador.service.mapper.BancoMapper;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import br.com.mrcontador.domain.Banco;
+import br.com.mrcontador.repository.BancoRepository;
+import br.com.mrcontador.service.mapper.BancoMapper;
 
 /**
  * Service Implementation for managing {@link Banco}.
@@ -25,11 +25,8 @@ public class BancoService {
 
     private final BancoRepository bancoRepository;
 
-    private final BancoMapper bancoMapper;
-
-    public BancoService(BancoRepository bancoRepository, BancoMapper bancoMapper) {
+      public BancoService(BancoRepository bancoRepository, BancoMapper bancoMapper) {
         this.bancoRepository = bancoRepository;
-        this.bancoMapper = bancoMapper;
     }
 
     /**
@@ -38,11 +35,9 @@ public class BancoService {
      * @param bancoDTO the entity to save.
      * @return the persisted entity.
      */
-    public BancoDTO save(BancoDTO bancoDTO) {
-        log.debug("Request to save Banco : {}", bancoDTO);
-        Banco banco = bancoMapper.toEntity(bancoDTO);
-        banco = bancoRepository.save(banco);
-        return bancoMapper.toDto(banco);
+    public Banco save(Banco banco) {
+        log.debug("Request to save Banco : {}", banco);
+        return  bancoRepository.save(banco);
     }
 
     /**
@@ -52,10 +47,15 @@ public class BancoService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<BancoDTO> findAll(Pageable pageable) {
+    public Page<Banco> findAll(Pageable pageable) {
         log.debug("Request to get all Bancos");
-        return bancoRepository.findAll(pageable)
-            .map(bancoMapper::toDto);
+        return bancoRepository.findAll(pageable);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Banco> findAll() {
+        log.debug("Request to get all Bancos");
+        return bancoRepository.findAll();
     }
 
 
@@ -66,10 +66,9 @@ public class BancoService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<BancoDTO> findOne(Long id) {
+    public Optional<Banco> findOne(Long id) {
         log.debug("Request to get Banco : {}", id);
-        return bancoRepository.findById(id)
-            .map(bancoMapper::toDto);
+        return bancoRepository.findById(id);
     }
 
     /**

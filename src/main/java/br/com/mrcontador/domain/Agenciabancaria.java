@@ -153,6 +153,7 @@ public class Agenciabancaria implements Serializable {
     }
 
     public void setBanco(Banco banco) {
+    	this.banCodigobancario = banco.getBanCodigobancario();
         this.banco = banco;
     }
 

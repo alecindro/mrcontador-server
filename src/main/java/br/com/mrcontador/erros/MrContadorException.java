@@ -1,34 +1,39 @@
 package br.com.mrcontador.erros;
 
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.Status;
+
 import br.com.mrcontador.web.rest.errors.ErrorConstants;
 
-public class MrContadorException extends BadRequestAlertException{
+public class MrContadorException extends AbstractThrowableProblem{
 	
 	private static final long serialVersionUID = 1L;
 	private String errorKey;
 	private String defaultMessasge;
 	
 	public MrContadorException(String errorKey, String message, Throwable e) {
-		 super(ErrorConstants.DEFAULT_TYPE, e.getMessage(), message, errorKey);
+		 this(errorKey,message);
 		this.defaultMessasge = message;
 		this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey, Throwable e) {
-		 super(ErrorConstants.DEFAULT_TYPE, e.getMessage(), e.getMessage(), errorKey);
-		this.errorKey = errorKey;
+		this(errorKey,errorKey);
+     	this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey, String message) {
-		 super(ErrorConstants.DEFAULT_TYPE, message, message, errorKey);
+		 super(ErrorConstants.MR_CONTADOR_TYPE, message, Status.BAD_REQUEST, null, null, null, getAlertParameters(message, errorKey));
 		this.defaultMessasge = message;
 		this.errorKey = errorKey;
 	}
 	
 	public MrContadorException(String errorKey) {
-		 super(ErrorConstants.DEFAULT_TYPE, "", "", errorKey);
-		this.errorKey = errorKey;
+		this(errorKey,errorKey);
+     	this.errorKey = errorKey;
 	}
 	
 	public String getErrorKey() {
@@ -38,5 +43,12 @@ public class MrContadorException extends BadRequestAlertException{
 	public String getDefaultMessasge() {
 		return defaultMessasge;
 	}
+	
+	   private static Map<String, Object> getAlertParameters(String param, String errorKey) {
+	        Map<String, Object> parameters = new HashMap<>();
+	        parameters.put("message", "error." + errorKey);
+	        parameters.put("params", param);
+	        return parameters;
+	    }
 
 }

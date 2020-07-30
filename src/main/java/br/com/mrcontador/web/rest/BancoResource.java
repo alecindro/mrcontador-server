@@ -1,30 +1,37 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.service.BancoService;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import br.com.mrcontador.service.dto.BancoDTO;
-import br.com.mrcontador.service.dto.BancoCriteria;
-import br.com.mrcontador.service.BancoQueryService;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import br.com.mrcontador.domain.Banco;
+import br.com.mrcontador.service.BancoQueryService;
+import br.com.mrcontador.service.BancoService;
+import br.com.mrcontador.service.dto.BancoCriteria;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link br.com.mrcontador.domain.Banco}.
@@ -57,12 +64,12 @@ public class BancoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/bancos")
-    public ResponseEntity<BancoDTO> createBanco(@Valid @RequestBody BancoDTO bancoDTO) throws URISyntaxException {
-        log.debug("REST request to save Banco : {}", bancoDTO);
-        if (bancoDTO.getId() != null) {
+    public ResponseEntity<Banco> createBanco(@Valid @RequestBody Banco banco) throws URISyntaxException {
+        log.debug("REST request to save Banco : {}", banco);
+        if (banco.getId() != null) {
             throw new BadRequestAlertException("A new banco cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        BancoDTO result = bancoService.save(bancoDTO);
+        Banco result = bancoService.save(banco);
         return ResponseEntity.created(new URI("/api/bancos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,14 +85,14 @@ public class BancoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/bancos")
-    public ResponseEntity<BancoDTO> updateBanco(@Valid @RequestBody BancoDTO bancoDTO) throws URISyntaxException {
-        log.debug("REST request to update Banco : {}", bancoDTO);
-        if (bancoDTO.getId() == null) {
+    public ResponseEntity<Banco> updateBanco(@Valid @RequestBody Banco banco) throws URISyntaxException {
+        log.debug("REST request to update Banco : {}", banco);
+        if (banco.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        BancoDTO result = bancoService.save(bancoDTO);
+        Banco result = bancoService.save(banco);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bancoDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, banco.getId().toString()))
             .body(result);
     }
 
@@ -97,11 +104,15 @@ public class BancoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bancos in body.
      */
     @GetMapping("/bancos")
-    public ResponseEntity<List<BancoDTO>> getAllBancos(BancoCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Banco>> getAllBancos(BancoCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Bancos by criteria: {}", criteria);
-        Page<BancoDTO> page = bancoQueryService.findByCriteria(criteria, pageable);
+        Page<Banco> page = bancoQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    @GetMapping("/bancos/all")
+    public ResponseEntity<List<Banco>> getAllBancos() {
+        return ResponseEntity.ok().body(bancoService.findAll());
     }
 
     /**
@@ -123,10 +134,10 @@ public class BancoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the bancoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/bancos/{id}")
-    public ResponseEntity<BancoDTO> getBanco(@PathVariable Long id) {
+    public ResponseEntity<Banco> getBanco(@PathVariable Long id) {
         log.debug("REST request to get Banco : {}", id);
-        Optional<BancoDTO> bancoDTO = bancoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(bancoDTO);
+        Optional<Banco> banco = bancoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(banco);
     }
 
     /**

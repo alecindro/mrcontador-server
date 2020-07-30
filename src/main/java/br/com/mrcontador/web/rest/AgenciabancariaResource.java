@@ -1,30 +1,37 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.service.AgenciabancariaService;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import br.com.mrcontador.service.dto.AgenciabancariaDTO;
-import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
-import br.com.mrcontador.service.AgenciabancariaQueryService;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.service.AgenciabancariaQueryService;
+import br.com.mrcontador.service.AgenciabancariaService;
+import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link br.com.mrcontador.domain.Agenciabancaria}.
@@ -52,17 +59,17 @@ public class AgenciabancariaResource {
     /**
      * {@code POST  /agenciabancarias} : Create a new agenciabancaria.
      *
-     * @param agenciabancariaDTO the agenciabancariaDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new agenciabancariaDTO, or with status {@code 400 (Bad Request)} if the agenciabancaria has already an ID.
+     * @param agenciabancaria the agenciabancaria to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new agenciabancaria, or with status {@code 400 (Bad Request)} if the agenciabancaria has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/agenciabancarias")
-    public ResponseEntity<AgenciabancariaDTO> createAgenciabancaria(@Valid @RequestBody AgenciabancariaDTO agenciabancariaDTO) throws URISyntaxException {
-        log.debug("REST request to save Agenciabancaria : {}", agenciabancariaDTO);
-        if (agenciabancariaDTO.getId() != null) {
+    public ResponseEntity<Agenciabancaria> createAgenciabancaria(@Valid @RequestBody Agenciabancaria agenciabancaria) throws URISyntaxException {
+        log.debug("REST request to save Agenciabancaria : {}", agenciabancaria);
+        if (agenciabancaria.getId() != null) {
             throw new BadRequestAlertException("A new agenciabancaria cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        AgenciabancariaDTO result = agenciabancariaService.save(agenciabancariaDTO);
+        Agenciabancaria result = agenciabancariaService.save(agenciabancaria);
         return ResponseEntity.created(new URI("/api/agenciabancarias/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -71,21 +78,21 @@ public class AgenciabancariaResource {
     /**
      * {@code PUT  /agenciabancarias} : Updates an existing agenciabancaria.
      *
-     * @param agenciabancariaDTO the agenciabancariaDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated agenciabancariaDTO,
-     * or with status {@code 400 (Bad Request)} if the agenciabancariaDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the agenciabancariaDTO couldn't be updated.
+     * @param agenciabancaria the agenciabancaria to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated agenciabancaria,
+     * or with status {@code 400 (Bad Request)} if the agenciabancaria is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the agenciabancaria couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/agenciabancarias")
-    public ResponseEntity<AgenciabancariaDTO> updateAgenciabancaria(@Valid @RequestBody AgenciabancariaDTO agenciabancariaDTO) throws URISyntaxException {
-        log.debug("REST request to update Agenciabancaria : {}", agenciabancariaDTO);
-        if (agenciabancariaDTO.getId() == null) {
+    public ResponseEntity<Agenciabancaria> updateAgenciabancaria(@Valid @RequestBody Agenciabancaria agenciabancaria) throws URISyntaxException {
+        log.debug("REST request to update Agenciabancaria : {}", agenciabancaria);
+        if (agenciabancaria.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        AgenciabancariaDTO result = agenciabancariaService.save(agenciabancariaDTO);
+        Agenciabancaria result = agenciabancariaService.save(agenciabancaria);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, agenciabancariaDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, agenciabancaria.getId().toString()))
             .body(result);
     }
 
@@ -97,9 +104,9 @@ public class AgenciabancariaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of agenciabancarias in body.
      */
     @GetMapping("/agenciabancarias")
-    public ResponseEntity<List<AgenciabancariaDTO>> getAllAgenciabancarias(AgenciabancariaCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Agenciabancaria>> getAllAgenciabancarias(AgenciabancariaCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Agenciabancarias by criteria: {}", criteria);
-        Page<AgenciabancariaDTO> page = agenciabancariaQueryService.findByCriteria(criteria, pageable);
+        Page<Agenciabancaria> page = agenciabancariaQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -119,20 +126,20 @@ public class AgenciabancariaResource {
     /**
      * {@code GET  /agenciabancarias/:id} : get the "id" agenciabancaria.
      *
-     * @param id the id of the agenciabancariaDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the agenciabancariaDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the agenciabancaria to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the agenciabancaria, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/agenciabancarias/{id}")
-    public ResponseEntity<AgenciabancariaDTO> getAgenciabancaria(@PathVariable Long id) {
+    public ResponseEntity<Agenciabancaria> getAgenciabancaria(@PathVariable Long id) {
         log.debug("REST request to get Agenciabancaria : {}", id);
-        Optional<AgenciabancariaDTO> agenciabancariaDTO = agenciabancariaService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(agenciabancariaDTO);
+        Optional<Agenciabancaria> agenciabancaria = agenciabancariaService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(agenciabancaria);
     }
 
     /**
      * {@code DELETE  /agenciabancarias/:id} : delete the "id" agenciabancaria.
      *
-     * @param id the id of the agenciabancariaDTO to delete.
+     * @param id the id of the agenciabancaria to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/agenciabancarias/{id}")

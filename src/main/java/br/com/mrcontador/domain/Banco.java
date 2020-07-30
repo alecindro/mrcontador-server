@@ -24,19 +24,19 @@ public class Banco implements Serializable {
 
     @Size(max = 200)
     @Column(name = "ban_descricao", length = 200)
-    private String ban_descricao;
+    private String banDescricao;
 
     @Size(max = 100)
     @Column(name = "ban_sigla", length = 100)
-    private String ban_sigla;
+    private String banSigla;
 
     @Column(name = "ban_ispb")
-    private Integer ban_ispb;
+    private Integer banIspb;
 
     @NotNull
     @Size(max = 5)
     @Column(name = "ban_codigobancario", length = 5, nullable = false)
-    private String ban_codigobancario;
+    private String banCodigobancario;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -46,61 +46,43 @@ public class Banco implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+   
 
-    public String getBan_descricao() {
-        return ban_descricao;
-    }
+    public String getBanDescricao() {
+		return banDescricao;
+	}
 
-    public Banco ban_descricao(String ban_descricao) {
-        this.ban_descricao = ban_descricao;
-        return this;
-    }
+	public void setBanDescricao(String banDescricao) {
+		this.banDescricao = banDescricao;
+	}
 
-    public void setBan_descricao(String ban_descricao) {
-        this.ban_descricao = ban_descricao;
-    }
+	public String getBanSigla() {
+		return banSigla;
+	}
 
-    public String getBan_sigla() {
-        return ban_sigla;
-    }
+	public void setBanSigla(String banSigla) {
+		this.banSigla = banSigla;
+	}
 
-    public Banco ban_sigla(String ban_sigla) {
-        this.ban_sigla = ban_sigla;
-        return this;
-    }
+	public Integer getBanIspb() {
+		return banIspb;
+	}
 
-    public void setBan_sigla(String ban_sigla) {
-        this.ban_sigla = ban_sigla;
-    }
+	public void setBanIspb(Integer banIspb) {
+		this.banIspb = banIspb;
+	}
 
-    public Integer getBan_ispb() {
-        return ban_ispb;
-    }
+	public String getBanCodigobancario() {
+		return banCodigobancario;
+	}
 
-    public Banco ban_ispb(Integer ban_ispb) {
-        this.ban_ispb = ban_ispb;
-        return this;
-    }
+	public void setBanCodigobancario(String banCodigobancario) {
+		this.banCodigobancario = banCodigobancario;
+	}
+	
+	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    public void setBan_ispb(Integer ban_ispb) {
-        this.ban_ispb = ban_ispb;
-    }
-
-    public String getBan_codigobancario() {
-        return ban_codigobancario;
-    }
-
-    public Banco ban_codigobancario(String ban_codigobancario) {
-        this.ban_codigobancario = ban_codigobancario;
-        return this;
-    }
-
-    public void setBan_codigobancario(String ban_codigobancario) {
-        this.ban_codigobancario = ban_codigobancario;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -121,10 +103,10 @@ public class Banco implements Serializable {
     public String toString() {
         return "Banco{" +
             "id=" + getId() +
-            ", ban_descricao='" + getBan_descricao() + "'" +
-            ", ban_sigla='" + getBan_sigla() + "'" +
-            ", ban_ispb=" + getBan_ispb() +
-            ", ban_codigobancario='" + getBan_codigobancario() + "'" +
+            ", ban_descricao='" + getBanDescricao() + "'" +
+            ", ban_sigla='" + getBanSigla() + "'" +
+            ", ban_ispb=" + getBanIspb() +
+            ", ban_codigobancario='" + getBanCodigobancario() + "'" +
             "}";
     }
 }

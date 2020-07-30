@@ -176,7 +176,7 @@ public class ExtratoService {
 		BancoCriteria criteria = new BancoCriteria();
 		StringFilter filter = new StringFilter();
 		filter.setEquals(banco);
-		criteria.setBan_codigobancario(filter);
+		criteria.setBanCodigobancario(filter);
 		List<Banco> list = bancoService.findBancoByCriteria(criteria);
 		if(list != null && !list.isEmpty()) {
 			return list.get(0);

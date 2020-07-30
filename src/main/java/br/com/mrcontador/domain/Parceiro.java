@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -134,17 +135,17 @@ public class Parceiro implements Serializable {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Atividade> atividades;
 
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Socio> socios;
     
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Agenciabancaria> agenciabancarias;
@@ -692,7 +693,7 @@ public class Parceiro implements Serializable {
 				+ ", email=" + email + ", telefone=" + telefone + ", dataSituacao=" + dataSituacao + ", efr=" + efr
 				+ ", motivoSituacao=" + motivoSituacao + ", situacaoEspecial=" + situacaoEspecial
 				+ ", dataSituacaoEspecial=" + dataSituacaoEspecial + ", capitalSocial=" + capitalSocial + ", enabled="
-				+ enabled + ", atividades=" + atividades + ", socios=" + socios + "]";
+				+ enabled  + "]";
 	}
     
     
