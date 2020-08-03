@@ -15,7 +15,7 @@ public class NotafiscalNfe400Mapper {
 
 	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, Arquivo arquivo) {
 		List<Notafiscal> list = new ArrayList<>();
-		if(nfe.getNota().getInfo().getCobranca().getParcelas()==null) {
+		if(nfe.getNota().getInfo().getCobranca() == null || nfe.getNota().getInfo().getCobranca().getParcelas()==null) {
 			list.add(parse(nfe, parceiro, arquivo));
 			return list;
 		}
