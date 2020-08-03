@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Arquivo;
-import br.com.mrcontador.domain.Banco;
 import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
@@ -22,11 +21,7 @@ import br.com.mrcontador.file.ofx.dto.ListOfxDto;
 import br.com.mrcontador.file.ofx.dto.OfxDTO;
 import br.com.mrcontador.file.ofx.dto.OfxData;
 import br.com.mrcontador.repository.ExtratoRepository;
-import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
-import br.com.mrcontador.service.dto.BancoCriteria;
 import br.com.mrcontador.service.file.S3Service;
-import io.github.jhipster.service.filter.LongFilter;
-import io.github.jhipster.service.filter.StringFilter;
 
 /**
  * Service Implementation for managing {@link Extrato}.
@@ -39,23 +34,13 @@ public class ExtratoService {
 
 	private final ExtratoRepository extratoRepository;
 
-	private final AgenciabancariaQueryService agenciaBancariaService;
-
-	private final AgenciabancariaService agenciaService;
-
 	private final S3Service s3Service;
-	
-	private final BancoQueryService bancoService;
+
 
 	public ExtratoService(ExtratoRepository extratoRepository,
-			AgenciabancariaQueryService agenciaBancariaService, AgenciabancariaService agenciaService,
-			S3Service s3Service,
-			BancoQueryService bancoService) {
+			S3Service s3Service) {
 		this.extratoRepository = extratoRepository;
-		this.agenciaBancariaService = agenciaBancariaService;
-		this.agenciaService = agenciaService;
 		this.s3Service = s3Service;
-		this.bancoService = bancoService;
 	}
 
 	/**

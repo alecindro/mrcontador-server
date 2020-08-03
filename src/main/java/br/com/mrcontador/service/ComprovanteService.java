@@ -16,6 +16,7 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.comprovante.DiffPage;
 import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.repository.ComprovanteRepository;
+import br.com.mrcontador.service.mapper.ComprovanteParseMapper;
 
 /**
  * Service Implementation for managing {@link Comprovante}.
@@ -79,10 +80,10 @@ public class ComprovanteService {
     }
     
     public void save(List<DiffPage> diffPages,Agenciabancaria agencia, Parceiro parceiro) {
+    	ComprovanteParseMapper mapper = new ComprovanteParseMapper();
     	for(DiffPage diffPage  :diffPages) {
-    			for(DiffValue diffValue : diffPage.getDiffValues()) {
-    				System.out.println(diffValue.toString());
-    			}
+    		mapper.toEntity(diffPage.getDiffValues(), agencia, parceiro);
+    		
     	}
     }
 }
