@@ -45,6 +45,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
     private LongFilter parceiroId;
 
     private LongFilter agenciabancariaId;
+    
+    private LongFilter arquivoId;
 
     public ExtratoCriteria() {
     }
@@ -60,6 +62,7 @@ public class ExtratoCriteria implements Serializable, Criteria {
         this.extDescricao = other.extDescricao == null ? null : other.extDescricao.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
+        this.arquivoId = other.arquivoId == null ? null : other.arquivoId.copy();
     }
 
     @Override
@@ -148,6 +151,14 @@ public class ExtratoCriteria implements Serializable, Criteria {
 		this.agenciabancariaId = agenciabancariaId;
 	}
 
+	public LongFilter getArquivoId() {
+		return arquivoId;
+	}
+
+	public void setArquivoId(LongFilter arquivoId) {
+		this.arquivoId = arquivoId;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -167,7 +178,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
             Objects.equals(extCredito, that.extCredito) &&
             Objects.equals(extDescricao, that.extDescricao) &&
             Objects.equals(parceiroId, that.parceiroId) &&
-            Objects.equals(agenciabancariaId, that.agenciabancariaId);
+            Objects.equals(agenciabancariaId, that.agenciabancariaId) &&
+            Objects.equals(arquivoId, that.arquivoId);
     }
 
     @Override
@@ -182,7 +194,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
         extCredito,
         extDescricao,
         parceiroId,
-        agenciabancariaId
+        agenciabancariaId,
+        arquivoId
         );
     }
 
@@ -200,6 +213,7 @@ public class ExtratoCriteria implements Serializable, Criteria {
                 (extDescricao != null ? "ext_descricao=" + extDescricao + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
+                (arquivoId != null ? "arquivoId=" + arquivoId + ", " : "") +
             "}";
     }
 

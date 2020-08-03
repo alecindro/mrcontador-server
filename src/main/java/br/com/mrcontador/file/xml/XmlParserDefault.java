@@ -32,7 +32,7 @@ public class XmlParserDefault implements FileParser {
     private ParceiroService parceiroService;
 
 	@Override
-	public void process(FileDTO dto) {
+	public void process(FileDTO dto) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream header = null;
 		InputStream doc = null;
@@ -53,8 +53,8 @@ public class XmlParserDefault implements FileParser {
 			default:
 				break;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
+			throw new MrContadorException("notafiscal.notparsed",e.getCause());
 		} finally {
 			try {
 				baos.close();
@@ -77,7 +77,7 @@ public class XmlParserDefault implements FileParser {
 		Parceiro parceiro = findParceiro(nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj()
 				: nfNotaProcessada.getNota().getInfo().getDestinatario().getCpf());
-		dto.setParceiro(parceiro);
+		validateParceiro(dto.getParceiro(), parceiro);
 		dto.setInputStream(doc);
 		Arquivo arquivo = s3Service.uploadNota(dto);
 		notafiscalService.process(nfNotaProcessada, parceiro, arquivo);
@@ -89,7 +89,7 @@ public class XmlParserDefault implements FileParser {
 		Parceiro parceiro = findParceiro(nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj()
 				: nfNotaProcessada.getNota().getInfo().getDestinatario().getCpf());
-		dto.setParceiro(parceiro);
+		validateParceiro(dto.getParceiro(), parceiro);
 		Arquivo arquivo = s3Service.uploadNota(dto);
 		dto.setInputStream(doc);
 		notafiscalService.process(nfNotaProcessada, parceiro, arquivo);
@@ -101,6 +101,11 @@ public class XmlParserDefault implements FileParser {
 	    		return parceiro.get();
 	    	}
 	    	throw new MrContadorException("error.parceiro.not.found", cnpj);
-	    }
+  }
+	 private void validateParceiro(Parceiro parameter, Parceiro nota) {
+		 if(!parameter.getId().equals(nota.getId())) {
+			 throw new MrContadorException("parceiro.notfromnota", nota.getParCnpjcpf());
+		 }
+	 }
 
 }

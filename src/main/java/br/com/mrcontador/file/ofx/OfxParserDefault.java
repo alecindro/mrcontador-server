@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,8 +21,8 @@ import com.webcohesion.ofx4j.io.AggregateUnmarshaller;
 import com.webcohesion.ofx4j.io.OFXParseException;
 
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.FileParser;
 import br.com.mrcontador.file.ofx.banco.OfxBancoDoBrasil;
 import br.com.mrcontador.file.ofx.banco.OfxBradesco;
 import br.com.mrcontador.file.ofx.banco.OfxCef;
@@ -41,7 +40,7 @@ import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
 
 @Service
-public class OfxParserDefault implements FileParser{
+public class OfxParserDefault{
 	
 	@Autowired
 	AggregateUnmarshaller<ResponseEnvelope> unmarshaller;
@@ -52,8 +51,7 @@ public class OfxParserDefault implements FileParser{
 	
 	private static Logger log = LoggerFactory.getLogger(OfxParserDefault.class);
 
-	@Override
-	public void process(FileDTO fileDTO) {
+	public void process(FileDTO fileDTO,  Agenciabancaria agenciaBancaria) {
 		List<BankStatementResponseTransaction> responses;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();	
 		InputStream first = null;
@@ -66,7 +64,6 @@ public class OfxParserDefault implements FileParser{
 			first = new ByteArrayInputStream(baos.toByteArray());
 			ListOfxDto listOfxDto = new ListOfxDto();
 			listOfxDto.setFileDTO(fileDTO);
-			//Reader reader = new InputStreamReader(first, Charset.forName("windows-1252"));
 			BankingResponseMessageSet bankingResponseMessageSet = init(first);
 			responses = bankingResponseMessageSet.getStatementResponses();
 			for (BankStatementResponseTransaction response : responses) {
@@ -74,7 +71,7 @@ public class OfxParserDefault implements FileParser{
 				listOfxDto.add(dto);
 			}
 			fileDTO.setInputStream(second);
-			extratoService.save(listOfxDto);
+			extratoService.save(listOfxDto, agenciaBancaria);
 		}catch(MrContadorException e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(),e);
@@ -139,12 +136,6 @@ public class OfxParserDefault implements FileParser{
 	
 	private BankingResponseMessageSet init(InputStream stream) throws IOException, OFXParseException {
 		ResponseEnvelope envelope = unmarshaller.unmarshal(stream);
-		return  (BankingResponseMessageSet) envelope
-				.getMessageSet(MessageSetType.banking);
-	}
-	
-	private BankingResponseMessageSet init(Reader reader) throws IOException, OFXParseException {
-		ResponseEnvelope envelope = unmarshaller.unmarshal(reader);
 		return  (BankingResponseMessageSet) envelope
 				.getMessageSet(MessageSetType.banking);
 	}

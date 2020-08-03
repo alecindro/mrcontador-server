@@ -14,8 +14,6 @@ import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.repository.NotafiscalRepository;
-import br.com.mrcontador.service.dto.NotafiscalDTO;
-import br.com.mrcontador.service.mapper.NotafiscalMapper;
 import br.com.mrcontador.service.mapper.NotafiscalNfe310Mapper;
 import br.com.mrcontador.service.mapper.NotafiscalNfe400Mapper;
 
@@ -30,13 +28,8 @@ public class NotafiscalService {
 
     private final NotafiscalRepository notafiscalRepository;
 
-    private final NotafiscalMapper notafiscalMapper;
-    
-
-
-    public NotafiscalService(NotafiscalRepository notafiscalRepository, NotafiscalMapper notafiscalMapper) {
-        this.notafiscalRepository = notafiscalRepository;
-        this.notafiscalMapper = notafiscalMapper;
+    public NotafiscalService(NotafiscalRepository notafiscalRepository) {
+        this.notafiscalRepository = notafiscalRepository;;
     }
 
     /**
@@ -45,11 +38,9 @@ public class NotafiscalService {
      * @param notafiscalDTO the entity to save.
      * @return the persisted entity.
      */
-    public NotafiscalDTO save(NotafiscalDTO notafiscalDTO) {
-        log.debug("Request to save Notafiscal : {}", notafiscalDTO);
-        Notafiscal notafiscal = notafiscalMapper.toEntity(notafiscalDTO);
-        notafiscal = notafiscalRepository.save(notafiscal);
-        return notafiscalMapper.toDto(notafiscal);
+    public Notafiscal save(Notafiscal notafiscal) {
+        log.debug("Request to save Notafiscal : {}", notafiscal);
+        return notafiscalRepository.save(notafiscal);
     }
 
     /**
@@ -59,10 +50,9 @@ public class NotafiscalService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<NotafiscalDTO> findAll(Pageable pageable) {
+    public Page<Notafiscal> findAll(Pageable pageable) {
         log.debug("Request to get all Notafiscals");
-        return notafiscalRepository.findAll(pageable)
-            .map(notafiscalMapper::toDto);
+        return notafiscalRepository.findAll(pageable);
     }
 
 
@@ -73,10 +63,9 @@ public class NotafiscalService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<NotafiscalDTO> findOne(Long id) {
+    public Optional<Notafiscal> findOne(Long id) {
         log.debug("Request to get Notafiscal : {}", id);
-        return notafiscalRepository.findById(id)
-            .map(notafiscalMapper::toDto);
+        return notafiscalRepository.findById(id);
     }
 
     /**

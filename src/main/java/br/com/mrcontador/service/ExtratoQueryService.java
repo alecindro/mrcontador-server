@@ -12,14 +12,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
+import br.com.mrcontador.domain.Agenciabancaria_;
+import br.com.mrcontador.domain.Arquivo_;
 import br.com.mrcontador.domain.Extrato;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Extrato_;
+import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.ExtratoRepository;
 import br.com.mrcontador.service.dto.ExtratoCriteria;
 import br.com.mrcontador.service.dto.ExtratoDTO;
-import br.com.mrcontador.service.mapper.ExtratoMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Extrato} entities in the database.
@@ -35,11 +37,8 @@ public class ExtratoQueryService extends QueryService<Extrato> {
 
     private final ExtratoRepository extratoRepository;
 
-    private final ExtratoMapper extratoMapper;
-
-    public ExtratoQueryService(ExtratoRepository extratoRepository, ExtratoMapper extratoMapper) {
+    public ExtratoQueryService(ExtratoRepository extratoRepository) {
         this.extratoRepository = extratoRepository;
-        this.extratoMapper = extratoMapper;
     }
 
     /**
@@ -48,10 +47,10 @@ public class ExtratoQueryService extends QueryService<Extrato> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<ExtratoDTO> findByCriteria(ExtratoCriteria criteria) {
+    public List<Extrato> findByCriteria(ExtratoCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Extrato> specification = createSpecification(criteria);
-        return extratoMapper.toDto(extratoRepository.findAll(specification));
+        return extratoRepository.findAll(specification);
     }
 
     /**
@@ -61,11 +60,10 @@ public class ExtratoQueryService extends QueryService<Extrato> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<ExtratoDTO> findByCriteria(ExtratoCriteria criteria, Pageable page) {
+    public Page<Extrato> findByCriteria(ExtratoCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Extrato> specification = createSpecification(criteria);
-        return extratoRepository.findAll(specification, page)
-            .map(extratoMapper::toDto);
+        return extratoRepository.findAll(specification, page);
     }
 
     /**
@@ -119,6 +117,10 @@ public class ExtratoQueryService extends QueryService<Extrato> {
             if (criteria.getAgenciabancariaId() != null) {
                 specification = specification.and(buildSpecification(criteria.getAgenciabancariaId(),
                     root -> root.join(Extrato_.agenciabancaria, JoinType.LEFT).get(Agenciabancaria_.id)));
+            }
+            if (criteria.getArquivoId() != null) {
+                specification = specification.and(buildSpecification(criteria.getArquivoId(),
+                    root -> root.join(Extrato_.arquivo, JoinType.LEFT).get(Arquivo_.id)));
             }
         }
         return specification;

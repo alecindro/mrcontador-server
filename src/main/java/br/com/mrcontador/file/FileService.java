@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.file.ofx.OfxParserDefault;
 import br.com.mrcontador.file.pdf.PdfParserPlanoConta;
 import br.com.mrcontador.file.xml.XmlParserDefault;
 import br.com.mrcontador.security.SecurityUtils;
@@ -25,15 +27,17 @@ public class FileService {
 	@Autowired
 	private XmlParserDefault xmlParserDefault;
 	@Autowired
+	private OfxParserDefault ofxParserDefault;
+	@Autowired
 	private S3Service s3Service;
 	
 	public Parceiro processPlanoConta(MultipartFile file, Optional<String> usuario, String contador,String cnpjParceiro,  SistemaPlanoConta sistemaPlanoConta) {
-		FileDTO dto = getFileDTO(file, usuario, contador);
+		FileDTO dto = getFileDTO(file, usuario, contador, null);
 		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, cnpjParceiro);
 	}
 
 	
-	private FileDTO getFileDTO(MultipartFile file, Optional<String> usuario, String contador) {
+	private FileDTO getFileDTO(MultipartFile file, Optional<String> usuario, String contador, Parceiro parceiro) {
 		FileDTO fileDTO = new FileDTO();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
@@ -42,12 +46,14 @@ public class FileService {
 			switch (media) {
 			case "pdf":
 				break;
-			case "xml": {
+			case "xml": 
 				break;
-			}
+			case "octet-stream":
+				break;			
 			default:
 				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
 			}
+			fileDTO.setParceiro(parceiro);
 			fileDTO.setContentType(file.getContentType());
 			fileDTO.setOriginalFilename(file.getOriginalFilename());
 			fileDTO.setSize(file.getSize());
@@ -65,15 +71,30 @@ public class FileService {
 			throw new MrContadorException("file.process.error", file.getOriginalFilename());
 		}
 	}
-	public void processNFE(FileDTO fileDTO) {
+	public void processNFE(FileDTO fileDTO) throws Exception{
 		xmlParserDefault.process(fileDTO);
 		
 	}
 	
-	public void processNFE(MultipartFile file, Optional<String> usuario, String contador) {
-		FileDTO fileDTO = getFileDTO(file, usuario, contador);
+	public void processNFE(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro) throws Exception {
+		if (parceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
+		}
+		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
 		xmlParserDefault.process(fileDTO);
 		
+	}
+	
+	
+	public void processOfx(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
+		if(parceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
+		}
+		if(agenciabancaria.isEmpty()) {
+			throw new MrContadorException("agencia.notfound");
+		}
+		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
+		ofxParserDefault.process(fileDTO, agenciabancaria.get());
 	}
 	
 	

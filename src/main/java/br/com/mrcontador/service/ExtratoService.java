@@ -16,6 +16,7 @@ import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Banco;
 import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.TipoEntrada;
 import br.com.mrcontador.file.ofx.dto.ListOfxDto;
 import br.com.mrcontador.file.ofx.dto.OfxDTO;
@@ -23,9 +24,7 @@ import br.com.mrcontador.file.ofx.dto.OfxData;
 import br.com.mrcontador.repository.ExtratoRepository;
 import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
 import br.com.mrcontador.service.dto.BancoCriteria;
-import br.com.mrcontador.service.dto.ExtratoDTO;
 import br.com.mrcontador.service.file.S3Service;
-import br.com.mrcontador.service.mapper.ExtratoMapper;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
@@ -44,18 +43,15 @@ public class ExtratoService {
 
 	private final AgenciabancariaService agenciaService;
 
-	private final ExtratoMapper extratoMapper;
-
 	private final S3Service s3Service;
 	
 	private final BancoQueryService bancoService;
 
-	public ExtratoService(ExtratoRepository extratoRepository, ExtratoMapper extratoMapper,
+	public ExtratoService(ExtratoRepository extratoRepository,
 			AgenciabancariaQueryService agenciaBancariaService, AgenciabancariaService agenciaService,
 			S3Service s3Service,
 			BancoQueryService bancoService) {
 		this.extratoRepository = extratoRepository;
-		this.extratoMapper = extratoMapper;
 		this.agenciaBancariaService = agenciaBancariaService;
 		this.agenciaService = agenciaService;
 		this.s3Service = s3Service;
@@ -68,14 +64,8 @@ public class ExtratoService {
 	 * @param extratoDTO the entity to save.
 	 * @return the persisted entity.
 	 */
-	public ExtratoDTO save(ExtratoDTO extratoDTO) {
-		log.debug("Request to save Extrato : {}", extratoDTO);
-		Extrato extrato = extratoMapper.toEntity(extratoDTO);
-		extrato = extratoRepository.save(extrato);
-		return extratoMapper.toDto(extrato);
-	}
-	
 	public Extrato save(Extrato extrato) {
+		log.debug("Request to save Extrato : {}", extrato);
 		return extratoRepository.save(extrato);
 	}
 
@@ -86,9 +76,9 @@ public class ExtratoService {
 	 * @return the list of entities.
 	 */
 	@Transactional(readOnly = true)
-	public Page<ExtratoDTO> findAll(Pageable pageable) {
+	public Page<Extrato> findAll(Pageable pageable) {
 		log.debug("Request to get all Extratoes");
-		return extratoRepository.findAll(pageable).map(extratoMapper::toDto);
+		return extratoRepository.findAll(pageable);
 	}
 
 	/**
@@ -98,9 +88,9 @@ public class ExtratoService {
 	 * @return the entity.
 	 */
 	@Transactional(readOnly = true)
-	public Optional<ExtratoDTO> findOne(Long id) {
+	public Optional<Extrato> findOne(Long id) {
 		log.debug("Request to get Extrato : {}", id);
-		return extratoRepository.findById(id).map(extratoMapper::toDto);
+		return extratoRepository.findById(id);
 	}
 
 	/**
@@ -113,18 +103,18 @@ public class ExtratoService {
 		extratoRepository.deleteById(id);
 	}
 
-	public void save(ListOfxDto listOfxDto) {
+	public void save(ListOfxDto listOfxDto,  Agenciabancaria agenciaBancaria) {
 		if (listOfxDto.getOfxDTOs().isEmpty()) {
 			return;
 		}
 		Arquivo arquivo = s3Service.uploadExtrato(listOfxDto.getFileDTO());
 		OfxDTO ofxDto = listOfxDto.getOfxDTOs().get(0);
-		Agenciabancaria agencia = find(ofxDto.getBanco(), ofxDto.getAgencia(),ofxDto.getConta(), listOfxDto.getFileDTO().getParceiro());
+		validate(ofxDto.getBanco(), ofxDto.getAgencia(),ofxDto.getConta(), listOfxDto.getFileDTO().getParceiro(),agenciaBancaria);
 		List<Extrato> extratos = new ArrayList<Extrato>();
 		for (OfxDTO _ofxDto : listOfxDto.getOfxDTOs()) {
 			for (OfxData ofxData : _ofxDto.getDataList()) {
 				Extrato extrato = new Extrato();
-				extrato.setAgenciabancaria(agencia);
+				extrato.setAgenciabancaria(agenciaBancaria);
 				extrato.setArquivo(arquivo);
 				extrato.setExtDatalancamento(new java.sql.Date(ofxData.getLancamento().getTime()).toLocalDate());
 				extrato.setExtHistorico(ofxData.getHistorico());
@@ -143,44 +133,27 @@ public class ExtratoService {
 		extratoRepository.saveAll(extratos);
 	}
 
-	private Agenciabancaria find(String banco, String agencia, String conta, Parceiro parceiro) {		
+	private void validate(String banco, String agencia, String conta, Parceiro parceiro, Agenciabancaria agenciaBancaria) {		
 		if (agencia != null) {
-			AgenciabancariaCriteria agenciaCriteria = new AgenciabancariaCriteria();			
-			StringFilter bancoFilter = new StringFilter();
-			bancoFilter.setEquals(banco);			
-			agenciaCriteria.setBanCodigobancario(bancoFilter);			
-			StringFilter contaFilter = new StringFilter();
-			contaFilter.setEquals(conta);
-			agenciaCriteria.setAgeNumero(contaFilter);			
-			LongFilter parceiroFilter = new LongFilter();
-			parceiroFilter.setEquals(parceiro.getId());
-			agenciaCriteria.setParceiroId(parceiroFilter);			
-			StringFilter agenciaFilter = new StringFilter();
-			agenciaFilter.setEquals(agencia);
-			agenciaCriteria.setAgeAgencia(agenciaFilter);
-			List<Agenciabancaria> agencias = agenciaBancariaService.findAgenciaByCriteria(agenciaCriteria);
-			if (agencias != null && !agencias.isEmpty()) {
-				return agencias.get(0);
+			if(!agencia.trim().equalsIgnoreCase(agenciaBancaria.getAgeAgencia())) {
+				throw new MrContadorException("agencia.notequals");
 			}
-		}		
-		Agenciabancaria agenciaBancaria = new Agenciabancaria();
-		agenciaBancaria.setParceiro(parceiro);
-		agenciaBancaria.setAgeNumero(conta);
-		agenciaBancaria.setBanCodigobancario(banco);
-		agenciaBancaria.setAgeAgencia(agencia);
-		agenciaBancaria.setBanco(findBanco(banco));
-		return agenciaService.save(agenciaBancaria);
+		}
+		if(banco != null) {
+			if(!banco.trim().equalsIgnoreCase(agenciaBancaria.getBanCodigobancario())) {
+				throw new MrContadorException("agencia.notequals");
+			}
+		}
+		if(conta != null) {
+			if(!conta.trim().equalsIgnoreCase(agenciaBancaria.getAgeNumero())) {
+				throw new MrContadorException("agencia.notequals");
+			}
+		}
+		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {
+			throw new MrContadorException("agencia.notequals");
+		}
+
 	}
 	
-	private Banco findBanco(String banco) {
-		BancoCriteria criteria = new BancoCriteria();
-		StringFilter filter = new StringFilter();
-		filter.setEquals(banco);
-		criteria.setBanCodigobancario(filter);
-		List<Banco> list = bancoService.findBancoByCriteria(criteria);
-		if(list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
-	}
+	
 }

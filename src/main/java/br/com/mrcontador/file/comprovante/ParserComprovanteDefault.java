@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.difflib.algorithm.DiffException;
 
-import br.com.mrcontador.domain.Banco;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
@@ -33,10 +33,10 @@ public class ParserComprovanteDefault {
 	@Autowired
 	private ComprovanteService service;
 
-	public void process(InputStream stream, Banco banco, Parceiro parceiro) {
+	public void process(InputStream stream, Agenciabancaria agencia, Parceiro parceiro) {
 		try {
 			List<String> comprovantes = parseComprovante(stream);
-			ComprovanteBanco parser = getParser(banco.getBanCodigobancario());
+			ComprovanteBanco parser = getParser(agencia.getBanCodigobancario());
 			List<DiffPage> diffPages = new ArrayList<>();
 			int page = 1;
 			for (String comprovante : comprovantes) {
@@ -51,7 +51,7 @@ public class ParserComprovanteDefault {
 				}
 				++page;
 			}
-			//service.save(diffPages, banco, parceiro);
+			service.save(diffPages, agencia, parceiro);
 		} catch (DiffException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

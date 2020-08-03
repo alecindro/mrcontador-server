@@ -16,7 +16,6 @@ import br.com.mrcontador.domain.Comprovante_;
 import br.com.mrcontador.repository.ComprovanteRepository;
 import br.com.mrcontador.service.dto.ComprovanteCriteria;
 import br.com.mrcontador.service.dto.ComprovanteDTO;
-import br.com.mrcontador.service.mapper.ComprovanteMapper;
 import io.github.jhipster.service.QueryService;
 
 /**
@@ -33,11 +32,8 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
 
     private final ComprovanteRepository comprovanteRepository;
 
-    private final ComprovanteMapper comprovanteMapper;
-
-    public ComprovanteQueryService(ComprovanteRepository comprovanteRepository, ComprovanteMapper comprovanteMapper) {
+    public ComprovanteQueryService(ComprovanteRepository comprovanteRepository) {
         this.comprovanteRepository = comprovanteRepository;
-        this.comprovanteMapper = comprovanteMapper;
     }
 
     /**
@@ -46,10 +42,10 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<ComprovanteDTO> findByCriteria(ComprovanteCriteria criteria) {
+    public List<Comprovante> findByCriteria(ComprovanteCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Comprovante> specification = createSpecification(criteria);
-        return comprovanteMapper.toDto(comprovanteRepository.findAll(specification));
+        return comprovanteRepository.findAll(specification);
     }
 
     /**
@@ -59,11 +55,10 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<ComprovanteDTO> findByCriteria(ComprovanteCriteria criteria, Pageable page) {
+    public Page<Comprovante> findByCriteria(ComprovanteCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Comprovante> specification = createSpecification(criteria);
-        return comprovanteRepository.findAll(specification, page)
-            .map(comprovanteMapper::toDto);
+        return comprovanteRepository.findAll(specification, page);
     }
 
     /**
@@ -89,35 +84,35 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Comprovante_.id));
             }
-            if (criteria.getPar_codigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getPar_codigo(), Comprovante_.par_codigo));
+            if (criteria.getParCodigo() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getParCodigo(), Comprovante_.parCodigo));
             }
-            if (criteria.getAge_codigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getAge_codigo(), Comprovante_.age_codigo));
+            if (criteria.getAgeCodigo() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getAgeCodigo(), Comprovante_.ageCodigo));
             }
-            if (criteria.getCom_cnpj() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCom_cnpj(), Comprovante_.com_cnpj));
+            if (criteria.getComCnpj() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getComCnpj(), Comprovante_.comCnpj));
             }
-            if (criteria.getCom_beneficiario() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCom_beneficiario(), Comprovante_.com_beneficiario));
+            if (criteria.getComBeneficiario() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getComBeneficiario(), Comprovante_.comBeneficiario));
             }
-            if (criteria.getCom_documento() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCom_documento(), Comprovante_.com_documento));
+            if (criteria.getComDocumento() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getComDocumento(), Comprovante_.comDocumento));
             }
-            if (criteria.getCom_datavencimento() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCom_datavencimento(), Comprovante_.com_datavencimento));
+            if (criteria.getComDatavencimento() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getComDatavencimento(), Comprovante_.comDatavencimento));
             }
-            if (criteria.getCom_datapagamento() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCom_datapagamento(), Comprovante_.com_datapagamento));
+            if (criteria.getComDatapagamento() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getComDatapagamento(), Comprovante_.comDatapagamento));
             }
-            if (criteria.getCom_valordocumento() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCom_valordocumento(), Comprovante_.com_valordocumento));
+            if (criteria.getComValordocumento() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getComValordocumento(), Comprovante_.comValordocumento));
             }
-            if (criteria.getCom_valorpagamento() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCom_valorpagamento(), Comprovante_.com_valorpagamento));
+            if (criteria.getComValorpagamento() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getComValorpagamento(), Comprovante_.comValorpagamento));
             }
-            if (criteria.getCom_observacao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCom_observacao(), Comprovante_.com_observacao));
+            if (criteria.getComObservacao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getComObservacao(), Comprovante_.comObservacao));
             }
         }
         return specification;

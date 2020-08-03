@@ -26,34 +26,34 @@ public class Notaservico implements Serializable {
     private Long id;
 
     @Column(name = "nse_numero")
-    private Integer nse_numero;
+    private Integer nseNumero;
 
     @Column(name = "nse_descricao", length = 50)
-    private String nse_descricao;
+    private String nseDescricao;
 
     @Column(name = "nse_cnpj", length = 20)
-    private String nse_cnpj;
+    private String nseCnpj;
 
     @Column(name = "nse_empresa", length = 60)
-    private String nse_empresa;
+    private String nseEmpresa;
 
     @Column(name = "nse_datasaida")
-    private ZonedDateTime nse_datasaida;
+    private ZonedDateTime nseDatasaida;
 
     @Column(name = "nse_valornota", precision = 21, scale = 2)
-    private BigDecimal nse_valornota;
+    private BigDecimal nseValornota;
 
     @Column(name = "nse_dataparcela")
-    private ZonedDateTime nse_dataparcela;
+    private ZonedDateTime nseDataparcela;
 
     @Column(name = "nse_valorparcela", precision = 21, scale = 2)
-    private BigDecimal nse_valorparcela;
+    private BigDecimal nseValorparcela;
 
     @Column(name = "tno_codigo")
-    private Integer tno_codigo;
+    private Integer tnoCodigo;
 
     @Column(name = "nse_parcela", length = 10)
-    private String nse_parcela;
+    private String nseParcela;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -69,137 +69,137 @@ public class Notaservico implements Serializable {
         this.id = id;
     }
 
-    public Integer getNse_numero() {
-        return nse_numero;
-    }
-
-    public Notaservico nse_numero(Integer nse_numero) {
-        this.nse_numero = nse_numero;
+    public Notaservico nseNumero(Integer nseNumero) {
+        this.nseNumero = nseNumero;
         return this;
     }
 
-    public void setNse_numero(Integer nse_numero) {
-        this.nse_numero = nse_numero;
-    }
-
-    public String getNse_descricao() {
-        return nse_descricao;
-    }
-
-    public Notaservico nse_descricao(String nse_descricao) {
-        this.nse_descricao = nse_descricao;
+    public Notaservico nseDescricao(String nseDescricao) {
+        this.nseDescricao = nseDescricao;
         return this;
     }
 
-    public void setNse_descricao(String nse_descricao) {
-        this.nse_descricao = nse_descricao;
-    }
-
-    public String getNse_cnpj() {
-        return nse_cnpj;
-    }
-
-    public Notaservico nse_cnpj(String nse_cnpj) {
-        this.nse_cnpj = nse_cnpj;
+    public Notaservico nseCnpj(String nseCnpj) {
+        this.nseCnpj = nseCnpj;
         return this;
     }
 
-    public void setNse_cnpj(String nse_cnpj) {
-        this.nse_cnpj = nse_cnpj;
-    }
-
-    public String getNse_empresa() {
-        return nse_empresa;
-    }
-
-    public Notaservico nse_empresa(String nse_empresa) {
-        this.nse_empresa = nse_empresa;
+    public Notaservico nseEmpresa(String nseEmpresa) {
+        this.nseEmpresa = nseEmpresa;
         return this;
     }
 
-    public void setNse_empresa(String nse_empresa) {
-        this.nse_empresa = nse_empresa;
-    }
-
-    public ZonedDateTime getNse_datasaida() {
-        return nse_datasaida;
-    }
-
-    public Notaservico nse_datasaida(ZonedDateTime nse_datasaida) {
-        this.nse_datasaida = nse_datasaida;
+    public Notaservico nseDatasaida(ZonedDateTime nseDatasaida) {
+        this.nseDatasaida = nseDatasaida;
         return this;
     }
 
-    public void setNse_datasaida(ZonedDateTime nse_datasaida) {
-        this.nse_datasaida = nse_datasaida;
-    }
-
-    public BigDecimal getNse_valornota() {
-        return nse_valornota;
-    }
-
-    public Notaservico nse_valornota(BigDecimal nse_valornota) {
-        this.nse_valornota = nse_valornota;
+    public Notaservico nseValornota(BigDecimal nseValornota) {
+        this.nseValornota = nseValornota;
         return this;
     }
 
-    public void setNse_valornota(BigDecimal nse_valornota) {
-        this.nse_valornota = nse_valornota;
-    }
-
-    public ZonedDateTime getNse_dataparcela() {
-        return nse_dataparcela;
-    }
-
-    public Notaservico nse_dataparcela(ZonedDateTime nse_dataparcela) {
-        this.nse_dataparcela = nse_dataparcela;
+    public Notaservico nseDataparcela(ZonedDateTime nseDataparcela) {
+        this.nseDataparcela = nseDataparcela;
         return this;
     }
 
-    public void setNse_dataparcela(ZonedDateTime nse_dataparcela) {
-        this.nse_dataparcela = nse_dataparcela;
-    }
-
-    public BigDecimal getNse_valorparcela() {
-        return nse_valorparcela;
-    }
-
-    public Notaservico nse_valorparcela(BigDecimal nse_valorparcela) {
-        this.nse_valorparcela = nse_valorparcela;
+    public Notaservico nseValorparcela(BigDecimal nseValorparcela) {
+        this.nseValorparcela = nseValorparcela;
         return this;
     }
 
-    public void setNse_valorparcela(BigDecimal nse_valorparcela) {
-        this.nse_valorparcela = nse_valorparcela;
-    }
-
-    public Integer getTno_codigo() {
-        return tno_codigo;
-    }
-
-    public Notaservico tno_codigo(Integer tno_codigo) {
-        this.tno_codigo = tno_codigo;
+    public Notaservico tnoCodigo(Integer tnoCodigo) {
+        this.tnoCodigo = tnoCodigo;
         return this;
     }
 
-    public void setTno_codigo(Integer tno_codigo) {
-        this.tno_codigo = tno_codigo;
-    }
-
-    public String getNse_parcela() {
-        return nse_parcela;
-    }
-
-    public Notaservico nse_parcela(String nse_parcela) {
-        this.nse_parcela = nse_parcela;
+    public Notaservico nseParcela(String nseParcela) {
+        this.nseParcela = nseParcela;
         return this;
     }
 
-    public void setNse_parcela(String nse_parcela) {
-        this.nse_parcela = nse_parcela;
-    }
+    public Integer getNseNumero() {
+		return nseNumero;
+	}
 
-    public Parceiro getParceiro() {
+	public void setNseNumero(Integer nseNumero) {
+		this.nseNumero = nseNumero;
+	}
+
+	public String getNseDescricao() {
+		return nseDescricao;
+	}
+
+	public void setNseDescricao(String nseDescricao) {
+		this.nseDescricao = nseDescricao;
+	}
+
+	public String getNseCnpj() {
+		return nseCnpj;
+	}
+
+	public void setNseCnpj(String nseCnpj) {
+		this.nseCnpj = nseCnpj;
+	}
+
+	public String getNseEmpresa() {
+		return nseEmpresa;
+	}
+
+	public void setNseEmpresa(String nseEmpresa) {
+		this.nseEmpresa = nseEmpresa;
+	}
+
+	public ZonedDateTime getNseDatasaida() {
+		return nseDatasaida;
+	}
+
+	public void setNseDatasaida(ZonedDateTime nseDatasaida) {
+		this.nseDatasaida = nseDatasaida;
+	}
+
+	public BigDecimal getNseValornota() {
+		return nseValornota;
+	}
+
+	public void setNseValornota(BigDecimal nseValornota) {
+		this.nseValornota = nseValornota;
+	}
+
+	public ZonedDateTime getNseDataparcela() {
+		return nseDataparcela;
+	}
+
+	public void setNseDataparcela(ZonedDateTime nseDataparcela) {
+		this.nseDataparcela = nseDataparcela;
+	}
+
+	public BigDecimal getNseValorparcela() {
+		return nseValorparcela;
+	}
+
+	public void setNseValorparcela(BigDecimal nseValorparcela) {
+		this.nseValorparcela = nseValorparcela;
+	}
+
+	public Integer getTnoCodigo() {
+		return tnoCodigo;
+	}
+
+	public void setTnoCodigo(Integer tnoCodigo) {
+		this.tnoCodigo = tnoCodigo;
+	}
+
+	public String getNseParcela() {
+		return nseParcela;
+	}
+
+	public void setNseParcela(String nseParcela) {
+		this.nseParcela = nseParcela;
+	}
+
+	public Parceiro getParceiro() {
         return parceiro;
     }
 
@@ -229,21 +229,13 @@ public class Notaservico implements Serializable {
         return 31;
     }
 
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "Notaservico{" +
-            "id=" + getId() +
-            ", nse_numero=" + getNse_numero() +
-            ", nse_descricao='" + getNse_descricao() + "'" +
-            ", nse_cnpj='" + getNse_cnpj() + "'" +
-            ", nse_empresa='" + getNse_empresa() + "'" +
-            ", nse_datasaida='" + getNse_datasaida() + "'" +
-            ", nse_valornota=" + getNse_valornota() +
-            ", nse_dataparcela='" + getNse_dataparcela() + "'" +
-            ", nse_valorparcela=" + getNse_valorparcela() +
-            ", tno_codigo=" + getTno_codigo() +
-            ", nse_parcela='" + getNse_parcela() + "'" +
-            "}";
-    }
+ // prettier-ignore
+	@Override
+	public String toString() {
+		return "Notaservico [id=" + id + ", nseNumero=" + nseNumero + ", nseDescricao=" + nseDescricao + ", nseCnpj="
+				+ nseCnpj + ", nseEmpresa=" + nseEmpresa + ", nseDatasaida=" + nseDatasaida + ", nseValornota="
+				+ nseValornota + ", nseDataparcela=" + nseDataparcela + ", nseValorparcela=" + nseValorparcela
+				+ ", tnoCodigo=" + tnoCodigo + ", nseParcela=" + nseParcela + ", parceiro=" + parceiro + "]";
+	}    
+    
 }

@@ -12,14 +12,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
 import br.com.mrcontador.domain.Notaservico;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Notaservico_;
+import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.NotaservicoRepository;
 import br.com.mrcontador.service.dto.NotaservicoCriteria;
 import br.com.mrcontador.service.dto.NotaservicoDTO;
-import br.com.mrcontador.service.mapper.NotaservicoMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Notaservico} entities in the database.
@@ -35,11 +35,8 @@ public class NotaservicoQueryService extends QueryService<Notaservico> {
 
     private final NotaservicoRepository notaservicoRepository;
 
-    private final NotaservicoMapper notaservicoMapper;
-
-    public NotaservicoQueryService(NotaservicoRepository notaservicoRepository, NotaservicoMapper notaservicoMapper) {
+    public NotaservicoQueryService(NotaservicoRepository notaservicoRepository) {
         this.notaservicoRepository = notaservicoRepository;
-        this.notaservicoMapper = notaservicoMapper;
     }
 
     /**
@@ -48,10 +45,10 @@ public class NotaservicoQueryService extends QueryService<Notaservico> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<NotaservicoDTO> findByCriteria(NotaservicoCriteria criteria) {
+    public List<Notaservico> findByCriteria(NotaservicoCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Notaservico> specification = createSpecification(criteria);
-        return notaservicoMapper.toDto(notaservicoRepository.findAll(specification));
+        return notaservicoRepository.findAll(specification);
     }
 
     /**
@@ -61,11 +58,10 @@ public class NotaservicoQueryService extends QueryService<Notaservico> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<NotaservicoDTO> findByCriteria(NotaservicoCriteria criteria, Pageable page) {
+    public Page<Notaservico> findByCriteria(NotaservicoCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Notaservico> specification = createSpecification(criteria);
-        return notaservicoRepository.findAll(specification, page)
-            .map(notaservicoMapper::toDto);
+        return notaservicoRepository.findAll(specification, page);
     }
 
     /**
@@ -91,35 +87,35 @@ public class NotaservicoQueryService extends QueryService<Notaservico> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Notaservico_.id));
             }
-            if (criteria.getNse_numero() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNse_numero(), Notaservico_.nse_numero));
+            if (criteria.getNseNumero() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNseNumero(), Notaservico_.nseNumero));
             }
-            if (criteria.getNse_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNse_descricao(), Notaservico_.nse_descricao));
+            if (criteria.getNseDescricao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNseDescricao(), Notaservico_.nseDescricao));
             }
-            if (criteria.getNse_cnpj() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNse_cnpj(), Notaservico_.nse_cnpj));
+            if (criteria.getNseCnpj() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNseCnpj(), Notaservico_.nseCnpj));
             }
-            if (criteria.getNse_empresa() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNse_empresa(), Notaservico_.nse_empresa));
+            if (criteria.getNseEmpresa() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNseEmpresa(), Notaservico_.nseEmpresa));
             }
-            if (criteria.getNse_datasaida() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNse_datasaida(), Notaservico_.nse_datasaida));
+            if (criteria.getNseDatasaida() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNseDatasaida(), Notaservico_.nseDatasaida));
             }
-            if (criteria.getNse_valornota() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNse_valornota(), Notaservico_.nse_valornota));
+            if (criteria.getNseValornota() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNseValornota(), Notaservico_.nseValornota));
             }
-            if (criteria.getNse_dataparcela() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNse_dataparcela(), Notaservico_.nse_dataparcela));
+            if (criteria.getNseDataparcela() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNseDataparcela(), Notaservico_.nseDataparcela));
             }
-            if (criteria.getNse_valorparcela() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNse_valorparcela(), Notaservico_.nse_valorparcela));
+            if (criteria.getNseValorparcela() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getNseValorparcela(), Notaservico_.nseValorparcela));
             }
-            if (criteria.getTno_codigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getTno_codigo(), Notaservico_.tno_codigo));
+            if (criteria.getTnoCodigo() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getTnoCodigo(), Notaservico_.tnoCodigo));
             }
-            if (criteria.getNse_parcela() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getNse_parcela(), Notaservico_.nse_parcela));
+            if (criteria.getNseParcela() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNseParcela(), Notaservico_.nseParcela));
             }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),

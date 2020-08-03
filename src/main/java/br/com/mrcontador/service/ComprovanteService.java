@@ -10,14 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mrcontador.domain.Banco;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.comprovante.DiffPage;
 import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.repository.ComprovanteRepository;
-import br.com.mrcontador.service.dto.ComprovanteDTO;
-import br.com.mrcontador.service.mapper.ComprovanteMapper;
 
 /**
  * Service Implementation for managing {@link Comprovante}.
@@ -30,11 +28,8 @@ public class ComprovanteService {
 
     private final ComprovanteRepository comprovanteRepository;
 
-    private final ComprovanteMapper comprovanteMapper;
-
-    public ComprovanteService(ComprovanteRepository comprovanteRepository, ComprovanteMapper comprovanteMapper) {
+    public ComprovanteService(ComprovanteRepository comprovanteRepository) {
         this.comprovanteRepository = comprovanteRepository;
-        this.comprovanteMapper = comprovanteMapper;
     }
 
     /**
@@ -43,11 +38,9 @@ public class ComprovanteService {
      * @param comprovanteDTO the entity to save.
      * @return the persisted entity.
      */
-    public ComprovanteDTO save(ComprovanteDTO comprovanteDTO) {
-        log.debug("Request to save Comprovante : {}", comprovanteDTO);
-        Comprovante comprovante = comprovanteMapper.toEntity(comprovanteDTO);
-        comprovante = comprovanteRepository.save(comprovante);
-        return comprovanteMapper.toDto(comprovante);
+    public Comprovante save(Comprovante comprovante) {
+        log.debug("Request to save Comprovante : {}", comprovante);
+        return comprovanteRepository.save(comprovante);
     }
 
     /**
@@ -57,10 +50,9 @@ public class ComprovanteService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<ComprovanteDTO> findAll(Pageable pageable) {
+    public Page<Comprovante> findAll(Pageable pageable) {
         log.debug("Request to get all Comprovantes");
-        return comprovanteRepository.findAll(pageable)
-            .map(comprovanteMapper::toDto);
+        return comprovanteRepository.findAll(pageable);
     }
 
 
@@ -71,10 +63,9 @@ public class ComprovanteService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<ComprovanteDTO> findOne(Long id) {
+    public Optional<Comprovante> findOne(Long id) {
         log.debug("Request to get Comprovante : {}", id);
-        return comprovanteRepository.findById(id)
-            .map(comprovanteMapper::toDto);
+        return comprovanteRepository.findById(id);
     }
 
     /**
@@ -87,7 +78,7 @@ public class ComprovanteService {
         comprovanteRepository.deleteById(id);
     }
     
-    public void save(List<DiffPage> diffPages,Banco banco, Parceiro parceiro) {
+    public void save(List<DiffPage> diffPages,Agenciabancaria agencia, Parceiro parceiro) {
     	for(DiffPage diffPage  :diffPages) {
     			for(DiffValue diffValue : diffPage.getDiffValues()) {
     				System.out.println(diffValue.toString());

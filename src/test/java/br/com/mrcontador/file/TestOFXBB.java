@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.ofx.OfxParserDefault;
 import br.com.mrcontador.security.SecurityUtils;
@@ -38,6 +39,7 @@ public class TestOFXBB {
 		String folder = "/home/alecindro/Documents/drcontabil/docs/sicoob.ofx";
 		File initialFile = new File(folder);	
 		FileDTO dto = new FileDTO();
+		Agenciabancaria bancaria = new Agenciabancaria();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
 			dto.setContentType("text/plain");
@@ -49,13 +51,14 @@ public class TestOFXBB {
 			Parceiro parceiro = new Parceiro();
 			parceiro.setId(1L);
 			dto.setParceiro(parceiro);
-			ofxParserDefault.process(dto);
+			ofxParserDefault.process(dto,bancaria);
 	    }catch(Exception e) {
 	    	e.printStackTrace();
 	    }
 	}
 	
 	public void testCaixa() {
+		Agenciabancaria bancaria = new Agenciabancaria();
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
 		String folder = "/home/alecindro/Documents/drcontabil/docs/caixa.ofx";
 		File initialFile = new File(folder);	
@@ -71,7 +74,7 @@ public class TestOFXBB {
 			Parceiro parceiro = new Parceiro();
 			parceiro.setId(1L);
 			dto.setParceiro(parceiro);
-			ofxParserDefault.process(dto);
+			ofxParserDefault.process(dto,bancaria);
 	    }catch(Exception e) {
 	    	e.printStackTrace();
 	    }

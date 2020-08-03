@@ -12,14 +12,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
 import br.com.mrcontador.domain.Notafiscal;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Notafiscal_;
+import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.NotafiscalRepository;
 import br.com.mrcontador.service.dto.NotafiscalCriteria;
 import br.com.mrcontador.service.dto.NotafiscalDTO;
-import br.com.mrcontador.service.mapper.NotafiscalMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Notafiscal} entities in the database.
@@ -35,11 +35,8 @@ public class NotafiscalQueryService extends QueryService<Notafiscal> {
 
     private final NotafiscalRepository notafiscalRepository;
 
-    private final NotafiscalMapper notafiscalMapper;
-
-    public NotafiscalQueryService(NotafiscalRepository notafiscalRepository, NotafiscalMapper notafiscalMapper) {
+    public NotafiscalQueryService(NotafiscalRepository notafiscalRepository) {
         this.notafiscalRepository = notafiscalRepository;
-        this.notafiscalMapper = notafiscalMapper;
     }
 
     /**
@@ -48,10 +45,10 @@ public class NotafiscalQueryService extends QueryService<Notafiscal> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<NotafiscalDTO> findByCriteria(NotafiscalCriteria criteria) {
+    public List<Notafiscal> findByCriteria(NotafiscalCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Notafiscal> specification = createSpecification(criteria);
-        return notafiscalMapper.toDto(notafiscalRepository.findAll(specification));
+        return notafiscalRepository.findAll(specification);
     }
 
     /**
@@ -61,11 +58,10 @@ public class NotafiscalQueryService extends QueryService<Notafiscal> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<NotafiscalDTO> findByCriteria(NotafiscalCriteria criteria, Pageable page) {
+    public Page<Notafiscal> findByCriteria(NotafiscalCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Notafiscal> specification = createSpecification(criteria);
-        return notafiscalRepository.findAll(specification, page)
-            .map(notafiscalMapper::toDto);
+        return notafiscalRepository.findAll(specification, page);
     }
 
     /**

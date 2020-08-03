@@ -3,12 +3,8 @@ package br.com.mrcontador.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +19,6 @@ import br.com.mrcontador.domain.Agenciabancaria_;
 import br.com.mrcontador.domain.Atividade_;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.domain.Parceiro_;
-import br.com.mrcontador.domain.Socio;
 import br.com.mrcontador.domain.Socio_;
 import br.com.mrcontador.repository.ParceiroRepository;
 import br.com.mrcontador.service.dto.ParceiroCriteria;

@@ -1,10 +1,11 @@
 package br.com.mrcontador.service.mapper;
 
 
-import br.com.mrcontador.domain.*;
-import br.com.mrcontador.service.dto.AgenciabancariaDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import org.mapstruct.*;
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.service.dto.AgenciabancariaDTO;
 
 /**
  * Mapper for the entity {@link Agenciabancaria} and its DTO {@link AgenciabancariaDTO}.

@@ -1,30 +1,37 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.service.NotafiscalService;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import br.com.mrcontador.service.dto.NotafiscalDTO;
-import br.com.mrcontador.service.dto.NotafiscalCriteria;
-import br.com.mrcontador.service.NotafiscalQueryService;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import br.com.mrcontador.domain.Notafiscal;
+import br.com.mrcontador.service.NotafiscalQueryService;
+import br.com.mrcontador.service.NotafiscalService;
+import br.com.mrcontador.service.dto.NotafiscalCriteria;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link br.com.mrcontador.domain.Notafiscal}.
@@ -57,12 +64,12 @@ public class NotafiscalResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/notafiscals")
-    public ResponseEntity<NotafiscalDTO> createNotafiscal(@Valid @RequestBody NotafiscalDTO notafiscalDTO) throws URISyntaxException {
-        log.debug("REST request to save Notafiscal : {}", notafiscalDTO);
-        if (notafiscalDTO.getId() != null) {
+    public ResponseEntity<Notafiscal> createNotafiscal(@Valid @RequestBody Notafiscal notafiscal) throws URISyntaxException {
+        log.debug("REST request to save Notafiscal : {}", notafiscal);
+        if (notafiscal.getId() != null) {
             throw new BadRequestAlertException("A new notafiscal cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        NotafiscalDTO result = notafiscalService.save(notafiscalDTO);
+        Notafiscal result = notafiscalService.save(notafiscal);
         return ResponseEntity.created(new URI("/api/notafiscals/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,14 +85,14 @@ public class NotafiscalResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/notafiscals")
-    public ResponseEntity<NotafiscalDTO> updateNotafiscal(@Valid @RequestBody NotafiscalDTO notafiscalDTO) throws URISyntaxException {
-        log.debug("REST request to update Notafiscal : {}", notafiscalDTO);
-        if (notafiscalDTO.getId() == null) {
+    public ResponseEntity<Notafiscal> updateNotafiscal(@Valid @RequestBody Notafiscal notafiscal) throws URISyntaxException {
+        log.debug("REST request to update Notafiscal : {}", notafiscal);
+        if (notafiscal.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        NotafiscalDTO result = notafiscalService.save(notafiscalDTO);
+        Notafiscal result = notafiscalService.save(notafiscal);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, notafiscalDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, notafiscal.getId().toString()))
             .body(result);
     }
 
@@ -97,9 +104,9 @@ public class NotafiscalResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of notafiscals in body.
      */
     @GetMapping("/notafiscals")
-    public ResponseEntity<List<NotafiscalDTO>> getAllNotafiscals(NotafiscalCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Notafiscal>> getAllNotafiscals(NotafiscalCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Notafiscals by criteria: {}", criteria);
-        Page<NotafiscalDTO> page = notafiscalQueryService.findByCriteria(criteria, pageable);
+        Page<Notafiscal> page = notafiscalQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -123,10 +130,10 @@ public class NotafiscalResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the notafiscalDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/notafiscals/{id}")
-    public ResponseEntity<NotafiscalDTO> getNotafiscal(@PathVariable Long id) {
+    public ResponseEntity<Notafiscal> getNotafiscal(@PathVariable Long id) {
         log.debug("REST request to get Notafiscal : {}", id);
-        Optional<NotafiscalDTO> notafiscalDTO = notafiscalService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(notafiscalDTO);
+        Optional<Notafiscal> notafiscal = notafiscalService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(notafiscal);
     }
 
     /**

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.repository.AgenciabancariaRepository;
-import br.com.mrcontador.service.dto.AgenciabancariaDTO;
 
 /**
  * Service Implementation for managing {@link Agenciabancaria}.

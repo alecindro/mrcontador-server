@@ -1,30 +1,37 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.service.ExtratoService;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import br.com.mrcontador.service.dto.ExtratoDTO;
-import br.com.mrcontador.service.dto.ExtratoCriteria;
-import br.com.mrcontador.service.ExtratoQueryService;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.service.ExtratoQueryService;
+import br.com.mrcontador.service.ExtratoService;
+import br.com.mrcontador.service.dto.ExtratoCriteria;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link br.com.mrcontador.domain.Extrato}.
@@ -57,12 +64,12 @@ public class ExtratoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/extratoes")
-    public ResponseEntity<ExtratoDTO> createExtrato(@Valid @RequestBody ExtratoDTO extratoDTO) throws URISyntaxException {
-        log.debug("REST request to save Extrato : {}", extratoDTO);
-        if (extratoDTO.getId() != null) {
+    public ResponseEntity<Extrato> createExtrato(@Valid @RequestBody Extrato extrato) throws URISyntaxException {
+        log.debug("REST request to save Extrato : {}", extrato);
+        if (extrato.getId() != null) {
             throw new BadRequestAlertException("A new extrato cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ExtratoDTO result = extratoService.save(extratoDTO);
+        Extrato result = extratoService.save(extrato);
         return ResponseEntity.created(new URI("/api/extratoes/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,14 +85,14 @@ public class ExtratoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/extratoes")
-    public ResponseEntity<ExtratoDTO> updateExtrato(@Valid @RequestBody ExtratoDTO extratoDTO) throws URISyntaxException {
-        log.debug("REST request to update Extrato : {}", extratoDTO);
-        if (extratoDTO.getId() == null) {
+    public ResponseEntity<Extrato> updateExtrato(@Valid @RequestBody Extrato extrato) throws URISyntaxException {
+        log.debug("REST request to update Extrato : {}", extrato);
+        if (extrato.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        ExtratoDTO result = extratoService.save(extratoDTO);
+        Extrato result = extratoService.save(extrato);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, extratoDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, extrato.getId().toString()))
             .body(result);
     }
 
@@ -97,9 +104,9 @@ public class ExtratoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of extratoes in body.
      */
     @GetMapping("/extratoes")
-    public ResponseEntity<List<ExtratoDTO>> getAllExtratoes(ExtratoCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Extrato>> getAllExtratoes(ExtratoCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Extratoes by criteria: {}", criteria);
-        Page<ExtratoDTO> page = extratoQueryService.findByCriteria(criteria, pageable);
+        Page<Extrato> page = extratoQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -123,10 +130,10 @@ public class ExtratoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the extratoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/extratoes/{id}")
-    public ResponseEntity<ExtratoDTO> getExtrato(@PathVariable Long id) {
+    public ResponseEntity<Extrato> getExtrato(@PathVariable Long id) {
         log.debug("REST request to get Extrato : {}", id);
-        Optional<ExtratoDTO> extratoDTO = extratoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(extratoDTO);
+        Optional<Extrato> extrato = extratoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(extrato);
     }
 
     /**

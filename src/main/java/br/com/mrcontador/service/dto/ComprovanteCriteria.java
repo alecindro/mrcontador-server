@@ -2,15 +2,13 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import io.github.jhipster.service.Criteria;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
+import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
@@ -28,41 +26,41 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private IntegerFilter par_codigo;
+    private IntegerFilter parCodigo;
 
-    private IntegerFilter age_codigo;
+    private IntegerFilter ageCodigo;
 
-    private StringFilter com_cnpj;
+    private StringFilter comCnpj;
 
-    private StringFilter com_beneficiario;
+    private StringFilter comBeneficiario;
 
-    private StringFilter com_documento;
+    private StringFilter comDocumento;
 
-    private ZonedDateTimeFilter com_datavencimento;
+    private ZonedDateTimeFilter comDatavencimento;
 
-    private ZonedDateTimeFilter com_datapagamento;
+    private ZonedDateTimeFilter comDatapagamento;
 
-    private BigDecimalFilter com_valordocumento;
+    private BigDecimalFilter comValordocumento;
 
-    private BigDecimalFilter com_valorpagamento;
+    private BigDecimalFilter comValorpagamento;
 
-    private StringFilter com_observacao;
+    private StringFilter comObservacao;
 
     public ComprovanteCriteria() {
     }
 
     public ComprovanteCriteria(ComprovanteCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.par_codigo = other.par_codigo == null ? null : other.par_codigo.copy();
-        this.age_codigo = other.age_codigo == null ? null : other.age_codigo.copy();
-        this.com_cnpj = other.com_cnpj == null ? null : other.com_cnpj.copy();
-        this.com_beneficiario = other.com_beneficiario == null ? null : other.com_beneficiario.copy();
-        this.com_documento = other.com_documento == null ? null : other.com_documento.copy();
-        this.com_datavencimento = other.com_datavencimento == null ? null : other.com_datavencimento.copy();
-        this.com_datapagamento = other.com_datapagamento == null ? null : other.com_datapagamento.copy();
-        this.com_valordocumento = other.com_valordocumento == null ? null : other.com_valordocumento.copy();
-        this.com_valorpagamento = other.com_valorpagamento == null ? null : other.com_valorpagamento.copy();
-        this.com_observacao = other.com_observacao == null ? null : other.com_observacao.copy();
+        this.parCodigo = other.parCodigo == null ? null : other.parCodigo.copy();
+        this.ageCodigo = other.ageCodigo == null ? null : other.ageCodigo.copy();
+        this.comCnpj = other.comCnpj == null ? null : other.comCnpj.copy();
+        this.comBeneficiario = other.comBeneficiario == null ? null : other.comBeneficiario.copy();
+        this.comDocumento = other.comDocumento == null ? null : other.comDocumento.copy();
+        this.comDatavencimento = other.comDatavencimento == null ? null : other.comDatavencimento.copy();
+        this.comDatapagamento = other.comDatapagamento == null ? null : other.comDatapagamento.copy();
+        this.comValordocumento = other.comValordocumento == null ? null : other.comValordocumento.copy();
+        this.comValorpagamento = other.comValorpagamento == null ? null : other.comValorpagamento.copy();
+        this.comObservacao = other.comObservacao == null ? null : other.comObservacao.copy();
     }
 
     @Override
@@ -78,88 +76,88 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public IntegerFilter getPar_codigo() {
-        return par_codigo;
-    }
 
-    public void setPar_codigo(IntegerFilter par_codigo) {
-        this.par_codigo = par_codigo;
-    }
+    public IntegerFilter getParCodigo() {
+		return parCodigo;
+	}
 
-    public IntegerFilter getAge_codigo() {
-        return age_codigo;
-    }
+	public void setParCodigo(IntegerFilter parCodigo) {
+		this.parCodigo = parCodigo;
+	}
 
-    public void setAge_codigo(IntegerFilter age_codigo) {
-        this.age_codigo = age_codigo;
-    }
+	public IntegerFilter getAgeCodigo() {
+		return ageCodigo;
+	}
 
-    public StringFilter getCom_cnpj() {
-        return com_cnpj;
-    }
+	public void setAgeCodigo(IntegerFilter ageCodigo) {
+		this.ageCodigo = ageCodigo;
+	}
 
-    public void setCom_cnpj(StringFilter com_cnpj) {
-        this.com_cnpj = com_cnpj;
-    }
+	public StringFilter getComCnpj() {
+		return comCnpj;
+	}
 
-    public StringFilter getCom_beneficiario() {
-        return com_beneficiario;
-    }
+	public void setComCnpj(StringFilter comCnpj) {
+		this.comCnpj = comCnpj;
+	}
 
-    public void setCom_beneficiario(StringFilter com_beneficiario) {
-        this.com_beneficiario = com_beneficiario;
-    }
+	public StringFilter getComBeneficiario() {
+		return comBeneficiario;
+	}
 
-    public StringFilter getCom_documento() {
-        return com_documento;
-    }
+	public void setComBeneficiario(StringFilter comBeneficiario) {
+		this.comBeneficiario = comBeneficiario;
+	}
 
-    public void setCom_documento(StringFilter com_documento) {
-        this.com_documento = com_documento;
-    }
+	public StringFilter getComDocumento() {
+		return comDocumento;
+	}
 
-    public ZonedDateTimeFilter getCom_datavencimento() {
-        return com_datavencimento;
-    }
+	public void setComDocumento(StringFilter comDocumento) {
+		this.comDocumento = comDocumento;
+	}
 
-    public void setCom_datavencimento(ZonedDateTimeFilter com_datavencimento) {
-        this.com_datavencimento = com_datavencimento;
-    }
+	public ZonedDateTimeFilter getComDatavencimento() {
+		return comDatavencimento;
+	}
 
-    public ZonedDateTimeFilter getCom_datapagamento() {
-        return com_datapagamento;
-    }
+	public void setComDatavencimento(ZonedDateTimeFilter comDatavencimento) {
+		this.comDatavencimento = comDatavencimento;
+	}
 
-    public void setCom_datapagamento(ZonedDateTimeFilter com_datapagamento) {
-        this.com_datapagamento = com_datapagamento;
-    }
+	public ZonedDateTimeFilter getComDatapagamento() {
+		return comDatapagamento;
+	}
 
-    public BigDecimalFilter getCom_valordocumento() {
-        return com_valordocumento;
-    }
+	public void setComDatapagamento(ZonedDateTimeFilter comDatapagamento) {
+		this.comDatapagamento = comDatapagamento;
+	}
 
-    public void setCom_valordocumento(BigDecimalFilter com_valordocumento) {
-        this.com_valordocumento = com_valordocumento;
-    }
+	public BigDecimalFilter getComValordocumento() {
+		return comValordocumento;
+	}
 
-    public BigDecimalFilter getCom_valorpagamento() {
-        return com_valorpagamento;
-    }
+	public void setComValordocumento(BigDecimalFilter comValordocumento) {
+		this.comValordocumento = comValordocumento;
+	}
 
-    public void setCom_valorpagamento(BigDecimalFilter com_valorpagamento) {
-        this.com_valorpagamento = com_valorpagamento;
-    }
+	public BigDecimalFilter getComValorpagamento() {
+		return comValorpagamento;
+	}
 
-    public StringFilter getCom_observacao() {
-        return com_observacao;
-    }
+	public void setComValorpagamento(BigDecimalFilter comValorpagamento) {
+		this.comValorpagamento = comValorpagamento;
+	}
 
-    public void setCom_observacao(StringFilter com_observacao) {
-        this.com_observacao = com_observacao;
-    }
+	public StringFilter getComObservacao() {
+		return comObservacao;
+	}
 
+	public void setComObservacao(StringFilter comObservacao) {
+		this.comObservacao = comObservacao;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -170,32 +168,32 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         final ComprovanteCriteria that = (ComprovanteCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(par_codigo, that.par_codigo) &&
-            Objects.equals(age_codigo, that.age_codigo) &&
-            Objects.equals(com_cnpj, that.com_cnpj) &&
-            Objects.equals(com_beneficiario, that.com_beneficiario) &&
-            Objects.equals(com_documento, that.com_documento) &&
-            Objects.equals(com_datavencimento, that.com_datavencimento) &&
-            Objects.equals(com_datapagamento, that.com_datapagamento) &&
-            Objects.equals(com_valordocumento, that.com_valordocumento) &&
-            Objects.equals(com_valorpagamento, that.com_valorpagamento) &&
-            Objects.equals(com_observacao, that.com_observacao);
+            Objects.equals(parCodigo, that.parCodigo) &&
+            Objects.equals(ageCodigo, that.ageCodigo) &&
+            Objects.equals(comCnpj, that.comCnpj) &&
+            Objects.equals(comBeneficiario, that.comBeneficiario) &&
+            Objects.equals(comDocumento, that.comDocumento) &&
+            Objects.equals(comDatavencimento, that.comDatavencimento) &&
+            Objects.equals(comDatapagamento, that.comDatapagamento) &&
+            Objects.equals(comValordocumento, that.comValordocumento) &&
+            Objects.equals(comValorpagamento, that.comValorpagamento) &&
+            Objects.equals(comObservacao, that.comObservacao);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
         id,
-        par_codigo,
-        age_codigo,
-        com_cnpj,
-        com_beneficiario,
-        com_documento,
-        com_datavencimento,
-        com_datapagamento,
-        com_valordocumento,
-        com_valorpagamento,
-        com_observacao
+        parCodigo,
+        ageCodigo,
+        comCnpj,
+        comBeneficiario,
+        comDocumento,
+        comDatavencimento,
+        comDatapagamento,
+        comValordocumento,
+        comValorpagamento,
+        comObservacao
         );
     }
 
@@ -204,16 +202,16 @@ public class ComprovanteCriteria implements Serializable, Criteria {
     public String toString() {
         return "ComprovanteCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (par_codigo != null ? "par_codigo=" + par_codigo + ", " : "") +
-                (age_codigo != null ? "age_codigo=" + age_codigo + ", " : "") +
-                (com_cnpj != null ? "com_cnpj=" + com_cnpj + ", " : "") +
-                (com_beneficiario != null ? "com_beneficiario=" + com_beneficiario + ", " : "") +
-                (com_documento != null ? "com_documento=" + com_documento + ", " : "") +
-                (com_datavencimento != null ? "com_datavencimento=" + com_datavencimento + ", " : "") +
-                (com_datapagamento != null ? "com_datapagamento=" + com_datapagamento + ", " : "") +
-                (com_valordocumento != null ? "com_valordocumento=" + com_valordocumento + ", " : "") +
-                (com_valorpagamento != null ? "com_valorpagamento=" + com_valorpagamento + ", " : "") +
-                (com_observacao != null ? "com_observacao=" + com_observacao + ", " : "") +
+                (parCodigo != null ? "par_codigo=" + parCodigo + ", " : "") +
+                (ageCodigo != null ? "age_codigo=" + ageCodigo + ", " : "") +
+                (comCnpj != null ? "com_cnpj=" + comCnpj + ", " : "") +
+                (comBeneficiario != null ? "com_beneficiario=" + comBeneficiario + ", " : "") +
+                (comDocumento != null ? "com_documento=" + comDocumento + ", " : "") +
+                (comDatavencimento != null ? "com_datavencimento=" + comDatavencimento + ", " : "") +
+                (comDatapagamento != null ? "com_datapagamento=" + comDatapagamento + ", " : "") +
+                (comValordocumento != null ? "com_valordocumento=" + comValordocumento + ", " : "") +
+                (comValorpagamento != null ? "com_valorpagamento=" + comValorpagamento + ", " : "") +
+                (comObservacao != null ? "com_observacao=" + comObservacao + ", " : "") +
             "}";
     }
 

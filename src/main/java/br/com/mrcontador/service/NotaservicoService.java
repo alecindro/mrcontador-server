@@ -1,18 +1,16 @@
 package br.com.mrcontador.service;
 
-import br.com.mrcontador.domain.Notaservico;
-import br.com.mrcontador.repository.NotaservicoRepository;
-import br.com.mrcontador.service.dto.NotaservicoDTO;
-import br.com.mrcontador.service.mapper.NotaservicoMapper;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import br.com.mrcontador.domain.Notaservico;
+import br.com.mrcontador.repository.NotaservicoRepository;
 
 /**
  * Service Implementation for managing {@link Notaservico}.
@@ -25,11 +23,9 @@ public class NotaservicoService {
 
     private final NotaservicoRepository notaservicoRepository;
 
-    private final NotaservicoMapper notaservicoMapper;
 
-    public NotaservicoService(NotaservicoRepository notaservicoRepository, NotaservicoMapper notaservicoMapper) {
+    public NotaservicoService(NotaservicoRepository notaservicoRepository) {
         this.notaservicoRepository = notaservicoRepository;
-        this.notaservicoMapper = notaservicoMapper;
     }
 
     /**
@@ -38,11 +34,9 @@ public class NotaservicoService {
      * @param notaservicoDTO the entity to save.
      * @return the persisted entity.
      */
-    public NotaservicoDTO save(NotaservicoDTO notaservicoDTO) {
-        log.debug("Request to save Notaservico : {}", notaservicoDTO);
-        Notaservico notaservico = notaservicoMapper.toEntity(notaservicoDTO);
-        notaservico = notaservicoRepository.save(notaservico);
-        return notaservicoMapper.toDto(notaservico);
+    public Notaservico save(Notaservico notaservico) {
+        log.debug("Request to save Notaservico : {}", notaservico);
+        return notaservicoRepository.save(notaservico);
     }
 
     /**
@@ -52,10 +46,9 @@ public class NotaservicoService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<NotaservicoDTO> findAll(Pageable pageable) {
+    public Page<Notaservico> findAll(Pageable pageable) {
         log.debug("Request to get all Notaservicos");
-        return notaservicoRepository.findAll(pageable)
-            .map(notaservicoMapper::toDto);
+        return notaservicoRepository.findAll(pageable);
     }
 
 
@@ -66,10 +59,9 @@ public class NotaservicoService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<NotaservicoDTO> findOne(Long id) {
+    public Optional<Notaservico> findOne(Long id) {
         log.debug("Request to get Notaservico : {}", id);
-        return notaservicoRepository.findById(id)
-            .map(notaservicoMapper::toDto);
+        return notaservicoRepository.findById(id);
     }
 
     /**

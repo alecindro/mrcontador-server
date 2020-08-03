@@ -1,30 +1,37 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.service.NotaservicoService;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import br.com.mrcontador.service.dto.NotaservicoDTO;
-import br.com.mrcontador.service.dto.NotaservicoCriteria;
-import br.com.mrcontador.service.NotaservicoQueryService;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import br.com.mrcontador.domain.Notaservico;
+import br.com.mrcontador.service.NotaservicoQueryService;
+import br.com.mrcontador.service.NotaservicoService;
+import br.com.mrcontador.service.dto.NotaservicoCriteria;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link br.com.mrcontador.domain.Notaservico}.
@@ -57,12 +64,12 @@ public class NotaservicoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/notaservicos")
-    public ResponseEntity<NotaservicoDTO> createNotaservico(@Valid @RequestBody NotaservicoDTO notaservicoDTO) throws URISyntaxException {
-        log.debug("REST request to save Notaservico : {}", notaservicoDTO);
-        if (notaservicoDTO.getId() != null) {
+    public ResponseEntity<Notaservico> createNotaservico(@Valid @RequestBody Notaservico notaservico) throws URISyntaxException {
+        log.debug("REST request to save Notaservico : {}", notaservico);
+        if (notaservico.getId() != null) {
             throw new BadRequestAlertException("A new notaservico cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        NotaservicoDTO result = notaservicoService.save(notaservicoDTO);
+        Notaservico result = notaservicoService.save(notaservico);
         return ResponseEntity.created(new URI("/api/notaservicos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,14 +85,14 @@ public class NotaservicoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/notaservicos")
-    public ResponseEntity<NotaservicoDTO> updateNotaservico(@Valid @RequestBody NotaservicoDTO notaservicoDTO) throws URISyntaxException {
-        log.debug("REST request to update Notaservico : {}", notaservicoDTO);
-        if (notaservicoDTO.getId() == null) {
+    public ResponseEntity<Notaservico> updateNotaservico(@Valid @RequestBody Notaservico notaservico) throws URISyntaxException {
+        log.debug("REST request to update Notaservico : {}", notaservico);
+        if (notaservico.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        NotaservicoDTO result = notaservicoService.save(notaservicoDTO);
+        Notaservico result = notaservicoService.save(notaservico);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, notaservicoDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, notaservico.getId().toString()))
             .body(result);
     }
 
@@ -97,9 +104,9 @@ public class NotaservicoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of notaservicos in body.
      */
     @GetMapping("/notaservicos")
-    public ResponseEntity<List<NotaservicoDTO>> getAllNotaservicos(NotaservicoCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Notaservico>> getAllNotaservicos(NotaservicoCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Notaservicos by criteria: {}", criteria);
-        Page<NotaservicoDTO> page = notaservicoQueryService.findByCriteria(criteria, pageable);
+        Page<Notaservico> page = notaservicoQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -123,10 +130,10 @@ public class NotaservicoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the notaservicoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/notaservicos/{id}")
-    public ResponseEntity<NotaservicoDTO> getNotaservico(@PathVariable Long id) {
+    public ResponseEntity<Notaservico> getNotaservico(@PathVariable Long id) {
         log.debug("REST request to get Notaservico : {}", id);
-        Optional<NotaservicoDTO> notaservicoDTO = notaservicoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(notaservicoDTO);
+        Optional<Notaservico> notaservico = notaservicoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(notaservico);
     }
 
     /**

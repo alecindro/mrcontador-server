@@ -7,6 +7,7 @@ import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.ofx.OfxParserDefault;
 import br.com.mrcontador.security.SecurityUtils;
@@ -22,6 +23,7 @@ public abstract class TestOFX {
 		String folder = "/home/alecindro/Documents/drcontabil/docs/ofx/"+file;
 		File initialFile = new File(folder);	
 		FileDTO dto = new FileDTO();
+		Agenciabancaria bancaria = new Agenciabancaria();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
 			dto.setContentType("text/plain");
@@ -33,7 +35,7 @@ public abstract class TestOFX {
 			Parceiro parceiro = new Parceiro();
 			parceiro.setId(1L);
 			dto.setParceiro(parceiro);
-			ofxParserDefault.process(dto);
+			ofxParserDefault.process(dto, bancaria);
 	    }catch(Exception e) {
 	    	e.printStackTrace();
 	    }

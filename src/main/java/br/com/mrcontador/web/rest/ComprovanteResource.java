@@ -1,29 +1,35 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.service.ComprovanteService;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import br.com.mrcontador.service.dto.ComprovanteDTO;
-import br.com.mrcontador.service.dto.ComprovanteCriteria;
-import br.com.mrcontador.service.ComprovanteQueryService;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.service.ComprovanteQueryService;
+import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.dto.ComprovanteCriteria;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link br.com.mrcontador.domain.Comprovante}.
@@ -56,12 +62,12 @@ public class ComprovanteResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/comprovantes")
-    public ResponseEntity<ComprovanteDTO> createComprovante(@RequestBody ComprovanteDTO comprovanteDTO) throws URISyntaxException {
-        log.debug("REST request to save Comprovante : {}", comprovanteDTO);
-        if (comprovanteDTO.getId() != null) {
+    public ResponseEntity<Comprovante> createComprovante(@RequestBody Comprovante comprovante) throws URISyntaxException {
+        log.debug("REST request to save Comprovante : {}", comprovante);
+        if (comprovante.getId() != null) {
             throw new BadRequestAlertException("A new comprovante cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ComprovanteDTO result = comprovanteService.save(comprovanteDTO);
+        Comprovante result = comprovanteService.save(comprovante);
         return ResponseEntity.created(new URI("/api/comprovantes/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -77,14 +83,14 @@ public class ComprovanteResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/comprovantes")
-    public ResponseEntity<ComprovanteDTO> updateComprovante(@RequestBody ComprovanteDTO comprovanteDTO) throws URISyntaxException {
-        log.debug("REST request to update Comprovante : {}", comprovanteDTO);
-        if (comprovanteDTO.getId() == null) {
+    public ResponseEntity<Comprovante> updateComprovante(@RequestBody Comprovante comprovante) throws URISyntaxException {
+        log.debug("REST request to update Comprovante : {}", comprovante);
+        if (comprovante.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        ComprovanteDTO result = comprovanteService.save(comprovanteDTO);
+        Comprovante result = comprovanteService.save(comprovante);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, comprovanteDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, comprovante.getId().toString()))
             .body(result);
     }
 
@@ -96,9 +102,9 @@ public class ComprovanteResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of comprovantes in body.
      */
     @GetMapping("/comprovantes")
-    public ResponseEntity<List<ComprovanteDTO>> getAllComprovantes(ComprovanteCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Comprovante>> getAllComprovantes(ComprovanteCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Comprovantes by criteria: {}", criteria);
-        Page<ComprovanteDTO> page = comprovanteQueryService.findByCriteria(criteria, pageable);
+        Page<Comprovante> page = comprovanteQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -122,10 +128,10 @@ public class ComprovanteResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the comprovanteDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/comprovantes/{id}")
-    public ResponseEntity<ComprovanteDTO> getComprovante(@PathVariable Long id) {
+    public ResponseEntity<Comprovante> getComprovante(@PathVariable Long id) {
         log.debug("REST request to get Comprovante : {}", id);
-        Optional<ComprovanteDTO> comprovanteDTO = comprovanteService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(comprovanteDTO);
+        Optional<Comprovante> comprovante = comprovanteService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(comprovante);
     }
 
     /**
