@@ -94,7 +94,7 @@ public class ExtratoService {
 		}
 		Arquivo arquivo = s3Service.uploadExtrato(listOfxDto.getFileDTO());
 		OfxDTO ofxDto = listOfxDto.getOfxDTOs().get(0);
-		validate(ofxDto.getBanco(), ofxDto.getAgencia(),ofxDto.getConta(), listOfxDto.getFileDTO().getParceiro(),agenciaBancaria);
+		//validate(ofxDto.getBanco(), ofxDto.getAgencia(),ofxDto.getConta(), listOfxDto.getFileDTO().getParceiro(),agenciaBancaria);
 		List<Extrato> extratos = new ArrayList<Extrato>();
 		for (OfxDTO _ofxDto : listOfxDto.getOfxDTOs()) {
 			for (OfxData ofxData : _ofxDto.getDataList()) {
