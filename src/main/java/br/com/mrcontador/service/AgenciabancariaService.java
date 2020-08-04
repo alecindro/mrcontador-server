@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class AgenciabancariaService {
      * @return the persisted entity.
      */
     
-    
+    //@CacheEvict(value = {"br.com.mrcontador.domain.Parceiro","br.com.mrcontador.domain.Parceiro.agenciabancarias","br.com.mrcontador.domain.Parceiro.atividades","br.com.mrcontador.domain.Parceiro.socios"})
     public Agenciabancaria save(Agenciabancaria agenciabancaria) {
         log.debug("Request to save Agenciabancaria : {}", agenciabancaria);
         return  agenciabancariaRepository.save(agenciabancaria);

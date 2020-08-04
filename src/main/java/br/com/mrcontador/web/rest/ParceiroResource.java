@@ -33,7 +33,6 @@ import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.ParceiroCriteria;
 import br.com.mrcontador.service.mapper.ParceiroPJMapper;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -175,11 +174,12 @@ public class ParceiroResource {
 	@GetMapping("/parceiros/{id}")
 	public ResponseEntity<Parceiro> getParceiro(@PathVariable Long id) {
 		log.debug("REST request to get Parceiro : {}", id);
-		ParceiroCriteria criteria = new ParceiroCriteria();
-		LongFilter filter = new LongFilter();
-		filter.setEquals(id);
-		criteria.setId(filter);
-		Optional<Parceiro> parceiro = parceiroQueryService.findOneByCriteria(criteria);
+		//ParceiroCriteria criteria = new ParceiroCriteria();
+		//LongFilter filter = new LongFilter();
+		//filter.setEquals(id);
+		//criteria.setId(filter);
+		//Optional<Parceiro> parceiro = parceiroQueryService.findOneByCriteria(criteria);
+		Optional<Parceiro> parceiro = parceiroService.findOne(id);
 		return ResponseUtil.wrapOrNotFound(parceiro);
 	}
 
