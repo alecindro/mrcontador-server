@@ -135,17 +135,17 @@ public class Parceiro implements Serializable {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Atividade> atividades;
 
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Socio> socios;
     
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Agenciabancaria> agenciabancarias;

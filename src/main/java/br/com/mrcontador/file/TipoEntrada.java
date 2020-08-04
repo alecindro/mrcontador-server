@@ -5,6 +5,7 @@ public enum TipoEntrada {
 	CREDIT,
 	DEBIT,
 	OTHER,
-	CHECK
+	CHECK,
+	DEP
 
 }

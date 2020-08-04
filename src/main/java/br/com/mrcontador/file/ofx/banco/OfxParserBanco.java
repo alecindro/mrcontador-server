@@ -1,21 +1,42 @@
 package br.com.mrcontador.file.ofx.banco;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.webcohesion.ofx4j.domain.data.MessageSetType;
+import com.webcohesion.ofx4j.domain.data.ResponseEnvelope;
 import com.webcohesion.ofx4j.domain.data.banking.BankAccountDetails;
 import com.webcohesion.ofx4j.domain.data.banking.BankStatementResponse;
+import com.webcohesion.ofx4j.domain.data.banking.BankStatementResponseTransaction;
+import com.webcohesion.ofx4j.domain.data.banking.BankingResponseMessageSet;
 import com.webcohesion.ofx4j.domain.data.common.Transaction;
+import com.webcohesion.ofx4j.io.AggregateUnmarshaller;
+import com.webcohesion.ofx4j.io.OFXParseException;
 
 import br.com.mrcontador.file.TipoEntrada;
 import br.com.mrcontador.file.ofx.OfxParser;
+import br.com.mrcontador.file.ofx.dto.ListOfxDto;
 import br.com.mrcontador.file.ofx.dto.OfxDTO;
 import br.com.mrcontador.file.ofx.dto.OfxData;
 
 public abstract class OfxParserBanco implements OfxParser {
+	
+	@Override
+	public void process(ListOfxDto listOfxDto, AggregateUnmarshaller<ResponseEnvelope> unmarshaller, InputStream stream) throws IOException, OFXParseException {
+		ResponseEnvelope envelope = unmarshaller.unmarshal(stream);
+		BankingResponseMessageSet bankingResponseMessageSet=  (BankingResponseMessageSet) envelope
+				.getMessageSet(MessageSetType.banking);
+		List<BankStatementResponseTransaction> responses = bankingResponseMessageSet.getStatementResponses();
+			for (BankStatementResponseTransaction transaction : responses) {
+				OfxDTO dto = process(transaction.getMessage());
+				listOfxDto.add(dto);
+			}
+	}
 
-	public OfxDTO process(BankStatementResponse bankStatementResponse) {
+	protected OfxDTO process(BankStatementResponse bankStatementResponse) {
 		OfxDTO dto = processBanco(bankStatementResponse.getAccount());
 		dto.setDataList(processDataBanco(bankStatementResponse.getTransactionList().getTransactions()));
 		return dto;

@@ -41,5 +41,28 @@ public class MrContadorUtil {
 		LocalDateTime z = LocalDateTime.now();
 		return z.getYear()+"_"+z.getMonthValue()+"_"+z.getDayOfMonth()+"_"+z.getHour()+"_"+z.getMinute()+"_"+z.getSecond();
 	}
+	
+	public static String removeZerosFromInital(String value) {
+		String result = value;
+		while (startWithsZero(result)) {
+			result = result.substring(1, result.length());
+		}
+		return result;
+	}
+	
+	private static boolean startWithsZero(String value) {
+		return value.startsWith("0");
+	}
+	
+	public static boolean compareWithoutDigit(String pattern, String value) {
+		value = removeZerosFromInital(value.trim());
+		if(value.equalsIgnoreCase(pattern.trim())) {
+			return true;
+		}
+		if(removeZerosFromInital(value).startsWith(pattern.trim())) {
+			return true;
+		}
+		return false;
+	}
 
 }

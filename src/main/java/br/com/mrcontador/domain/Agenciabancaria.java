@@ -1,6 +1,9 @@
 package br.com.mrcontador.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import br.com.mrcontador.util.MrContadorUtil;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -66,7 +69,7 @@ public class Agenciabancaria implements Serializable {
     }
 
     public Agenciabancaria ageNumero(String ageNumero) {
-        this.ageNumero = ageNumero;
+        this.ageNumero = MrContadorUtil.removeZerosFromInital(ageNumero);
         return this;
     }
     
@@ -76,7 +79,7 @@ public class Agenciabancaria implements Serializable {
     }
 
     public Agenciabancaria ageAgencia(String ageAgencia) {
-        this.ageAgencia = ageAgencia;
+        this.ageAgencia = MrContadorUtil.removeZerosFromInital(ageAgencia);
         return this;
     }
 
@@ -91,7 +94,7 @@ public class Agenciabancaria implements Serializable {
     }
 
     public Agenciabancaria banCodigobancario(String banCodigobancario) {
-        this.banCodigobancario = banCodigobancario;
+        this.banCodigobancario = MrContadorUtil.removeZerosFromInital(banCodigobancario);
         return this;
     }
 
@@ -100,7 +103,7 @@ public class Agenciabancaria implements Serializable {
 	}
 
 	public void setAgeNumero(String ageNumero) {
-		this.ageNumero = ageNumero;
+		this.ageNumero = MrContadorUtil.removeZerosFromInital(ageNumero);
 	}
 
 	public String getAgeDigito() {
@@ -116,7 +119,7 @@ public class Agenciabancaria implements Serializable {
 	}
 
 	public void setAgeAgencia(String ageAgencia) {
-		this.ageAgencia = ageAgencia;
+		this.ageAgencia = MrContadorUtil.removeZerosFromInital(ageAgencia);
 	}
 
 	public String getAgeDescricao() {
@@ -140,7 +143,7 @@ public class Agenciabancaria implements Serializable {
 	}
 
 	public void setBanCodigobancario(String banCodigobancario) {
-		this.banCodigobancario = banCodigobancario;
+		this.banCodigobancario = MrContadorUtil.removeZerosFromInital(banCodigobancario);
 	}
 
 	public Banco getBanco() {

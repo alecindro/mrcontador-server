@@ -22,6 +22,7 @@ import com.webcohesion.ofx4j.io.OFXParseException;
 
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.ofx.banco.OfxBancoDoBrasil;
 import br.com.mrcontador.file.ofx.banco.OfxBradesco;
@@ -33,11 +34,11 @@ import br.com.mrcontador.file.ofx.banco.OfxSantander;
 import br.com.mrcontador.file.ofx.banco.OfxSicob;
 import br.com.mrcontador.file.ofx.banco.OfxSicred;
 import br.com.mrcontador.file.ofx.dto.ListOfxDto;
-import br.com.mrcontador.file.ofx.dto.OfxDTO;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
 public class OfxParserDefault{
@@ -57,8 +58,10 @@ public class OfxParserDefault{
 		InputStream first = null;
 		InputStream second = null;
 		InputStream third = null;
+		InputStream fourth = null;
 		try {
 			fileDTO.getInputStream().transferTo(baos);
+			fourth = new ByteArrayInputStream(baos.toByteArray());
 			third = new ByteArrayInputStream(baos.toByteArray());
 			second = new ByteArrayInputStream(baos.toByteArray());
 			first = new ByteArrayInputStream(baos.toByteArray());
@@ -66,9 +69,11 @@ public class OfxParserDefault{
 			listOfxDto.setFileDTO(fileDTO);
 			BankingResponseMessageSet bankingResponseMessageSet = init(first);
 			responses = bankingResponseMessageSet.getStatementResponses();
+			if(!responses.isEmpty()) {
+				
+			}
 			for (BankStatementResponseTransaction response : responses) {
-				OfxDTO dto = process(response);
-				listOfxDto.add(dto);
+				process(response,fourth,listOfxDto);
 			}
 			fileDTO.setInputStream(second);
 			extratoService.save(listOfxDto, agenciaBancaria);
@@ -93,45 +98,53 @@ public class OfxParserDefault{
 				if(third!= null) {
 					third.close();
 				}
+				if(fourth!= null) {
+					fourth.close();
+				}
 			} catch (IOException e) {
 			}
 		}
 	}
 	
-	private OfxDTO process(BankStatementResponseTransaction transaction) {
+	private void process(BankStatementResponseTransaction transaction,InputStream stream, ListOfxDto listOfxDto) throws IOException, OFXParseException {
 		BankStatementResponse message = transaction.getMessage();
 		BankAccountDetails bancoDetails = message.getAccount();
 		OfxParserBanco parserBanco = null;
-		switch (bancoDetails.getBankId()) {
-		case "001":
+		String codigoBancario = MrContadorUtil.removeZerosFromInital(bancoDetails.getBankId());
+		BancoCodigoBancario bancoCodigoBancario = BancoCodigoBancario.find(codigoBancario);
+		switch (bancoCodigoBancario) {
+		case BB:
 			parserBanco = new OfxBancoDoBrasil();
 			break;
-		case "0237":
+		case BRADESCO:
 			parserBanco = new OfxBradesco();
 			break;
-		case "0104":
+		case CAIXA:
 			parserBanco = new OfxCef();
 			break;
-		case "085":
+		case CREDCREA:
 			parserBanco = new OfxCredCrea();
 			break;
-		case "999999999":
+		case ITAU2:
 			parserBanco = new OfxItau();
 			break;
-		case "033":
+		case ITAU:
+			parserBanco = new OfxItau();
+			break;
+		case SANTANDER:
 			parserBanco = new OfxSantander();
 			break;
-		case "756":
+		case SICOOB:
 			parserBanco = new OfxSicob();
 			break;
-		case "748":
+		case SICRED:
 			parserBanco = new OfxSicred();
 			break;
 
 		default:
 			throw new RuntimeException(bancoDetails.getBankId());
 		}
-		return parserBanco.process(message);
+		parserBanco.process(listOfxDto, unmarshaller,stream);
 	}
 	
 	private BankingResponseMessageSet init(InputStream stream) throws IOException, OFXParseException {

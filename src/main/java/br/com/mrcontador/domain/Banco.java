@@ -3,6 +3,8 @@ package br.com.mrcontador.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import br.com.mrcontador.util.MrContadorUtil;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -77,7 +79,7 @@ public class Banco implements Serializable {
 	}
 
 	public void setBanCodigobancario(String banCodigobancario) {
-		this.banCodigobancario = banCodigobancario;
+		this.banCodigobancario = MrContadorUtil.removeZerosFromInital(banCodigobancario);
 	}
 	
 	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -1,5 +1,6 @@
 package br.com.mrcontador.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import br.com.mrcontador.file.ofx.dto.OfxDTO;
 import br.com.mrcontador.file.ofx.dto.OfxData;
 import br.com.mrcontador.repository.ExtratoRepository;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.util.MrContadorUtil;
 
 /**
  * Service Implementation for managing {@link Extrato}.
@@ -94,7 +96,7 @@ public class ExtratoService {
 		}
 		Arquivo arquivo = s3Service.uploadExtrato(listOfxDto.getFileDTO());
 		OfxDTO ofxDto = listOfxDto.getOfxDTOs().get(0);
-		//validate(ofxDto.getBanco(), ofxDto.getAgencia(),ofxDto.getConta(), listOfxDto.getFileDTO().getParceiro(),agenciaBancaria);
+		validate(ofxDto.getBanco(), ofxDto.getAgencia(),ofxDto.getConta(), listOfxDto.getFileDTO().getParceiro(),agenciaBancaria);
 		List<Extrato> extratos = new ArrayList<Extrato>();
 		for (OfxDTO _ofxDto : listOfxDto.getOfxDTOs()) {
 			for (OfxData ofxData : _ofxDto.getDataList()) {
@@ -107,7 +109,7 @@ public class ExtratoService {
 				extrato.setExtNumerocontrole(ofxData.getControle());
 				extrato.setExtNumerodocumento(ofxData.getDocumento());
 				extrato.setParceiro(listOfxDto.getFileDTO().getParceiro());
-				if (ofxData.getTipoEntrada().equals(TipoEntrada.CREDIT)) {
+				if (ofxData.getTipoEntrada().equals(TipoEntrada.CREDIT) || ofxData.getValor().compareTo(BigDecimal.ZERO)>0) {
 					extrato.setExtCredito(ofxData.getValor());
 				}else {
 					extrato.setExtDebito(ofxData.getValor());
@@ -120,22 +122,22 @@ public class ExtratoService {
 
 	private void validate(String banco, String agencia, String conta, Parceiro parceiro, Agenciabancaria agenciaBancaria) {		
 		if (agencia != null) {
-			if(!agencia.trim().equalsIgnoreCase(agenciaBancaria.getAgeAgencia())) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia(), agencia)) {
 				throw new MrContadorException("agencia.notequals");
 			}
 		}
 		if(banco != null) {
-			if(!banco.trim().equalsIgnoreCase(agenciaBancaria.getBanCodigobancario())) {
-				throw new MrContadorException("agencia.notequals");
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getBanCodigobancario(),banco)) {
+				throw new MrContadorException("banco.notequals");
 			}
 		}
 		if(conta != null) {
-			if(!conta.trim().equalsIgnoreCase(agenciaBancaria.getAgeNumero())) {
-				throw new MrContadorException("agencia.notequals");
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeNumero(), conta)) {
+				throw new MrContadorException("conta.notequals");
 			}
 		}
 		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {
-			throw new MrContadorException("agencia.notequals");
+			throw new MrContadorException("parceiro.notequals");
 		}
 
 	}
