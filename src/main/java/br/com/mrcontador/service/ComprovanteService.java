@@ -10,13 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
-import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.file.comprovante.DiffPage;
-import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.repository.ComprovanteRepository;
-import br.com.mrcontador.service.mapper.ComprovanteParseMapper;
 
 /**
  * Service Implementation for managing {@link Comprovante}.
@@ -79,11 +74,7 @@ public class ComprovanteService {
         comprovanteRepository.deleteById(id);
     }
     
-    public void save(List<DiffPage> diffPages,Agenciabancaria agencia, Parceiro parceiro) {
-    	ComprovanteParseMapper mapper = new ComprovanteParseMapper();
-    	for(DiffPage diffPage  :diffPages) {
-    		mapper.toEntity(diffPage.getDiffValues(), agencia, parceiro);
-    		
-    	}
+    public List<Comprovante> saveAll(List<Comprovante> comprovantes) {
+    	return comprovanteRepository.saveAll(comprovantes);
     }
 }

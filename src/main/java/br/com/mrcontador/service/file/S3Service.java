@@ -42,23 +42,7 @@ public class S3Service {
 	private ArquivoErroService arquivoErroService;
 
 	private final Logger log = LoggerFactory.getLogger(S3Service.class);
-/*
-	@Deprecated
-	public void save(InputStream stream) throws IOException, SAXException, TikaException {
-		ParserDTO parserDTO = this.process(stream);
-		log.info(parserDTO.getContent());
-	}
 
-	@Deprecated
-	private ParserDTO process(InputStream stream) throws IOException, SAXException, TikaException {
-		Metadata metadata = new Metadata();
-		ParseContext context = new ParseContext();
-		Parser parser = new AutoDetectParser();
-		ContentHandler contentHandler = new BodyContentHandler(-1);
-		parser.parse(stream, contentHandler, metadata, context);
-		return new ParserDTO(contentHandler.toString(), metadata);
-	}
-	*/
 	public ArquivoErro uploadErro(FileDTO dto) {
 		String dir = properties.getErrorFolder();
 		String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());

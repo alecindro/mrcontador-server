@@ -15,7 +15,7 @@ import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.file.ofx.OfxParserDefault;
+import br.com.mrcontador.file.extrato.OfxParserDefault;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
 

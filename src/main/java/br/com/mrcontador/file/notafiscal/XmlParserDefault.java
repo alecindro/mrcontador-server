@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.xml;
+package br.com.mrcontador.file.notafiscal;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,7 +15,6 @@ import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileParser;
-import br.com.mrcontador.file.xml.nfe.NotaDefault;
 import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;

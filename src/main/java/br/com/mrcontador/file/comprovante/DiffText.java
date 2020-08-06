@@ -498,10 +498,11 @@ public class DiffText {
 	
 	void addMap(Integer line, String value) {
 		if(map.containsKey(line)) {
-		 map.get(line).setNewValue(value);
+		 map.get(line).newValue(value).setLine(line);
 		}else {
 			DiffValue _diffValues = new DiffValue();
 			_diffValues.setOldValue(value);
+			_diffValues.setLine(line);
 			map.put(line, _diffValues);
 		}
 	}

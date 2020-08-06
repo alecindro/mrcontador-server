@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.ofx.banco;
+package br.com.mrcontador.file.extrato.banco;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +15,8 @@ import com.webcohesion.ofx4j.domain.data.banking.BankingResponseMessageSet;
 import com.webcohesion.ofx4j.io.AggregateUnmarshaller;
 import com.webcohesion.ofx4j.io.OFXParseException;
 
-import br.com.mrcontador.file.ofx.dto.ListOfxDto;
-import br.com.mrcontador.file.ofx.dto.OfxDTO;
+import br.com.mrcontador.file.extrato.dto.ListOfxDto;
+import br.com.mrcontador.file.extrato.dto.OfxDTO;
 
 public class OfxBancoDoBrasil extends OfxParserBanco{
 	

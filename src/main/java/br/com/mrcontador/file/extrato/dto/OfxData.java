@@ -1,9 +1,9 @@
-package br.com.mrcontador.file.ofx.dto;
+package br.com.mrcontador.file.extrato.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import br.com.mrcontador.file.TipoEntrada;
+import br.com.mrcontador.file.extrato.TipoEntrada;
 
 public class OfxData {
 	

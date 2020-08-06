@@ -4,14 +4,17 @@ import java.util.List;
 
 import com.github.difflib.algorithm.DiffException;
 
-import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.domain.Parceiro;
 
 public class ComprovanteCredCrea extends ComprovanteBanco{
 
 	@Override
-	public List<DiffValue> parse(String comprovante) throws DiffException {
-		return super.parse(comprovante, pattern);
+	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException {
+		return super.parse(comprovante,pattern,agenciabancaria,parceiro);
 	}
+	
 	
 	private static final String pattern = "                                                                                                                                               Emitido     em   17/05/2020       - 19:58:34\n" + 
 			"                                                                       COMPROVANTE                 DE   PAGAMENTO\n" + 

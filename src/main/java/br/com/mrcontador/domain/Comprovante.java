@@ -1,16 +1,23 @@
 package br.com.mrcontador.domain;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 
 /**
  * A Comprovante.
@@ -42,10 +49,10 @@ public class Comprovante implements Serializable {
     private String comDocumento;
 
     @Column(name = "com_datavencimento")
-    private ZonedDateTime comDatavencimento;
+    private LocalDate comDatavencimento;
 
     @Column(name = "com_datapagamento")
-    private ZonedDateTime comDatapagamento;
+    private LocalDate comDatapagamento;
 
     @Column(name = "com_valordocumento", precision = 21, scale = 2)
     private BigDecimal comValordocumento;
@@ -66,7 +73,7 @@ public class Comprovante implements Serializable {
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Agenciabancaria agenciabancaria;
     
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Arquivo arquivo;
@@ -111,12 +118,12 @@ public class Comprovante implements Serializable {
     }
 
 
-    public Comprovante comDatavencimento(ZonedDateTime comDatavencimento) {
+    public Comprovante comDatavencimento(LocalDate comDatavencimento) {
         this.comDatavencimento = comDatavencimento;
         return this;
     }
 
-    public Comprovante comDatapagamento(ZonedDateTime comDatapagamento) {
+    public Comprovante comDatapagamento(LocalDate comDatapagamento) {
         this.comDatapagamento = comDatapagamento;
         return this;
     }
@@ -177,19 +184,19 @@ public class Comprovante implements Serializable {
 		this.comDocumento = comDocumento;
 	}
 
-	public ZonedDateTime getComDatavencimento() {
+	public LocalDate getComDatavencimento() {
 		return comDatavencimento;
 	}
 
-	public void setComDatavencimento(ZonedDateTime comDatavencimento) {
+	public void setComDatavencimento(LocalDate comDatavencimento) {
 		this.comDatavencimento = comDatavencimento;
 	}
 
-	public ZonedDateTime getComDatapagamento() {
+	public LocalDate getComDatapagamento() {
 		return comDatapagamento;
 	}
 
-	public void setComDatapagamento(ZonedDateTime comDatapagamento) {
+	public void setComDatapagamento(LocalDate comDatapagamento) {
 		this.comDatapagamento = comDatapagamento;
 	}
 

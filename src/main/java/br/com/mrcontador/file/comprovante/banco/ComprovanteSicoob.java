@@ -5,23 +5,25 @@ import java.util.List;
 
 import com.github.difflib.algorithm.DiffException;
 
-import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.domain.Parceiro;
 
 public class ComprovanteSicoob extends ComprovanteBanco{
 
 	@Override
-	public List<DiffValue> parse(String comprovante) throws DiffException {
-		String[] comprovantes = comprovante.split(quebra_linha);
-		if(comprovantes.length>2) {
-			comprovantes[1] =comprovantes[1].replaceFirst("\\n", "");
+	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException {
+		List<Comprovante> comprovantes = new ArrayList<>();
+		String[] comprovantesText = comprovante.split(quebra_linha);
+		if(comprovantesText.length>2) {
+			comprovantesText[1] =comprovantesText[1].replaceFirst("\\n", "");
 		}
-		List<DiffValue> values = new ArrayList<>();
-		for(String _comprovante : comprovantes) {
+		for(String _comprovante : comprovantesText) {
 			if(_comprovante.split("\\r?\\n").length>5) {
-			values.addAll(super.parse(_comprovante,pattern));
+			comprovantes.addAll(super.parse(_comprovante,pattern,agenciabancaria,parceiro));
 			}
 		}
-		return values;
+		return comprovantes;
 	}
 	
 

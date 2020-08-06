@@ -7,9 +7,9 @@ import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link br.com.mrcontador.domain.Comprovante} entity. This class is used
@@ -36,15 +36,17 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 
     private StringFilter comDocumento;
 
-    private ZonedDateTimeFilter comDatavencimento;
+    private LocalDateFilter comDatavencimento;
 
-    private ZonedDateTimeFilter comDatapagamento;
+    private LocalDateFilter comDatapagamento;
 
     private BigDecimalFilter comValordocumento;
 
     private BigDecimalFilter comValorpagamento;
 
     private StringFilter comObservacao;
+    
+    private LongFilter parceiroId;
 
     public ComprovanteCriteria() {
     }
@@ -61,6 +63,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         this.comValordocumento = other.comValordocumento == null ? null : other.comValordocumento.copy();
         this.comValorpagamento = other.comValorpagamento == null ? null : other.comValorpagamento.copy();
         this.comObservacao = other.comObservacao == null ? null : other.comObservacao.copy();
+        this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
     }
 
     @Override
@@ -117,19 +120,19 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 		this.comDocumento = comDocumento;
 	}
 
-	public ZonedDateTimeFilter getComDatavencimento() {
+	public LocalDateFilter getComDatavencimento() {
 		return comDatavencimento;
 	}
 
-	public void setComDatavencimento(ZonedDateTimeFilter comDatavencimento) {
+	public void setComDatavencimento(LocalDateFilter comDatavencimento) {
 		this.comDatavencimento = comDatavencimento;
 	}
 
-	public ZonedDateTimeFilter getComDatapagamento() {
+	public LocalDateFilter getComDatapagamento() {
 		return comDatapagamento;
 	}
 
-	public void setComDatapagamento(ZonedDateTimeFilter comDatapagamento) {
+	public void setComDatapagamento(LocalDateFilter comDatapagamento) {
 		this.comDatapagamento = comDatapagamento;
 	}
 
@@ -156,6 +159,14 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 	public void setComObservacao(StringFilter comObservacao) {
 		this.comObservacao = comObservacao;
 	}
+	
+	public LongFilter getParceiroId() {
+		return parceiroId;
+	}
+
+	public void setParceiroId(LongFilter parceiroId) {
+		this.parceiroId = parceiroId;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -177,7 +188,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
             Objects.equals(comDatapagamento, that.comDatapagamento) &&
             Objects.equals(comValordocumento, that.comValordocumento) &&
             Objects.equals(comValorpagamento, that.comValorpagamento) &&
-            Objects.equals(comObservacao, that.comObservacao);
+            Objects.equals(comObservacao, that.comObservacao) &&
+            Objects.equals(parceiroId, that.parceiroId);
     }
 
     @Override
@@ -193,7 +205,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         comDatapagamento,
         comValordocumento,
         comValorpagamento,
-        comObservacao
+        comObservacao,
+        parceiroId
         );
     }
 
@@ -212,6 +225,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
                 (comValordocumento != null ? "com_valordocumento=" + comValordocumento + ", " : "") +
                 (comValorpagamento != null ? "com_valorpagamento=" + comValorpagamento + ", " : "") +
                 (comObservacao != null ? "com_observacao=" + comObservacao + ", " : "") +
+                (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
             "}";
     }
 

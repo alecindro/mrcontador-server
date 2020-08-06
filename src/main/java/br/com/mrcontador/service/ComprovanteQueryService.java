@@ -2,6 +2,8 @@ package br.com.mrcontador.service;
 
 import java.util.List;
 
+import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 // for static metamodels
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Comprovante_;
+import br.com.mrcontador.domain.Extrato_;
+import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.ComprovanteRepository;
 import br.com.mrcontador.service.dto.ComprovanteCriteria;
 import br.com.mrcontador.service.dto.ComprovanteDTO;
@@ -113,6 +117,10 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
             }
             if (criteria.getComObservacao() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getComObservacao(), Comprovante_.comObservacao));
+            }
+            if (criteria.getParceiroId() != null) {
+                specification = specification.and(buildSpecification(criteria.getParceiroId(),
+                    root -> root.join(Comprovante_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
             }
         }
         return specification;

@@ -14,6 +14,16 @@ public class MrContadorUtil {
 		return cnpj;
 	}
 	
+	public static String onlyMoney(String value) {
+		if (value != null) {
+			value = value.replace("R$", "").trim();
+			value = value.replace(".", "");
+			return value.replace(",", ".");
+		}
+		return value;
+	}
+	
+	
 	public static String getFolder(String contador,String parceiro, String s3Folder) {
 		return MessageFormat.format(s3Folder,contador,parceiro);
 	}
@@ -55,11 +65,14 @@ public class MrContadorUtil {
 	}
 	
 	public static boolean compareWithoutDigit(String pattern, String value) {
+		pattern = org.apache.commons.lang3.StringUtils.deleteWhitespace(pattern);
+		value = org.apache.commons.lang3.StringUtils.deleteWhitespace(value);
 		value = removeZerosFromInital(value.trim());
-		if(value.equalsIgnoreCase(pattern.trim())) {
+		pattern = removeZerosFromInital(pattern.trim());
+		if(value.equalsIgnoreCase(pattern)) {
 			return true;
 		}
-		if(removeZerosFromInital(value).startsWith(pattern.trim())) {
+		if(value.startsWith(pattern)) {
 			return true;
 		}
 		return false;

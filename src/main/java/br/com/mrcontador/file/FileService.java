@@ -12,9 +12,11 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.ofx.OfxParserDefault;
-import br.com.mrcontador.file.pdf.PdfParserPlanoConta;
-import br.com.mrcontador.file.xml.XmlParserDefault;
+import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
+import br.com.mrcontador.file.extrato.OfxParserDefault;
+import br.com.mrcontador.file.notafiscal.XmlParserDefault;
+import br.com.mrcontador.file.planoconta.PdfParserPlanoConta;
+import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
@@ -30,6 +32,8 @@ public class FileService {
 	private OfxParserDefault ofxParserDefault;
 	@Autowired
 	private S3Service s3Service;
+	@Autowired
+	private ParserComprovanteDefault parserComprovante;
 	
 	public Parceiro processPlanoConta(MultipartFile file, Optional<String> usuario, String contador,String cnpjParceiro,  SistemaPlanoConta sistemaPlanoConta) {
 		FileDTO dto = getFileDTO(file, usuario, contador, null);
@@ -86,7 +90,7 @@ public class FileService {
 	}
 	
 	
-	public void processOfx(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
+	public void processExtrato(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
 		if(parceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
 		}
@@ -97,7 +101,16 @@ public class FileService {
 		ofxParserDefault.process(fileDTO, agenciabancaria.get());
 	}
 	
-	
+	public void processComprovante(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
+		if(parceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
+		}
+		if(agenciabancaria.isEmpty()) {
+			throw new MrContadorException("agencia.notfound");
+		}
+		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
+		parserComprovante.process(fileDTO, agenciabancaria.get());
+	}
 
 
 }

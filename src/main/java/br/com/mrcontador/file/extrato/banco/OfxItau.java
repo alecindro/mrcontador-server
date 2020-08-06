@@ -1,8 +1,8 @@
-package br.com.mrcontador.file.ofx.banco;
+package br.com.mrcontador.file.extrato.banco;
 
 import com.webcohesion.ofx4j.domain.data.banking.BankAccountDetails;
 
-import br.com.mrcontador.file.ofx.dto.OfxDTO;
+import br.com.mrcontador.file.extrato.dto.OfxDTO;
 
 public class OfxItau extends OfxParserBanco{
 	

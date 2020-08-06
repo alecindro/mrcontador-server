@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.ofx.banco;
+package br.com.mrcontador.file.extrato.banco;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +16,15 @@ import com.webcohesion.ofx4j.domain.data.common.Transaction;
 import com.webcohesion.ofx4j.io.AggregateUnmarshaller;
 import com.webcohesion.ofx4j.io.OFXParseException;
 
-import br.com.mrcontador.file.TipoEntrada;
-import br.com.mrcontador.file.ofx.OfxParser;
-import br.com.mrcontador.file.ofx.dto.ListOfxDto;
-import br.com.mrcontador.file.ofx.dto.OfxDTO;
-import br.com.mrcontador.file.ofx.dto.OfxData;
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.file.extrato.OfxParser;
+import br.com.mrcontador.file.extrato.TipoEntrada;
+import br.com.mrcontador.file.extrato.dto.ListOfxDto;
+import br.com.mrcontador.file.extrato.dto.OfxDTO;
+import br.com.mrcontador.file.extrato.dto.OfxData;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public abstract class OfxParserBanco implements OfxParser {
 	
@@ -73,6 +77,28 @@ public abstract class OfxParserBanco implements OfxParser {
 		}
 		
 		return list;
+	}
+	
+	public void validate(String banco, String agencia, String conta, Parceiro parceiro, Agenciabancaria agenciaBancaria) {		
+		if (agencia != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia(), agencia)) {
+				throw new MrContadorException("agencia.notequals");
+			}
+		}
+		if(banco != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getBanCodigobancario(),banco)) {
+				throw new MrContadorException("banco.notequals");
+			}
+		}
+		if(conta != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeNumero(), conta)) {
+				throw new MrContadorException("conta.notequals");
+			}
+		}
+		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {
+			throw new MrContadorException("parceiro.notequals");
+		}
+
 	}
 
 }

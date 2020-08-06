@@ -17,7 +17,7 @@ import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
-import br.com.mrcontador.file.SistemaPlanoConta;
+import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ParceiroService;
@@ -65,7 +65,7 @@ public class UploadFileResource {
 		log.info("Processando Extrato: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
-		fileService.processOfx(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
+		fileService.processExtrato(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
 		return ResponseEntity
 				.created(new URI("/api/extrato/")).headers(HeaderUtil
 						.createEntityCreationAlert(applicationName, true, "uploadExtrato", file.getName()))
@@ -77,6 +77,9 @@ public class UploadFileResource {
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro,
 			@RequestParam(required = true, name = "idAgenciabancaria") Long idAgencia) throws Exception {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
+		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
+		fileService.processComprovante(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
 		throw new MrContadorException("error.notimplemented");
 	}
 

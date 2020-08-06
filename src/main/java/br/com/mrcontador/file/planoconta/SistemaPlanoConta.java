@@ -1,4 +1,4 @@
-package br.com.mrcontador.file;
+package br.com.mrcontador.file.planoconta;
 
 public enum SistemaPlanoConta {
 

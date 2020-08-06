@@ -1,4 +1,4 @@
-package br.com.mrcontador.file;
+package br.com.mrcontador.file.extrato;
 
 public enum TipoEntrada {
 	

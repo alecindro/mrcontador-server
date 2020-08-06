@@ -1,5 +1,7 @@
 package br.com.mrcontador.file.comprovante;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -8,62 +10,79 @@ import java.util.List;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.difflib.algorithm.DiffException;
 
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.BancoCodigoBancario;
-import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteBanco;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteCredCrea;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSicoob;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteUnicred;
-import br.com.mrcontador.file.pdf.PdfReaderPreserveSpace;
+import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
+import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.file.S3Service;
 
 @Service
 public class ParserComprovanteDefault {
 
 	@Autowired
 	private ComprovanteService service;
+	@Autowired
+	S3Service s3Service;
+	@Autowired
+	private ArquivoService arquivoService;
+	
+	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
-	public void process(InputStream stream, Agenciabancaria agencia, Parceiro parceiro) {
+	public void process(FileDTO fileDTO, Agenciabancaria agencia) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();	
+		InputStream first = null;
+		InputStream second = null;
 		try {
-			List<String> comprovantes = parseComprovante(stream);
-			ComprovanteBanco parser = getParser(agencia.getBanCodigobancario());
-			List<DiffPage> diffPages = new ArrayList<>();
-			int page = 1;
-			for (String comprovante : comprovantes) {
-				System.out.println("Pagina:" +page);
-				List<DiffValue> diffvalues = parser.parse(comprovante);
-				if(diffvalues!= null) {
-				DiffPage diffPage = new DiffPage();
-				diffPage.setPage(page);
-				diffPage.setDiffValues(diffvalues);
-				diffPages.add(diffPage);
-				System.out.println(diffPage.toString());
-				}
-				++page;
+			first = new ByteArrayInputStream(baos.toByteArray());
+			second = new ByteArrayInputStream(baos.toByteArray());
+			List<String> textComprovantes = parseComprovante(fileDTO.getInputStream());
+			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
+			List<Comprovante> comprovantes = new ArrayList<>();
+			for (String comprovante : textComprovantes) {
+				comprovantes.addAll(parser.parse(comprovante, agencia, fileDTO.getParceiro()));
 			}
-			service.save(diffPages, agencia, parceiro);
+			fileDTO.setInputStream(second);
+			//Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
+			Arquivo arquivo = arquivoService.findOne(5L).get();
+			comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
+			service.saveAll(comprovantes);
 		} catch (DiffException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
+			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+			log.error(e.getMessage(),e);
+			fileDTO.setInputStream(first);
+			s3Service.uploadErro(fileDTO);
+			throw new MrContadorException("ofx.process", e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+			log.error(e.getMessage(),e);
+			fileDTO.setInputStream(first);
+			s3Service.uploadErro(fileDTO);
+			throw new MrContadorException("ofx.process", e.getMessage());
 		}
 
 	}
 
-	private ComprovanteBanco getParser(String codigoBancario) {
+	private ParserComprovante getParser(String codigoBancario) {
 		BancoCodigoBancario bcb = BancoCodigoBancario.find(codigoBancario);
 		switch (bcb) {
 		case BB:
@@ -97,6 +116,7 @@ public class ParserComprovanteDefault {
 		for (PDDocument page : pages) {
 			comprovantes.add(stripper.getText(page));
 		}
+		document.close();
 		return comprovantes;
 	}
 

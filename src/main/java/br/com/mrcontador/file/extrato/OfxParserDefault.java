@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.ofx;
+package br.com.mrcontador.file.extrato;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,16 +24,16 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.ofx.banco.OfxBancoDoBrasil;
-import br.com.mrcontador.file.ofx.banco.OfxBradesco;
-import br.com.mrcontador.file.ofx.banco.OfxCef;
-import br.com.mrcontador.file.ofx.banco.OfxCredCrea;
-import br.com.mrcontador.file.ofx.banco.OfxItau;
-import br.com.mrcontador.file.ofx.banco.OfxParserBanco;
-import br.com.mrcontador.file.ofx.banco.OfxSantander;
-import br.com.mrcontador.file.ofx.banco.OfxSicob;
-import br.com.mrcontador.file.ofx.banco.OfxSicred;
-import br.com.mrcontador.file.ofx.dto.ListOfxDto;
+import br.com.mrcontador.file.extrato.banco.OfxBancoDoBrasil;
+import br.com.mrcontador.file.extrato.banco.OfxBradesco;
+import br.com.mrcontador.file.extrato.banco.OfxCef;
+import br.com.mrcontador.file.extrato.banco.OfxCredCrea;
+import br.com.mrcontador.file.extrato.banco.OfxItau;
+import br.com.mrcontador.file.extrato.banco.OfxParserBanco;
+import br.com.mrcontador.file.extrato.banco.OfxSantander;
+import br.com.mrcontador.file.extrato.banco.OfxSicob;
+import br.com.mrcontador.file.extrato.banco.OfxSicred;
+import br.com.mrcontador.file.extrato.dto.ListOfxDto;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -69,12 +69,10 @@ public class OfxParserDefault{
 			listOfxDto.setFileDTO(fileDTO);
 			BankingResponseMessageSet bankingResponseMessageSet = init(first);
 			responses = bankingResponseMessageSet.getStatementResponses();
-			if(!responses.isEmpty()) {
-				
+			if(responses.isEmpty()) {
+				throw new MrContadorException("ofx.empty");
 			}
-			for (BankStatementResponseTransaction response : responses) {
-				process(response,fourth,listOfxDto);
-			}
+			process(responses.get(0),fourth,listOfxDto,agenciaBancaria);
 			fileDTO.setInputStream(second);
 			extratoService.save(listOfxDto, agenciaBancaria);
 		}catch(MrContadorException e) {
@@ -106,7 +104,7 @@ public class OfxParserDefault{
 		}
 	}
 	
-	private void process(BankStatementResponseTransaction transaction,InputStream stream, ListOfxDto listOfxDto) throws IOException, OFXParseException {
+	private void process(BankStatementResponseTransaction transaction,InputStream stream, ListOfxDto listOfxDto, Agenciabancaria agenciaBancaria) throws IOException, OFXParseException {
 		BankStatementResponse message = transaction.getMessage();
 		BankAccountDetails bancoDetails = message.getAccount();
 		OfxParserBanco parserBanco = null;
@@ -140,10 +138,10 @@ public class OfxParserDefault{
 		case SICRED:
 			parserBanco = new OfxSicred();
 			break;
-
 		default:
-			throw new RuntimeException(bancoDetails.getBankId());
+			throw new MrContadorException("ofx.banknotimplemented",bancoDetails.getBankId());
 		}
+		parserBanco.validate(bancoDetails.getBankId(), bancoDetails.getBranchId(), bancoDetails.getAccountNumber(), listOfxDto.getFileDTO().getParceiro(), agenciaBancaria);
 		parserBanco.process(listOfxDto, unmarshaller,stream);
 	}
 	

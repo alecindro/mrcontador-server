@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.ofx.dto;
+package br.com.mrcontador.file.extrato.dto;
 
 import java.util.ArrayList;
 import java.util.List;

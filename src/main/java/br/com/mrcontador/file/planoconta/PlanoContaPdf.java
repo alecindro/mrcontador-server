@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.pdf;
+package br.com.mrcontador.file.planoconta;
 
 import java.io.IOException;
 

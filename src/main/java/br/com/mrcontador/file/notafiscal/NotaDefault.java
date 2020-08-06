@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.xml.nfe;
+package br.com.mrcontador.file.notafiscal;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;

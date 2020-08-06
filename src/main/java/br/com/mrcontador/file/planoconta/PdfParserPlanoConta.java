@@ -1,4 +1,4 @@
-package br.com.mrcontador.file.pdf;
+package br.com.mrcontador.file.planoconta;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +16,6 @@ import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.SistemaPlanoConta;
 import br.com.mrcontador.file.dto.PlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ContaService;

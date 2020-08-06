@@ -4,8 +4,12 @@ import java.util.List;
 
 import com.github.difflib.algorithm.DiffException;
 
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.domain.Parceiro;
+
 public interface ParserComprovante {
 	
-	abstract List<DiffValue> parse(String comprovante) throws DiffException;
+	abstract List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException;
 
 }

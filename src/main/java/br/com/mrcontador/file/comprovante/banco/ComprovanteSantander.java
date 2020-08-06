@@ -4,15 +4,19 @@ import java.util.List;
 
 import com.github.difflib.algorithm.DiffException;
 
-import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.domain.Parceiro;
 
 public class ComprovanteSantander extends ComprovanteBanco{
 
 
 	@Override
-	public List<DiffValue> parse(String comprovante) throws DiffException {
-		return super.parse(comprovante, pattern);
+	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException {
+		return super.parse(comprovante,pattern,agenciabancaria,parceiro);
 	}
+	
+	
 	
 	public static final String pattern = "                                                           \n" + 
 			"                       $1                                     Agência: $ag              Conta    Corrente: $conta\n" + 
