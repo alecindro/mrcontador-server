@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 // for static metamodels
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Comprovante_;
-import br.com.mrcontador.domain.Extrato_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.ComprovanteRepository;
 import br.com.mrcontador.service.dto.ComprovanteCriteria;

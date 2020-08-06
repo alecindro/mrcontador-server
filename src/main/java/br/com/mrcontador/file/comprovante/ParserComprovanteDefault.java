@@ -62,8 +62,8 @@ public class ParserComprovanteDefault {
 				comprovantes.addAll(parser.parse(comprovante, agencia, fileDTO.getParceiro()));
 			}
 			fileDTO.setInputStream(second);
-			//Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
-			Arquivo arquivo = arquivoService.findOne(5L).get();
+			Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
+			//Arquivo arquivo = arquivoService.findOne(5L).get();
 			comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
 			service.saveAll(comprovantes);
 		} catch (DiffException e) {
