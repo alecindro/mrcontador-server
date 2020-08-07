@@ -53,6 +53,7 @@ public class ParserComprovanteDefault {
 		InputStream first = null;
 		InputStream second = null;
 		try {
+			fileDTO.getInputStream().transferTo(baos);
 			first = new ByteArrayInputStream(baos.toByteArray());
 			second = new ByteArrayInputStream(baos.toByteArray());
 			List<String> textComprovantes = parseComprovante(fileDTO.getInputStream());
