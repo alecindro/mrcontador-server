@@ -43,8 +43,7 @@ public class ParserComprovanteDefault {
 	private ComprovanteService service;
 	@Autowired
 	S3Service s3Service;
-	@Autowired
-	private ArquivoService arquivoService;
+
 	
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
@@ -52,11 +51,13 @@ public class ParserComprovanteDefault {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();	
 		InputStream first = null;
 		InputStream second = null;
+		InputStream third = null;
 		try {
 			fileDTO.getInputStream().transferTo(baos);
 			first = new ByteArrayInputStream(baos.toByteArray());
 			second = new ByteArrayInputStream(baos.toByteArray());
-			List<String> textComprovantes = parseComprovante(fileDTO.getInputStream());
+			third = new ByteArrayInputStream(baos.toByteArray());
+			List<String> textComprovantes = parseComprovante(third);
 			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
 			List<Comprovante> comprovantes = new ArrayList<>();
 			for (String comprovante : textComprovantes) {
@@ -64,7 +65,6 @@ public class ParserComprovanteDefault {
 			}
 			fileDTO.setInputStream(second);
 			Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
-			//Arquivo arquivo = arquivoService.findOne(5L).get();
 			comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
 			service.saveAll(comprovantes);
 		} catch (DiffException e) {
@@ -72,13 +72,19 @@ public class ParserComprovanteDefault {
 			log.error(e.getMessage(),e);
 			fileDTO.setInputStream(first);
 			s3Service.uploadErro(fileDTO);
-			throw new MrContadorException("ofx.process", e.getMessage());
+			throw new MrContadorException("comprovante.process", e.getMessage());
 		} catch (IOException e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(),e);
 			fileDTO.setInputStream(first);
 			s3Service.uploadErro(fileDTO);
-			throw new MrContadorException("ofx.process", e.getMessage());
+			throw new MrContadorException("comprovante.process", e.getMessage());
+		} finally {
+			try {
+				third.close();
+			} catch (IOException e) {
+				log.error(e.getMessage(),e);
+			}
 		}
 
 	}

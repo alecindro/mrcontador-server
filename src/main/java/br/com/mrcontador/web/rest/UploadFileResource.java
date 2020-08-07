@@ -50,7 +50,7 @@ public class UploadFileResource {
 			Parceiro parceiro = fileService.processPlanoConta(file, SecurityUtils.getCurrentUserLogin(),
 					SecurityUtils.getCurrentTenantHeader(), parceiroCnpj, SistemaPlanoConta.DOMINIO_SISTEMAS);
 			return ResponseEntity
-					.created(new URI("/api/uploadplanoconta/")).headers(HeaderUtil
+					.created(new URI("/api/upload/planoconta/")).headers(HeaderUtil
 							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName()))
 					.body(parceiro);
 		} catch (MrContadorException e) {
@@ -67,7 +67,7 @@ public class UploadFileResource {
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
 		fileService.processExtrato(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
 		return ResponseEntity
-				.created(new URI("/api/extrato/")).headers(HeaderUtil
+				.created(new URI("/api/upload/extrato/")).headers(HeaderUtil
 						.createEntityCreationAlert(applicationName, true, "uploadExtrato", file.getName()))
 				.build();
 	}
@@ -80,7 +80,10 @@ public class UploadFileResource {
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
 		fileService.processComprovante(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
-		throw new MrContadorException("error.notimplemented");
+		return ResponseEntity
+				.created(new URI("/api/upload/comprovante/")).headers(HeaderUtil
+						.createEntityCreationAlert(applicationName, true, "uploadComprovante", file.getName()))
+				.build();
 	}
 
 	@PostMapping("/upload/nf")
