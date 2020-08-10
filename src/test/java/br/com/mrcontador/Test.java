@@ -3,8 +3,6 @@ package br.com.mrcontador;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-import br.com.mrcontador.util.MrContadorUtil;
-
 public class Test {
 	
 	

@@ -66,7 +66,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		for (AbstractDelta<String> delta : deltas) {
 			if (delta.getType().equals(DeltaType.INSERT)) {
 				List<DiffValue> sublist = changes.stream()
-						.filter(diffvalue -> diffvalue.getPosition() < delta.getTarget().getPosition())
+						.filter(diffvalue -> diffvalue.getPosition() == delta.getTarget().getPosition())
 						.collect(Collectors.toList());
 				DiffValue anterior = sublist.stream().min(Comparator.comparing(DiffValue::getPosition))
 						.orElse(null);
@@ -96,7 +96,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private static int count = 1;
 
-	public Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro) {
+	protected Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro) {
 		Comprovante comprovante = new Comprovante();
 
 		Optional<DiffValue> agencia = diffValues.stream()
@@ -172,7 +172,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	}
 
 	protected LocalDate toDate(String value) {
-		return LocalDate.parse(value, formatter);
+		return LocalDate.parse(value.trim(), formatter);
 	}
 
 }

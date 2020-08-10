@@ -56,7 +56,7 @@ public class TestComprovante {
 		
 	}
 	
-	@Test
+	
 	public void testSantander() throws FileNotFoundException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("1512");
@@ -72,16 +72,31 @@ public class TestComprovante {
 		
 	}
 	
-	
-	public void testBradesco() throws FileNotFoundException {
+	public void testSantander2() throws FileNotFoundException {
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("348");
-		agencia.setAgeNumero("128527");
+		agencia.setAgeAgencia("1651");
+		agencia.setAgeNumero("13-000889");
 		Parceiro parceiro = new Parceiro();
-		parceiro.setParCnpjcpf("003.551.834/0001-83");		
-		agencia.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
+		parceiro.setParCnpjcpf("24.408.746/0001-05");		
+		agencia.setBanCodigobancario(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco.pdf"));
+		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/GerarPDF_17052020191226-1-mesclado.pdf"));
+		dto.setUsuario(usuario);
+		dto.setParceiro(parceiro);
+		defaultParser.process(dto, agencia);
+		
+	}
+	
+	@Test
+	public void testItau() throws FileNotFoundException {
+		Agenciabancaria agencia = new Agenciabancaria();
+		agencia.setAgeAgencia("1575");
+		agencia.setAgeNumero("12906");
+		Parceiro parceiro = new Parceiro();
+		parceiro.setParCnpjcpf("08.892.611/0001-01");		
+		agencia.setBanCodigobancario(BancoCodigoBancario.ITAU.getCodigoBancario());
+		FileDTO dto = new FileDTO();
+		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/Comprovantes_Itaú_Moto_Bombas_01.2020_.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		defaultParser.process(dto, agencia);

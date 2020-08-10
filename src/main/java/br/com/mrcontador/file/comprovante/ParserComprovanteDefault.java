@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.difflib.algorithm.DiffException;
-
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Arquivo;
@@ -31,7 +29,6 @@ import br.com.mrcontador.file.comprovante.banco.ComprovanteSicoob;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteUnicred;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.security.SecurityUtils;
-import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
@@ -44,11 +41,10 @@ public class ParserComprovanteDefault {
 	@Autowired
 	S3Service s3Service;
 
-	
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
 	public void process(FileDTO fileDTO, Agenciabancaria agencia) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();	
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream first = null;
 		InputStream second = null;
 		InputStream third = null;
@@ -61,21 +57,18 @@ public class ParserComprovanteDefault {
 			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
 			List<Comprovante> comprovantes = new ArrayList<>();
 			for (String comprovante : textComprovantes) {
-				comprovantes.addAll(parser.parse(comprovante, agencia, fileDTO.getParceiro()));
+					List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
+					if (!comprovantes.isEmpty()) {
+						comprovantes.addAll(_comprovantes);
+					}
 			}
-			fileDTO.setInputStream(second);
-			Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
-			comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
-			service.saveAll(comprovantes);
-		} catch (DiffException e) {
+			 fileDTO.setInputStream(second);
+			 Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
+			 comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
+			 service.saveAll(comprovantes);
+		} catch (Exception e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-			log.error(e.getMessage(),e);
-			fileDTO.setInputStream(first);
-			s3Service.uploadErro(fileDTO);
-			throw new MrContadorException("comprovante.process", e.getMessage());
-		} catch (IOException e) {
-			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-			log.error(e.getMessage(),e);
+			log.error(e.getMessage(), e);
 			fileDTO.setInputStream(first);
 			s3Service.uploadErro(fileDTO);
 			throw new MrContadorException("comprovante.process", e.getMessage());
@@ -83,7 +76,7 @@ public class ParserComprovanteDefault {
 			try {
 				third.close();
 			} catch (IOException e) {
-				log.error(e.getMessage(),e);
+				log.error(e.getMessage(), e);
 			}
 		}
 
