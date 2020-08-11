@@ -28,7 +28,7 @@ public class TestComprovante {
 	private static final String usuario = "teste";
 	
 
-	@Test
+	
 	public void testBradesco() throws FileNotFoundException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("348");
@@ -86,6 +86,7 @@ public class TestComprovante {
 		
 	}
 	
+	@Test
 	public void testSantander2() throws FileNotFoundException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("1651");
@@ -94,7 +95,7 @@ public class TestComprovante {
 		parceiro.setParCnpjcpf("24.408.746/0001-05");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/GerarPDF_17052020191226-1-mesclado.pdf"));
+		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/santander/GerarPDF_04082020105944.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		defaultParser.process(dto, agencia);

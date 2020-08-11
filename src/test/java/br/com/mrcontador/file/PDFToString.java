@@ -20,7 +20,7 @@ public class PDFToString {
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		System.out.println(pages.size());
-		System.out.println(stripper.getText(pages.get(3)));
+		System.out.println(stripper.getText(pages.get(0)));
 		document.close();
    
     

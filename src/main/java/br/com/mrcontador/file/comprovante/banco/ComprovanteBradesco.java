@@ -56,43 +56,44 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 
 	private static final String BOLETO_COBRANCA = "                                                   Comprovante             de   Transação          Bancária\n" + 
 			"                                                   Boleto   de  Cobrança\n" + 
-			"                                                   Data   da  operação:    07/05/2020\n" + 
-			"                                                   N°  de  controle:   752.221.588.152.371.615         |Documento:      $doc \n" + 
-			"                       Conta   de  débito:    Agência:    $ag   | Conta:   $conta     | Tipo:  Conta-Corrente\n" + 
-			"                               Empresa:       $1   | CNPJ:    $cnpj \n" + 
-			"                     Código    de  barras:    23792   37403    59606   535488    19010   520005    6  82480000018961\n" + 
-			"                    Banco   destinatário:     237  - BANCO      BRADESCO        S.A.\n" + 
-			"                           Razao    Social    Não   informado\n" + 
+			"                                                   Data   da  operação:    20/02/2020\n" + 
+			"                                                   N°  de  controle:   860.407.209.794.660.585         |Documento:      $doc   \n" + 
+			"                       Conta   de  débito:    Agência:    $ag    | Conta:   $conta        | Tipo:  Conta-Corrente\n" + 
+			"                               Empresa:       CRIADORES        DE   IMAGEM      LTDA    - ME   |CNPJ:    $cnpj              \n" + 
+			"                     Código    de  barras:    00190   00009    03075   800007    62061   486171    5  81720000120000\n" + 
+			"                    Banco   destinatário:     001  - BANCO      DO   BRASIL     S.A.\n" + 
+			"                           Razao    Social    IUGU   SERVICOS       NA   INTERNET       S.A\n" + 
 			"                            Beneficiário:\n" + 
-			"                        Nome     Fantasia     Não   informado\n" + 
+			"                        Nome     Fantasia     IUGU   SERVICOS       NA   INTERNET       S.A\n" + 
 			"                            Beneficiário:\n" + 
-			"              CPF/CNPJ      Beneficiário:     Não   informado\n" + 
-			"                Razao    Social  Sacador      Não   informado\n" + 
+			"              CPF/CNPJ      Beneficiário:     015.111.975/0001-64\n" + 
+			"                Razao    Social  Sacador      KOMODO       PRODUCAO         AUDIO     VISUAL     LTDA\n" + 
 			"                                 Avalista:\n" + 
-			"                   CPF/CNPJ      Sacador      Não   informado\n" + 
+			"                   CPF/CNPJ      Sacador      009.414.025/0001-06\n" + 
 			"                                 Avalista:\n" + 
 			"              Instituição  Recebedora:        237  - BANCO      BRADESCO        S.A.\n" + 
-			"                    Nome    do  Pagador:      Não   informado\n" + 
-			"              CPF/CNPJ      do  Pagador:      Não   informado\n" + 
-			"                        Data   de  débito:    $pagto \n" + 
-			"                  Data  de  vencimento:       $data_venc \n" + 
-			"                                    Valor:    R$  $valor_doc \n" + 
+			"                    Nome    do  Pagador:      CRIADORES        DE   IMAGEM      LTDA\n" + 
+			"              CPF/CNPJ      do  Pagador:      028.733.282/0001-55\n" + 
+			"                        Data   de  débito:    $pagto    \n" + 
+			"                  Data  de  vencimento:       $data_venc\n" + 
+			"                                    Valor:    R$  $valor_doc\n" + 
 			"                               Desconto:      R$  0,00\n" + 
 			"                            Abatimento:       R$  0,00\n" + 
 			"                            Bonificação:      R$  0,00\n" + 
 			"                                    Multa:    R$  0,00\n" + 
 			"                                    Juros:    R$  0,00\n" + 
-			"                              Valor  total:   R$  $valor_pag \n" + 
-			"                              Descrição:      $4 \n" + 
-			"                 A  transação   acima    foirealizada   por  meio   do  $3    COBRANCA        COM     DEBITO     AUTOMATICO\n" + 
+			"                              Valor  total:   R$  $valor_pag\n" + 
+			"                              Descrição:      $4           \n" + 
+			"                 A  transação   acima    foirealizada   por  meio   do  Bradesco    NET   EMPRESA\n" + 
 			"                                                                                            Autenticação\n" + 
-			"                                       TP?IBMT4        y2yKO3I2         z??Z2hqv        KIJuQgkK        I7fU5YK#        sVbyMHGo        ZtXbUjcw         6LkJ436y\n" + 
-			"                                       sW7Zr*cv        mLbxr95Y         kmc*gvuy        e#5yHK@p        fhp97oij        NsC2vClX        lV4xLC#L         NKKu?fY@\n" + 
-			"                                       5nleseRk        Ohxe73fi         vg?Q*Pzf        f4h?6fdA        RdHewaA2        2*cSPAAL        67173280         27749010\n" + 
+			"                                       DNcetgv2        ?LsSn*2A         iln*#HwZ        vvQQrfs6        24O#ElFR        yt6v7qdR        qrBK3sOJ         DAqxigJ#\n" + 
+			"                                       qMSOCNra        F2h34UO@         BhkAeFG@        i4BFK#ly        VPC4aHaV        r6XjCQPb        mFKAlbF3         dkfe*sAK\n" + 
+			"                                       #7hHjNlW        I9xSDgPP         Wg2UUzHo        psGO2RLL        #?Y5rOOp        R3UR8f4S        00910200         01140002\n" + 
 			"                 SAC    -Serviço    de     Alô  Bradesco           Deficiente   Auditivo   ou  de Fala      Cancelamentos,     Reclamações     e                     Demais   telefones\n" + 
 			"                  Apoio   ao  Cliente      0800   704   8383       0800   722  0099                         Informações.                                             consulte  o site\n" + 
 			"                                                                                                            Atendimento    24 horas,  7 dias por  semana.            Fale Conosco.\n" + 
 			"                Ouvidoria       0800   727   9933      Atendimento   de  segunda   a sexta-feira, das  8h às  18h, exceto  feriados.";
+	
 	
 	private static final String AGUA_LUZ_TELEFONE = "Comprovante             de   Transação          Bancária\n" + 
 			"                                                   Água,   Luz,  Telefone    e Gás\n" + 
@@ -148,26 +149,24 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 	
 	private static final String IMPOSTO_TAXAS = "                                                    Comprovante            de   Transação          Bancária\n" + 
 			"                                                    IMPOSTO/TAXAS\n" + 
-			"                                                    Data  da  operação:    14/04/2020\n" + 
-			"                                                    Nº Controle:   752.221.588.152.371.615          |Autenticação     Bancária:   $doc \n" + 
-			"                                            Conta   de  débito:    Agência:   $ag   |Conta:   $conta     |Tipo:  Conta-Corrente                                             Empresa:\n" + 
-			"                 $1   |CNPJ:    $cnpj \n" + 
-			"                                          Código    de  barras:    85800000007-0       33310270200-0       30355183400-9       01832020037-2\n" + 
-			"                                           Empresa    / Órgão:     $2                                           Descrição:      $4 \n" + 
-			"                                          IDENTIFICADOR:           03551834000183                                        Data   de débito:    $pagto \n" + 
-			"                                       Data   do  vencimento:      00/00/0000                                     Valor  principal:    R$  $valor_doc \n" + 
-			"                                                    Desconto:      R$  0,00                                             Juros:    R$   0,00\n" + 
-			"                                                         Multa:    R$  0,00                           Valor  do  pagamento:       R$   $valor_pag \n" + 
+			"                                                    Data  da  operação:    20/03/2020\n" + 
+			"                                                    Nº Controle:   860.407.209.794.660.585          |Autenticação     Bancária:   096.164.978\n" + 
+			"                           Conta   de  débito:   Agência:     $ag  | Conta:   $conta     | Tipo:  Conta-Corrente                             Empresa:\n" + 
+			"                 CRIADORES        DE   IMAGEM      LTDA    - ME   |CNPJ:    $cnpj              \n" + 
+			"                         Código   de  barras:    85800000002-0        33700270200-0       32873328200-7       01552020027-4                  Empresa     /Órgão:     INSS/GPS\n" + 
+			"                                  Descrição:     $4                                         IDENTIFICADOR:           28733282000155                      Data   de  débito:  \n" + 
+			"                 $pagto                Data   do  vencimento:      00/00/0000                   Valor   principal:   R$  $valor_doc                    Desconto:      R$  0,00\n" + 
+			"                                       Juros:    R$   0,00                           Multa:    R$   0,00         Valor  do  pagamento:       R$   $valor_pag\n" + 
 			"                 A  transação   acima    foirealizada   por  meio   do  INTERNET      - PESSOA      JURIDIC.\n" + 
-			"                 O  Lançamento      do  valor consta   no  extrato  de  Conta-Corrente,      junto  a Agência    do débito   nº. 348  , da  data  de  pagamento     14/04/2020.\n" + 
+			"                 O  Lançamento      do  valor consta   no  extrato  de  Conta-Corrente,      junto  a Agência    do débito   nº. 348  , da  data  de  pagamento     20/03/2020.\n" + 
 			"                                                                                            Autenticação\n" + 
-			"                                             PFDHiHEQ      t9X9EaR7       AoGv@Tg9       J#I7#DsI       AwHD7bJ5       ExiF5bJW       h33C@MLf       m74ZlEJl\n" + 
-			"                                             ocOtYsux      9cHLRL3X       QNxHT6VN       x9FMqg#c       UIG45H9n       go*e5Y@a       VD95#NE*       nHM5RD7*\n" + 
-			"                                             r?CB*qSN      sTVKKpIu       4hAaY4VE       VPQZz??g       #E?LuDdX       b??S4f6X       00501420       00730033\n" + 
-			"               SAC   - Serviço    de     Alô $3            Deficiente    Auditivo  ou  de  Fala      Cancelamentos,    Reclamações     e                   Demais   telefones\n" + 
-			"               Apoio    ao  Cliente      0800   704  8383       0800   722   0099                         Informações.   Atendimento   24  horas, 7  dias       consulte  o site\n" + 
-			"                                                                                                          por semana.                                           Fale Conosco\n" + 
-			"                       Ouvidoria        0800  727   9933      Atendimento   de  segunda   a sexta-feira, das  8h às  18h, exceto  feriados.";
+			"                                             qsa6j6ZX      m8agg8uN       TgjEjg46       8r#w#2G3       8Qm7?5CG       cxczXYvC       M4tdvc4#       nedCpGaA\n" + 
+			"                                             55I44YvS      mhg@FR#S       PONN6XF9       TfniOs#T       XebmV?Ym       vjDnSCDS       EfrEn#KN       ewoIyN*R\n" + 
+			"                                             6ZZKagTZ      BQ#9kXZA       muGFj2k?       6tG3#aiQ       dbGDEojQ       OHgS2@t6       00502020       00230033\n" + 
+			"                 SAC    -Serviço    de     Alô  Bradesco           Deficiente   Auditivo   ou  de Fala      Cancelamentos,     Reclamações     e                     Demais   telefones\n" + 
+			"                  Apoio   ao  Cliente      0800   704   8383       0800   722  0099                         Informações.   Atendimento    24 horas,  7 dias          consulte  o site\n" + 
+			"                                                                                                            por semana.                                              Fale Conosco\n" + 
+			"                Ouvidoria       0800   727   9933      Atendimento   de  segunda   a sexta-feira, das  8h às  18h, exceto  feriados.";
 	
 	private static final String SIMPLES_NACIONAL = "                                                   Data   da  Transação:    20/03/2020\n" + 
 			"                                                   Nº  Controle:   752.221.588.152.371.615\n" + 

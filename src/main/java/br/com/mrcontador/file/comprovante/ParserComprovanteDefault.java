@@ -57,15 +57,16 @@ public class ParserComprovanteDefault {
 			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
 			List<Comprovante> comprovantes = new ArrayList<>();
 			for (String comprovante : textComprovantes) {
-					List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
-					if (!comprovantes.isEmpty()) {
-						comprovantes.addAll(_comprovantes);
-					}
+				List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
+				if (!comprovantes.isEmpty()) {
+					comprovantes.addAll(_comprovantes);
+				}
 			}
 			fileDTO.setInputStream(second);
 			Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
 			comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
 			service.saveAll(comprovantes);
+			log.info("Comprovantes salvos");
 		} catch (Exception e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(), e);
