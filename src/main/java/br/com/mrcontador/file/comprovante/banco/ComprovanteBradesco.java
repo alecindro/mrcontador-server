@@ -44,6 +44,9 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 		if(StringUtils.normalizeSpace(_lines[4].trim()).equals("COMPROVANTE DE PAGAMENTO DO SIMPLES NACIONAL")) {
 			return  SIMPLES_NACIONAL;
 		}
+		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("FGTS")) {
+			return  FGTS;
+		}
 		if(StringUtils.normalizeSpace(_lines[5].trim()).equals("COMPROVANTE DE PAGAMENTO DARF")) {
 			return  DARF;
 		}
@@ -271,4 +274,28 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 			"                Ouvidoria       0800   727   9933      Atendimento   de  segunda   a sexta-feira, das  8h às  18h, exceto  feriados.\n" + 
 			"\n" + 
 			"";
+	
+	private static final String FGTS = "                                                    Comprovante            de   Transação          Bancária\n" + 
+			"                                                    FGTS\n" + 
+			"                                                    Data  da  operação:    07/05/2020    \n" + 
+			"                                                    Nº Controle:   $doc                             |Autenticação     Bancária:   029.915.781\n" + 
+			"                           Conta   de  débito:   Agência:     $ag  | Conta:   $conta     | Tipo:  Conta-Corrente                             Empresa:\n" + 
+			"                 CRIADORES        DE   IMAGEM      LTDA    - ME   |CNPJ:    $cnpj              \n" + 
+			"                         Código   de  barras:    85800000001-1        34750179200-2       50764005082-3       87332820001-4                    Empresa     /Órgão:\n" + 
+			"                 FGTS/GRF       S/TOMADOR                IDENTIF.     EMPRESA:        287332820001                             CNPJ/CEI:                       Cod.  convênio:\n" + 
+			"                 0179                    Competência:       04/2020                Data   de  validade:    07/05/2020                    Data  de  débito:    $pagto    \n" + 
+			"                     Valor  do  pagamento:       R$   $valor_pag\n" + 
+			"                 A  transação   acima    foirealizada   por  meio   do  Bradesco    Net  Empresa.\n" + 
+			"                 O  lançamento     consta   no  extrato  de  Conta-Corrente      do cliente  CRIADORES         DE  IMAGEM      LTDA    - ME,   junto  à Agência    348  , da data   de\n" + 
+			"                 pagamento.\n" + 
+			"                 Esse   documento     serve   como   comprovante      de  pagamento.     Portanto,   ele  deverá   ser  guardado    juntamente    com   a  guia  que  originou   o\n" + 
+			"                 pagamento,     para   apresentação     ao(s)  Órgão(s)    fiscalizados,   quando    solicitado.\n" + 
+			"                                                                                            Autenticação\n" + 
+			"                                             DjJMTDpv      VNvr5PS5       E9xSeqp#       kGucsCjp       iZ662fGy       vr6@lSwj       exRMF6QB       FO3f9@nn\n" + 
+			"                                             OFa3*iuS      rAnNJP*g       YsLVpNYO       6niWYQ68       HbHjqTHz       kEmqatip       z3VUmMQm       sxoHyuNH\n" + 
+			"                                             XJX7j7IX      BcvHi5J5       #57nenKJ       ZAJcbTDn       h?ZnnwWB       rOoTo@*O       00500720       00140034\n" + 
+			"                 SAC    -Serviço    de     Alô  Bradesco           Deficiente   Auditivo   ou  de Fala      Cancelamentos,     Reclamações     e                     Demais   telefones\n" + 
+			"                  Apoio   ao  Cliente      0800   704   8383       0800   722  0099                         Informações.   Atendimento    24 horas,  7 dias          consulte  o site\n" + 
+			"                                                                                                            por semana.                                              Fale Conosco\n" + 
+			"                Ouvidoria       0800   727   9933      Atendimento   de  segunda   a sexta-feira, das  8h às  18h, exceto  feriados.";
 }

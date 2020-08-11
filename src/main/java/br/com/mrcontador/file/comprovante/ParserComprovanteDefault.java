@@ -62,10 +62,10 @@ public class ParserComprovanteDefault {
 						comprovantes.addAll(_comprovantes);
 					}
 			}
-			 fileDTO.setInputStream(second);
-			 Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
-			 comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
-			 service.saveAll(comprovantes);
+			fileDTO.setInputStream(second);
+			Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
+			comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
+			service.saveAll(comprovantes);
 		} catch (Exception e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(), e);

@@ -26,8 +26,22 @@ public class TestComprovante {
 	@Autowired
 	private ParserComprovanteDefault defaultParser;
 	private static final String usuario = "teste";
-
 	
+
+	@Test
+	public void testBradesco() throws FileNotFoundException {
+		Agenciabancaria agencia = new Agenciabancaria();
+		agencia.setAgeAgencia("348");
+		agencia.setAgeNumero("0017807");
+		agencia.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
+		Parceiro parceiro = new Parceiro();
+		parceiro.setParCnpjcpf("028.733.282/0001-55");	
+		FileDTO dto = new FileDTO();
+		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/comprovantes.pdf"));
+		dto.setUsuario(usuario);
+		dto.setParceiro(parceiro);
+		defaultParser.process(dto, agencia);		
+	}
 
 	public void testSicoob() throws FileNotFoundException {
 		Agenciabancaria agencia = new Agenciabancaria();
@@ -87,7 +101,7 @@ public class TestComprovante {
 		
 	}
 	
-	@Test
+
 	public void testItau() throws FileNotFoundException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("1575");
