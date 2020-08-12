@@ -9,16 +9,20 @@ import com.github.difflib.algorithm.DiffException;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.erros.ComprovanteException;
 
 public class ComprovanteBradesco extends ComprovanteBanco{
 	
 	@Override
-	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException {
-		return super.parse(comprovante,getPattern(comprovante),agenciabancaria,parceiro);
+	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException, ComprovanteException {
+		String pattern = getPattern(comprovante);
+		if(pattern == null ) {
+			throw new ComprovanteException("Comprovante está sem informação");
+		}
+		return super.parse(comprovante,pattern,agenciabancaria,parceiro);
 	}
 	
-	private String getPattern(String comprovante) {
+	private String getPattern(String comprovante) throws ComprovanteException {
 		String[] _lines = comprovante.split("\\r?\\n");
 		if(_lines == null || _lines.length<6) {
 			return null;
@@ -51,7 +55,7 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 			return  DARF;
 		}
 		System.out.println(comprovante);
-		throw new MrContadorException("comprovante.patternnotfound", StringUtils.normalizeSpace(_lines[1].trim()));
+		throw new ComprovanteException(StringUtils.normalizeSpace(_lines[1].trim()));
 	}
 
 	private static final String BOLETO_COBRANCA = "                                                   Comprovante             de   Transação          Bancária\n" + 

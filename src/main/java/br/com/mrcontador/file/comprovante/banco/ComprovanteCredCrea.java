@@ -7,11 +7,12 @@ import com.github.difflib.algorithm.DiffException;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.ComprovanteException;
 
 public class ComprovanteCredCrea extends ComprovanteBanco{
 
 	@Override
-	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException {
+	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException, ComprovanteException {
 		return super.parse(comprovante,pattern,agenciabancaria,parceiro);
 	}
 	

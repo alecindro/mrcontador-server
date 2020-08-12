@@ -2,6 +2,7 @@ package br.com.mrcontador.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.extrato.OfxParserDefault;
@@ -101,7 +103,7 @@ public class FileService {
 		ofxParserDefault.process(fileDTO, agenciabancaria.get());
 	}
 	
-	public void processComprovante(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
+	public List<ComprovanteErro> processComprovante(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
 		if(parceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
 		}
@@ -109,7 +111,7 @@ public class FileService {
 			throw new MrContadorException("agencia.notfound");
 		}
 		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
-		parserComprovante.process(fileDTO, agenciabancaria.get());
+		return parserComprovante.process(fileDTO, agenciabancaria.get());
 	}
 
 

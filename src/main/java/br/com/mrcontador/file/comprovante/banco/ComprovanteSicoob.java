@@ -8,11 +8,12 @@ import com.github.difflib.algorithm.DiffException;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.ComprovanteException;
 
 public class ComprovanteSicoob extends ComprovanteBanco{
 
 	@Override
-	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException {
+	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException, ComprovanteException {
 		List<Comprovante> comprovantes = new ArrayList<>();
 		String[] comprovantesText = comprovante.split(quebra_linha);
 		if(comprovantesText.length>2) {

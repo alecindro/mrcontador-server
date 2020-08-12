@@ -1,6 +1,7 @@
 package br.com.mrcontador.web.rest;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
@@ -79,7 +81,10 @@ public class UploadFileResource {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
-		fileService.processComprovante(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
+		List<ComprovanteErro> errors = fileService.processComprovante(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
+		if(!errors.isEmpty()) {
+			throw new MrContadorException("alguns arquivos não foram processados");
+		}
 		return ResponseEntity
 				.created(new URI("/api/upload/comprovante/")).headers(HeaderUtil
 						.createEntityCreationAlert(applicationName, true, "uploadComprovante", file.getName()))

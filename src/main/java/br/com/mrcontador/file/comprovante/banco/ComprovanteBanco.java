@@ -19,7 +19,7 @@ import com.github.difflib.patch.Patch;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffText;
 import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.ParserComprovante;
@@ -30,7 +30,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	private static final String diff = "$";
 
 	public List<Comprovante> parse(String comprovante, String pattern, Agenciabancaria agenciabancaria,
-			Parceiro parceiro) throws DiffException {
+			Parceiro parceiro) throws DiffException, ComprovanteException {
 		DiffText d = new DiffText();
 		Map<Integer, DiffValue> map = d.doDiff(pattern, comprovante);
 		List<DiffValue> list = new ArrayList<DiffValue>();
@@ -54,7 +54,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		List<AbstractDelta<String>> deltas = patchs.getDeltas();
 		for (AbstractDelta<String> delta : deltas) {
 			if (delta.getType().equals(DeltaType.CHANGE)) {
-				if (delta.getSource().getLines().get(0).startsWith(diff)) {
+				if (delta.getSource().getLines().get(0).trim().startsWith(diff)) {
 					DiffValue diffValues = new DiffValue();
 					diffValues.setOldValue(delta.getSource().getLines().get(0));
 					diffValues.setNewValue(delta.getTarget().getLines().get(0));
@@ -81,22 +81,22 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		return changes;
 	}
 
-	private static final String AGENCIA = "$ag";
-	private static final String CONTA = "$conta";// split - conta e digito
-	private static final String DOCUMENTO = "$doc";
-	private static final String FORNECEDOR = "$2";
-	private static final String CNPJ_BEN = "$cnpj_ben";
-	private static final String CNPJ_PAG = "$cnpj";
-	private static final String DATA_VCTO = "$data_venc";
-	private static final String DATA_PGTO = "$pagto";
-	private static final String VALOR_PGTO = "$valor_pag";
-	private static final String VALOR_DOC = "$valor_doc";
+	protected static final String AGENCIA = "$ag";
+	protected static final String CONTA = "$conta";// split - conta e digito
+	protected static final String DOCUMENTO = "$doc";
+	protected static final String FORNECEDOR = "$2";
+	protected static final String CNPJ_BEN = "$cnpj_ben";
+	protected static final String CNPJ_PAG = "$cnpj";
+	protected static final String DATA_VCTO = "$data_venc";
+	protected static final String DATA_PGTO = "$pagto";
+	protected static final String VALOR_PGTO = "$valor_pag";
+	protected static final String VALOR_DOC = "$valor_doc";
 	// private static final String PARCEIRO = "$1";
-	private static final String OBS = "$4";
+	protected static final String OBS = "$4";
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private static int count = 1;
 
-	protected Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro) {
+	protected Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException {
 		Comprovante comprovante = new Comprovante();
 
 		Optional<DiffValue> agencia = diffValues.stream()
@@ -146,27 +146,27 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	}
 
 	protected void validateAgencia(Optional<DiffValue> agencia, Optional<DiffValue> conta,
-			Agenciabancaria agenciabancaria) {
+			Agenciabancaria agenciabancaria) throws ComprovanteException {
 		if (agencia.isPresent()) {
 			if (!MrContadorUtil.compareWithoutDigit(agenciabancaria.getAgeAgencia(), agencia.get().getNewValue())) {
-				throw new MrContadorException("comprovante.agencianotequal");
+				throw new ComprovanteException("comprovante.agencianotequal");
 			}
 
 		}
 		if (conta.isPresent()) {
 			if (!MrContadorUtil.compareWithoutDigit(agenciabancaria.getAgeNumero(), conta.get().getNewValue())) {
-				throw new MrContadorException("comprovante.agencianotequal");
+				throw new ComprovanteException("comprovante.agencianotequal");
 			}
 		}
 	}
 
-	protected void validateParceiro(Optional<DiffValue> cnpj_pagador, Parceiro parceiro, List<DiffValue> diffValues) {
+	protected void validateParceiro(Optional<DiffValue> cnpj_pagador, Parceiro parceiro, List<DiffValue> diffValues) throws ComprovanteException {
 		if (cnpj_pagador.isPresent()) {
 			String cnpjComprovante = MrContadorUtil
 					.removeZerosFromInital(MrContadorUtil.onlyNumbers(cnpj_pagador.get().getNewValue()));
 			String cnpj = MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(parceiro.getParCnpjcpf()));
 			if (!cnpj.equalsIgnoreCase(cnpjComprovante)) {
-				throw new MrContadorException("comprovante.parceironotequal");
+				throw new ComprovanteException("comprovante.parceironotequal");
 			}
 		}
 	}

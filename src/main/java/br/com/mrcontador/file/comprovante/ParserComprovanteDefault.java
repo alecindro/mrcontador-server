@@ -15,11 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
-import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteCredCrea;
@@ -28,7 +27,6 @@ import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSicoob;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteUnicred;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
@@ -43,41 +41,50 @@ public class ParserComprovanteDefault {
 
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
-	public void process(FileDTO fileDTO, Agenciabancaria agencia) {
+	public List<ComprovanteErro> process(FileDTO fileDTO, Agenciabancaria agencia) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream first = null;
 		InputStream second = null;
-		InputStream third = null;
 		try {
 			fileDTO.getInputStream().transferTo(baos);
+
 			first = new ByteArrayInputStream(baos.toByteArray());
 			second = new ByteArrayInputStream(baos.toByteArray());
-			third = new ByteArrayInputStream(baos.toByteArray());
-			List<String> textComprovantes = parseComprovante(third);
+			fileDTO.setInputStream(second);
+			List<String> textComprovantes = parseComprovante(first);
 			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
 			List<Comprovante> comprovantes = new ArrayList<>();
+			List<ComprovanteErro> erros = new ArrayList<ComprovanteErro>();
+			int page = 0;
 			for (String comprovante : textComprovantes) {
-				List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
-				if (!comprovantes.isEmpty()) {
-					comprovantes.addAll(_comprovantes);
+				try {
+					page = page + 1;
+					List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
+					if (!_comprovantes.isEmpty()) {
+						comprovantes.addAll(_comprovantes);
+					}
+				} catch (Exception e) {
+					ComprovanteErro comprovanteErro = new ComprovanteErro();
+					comprovanteErro.setAgencia(agencia);
+					comprovanteErro.setComprovante(comprovante);
+					comprovanteErro.setFileDTO(fileDTO);
+					comprovanteErro.setPage(page);
+					comprovanteErro.setErro(e.getMessage());
+					erros.add(comprovanteErro);
 				}
 			}
-			fileDTO.setInputStream(second);
-			Arquivo arquivo = s3Service.uploadComprovante(fileDTO);
-			comprovantes.forEach(comprovante -> comprovante.setArquivo(arquivo));
 			service.saveAll(comprovantes);
 			log.info("Comprovantes salvos");
-		} catch (Exception e) {
-			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-			log.error(e.getMessage(), e);
-			fileDTO.setInputStream(first);
-			s3Service.uploadErro(fileDTO);
-			throw new MrContadorException("comprovante.process", e.getMessage());
+			return erros;
+		} catch (IOException e1) {
+			throw new MrContadorException("error.parsecomprovante", e1);
 		} finally {
-			try {
-				third.close();
-			} catch (IOException e) {
-				log.error(e.getMessage(), e);
+			if (first != null) {
+				try {
+					first.close();
+				} catch (IOException e) {
+					log.info("Erro ao fechar inputstream", e);
+				}
 			}
 		}
 

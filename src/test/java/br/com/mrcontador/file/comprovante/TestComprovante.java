@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.ComprovanteErro;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
 import br.com.mrcontador.service.dto.FileDTO;
 
 @SpringBootTest(classes = MrcontadorServerApp.class)
@@ -98,7 +101,11 @@ public class TestComprovante {
 		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/santander/GerarPDF_04082020105944.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		defaultParser.process(dto, agencia);
+		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		List<ComprovanteErro> errors =  p.process(dto, agencia);
+		for(ComprovanteErro erro : errors) {
+			System.out.println(erro.toString());
+		}
 		
 	}
 	
