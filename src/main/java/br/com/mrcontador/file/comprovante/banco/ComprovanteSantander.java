@@ -157,44 +157,6 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		return comprovantes;
 	}
 
-	private String getPattern(String comprovante) throws ComprovanteException {
-		String[] _lines = comprovante.split("\\r?\\n");
-		if (_lines == null || _lines.length < 6) {
-			return null;
-		}
-		if (StringUtils.normalizeSpace(_lines[3].trim()).equals("COMPROVANTE DE PAGAMENTO")) {
-			return COMPROVANTE;
-		}
-		if (StringUtils.normalizeSpace(_lines[3].trim()).equals("COMPROVANTE DE RECOLHIMENTO - FGTS RESCISORIO")) {
-			return FGTS_RESC;
-		}
-		if (StringUtils.normalizeSpace(_lines[3].trim()).equals("COMPROVANTE DE PAGAMENTO RECOLHIMENTO - FGTS GRF")) {
-			return FGTS_GRF;
-		}
-		if (StringUtils.normalizeSpace(_lines[3].trim()).equals("COMPROVANTE DE PAGAMENTO DE DAS")) {
-			return DAS;
-		}
-
-		/*
-		 * if (StringUtils.normalizeSpace(_lines[4].trim()).contains("Nosso Número")) {
-		 * return TITULOS; }
-		 */
-		/*
-		 * if (StringUtils.normalizeSpace(_lines[1].trim()).
-		 * equals("Títulos > 2ª via de Comprovante") && StringUtils
-		 * .normalizeSpace(_lines[7].trim()).
-		 * equals("Dados do Beneficiário Original  Dados do Sacador Avalista")) { return
-		 * TITULOS3; } if
-		 * (StringUtils.normalizeSpace(_lines[16].trim()).contains("Dados do Pagamento"
-		 * )) { return TITULOS4; }
-		 */
-		if (StringUtils.normalizeSpace(_lines[13].trim()).contains("Dados do Pagamento")) {
-			return TITULOS2;
-		}
-
-		throw new ComprovanteException(StringUtils.normalizeSpace(_lines[0].trim()));
-	}
-
 	public static final String COMPROVANTE = "                                                           \n"
 			+ "                       $1                                     Agência: $ag              Conta    Corrente: $conta\n"
 			+ "                       Pagamento        com    codigo    de  barras    >  2ª  via de  comprovante\n"

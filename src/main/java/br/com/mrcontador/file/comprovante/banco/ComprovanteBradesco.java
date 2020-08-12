@@ -1,5 +1,6 @@
 package br.com.mrcontador.file.comprovante.banco;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,53 +11,130 @@ import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
+import br.com.mrcontador.file.comprovante.DiffValue;
 
 public class ComprovanteBradesco extends ComprovanteBanco{
 	
 	@Override
 	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException, ComprovanteException {
-		String pattern = getPattern(comprovante);
-		if(pattern == null ) {
-			throw new ComprovanteException("Comprovante está sem informação");
-		}
-		return super.parse(comprovante,pattern,agenciabancaria,parceiro);
-	}
-	
-	private String getPattern(String comprovante) throws ComprovanteException {
+		
 		String[] _lines = comprovante.split("\\r?\\n");
 		if(_lines == null || _lines.length<6) {
 			return null;
 		}
 		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("Boleto de Cobrança")) {
-			return BOLETO_COBRANCA;
+			return super.parse(comprovante,BOLETO_COBRANCA,agenciabancaria,parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("Água, Luz, Telefone e Gás")) {
-			return  AGUA_LUZ_TELEFONE;
+			return super.parse(comprovante,AGUA_LUZ_TELEFONE,agenciabancaria,parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("Transferência entre Contas Bradesco")) {
-			return  TEC;
+			return super.parse(comprovante,TEC,agenciabancaria,parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("IMPOSTO/TAXAS")) {
-			return  IMPOSTO_TAXAS;
+			return  parseImpostosTaxas(_lines, agenciabancaria, parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("Transferências Para Contas de Outros Bancos (TED)")) {
-			return  TED;
+			return super.parse(comprovante,TED,agenciabancaria,parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("Transferências Para Contas de Outros Bancos (DOC)")) {
-			return  DOC;
+			return super.parse(comprovante,DOC,agenciabancaria,parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[4].trim()).equals("COMPROVANTE DE PAGAMENTO DO SIMPLES NACIONAL")) {
-			return  SIMPLES_NACIONAL;
+			return super.parse(comprovante,SIMPLES_NACIONAL,agenciabancaria,parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[1].trim()).equals("FGTS")) {
-			return  FGTS;
+			return super.parse(comprovante,FGTS,agenciabancaria,parceiro);
 		}
 		if(StringUtils.normalizeSpace(_lines[5].trim()).equals("COMPROVANTE DE PAGAMENTO DARF")) {
-			return  DARF;
+			return super.parse(comprovante,DARF,agenciabancaria,parceiro);
 		}
-		System.out.println(comprovante);
 		throw new ComprovanteException(StringUtils.normalizeSpace(_lines[1].trim()));
 	}
+	
+	private List<Comprovante> parseImpostosTaxas(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException {
+		List<DiffValue> list = new ArrayList<DiffValue>();
+		int i = 0;
+		for (String line : lines) {
+			line = StringUtils.normalizeSpace(line.trim());
+			if (line.contains("Agência:")) {
+				String lineA = StringUtils
+						.substringBefore(StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência:")), "|Conta:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(AGENCIA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Conta:")) {
+				String lineA = StringUtils
+						.substringBefore(StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Conta:")),"|Tipo:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CONTA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Descrição:")) {
+				String lineA = StringUtils
+						.substringBefore(StringUtils.substringAfter(line, "Descrição:").trim(),"IDENTIFICADOR:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(OBS);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("CNPJ:")) {
+				String lineA = StringUtils.substringAfter(line, "CNPJ:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CNPJ_PAG);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Data de débito:")) {
+				String lineA = StringUtils.substringAfter(line, "Data de débito:").trim();
+				if(StringUtils.isBlank(lineA)) {
+					lineA = StringUtils.substringBefore(StringUtils.normalizeSpace(lines[i+1]), "Data do vencimento:").trim();
+				}
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Valor principal:")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Valor principal:").trim(),"Desconto:");
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_DOC);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Valor principal:")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Data do vencimento:").trim(),"Valor principal:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_VCTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Valor do pagamento:")) {
+				String lineA = StringUtils.substringAfter(line, "Valor do pagamento: R$").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			i = i + 1;
+		}
+		List<Comprovante> comprovantes = new ArrayList<>();
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		return comprovantes;
+	}
+	
+
 
 	private static final String BOLETO_COBRANCA = "                                                   Comprovante             de   Transação          Bancária\n" + 
 			"                                                   Boleto   de  Cobrança\n" + 
@@ -66,11 +144,11 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 			"                               Empresa:       CRIADORES        DE   IMAGEM      LTDA    - ME   |CNPJ:    $cnpj              \n" + 
 			"                     Código    de  barras:    00190   00009    03075   800007    62061   486171    5  81720000120000\n" + 
 			"                    Banco   destinatário:     001  - BANCO      DO   BRASIL     S.A.\n" + 
-			"                           Razao    Social    IUGU   SERVICOS       NA   INTERNET       S.A\n" + 
+			"                           Razao    Social    $2\n" + 
 			"                            Beneficiário:\n" + 
 			"                        Nome     Fantasia     IUGU   SERVICOS       NA   INTERNET       S.A\n" + 
 			"                            Beneficiário:\n" + 
-			"              CPF/CNPJ      Beneficiário:     015.111.975/0001-64\n" + 
+			"              CPF/CNPJ      Beneficiário:     $cnpj_ben\n" + 
 			"                Razao    Social  Sacador      KOMODO       PRODUCAO         AUDIO     VISUAL     LTDA\n" + 
 			"                                 Avalista:\n" + 
 			"                   CPF/CNPJ      Sacador      009.414.025/0001-06\n" + 
@@ -87,7 +165,7 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 			"                                    Multa:    R$  0,00\n" + 
 			"                                    Juros:    R$  0,00\n" + 
 			"                              Valor  total:   R$  $valor_pag\n" + 
-			"                              Descrição:      $4           \n" + 
+			"                              Descrição:      $4\n" + 
 			"                 A  transação   acima    foirealizada   por  meio   do  Bradesco    NET   EMPRESA\n" + 
 			"                                                                                            Autenticação\n" + 
 			"                                       DNcetgv2        ?LsSn*2A         iln*#HwZ        vvQQrfs6        24O#ElFR        yt6v7qdR        qrBK3sOJ         DAqxigJ#\n" + 
@@ -158,8 +236,8 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 			"                           Conta   de  débito:   Agência:     $ag  | Conta:   $conta     | Tipo:  Conta-Corrente                             Empresa:\n" + 
 			"                 CRIADORES        DE   IMAGEM      LTDA    - ME   |CNPJ:    $cnpj              \n" + 
 			"                         Código   de  barras:    85800000002-0        33700270200-0       32873328200-7       01552020027-4                  Empresa     /Órgão:     INSS/GPS\n" + 
-			"                                  Descrição:     $4                                         IDENTIFICADOR:           28733282000155                      Data   de  débito:  \n" + 
-			"                 $pagto                Data   do  vencimento:      00/00/0000                   Valor   principal:   R$  $valor_doc                    Desconto:      R$  0,00\n" + 
+			"                                  Descrição:     $4                IDENTIFICADOR:           $doc                      Data   de  débito:\n" + 
+			"                 $pagto                Data   do  vencimento:      $data_venc                   Valor   principal:   R$  $valor_doc                    Desconto:      R$  0,00\n" + 
 			"                                       Juros:    R$   0,00                           Multa:    R$   0,00         Valor  do  pagamento:       R$   $valor_pag\n" + 
 			"                 A  transação   acima    foirealizada   por  meio   do  INTERNET      - PESSOA      JURIDIC.\n" + 
 			"                 O  Lançamento      do  valor consta   no  extrato  de  Conta-Corrente,      junto  a Agência    do débito   nº. 348  , da  data  de  pagamento     20/03/2020.\n" + 
@@ -285,7 +363,7 @@ public class ComprovanteBradesco extends ComprovanteBanco{
 			"                           Conta   de  débito:   Agência:     $ag  | Conta:   $conta     | Tipo:  Conta-Corrente                             Empresa:\n" + 
 			"                 CRIADORES        DE   IMAGEM      LTDA    - ME   |CNPJ:    $cnpj              \n" + 
 			"                         Código   de  barras:    85800000001-1        34750179200-2       50764005082-3       87332820001-4                    Empresa     /Órgão:\n" + 
-			"                 FGTS/GRF       S/TOMADOR                IDENTIF.     EMPRESA:        287332820001                             CNPJ/CEI:                       Cod.  convênio:\n" + 
+			"                 $2                IDENTIF.     EMPRESA:        287332820001                             CNPJ/CEI:                       Cod.  convênio:\n" + 
 			"                 0179                    Competência:       04/2020                Data   de  validade:    07/05/2020                    Data  de  débito:    $pagto    \n" + 
 			"                     Valor  do  pagamento:       R$   $valor_pag\n" + 
 			"                 A  transação   acima    foirealizada   por  meio   do  Bradesco    Net  Empresa.\n" + 

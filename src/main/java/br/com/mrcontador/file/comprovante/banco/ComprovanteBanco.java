@@ -172,6 +172,9 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	}
 
 	protected LocalDate toDate(String value) {
+		if(value.trim().equals("00/00/0000")) {
+			return null;
+		}
 		return LocalDate.parse(value.trim(), formatter);
 	}
 
