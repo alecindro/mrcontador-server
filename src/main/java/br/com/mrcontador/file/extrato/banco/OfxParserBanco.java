@@ -92,7 +92,9 @@ public abstract class OfxParserBanco implements OfxParser {
 		}
 		if(conta != null) {
 			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeNumero(), conta)) {
+				if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia()+agenciaBancaria.getAgeNumero(),conta)){
 				throw new MrContadorException("conta.notequals");
+				}
 			}
 		}
 		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {

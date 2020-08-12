@@ -69,6 +69,8 @@ public class MrContadorUtil {
 		value = org.apache.commons.lang3.StringUtils.deleteWhitespace(value);
 		value = removeZerosFromInital(value.trim());
 		pattern = removeZerosFromInital(pattern.trim());
+		pattern = onlyNumbers(pattern);
+		value = onlyNumbers(value);
 		if(value.equalsIgnoreCase(pattern)) {
 			return true;
 		}
