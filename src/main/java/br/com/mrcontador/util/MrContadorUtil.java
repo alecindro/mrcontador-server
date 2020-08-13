@@ -3,17 +3,26 @@ package br.com.mrcontador.util;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.mrcontador.file.TipoDocumento;
 
 public class MrContadorUtil {
 
-	public static String onlyNumbers(String cnpj) {
-		if (cnpj != null) {
-			return cnpj.replaceAll("\\D", "");
+	public static String onlyNumbers(String value) {
+		if (value != null) {
+			return value.replaceAll("\\D", "");
 		}
-		return cnpj;
+		return value;
 	}
 	
+	public static boolean only9(String value) {
+		if (value != null) {
+			value = onlyNumbers(value);
+			return StringUtils.containsOnly(value, "9");
+		}
+		return false;
+	}
 	public static String onlyMoney(String value) {
 		if (value != null) {
 			value = value.replace("R$", "").trim();
