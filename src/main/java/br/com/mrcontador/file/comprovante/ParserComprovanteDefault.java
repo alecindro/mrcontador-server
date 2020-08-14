@@ -60,7 +60,7 @@ public class ParserComprovanteDefault {
 				try {
 					page = page + 1;
 					List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
-					if (!_comprovantes.isEmpty()) {
+					if (_comprovantes != null && !_comprovantes.isEmpty()) {
 						comprovantes.addAll(_comprovantes);
 					}
 				} catch (Exception e) {

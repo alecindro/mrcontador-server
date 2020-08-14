@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.difflib.DiffUtils;
 import com.github.difflib.algorithm.DiffException;
 import com.github.difflib.patch.AbstractDelta;
@@ -119,21 +121,18 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(VALOR_PGTO)).findFirst();
 		Optional<DiffValue> valor_documento = diffValues.stream()
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(VALOR_DOC)).findFirst();
-		// Optional<DiffValue> parceiro_desc =diffValues.stream().filter(diffvalue ->
-		// diffvalue.getOldValue().equals(PARCEIRO)).findFirst();
 		Optional<DiffValue> obs = diffValues.stream().filter(diffvalue -> diffvalue.getOldValue().trim().equals(OBS))
 				.findFirst();
-		comprovante.setComBeneficiario(cnpj_beneficiario.isPresent() ? cnpj_beneficiario.get().getNewValue() : "");
-		comprovante.setComCnpj(cnpj_pagador.isPresent() ? MrContadorUtil.onlyNumbers(cnpj_pagador.get().getNewValue()) : "");
-		comprovante.setComDocumento(documento.isPresent() ? documento.get().getNewValue() : "");
-		comprovante.setComObservacao(obs.isPresent() ? obs.get().getNewValue() : "");
+		comprovante.setComCnpj(cnpj_beneficiario.isPresent() ? MrContadorUtil.onlyNumbers(cnpj_beneficiario.get().getNewValue().trim()) : "");
+		comprovante.setComDocumento(documento.isPresent() ? StringUtils.normalizeSpace(documento.get().getNewValue()) : "");
+		comprovante.setComObservacao(obs.isPresent() ? StringUtils.normalizeSpace(obs.get().getNewValue()) : "");
 		comprovante.setComValordocumento(valor_documento.isPresent()
 				? new BigDecimal(MrContadorUtil.onlyMoney(valor_documento.get().getNewValue()))
 				: BigDecimal.ZERO);
 		comprovante.setComValorpagamento(valor_pagamento.isPresent()
 				? new BigDecimal(MrContadorUtil.onlyMoney(valor_pagamento.get().getNewValue()))
 				: BigDecimal.ZERO);
-		comprovante.setComBeneficiario(fornecedor.isPresent() ? fornecedor.get().getNewValue() : "");
+		comprovante.setComBeneficiario(fornecedor.isPresent() ? StringUtils.normalizeSpace(fornecedor.get().getNewValue()) : "");
 		comprovante.setComDatapagamento(data_pagto.isPresent() ? toDate(data_pagto.get().getNewValue()) : null);
 		comprovante.setComDatavencimento(data_vcto.isPresent() ? toDate(data_vcto.get().getNewValue()) : null);
 		comprovante.setAgenciabancaria(agenciabancaria);
