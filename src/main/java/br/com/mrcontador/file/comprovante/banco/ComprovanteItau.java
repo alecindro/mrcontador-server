@@ -310,6 +310,29 @@ public class ComprovanteItau extends ComprovanteBanco {
 					}	
 				}
 			}
+			if (line.contains("Data de pagamento:")) {
+				String _line = StringUtils.normalizeSpace(lines[i + 1]);
+				String[] values = _line.split("\\s");
+				String value = values[values.length - 1].trim();
+				if(MrContadorUtil.onlyNumbers(value).length() == 8) {
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i + 1);
+				list.add(diffValue);
+				}else{
+					_line = StringUtils.normalizeSpace(lines[i + 2]);
+					values = _line.split("\\s");
+					value = values[values.length - 1].trim();
+					if(MrContadorUtil.onlyNumbers(value).length() == 8) {
+						DiffValue diffValue = new DiffValue();
+						diffValue.setOldValue(DATA_PGTO);
+						diffValue.setNewValue(value);
+						diffValue.setLine(i + 2);
+						list.add(diffValue);
+					}	
+				}
+			}
 			if (line.contains("CTRL")) {
 				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "CTRL"), ".");
 				DiffValue diffValue = new DiffValue();
