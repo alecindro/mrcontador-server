@@ -21,7 +21,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 	public List<Comprovante> parse(String comprovante, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws DiffException, ComprovanteException {
 		String[] _lines = comprovante.split("\\r?\\n");
-		
+
 		if (_lines == null || _lines.length < 6) {
 			throw new ComprovanteException("Comprovante está sem informação");
 		}
@@ -56,6 +56,10 @@ public class ComprovanteItau extends ComprovanteBanco {
 				&& StringUtils.normalizeSpace(_lines[1].trim()).equals("DOC C – outra titularidade")) {
 			return super.parse(comprovante, DOC_C, agenciabancaria, parceiro);
 		}
+		if (line.equals("Banco Itaú - Comprovante de Pagamento")
+				&& StringUtils.normalizeSpace(_lines[1].trim()).contains("TED C")) {
+			return parseTEDC(_lines, agenciabancaria, parceiro);
+		}
 		if (line.contains("GPS")) {
 			return parseGPS(_lines, agenciabancaria, parceiro);
 		}
@@ -65,7 +69,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 		if (StringUtils.normalizeSpace(_lines[0].trim()).equals("Comprovante de pagamento de boleto")) {
 			return parseBoleto(_lines, agenciabancaria, parceiro);
 		}
-		throw new ComprovanteException("Comprovante IdentificaoNoMeu não reallizado");
+		throw new ComprovanteException("Comprovante não identificado");
 
 	}
 
@@ -78,7 +82,6 @@ public class ComprovanteItau extends ComprovanteBanco {
 		return false;
 	}
 
-	
 	public List<Comprovante> parseGPS(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
@@ -111,7 +114,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if(line.contains("Identificação do extrato:")) {
+			if (line.contains("Identificação do extrato:")) {
 				String value = StringUtils.substringAfter(line, "Identificação do extrato:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(OBS);
@@ -119,8 +122,8 @@ public class ComprovanteItau extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			
-			if(line.contains("Agência/Conta:")) {
+
+			if (line.contains("Agência/Conta:")) {
 				String value = StringUtils.substringAfter(line, "Agência/Conta:").trim();
 				String[] values = value.split("\\s");
 				DiffValue diffValue = new DiffValue();
@@ -134,15 +137,16 @@ public class ComprovanteItau extends ComprovanteBanco {
 				diffValue2.setLine(i);
 				list.add(diffValue);
 			}
-			if(line.contains("Agência:") && !line.contains("Agência/Conta:")) {
-				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "Agência:").trim(),"Conta:").trim();
+			if (line.contains("Agência:") && !line.contains("Agência/Conta:")) {
+				String value = StringUtils
+						.substringBefore(StringUtils.substringAfter(line, "Agência:").trim(), "Conta:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(AGENCIA);
 				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if(line.contains("Conta:") && !line.contains("Agência/Conta:")) {
+			if (line.contains("Conta:") && !line.contains("Agência/Conta:")) {
 				String value = StringUtils.substringAfter(line, "Conta:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CONTA);
@@ -150,12 +154,12 @@ public class ComprovanteItau extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if(line.contains("CTRL")) {
-				ctrl = StringUtils.substringBefore(StringUtils.substringAfter(line, "CTRL").trim(),".");
+			if (line.contains("CTRL")) {
+				ctrl = StringUtils.substringBefore(StringUtils.substringAfter(line, "CTRL").trim(), ".");
 			}
 		}
-		Optional<DiffValue> optional =  list.stream().filter(diff -> diff.getOldValue().equals(OBS)).findFirst();
-		if(optional.isEmpty()) {
+		Optional<DiffValue> optional = list.stream().filter(diff -> diff.getOldValue().equals(OBS)).findFirst();
+		if (optional.isEmpty()) {
 			DiffValue diffValue = new DiffValue();
 			diffValue.setOldValue(OBS);
 			diffValue.setNewValue(ctrl);
@@ -174,7 +178,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
 		return comprovantes;
 	}
-	
+
 	public List<Comprovante> parseBoleto(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
@@ -276,7 +280,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_DOC);
 				diffValue.setNewValue(_line.trim());
-				diffValue.setLine(i+1);
+				diffValue.setLine(i + 1);
 				list.add(diffValue);
 			}
 			if (line.trim().contains("Valor do documento")) {
@@ -284,53 +288,53 @@ public class ComprovanteItau extends ComprovanteBanco {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_DOC);
 				diffValue.setNewValue(_line.trim());
-				diffValue.setLine(i+1);
+				diffValue.setLine(i + 1);
 				list.add(diffValue);
 			}
 			if (line.trim().contains("Valor do pagamento")) {
 				String _line = StringUtils.normalizeSpace(lines[i + 1]);
 				String[] values = _line.split("\\s");
 				String value = values[values.length - 1].trim();
-				if(MrContadorUtil.onlyNumbers(value).length() > 3) {
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(VALOR_PGTO);
-				diffValue.setNewValue(value);
-				diffValue.setLine(i + 1);
-				list.add(diffValue);
-				}else{
+				if (MrContadorUtil.onlyNumbers(value).length() > 3) {
+					DiffValue diffValue = new DiffValue();
+					diffValue.setOldValue(VALOR_PGTO);
+					diffValue.setNewValue(value);
+					diffValue.setLine(i + 1);
+					list.add(diffValue);
+				} else {
 					_line = StringUtils.normalizeSpace(lines[i + 2]);
 					values = _line.split("\\s");
 					value = values[values.length - 1].trim();
-					if(MrContadorUtil.onlyNumbers(value).length() > 3) {
+					if (MrContadorUtil.onlyNumbers(value).length() > 3) {
 						DiffValue diffValue = new DiffValue();
 						diffValue.setOldValue(VALOR_PGTO);
 						diffValue.setNewValue(value);
 						diffValue.setLine(i + 2);
 						list.add(diffValue);
-					}	
+					}
 				}
 			}
 			if (line.contains("Data de pagamento:")) {
 				String _line = StringUtils.normalizeSpace(lines[i + 1]);
 				String[] values = _line.split("\\s");
 				String value = values[values.length - 1].trim();
-				if(MrContadorUtil.onlyNumbers(value).length() == 8) {
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(DATA_PGTO);
-				diffValue.setNewValue(value);
-				diffValue.setLine(i + 1);
-				list.add(diffValue);
-				}else{
+				if (MrContadorUtil.onlyNumbers(value).length() == 8) {
+					DiffValue diffValue = new DiffValue();
+					diffValue.setOldValue(DATA_PGTO);
+					diffValue.setNewValue(value);
+					diffValue.setLine(i + 1);
+					list.add(diffValue);
+				} else {
 					_line = StringUtils.normalizeSpace(lines[i + 2]);
 					values = _line.split("\\s");
 					value = values[values.length - 1].trim();
-					if(MrContadorUtil.onlyNumbers(value).length() == 8) {
+					if (MrContadorUtil.onlyNumbers(value).length() == 8) {
 						DiffValue diffValue = new DiffValue();
 						diffValue.setOldValue(DATA_PGTO);
 						diffValue.setNewValue(value);
 						diffValue.setLine(i + 2);
 						list.add(diffValue);
-					}	
+					}
 				}
 			}
 			if (line.contains("CTRL")) {
@@ -445,7 +449,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 					String _line2 = StringUtils.normalizeSpace(lines[i + 2]);
 					data = _line2.substring(_line2.length() - 10, _line2.length()).trim();
 					String cnpj_ben = StringUtils.substringBefore(_line2, data).trim();
-					cnpj_ben = cnpj_ben.substring(cnpj_ben.length()-18, cnpj_ben.length());
+					cnpj_ben = cnpj_ben.substring(cnpj_ben.length() - 18, cnpj_ben.length());
 					DiffValue diffValue2 = new DiffValue();
 					diffValue2.setOldValue(DATA_VCTO);
 					diffValue2.setNewValue(data);
@@ -457,26 +461,6 @@ public class ComprovanteItau extends ComprovanteBanco {
 					diffValue3.setLine(i + 1);
 					list.add(diffValue3);
 				}
-				/*String _line = StringUtils.normalizeSpace(lines[i + 1]);
-				String data = _line.substring(_line.length() - 10, _line.length()).trim();
-				String cnpj_ben = _line.substring(_line.length() - 29, _line.length() - 10).trim();
-				String razao = StringUtils.substringBefore(StringUtils.substringAfter(_line, "Razão Social:"), cnpj_ben)
-						.trim();
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(FORNECEDOR);
-				diffValue.setNewValue(razao);
-				diffValue.setLine(i + 1);
-				list.add(diffValue);
-				DiffValue diffValue2 = new DiffValue();
-				diffValue2.setOldValue(DATA_VCTO);
-				diffValue2.setNewValue(data);
-				diffValue2.setLine(i + 1);
-				list.add(diffValue2);
-				DiffValue diffValue3 = new DiffValue();
-				diffValue3.setOldValue(CNPJ_BEN);
-				diffValue3.setNewValue(cnpj_ben);
-				diffValue3.setLine(i + 1);
-				list.add(diffValue3);*/
 			}
 			if (line.trim().contains("Valor do boleto")) {
 				String _line = StringUtils.normalizeSpace(lines[i + 1]);
@@ -499,45 +483,45 @@ public class ComprovanteItau extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.trim().contains("Valor do pagamento")) {
-				int lin = i+1;
+				int lin = i + 1;
 				String _line = StringUtils.normalizeSpace(lines[lin]);
 				String[] values = _line.split("\\s");
 				String value = values[values.length - 1].trim();
-				if(MrContadorUtil.onlyNumbers(value).isEmpty()) {
-					lin = lin +1;
-					 _line = StringUtils.normalizeSpace(lines[lin]);
-					 values = _line.split("\\s");
+				if (MrContadorUtil.onlyNumbers(value).isEmpty()) {
+					lin = lin + 1;
+					_line = StringUtils.normalizeSpace(lines[lin]);
+					values = _line.split("\\s");
 					value = values[values.length - 1].trim();
-						
+
 				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(value);
 				diffValue.setLine(lin);
 				list.add(diffValue);
-				
+
 			}
 			if (line.contains("Data de pagamento:")) {
 				String _line = StringUtils.normalizeSpace(lines[i + 1]);
 				String[] values = _line.split("\\s");
 				String value = values[values.length - 1].trim();
-				if(MrContadorUtil.onlyNumbers(value).length() == 8) {
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(DATA_PGTO);
-				diffValue.setNewValue(value);
-				diffValue.setLine(i + 1);
-				list.add(diffValue);
-				}else{
+				if (MrContadorUtil.onlyNumbers(value).length() == 8) {
+					DiffValue diffValue = new DiffValue();
+					diffValue.setOldValue(DATA_PGTO);
+					diffValue.setNewValue(value);
+					diffValue.setLine(i + 1);
+					list.add(diffValue);
+				} else {
 					_line = StringUtils.normalizeSpace(lines[i + 2]);
 					values = _line.split("\\s");
 					value = values[values.length - 1].trim();
-					if(MrContadorUtil.onlyNumbers(value).length() == 8) {
+					if (MrContadorUtil.onlyNumbers(value).length() == 8) {
 						DiffValue diffValue = new DiffValue();
 						diffValue.setOldValue(DATA_PGTO);
 						diffValue.setNewValue(value);
 						diffValue.setLine(i + 2);
 						list.add(diffValue);
-					}	
+					}
 				}
 			}
 			if (line.contains("CTRL")) {
@@ -554,6 +538,101 @@ public class ComprovanteItau extends ComprovanteBanco {
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
 		return comprovantes;
 	}
+
+	public List<Comprovante> parseTEDC(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
+			throws ComprovanteException {
+		List<DiffValue> list = new ArrayList<DiffValue>();
+		int i = 0;
+		for (String line : lines) {
+			line = StringUtils.normalizeSpace(line.trim());
+			if (line.contains("Identificação no extrato:")) {
+				String lineA = StringUtils.substringAfter(line, "Identificação no extrato:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(OBS);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Agência:")) {
+				String lineA = StringUtils
+						.substringBefore(StringUtils.substringAfter(line, "Agência:"), "Conta corrente:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(AGENCIA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Conta corrente:")) {
+				String lineA = StringUtils.substringAfter(line, "Conta corrente:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CONTA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Nome do favorecido:")) {
+				String lineA = StringUtils.substringAfter(line, "Nome do favorecido:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(FORNECEDOR);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("CPF / CNPJ:")) {
+				String lineA = StringUtils.substringAfter(line, "CPF / CNPJ:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CNPJ_BEN);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Valor da TED:")) {
+				String lineA = StringUtils.substringAfter(line, "Valor da TED:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("TED solicitada em")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "TED solicitada em").trim(),
+						"às");
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+
+		}
+		DiffValue diffValue = new DiffValue();
+		diffValue.setOldValue(DOCUMENTO);
+		diffValue.setNewValue("TED C – outra titularidade");
+		diffValue.setLine(1);
+		list.add(diffValue);
+		List<Comprovante> comprovantes = new ArrayList<>();
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		return comprovantes;
+	}
+
+/*	private static final String TED_C = "                                                      Banco         Itaú     -  Comprovante                 de    Pagamento\n"
+			+ "                                                                      TED       C   –   outra      titularidade\n"
+			+ "               Identificação       no   extrato: $4\n" + "         Dados      da   conta    debitada:\n"
+			+ "                                         Nome:      MOTO        BOMBAS          F  LTDA      ME\n"
+			+ "                                      Agência:      $ag                           Conta     corrente:     $conta\n"
+			+ "         Dados      da   TED:\n" + "                         Nome       do  favorecido: $2\n"
+			+ "                                     CPF     / CNPJ:      $cnpj_ben\n"
+			+ "              Número        do  banco,      nome      ou\n"
+			+ "                                                 ISPB:    001    - BANCO         DO    - ISPB     RASIL      SA\n"
+			+ "                                            Agência:      3412     EMPRESARIAL               SERRA        GAUCHA\n"
+			+ "                                 Conta      corrente:     00000007186-2\n"
+			+ "                                    Valor    da   TED:    R$    $valor_pag\n"
+			+ "                                        Finalidade:       01-CREDITO            EM    CONTA        CORRENTE\n"
+			+ "         TED     solicitada     em    $pagto          às  11:05:44       via  bankline.\n"
+			+ "         Autenticação:\n" + "         1CE5B41568282068284B06A756C3A267EE05C2A8\n"
+			+ "         Dúvidas,  sugestões    e reclamações:    na sua  agência.  Se  preferir, ligue para o  SAC   Itaú:0800   728 0728   (todos  os dias, 24h)  ou acesse   o Fale  Conosco    no\n"
+			+ "         www.itau.com.br.    Se  não  ficarsatisfeito com   a solução  apresentada,    ligue para  a Ouvidoria  Corporativa   Itaú: 0800  570  0011  (em  dias  úteis, das 9h  às\n"
+			+ "         18h)  ou Caixa  Postal  67.600,  CEP   03162-971.    Deficientes  auditivos  ou de  fala:0800   722  1722  (todos  os dias, 24h).";
 
 	private static final String BOLETO = "         $4\n" + "         Dados         da    conta       debitada\n"
 			+ "         Agência/conta:          $ag/$conta                          CNPJ:      $cnpj                         Empresa:        MOTO        BOMBAS         F   LTDAME\n"
@@ -636,7 +715,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 			+ "         18h)  ou Caixa  Postal  67.600,  CEP   03162-971.    Deficientes  auditivos  ou de  fala:0800   722  1722  (todos  os dias, 24h).\n"
 			+ "                                                                                                                                                                                                 14\n"
 			+ "\n";
-
+*/
 	private static final String CONCESSIONARIA = "                                   Banco         Itaú    -  $4\n"
 			+ "                                                                            $2\n"
 			+ "               Identificação       no   extrato:    tim\n"
@@ -673,7 +752,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 			+ "         18h)  ou Caixa  Postal  67.600,  CEP   03162-971.    Deficientes  auditivos  ou de  fala:0800   722  1722  (todos  os dias, 24h).\n"
 			+ "                                                                                                                                                                                                  9\n"
 			+ "\n";
-
+/*
 	private static final String GPS = "                                             Comprovante           de   Pagamento          de  $4\n"
 			+ "                    Agente      arrecadador:\n"
 			+ "                                     CNC:341        Banco      Itaú   S/A\n"
@@ -722,7 +801,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 			+ "         Dúvidas,  sugestões    e reclamações:    na sua  agência.  Se  preferir, ligue para o  SAC   Itaú:0800   728 0728   (todos  os dias, 24h)  ou acesse   o Fale  Conosco    no\n"
 			+ "         www.itau.com.br.    Se  não  ficarsatisfeito com   a solução  apresentada,    ligue para  a Ouvidoria  Corporativa   Itaú: 0800  570  0011  (em  dias  úteis, das 9h  às\n"
 			+ "         18h)  ou Caixa  Postal  67.600,  CEP   03162-971.    Deficientes  auditivos  ou de  fala:0800   722  1722  (todos  os dias, 24h).";
-
+*/
 	private static final String DARF = "                                                                    Comprovante           de   pagamento         $4\n"
 			+ "\n"
 			+ "         ___________________________________________________________________________________________________________\n"
@@ -772,7 +851,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 			+ "         Dúvidas,  sugestões    e reclamações:    na sua  agência.  Se  preferir, ligue para o  SAC   Itaú:0800   728 0728   (todos  os dias, 24h)  ou acesse   o Fale  Conosco    no\n"
 			+ "         www.itau.com.br.    Se  não  ficarsatisfeito com   a solução  apresentada,    ligue para  a Ouvidoria  Corporativa   Itaú: 0800  570  0011  (em  dias  úteis, das 9h  às\n"
 			+ "         18h)  ou Caixa  Postal  67.600,  CEP   03162-971.    Deficientes  auditivos  ou de  fala:0800   722  1722  (todos  os dias, 24h).\n";
-
+	/*
 	private static final String BOLETO3 = "         Comprovante                 de    pagamento               de    boleto\n"
 			+ "         Dados         da    conta       debitada\n"
 			+ "         Agência/conta:          $ag /$conta                           CNPJ:      08.892.611/0001-01                         Empresa:        MOTO        BOMBAS         F   LTDAME\n"
@@ -857,7 +936,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 			+ "         Dúvidas,  sugestões    e reclamações:    na sua  agência.  Se  preferir, ligue para o  SAC   Itaú:0800   728 0728   (todos  os dias, 24h)  ou acesse   o Fale  Conosco    no\n"
 			+ "         www.itau.com.br.    Se  não  ficarsatisfeito com   a solução  apresentada,    ligue para  a Ouvidoria  Corporativa   Itaú: 0800  570  0011  (em  dias  úteis, das 9h  às\n"
 			+ "         18h)  ou Caixa  Postal  67.600,  CEP   03162-971.    Deficientes  auditivos  ou de  fala:0800   722  1722  (todos  os dias, 24h).\n";
-
+*/
 	private static final String PAGTO_COD_BARRAS = "                                Banco         Itaú     -  Comprovante                 de    Pagamento               com      código         de    barras\n"
 			+ "                                                                            0024     - $2\n"
 			+ "               Identificação       no   extrato:    $4\n"

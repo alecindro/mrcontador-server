@@ -95,7 +95,9 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	protected static final String VALOR_DOC = "$valor_doc";
 	// private static final String PARCEIRO = "$1";
 	protected static final String OBS = "$4";
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static DateTimeFormatter formatterBar = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static DateTimeFormatter formatterPoint = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	
 	private static int count = 1;
 
 	protected Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException {
@@ -171,10 +173,15 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	}
 
 	protected LocalDate toDate(String value) {
+		
 		if(value.trim().equals("00/00/0000")) {
 			return null;
 		}
-		return LocalDate.parse(value.trim(), formatter);
+		
+		if (StringUtils.contains(value, ".")){ 
+		return LocalDate.parse(value.trim(), formatterPoint);
+		}
+		return LocalDate.parse(value.trim(), formatterBar);
 	}
 
 }

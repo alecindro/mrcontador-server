@@ -20,6 +20,7 @@ import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteBB;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteCredCrea;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
@@ -73,7 +74,7 @@ public class ParserComprovanteDefault {
 					erros.add(comprovanteErro);
 				}
 			}
-			service.saveAll(comprovantes);
+		//	service.saveAll(comprovantes);
 			log.info("Comprovantes salvos");
 			return erros;
 		} catch (IOException e1) {
@@ -94,7 +95,7 @@ public class ParserComprovanteDefault {
 		BancoCodigoBancario bcb = BancoCodigoBancario.find(codigoBancario);
 		switch (bcb) {
 		case BB:
-			return null;
+			return new ComprovanteBB();
 		case BRADESCO:
 			return new ComprovanteBradesco();
 		case CAIXA:
