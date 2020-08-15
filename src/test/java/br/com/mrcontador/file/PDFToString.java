@@ -42,7 +42,7 @@ public class PDFToString {
 		PDFToString PDFToString = new PDFToString();
 	//	
   //PDFToString.printDoc();
-  PDFToString.itau2();
+  PDFToString.itau();
  }
 	
 	
@@ -63,13 +63,13 @@ public class PDFToString {
 	}
 	
 	private void itau() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/Comprovantes_Itaú_Moto_Bombas_03.2020_.pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/Comprovantes_Itaú_Moto_Bombas_01.2020_.pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		System.out.println(pages.size());
-		String comprovante = stripper.getText(pages.get(102));
+		String comprovante = stripper.getText(pages.get(51));
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("1575");
 		agencia.setAgeNumero("12906");

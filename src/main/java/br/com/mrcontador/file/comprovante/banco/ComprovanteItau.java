@@ -291,7 +291,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 				String _line = StringUtils.normalizeSpace(lines[i + 1]);
 				String[] values = _line.split("\\s");
 				String value = values[values.length - 1].trim();
-				if(MrContadorUtil.onlyNumbers(value).length() == 8) {
+				if(MrContadorUtil.onlyNumbers(value).length() > 3) {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(value);
@@ -301,7 +301,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 					_line = StringUtils.normalizeSpace(lines[i + 2]);
 					values = _line.split("\\s");
 					value = values[values.length - 1].trim();
-					if(MrContadorUtil.onlyNumbers(value).length() == 8) {
+					if(MrContadorUtil.onlyNumbers(value).length() > 3) {
 						DiffValue diffValue = new DiffValue();
 						diffValue.setOldValue(VALOR_PGTO);
 						diffValue.setNewValue(value);
