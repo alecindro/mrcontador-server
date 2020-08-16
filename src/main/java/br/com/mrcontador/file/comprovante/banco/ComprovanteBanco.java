@@ -140,7 +140,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		comprovante.setAgenciabancaria(agenciabancaria);
 		comprovante.setParceiro(parceiro);
 		validateAgencia(agencia, conta, agenciabancaria);
-		validateParceiro(cnpj_pagador, parceiro, diffValues);
+		//validateParceiro(cnpj_pagador, parceiro, diffValues);
 		System.out.println(count + " - " + comprovante.toString());
 		count = count + 1;
 		return comprovante;

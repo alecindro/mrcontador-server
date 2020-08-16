@@ -40,14 +40,14 @@ public class PDFToString {
 		document.close();*/
 		PDFToString PDFToString = new PDFToString();
 	//	
- // PDFToString.printDoc();
-  PDFToString.testBB();
+  //PDFToString.printDoc();
+  PDFToString.sicoob();
  }
 	
 	
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/01.2019.pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/sicoob.pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
@@ -119,6 +119,28 @@ public class PDFToString {
 			System.out.println(erro.toString());
 		}
 	}
+	
+	private void sicoob() throws Exception {
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/sicoob.pdf"));
+	 	Agenciabancaria agencia = new Agenciabancaria();
+		agencia.setAgeAgencia("3069-4");
+		agencia.setAgeNumero("97.731-4");
+		agencia.setBanCodigobancario(BancoCodigoBancario.SICOOB.getCodigoBancario());
+		Parceiro parceiro = new Parceiro();
+		parceiro.setParCnpjcpf("18.976.447/0001-66");
+		FileDTO dto = new FileDTO();
+		dto.setInputStream(inputstream);
+		dto.setUsuario(usuario);
+		dto.setParceiro(parceiro);
+		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		List<ComprovanteErro> errors =  p.process(dto, agencia);
+		System.out.println("========== ERROS ==================");
+		for(ComprovanteErro erro : errors) {
+			
+			System.out.println(erro.toString());
+		}
+	}
+	
 	
 	private static final String usuario = "teste";
 	
