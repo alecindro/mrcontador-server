@@ -33,6 +33,7 @@ import br.com.mrcontador.file.extrato.banco.OfxParserBanco;
 import br.com.mrcontador.file.extrato.banco.OfxSantander;
 import br.com.mrcontador.file.extrato.banco.OfxSicob;
 import br.com.mrcontador.file.extrato.banco.OfxSicred;
+import br.com.mrcontador.file.extrato.banco.OfxUniCred;
 import br.com.mrcontador.file.extrato.dto.ListOfxDto;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ExtratoService;
@@ -138,6 +139,9 @@ public class OfxParserDefault{
 		case SICRED:
 			parserBanco = new OfxSicred();
 			break;
+		case UNICRED:
+		   parserBanco = new OfxUniCred();
+		   break;
 		default:
 			throw new MrContadorException("ofx.banknotimplemented",bancoDetails.getBankId());
 		}
