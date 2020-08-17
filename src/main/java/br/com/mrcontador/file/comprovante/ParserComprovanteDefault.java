@@ -74,7 +74,7 @@ public class ParserComprovanteDefault {
 					erros.add(comprovanteErro);
 				}
 			}
-		//	service.saveAll(comprovantes);
+			service.saveAll(comprovantes);
 			log.info("Comprovantes salvos");
 			return erros;
 		} catch (IOException e1) {
