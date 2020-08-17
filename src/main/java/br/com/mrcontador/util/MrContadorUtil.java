@@ -74,6 +74,9 @@ public class MrContadorUtil {
 	}
 	
 	public static boolean compareWithoutDigit(String pattern, String value) {
+		if(pattern == null) {
+			return true;
+		}
 		pattern = org.apache.commons.lang3.StringUtils.deleteWhitespace(pattern);
 		value = org.apache.commons.lang3.StringUtils.deleteWhitespace(value);
 		value = removeZerosFromInital(value.trim());

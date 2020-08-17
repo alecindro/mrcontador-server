@@ -41,13 +41,13 @@ public class PDFToString {
 		PDFToString PDFToString = new PDFToString();
 	//	
   //PDFToString.printDoc();
-  PDFToString.sicoob();
+  PDFToString.unicred();
  }
 	
 	
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/sicoob.pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/unicred.pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
@@ -128,6 +128,26 @@ public class PDFToString {
 		agencia.setBanCodigobancario(BancoCodigoBancario.SICOOB.getCodigoBancario());
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("18.976.447/0001-66");
+		FileDTO dto = new FileDTO();
+		dto.setInputStream(inputstream);
+		dto.setUsuario(usuario);
+		dto.setParceiro(parceiro);
+		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		List<ComprovanteErro> errors =  p.process(dto, agencia);
+		System.out.println("========== ERROS ==================");
+		for(ComprovanteErro erro : errors) {
+			
+			System.out.println(erro.toString());
+		}
+	}
+	private void unicred() throws Exception {
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/unicred.pdf"));
+	 	Agenciabancaria agencia = new Agenciabancaria();
+		//agencia.setAgeAgencia("3069-4");
+		agencia.setAgeNumero("1022695");
+		agencia.setBanCodigobancario(BancoCodigoBancario.UNICRED.getCodigoBancario());
+		Parceiro parceiro = new Parceiro();
+		parceiro.setParCnpjcpf("15.584.243/0001-91");
 		FileDTO dto = new FileDTO();
 		dto.setInputStream(inputstream);
 		dto.setUsuario(usuario);
