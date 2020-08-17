@@ -41,7 +41,7 @@ public class PDFToString {
 		PDFToString PDFToString = new PDFToString();
 	//	
   //PDFToString.printDoc();
-  PDFToString.unicred();
+  PDFToString.credcrea();
  }
 	
 	
@@ -148,6 +148,27 @@ public class PDFToString {
 		agencia.setBanCodigobancario(BancoCodigoBancario.UNICRED.getCodigoBancario());
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("15.584.243/0001-91");
+		FileDTO dto = new FileDTO();
+		dto.setInputStream(inputstream);
+		dto.setUsuario(usuario);
+		dto.setParceiro(parceiro);
+		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		List<ComprovanteErro> errors =  p.process(dto, agencia);
+		System.out.println("========== ERROS ==================");
+		for(ComprovanteErro erro : errors) {
+			
+			System.out.println(erro.toString());
+		}
+	}
+	
+	private void credcrea() throws Exception {
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/credcrea.pdf"));
+	 	Agenciabancaria agencia = new Agenciabancaria();
+		agencia.setAgeAgencia("106");
+		agencia.setAgeNumero("66540");
+		agencia.setBanCodigobancario(BancoCodigoBancario.CREDCREA.getCodigoBancario());
+		Parceiro parceiro = new Parceiro();
+		parceiro.setParCnpjcpf("004.516.599-88");
 		FileDTO dto = new FileDTO();
 		dto.setInputStream(inputstream);
 		dto.setUsuario(usuario);
