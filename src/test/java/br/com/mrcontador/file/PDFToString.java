@@ -41,19 +41,38 @@ public class PDFToString {
 		PDFToString PDFToString = new PDFToString();
 	//	
   //PDFToString.printDoc();
-  PDFToString.credcrea();
+  PDFToString.caixa();
+  
  }
 	
-	
+	private void caixa() throws Exception {
+		Agenciabancaria agencia = new Agenciabancaria();
+		agencia.setAgeAgencia("1011");
+		agencia.setAgeNumero("842-4");
+		Parceiro parceiro = new Parceiro();
+		parceiro.setParCnpjcpf("09.165.847/0001-09");		
+		agencia.setBanCodigobancario(BancoCodigoBancario.CAIXA.getCodigoBancario());
+		FileDTO dto = new FileDTO();
+		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa/Aciplas - ND-33470-1 - 06.05.2020.pdf"));
+		dto.setUsuario(usuario);
+		dto.setParceiro(parceiro);
+		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		List<ComprovanteErro> errors =  p.process(dto, agencia);
+		System.out.println("========== ERROS ==================");
+		for(ComprovanteErro erro : errors) {
+			
+			System.out.println(erro.toString());
+		}
+	}
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/unicred.pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa/Aciplas - ND-33470-1 - 06.05.2020.pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		System.out.println(pages.size());
-		String comprovante = stripper.getText(pages.get(1));
+		String comprovante = stripper.getText(pages.get(0));
 		String[] _lines = comprovante.split("\\r?\\n");
 		System.out.println(comprovante);
 		System.out.println("===== "+_lines.length+" =======");

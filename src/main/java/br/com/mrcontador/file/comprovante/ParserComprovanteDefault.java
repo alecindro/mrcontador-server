@@ -22,6 +22,7 @@ import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBB;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteCaixa;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteCredCrea;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
@@ -99,7 +100,7 @@ public class ParserComprovanteDefault {
 		case BRADESCO:
 			return new ComprovanteBradesco();
 		case CAIXA:
-			return null;
+			return new ComprovanteCaixa();
 		case CREDCREA:
 			return new ComprovanteCredCrea();
 		case ITAU:
@@ -124,6 +125,7 @@ public class ParserComprovanteDefault {
 		List<String> comprovantes = new ArrayList<String>();
 		for (PDDocument page : pages) {
 			comprovantes.add(stripper.getText(page));
+			page.close();
 		}
 		document.close();
 		return comprovantes;
