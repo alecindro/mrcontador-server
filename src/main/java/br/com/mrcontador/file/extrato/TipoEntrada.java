@@ -6,6 +6,7 @@ public enum TipoEntrada {
 	DEBIT,
 	OTHER,
 	CHECK,
-	DEP
+	DEP,
+	XFER
 
 }
