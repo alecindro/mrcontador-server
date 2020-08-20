@@ -15,16 +15,18 @@ import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
 
-public class TesteBradescoComprovante {
+public class TesteItauComprovante {
 	
 	private static final String usuario = "teste";
 	
 	public static void main(String[] args) throws Exception {
-		TesteBradescoComprovante teste = new TesteBradescoComprovante();
-		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/COMPROVANTES DE PAGAMENTO.PDF");
+		TesteItauComprovante teste = new TesteItauComprovante();
+		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/WArquivo00188.pdf");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {
@@ -47,13 +49,13 @@ public class TesteBradescoComprovante {
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("7238");
-		agencia.setAgeNumero("0022188-0");
+		agencia.setAgeAgencia("1575");
+		agencia.setAgeNumero("12906");
 		Parceiro parceiro = new Parceiro();
-		parceiro.setParCnpjcpf("018.158.321/0001-84");		
-		agencia.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
-		String comprovante = stripper.getText(pages.get(1));
-		ComprovanteBradesco cb = new ComprovanteBradesco();
+		parceiro.setParCnpjcpf("08.892.611/0001-01");		
+		agencia.setBanCodigobancario(BancoCodigoBancario.ITAU.getCodigoBancario());
+		String comprovante = stripper.getText(pages.get(147));
+		ComprovanteItau cb = new ComprovanteItau();
 		cb.parse(comprovante, agencia, parceiro);
 		
 		document.close();
@@ -61,11 +63,11 @@ public class TesteBradescoComprovante {
 	
 	private void caixa(String file) throws Exception {
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("7238");
-		agencia.setAgeNumero("0022188-0");
+		agencia.setAgeAgencia("1575");
+		agencia.setAgeNumero("12906");
 		Parceiro parceiro = new Parceiro();
-		parceiro.setParCnpjcpf("018.158.321/0001-84");		
-		agencia.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
+		parceiro.setParCnpjcpf("08.892.611/0001-01");		
+		agencia.setBanCodigobancario(BancoCodigoBancario.ITAU.getCodigoBancario());
 		FileDTO dto = new FileDTO();
 		dto.setInputStream(load(file));
 		dto.setUsuario(usuario);

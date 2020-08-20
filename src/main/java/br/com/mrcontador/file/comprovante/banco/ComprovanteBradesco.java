@@ -12,6 +12,7 @@ import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
+import liquibase.pro.packaged.cn;
 
 public class ComprovanteBradesco extends ComprovanteBanco {
 
@@ -172,21 +173,28 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Razao Social")) {
-				String lineA = StringUtils.substringAfter(line, "Razao Social").trim();
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(FORNECEDOR);
-				diffValue.setNewValue(lineA);
-				diffValue.setLine(i);
-				list.add(diffValue);
-			}
-			if (line.contains("CPF/CNPJ Beneficiário:")) {
-				String lineA = StringUtils.substringAfter(line, "CPF/CNPJ Beneficiário:").trim();
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(CNPJ_BEN);
-				diffValue.setNewValue(lineA);
-				diffValue.setLine(i);
-				list.add(diffValue);
+			if (line.contains("Razao Social Sacador")) {
+				String lineA = StringUtils.substringAfter(line, "Razao Social Sacador").trim();
+				String lineB = StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i+2]), "CPF/CNPJ Sacador").trim();
+				int _cnpj = i+2;
+				int _razao = i;
+				DiffValue sacador = new DiffValue();
+				DiffValue cnpj = new DiffValue();
+				
+				if(lineA.equalsIgnoreCase("Não informado")) {
+					lineA = StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i-5]), "Razao Social").trim();
+					_razao = i-5;
+					lineB = StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i-1]), "CPF/CNPJ Beneficiário:").trim();
+					_cnpj = i-1;
+				}
+				cnpj.setOldValue(CNPJ_BEN);
+				cnpj.setNewValue(lineB);
+				cnpj.setLine(_cnpj);
+				list.add(cnpj);
+				sacador.setOldValue(FORNECEDOR);
+				sacador.setNewValue(lineA);
+				sacador.setLine(_razao);
+				list.add(sacador);
 			}
 			if (line.contains("Data de débito:")) {
 				String lineA = StringUtils.substringAfter(line, "Data de débito:").trim();
