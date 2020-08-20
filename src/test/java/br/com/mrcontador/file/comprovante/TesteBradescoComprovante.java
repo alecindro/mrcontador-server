@@ -10,20 +10,26 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.pdfbox.multipdf.Splitter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteErro;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
+import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
 
-public class TesteCaixaComprovante {
+public class TesteBradescoComprovante {
 	
 	private static final String usuario = "teste";
 	
 	public static void main(String[] args) throws Exception {
-		TesteCaixaComprovante teste = new TesteCaixaComprovante();
-		//teste.teste1();
-		try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa"))) {
+		TesteBradescoComprovante teste = new TesteBradescoComprovante();
+		teste.teste1();
+		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {
 		        if (Files.isRegularFile(filePath)) {
 		            try {
@@ -34,11 +40,26 @@ public class TesteCaixaComprovante {
 					}
 		        }
 		    });
-		}
+		}*/
 	}
 	
 	private void teste1() throws Exception {
-		caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa3/Nutrifrios Comercial de Alimentos LTDA - ND-1047477-1 - 09.06.2020.pdf");
+		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/comprovantes.pdf"));
+	    PDDocument document = PDDocument.load(inputstream);
+		Splitter splitter = new Splitter();
+		PDFTextStripper stripper = new PdfReaderPreserveSpace();
+		List<PDDocument> pages = splitter.split(document);
+		Agenciabancaria agencia = new Agenciabancaria();
+		agencia.setAgeAgencia("348");
+		agencia.setAgeNumero("17807-1");
+		Parceiro parceiro = new Parceiro();
+		parceiro.setParCnpjcpf("028.733.282/0001-55");		
+		agencia.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
+		String comprovante = stripper.getText(pages.get(5));
+		ComprovanteBradesco cb = new ComprovanteBradesco();
+		cb.parse(comprovante, agencia, parceiro);
+		
+		document.close();
 	}
 	
 	private void caixa(String file) throws Exception {
