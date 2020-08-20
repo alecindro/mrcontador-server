@@ -113,8 +113,8 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(FORNECEDOR)).findFirst();
 		Optional<DiffValue> cnpj_beneficiario = diffValues.stream()
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(CNPJ_BEN)).findFirst();
-		Optional<DiffValue> cnpj_pagador = diffValues.stream()
-				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(CNPJ_PAG)).findFirst();
+		//Optional<DiffValue> cnpj_pagador = diffValues.stream()
+		//		.filter(diffvalue -> diffvalue.getOldValue().trim().equals(CNPJ_PAG)).findFirst();
 		Optional<DiffValue> data_vcto = diffValues.stream()
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(DATA_VCTO)).findFirst();
 		Optional<DiffValue> data_pagto = diffValues.stream()

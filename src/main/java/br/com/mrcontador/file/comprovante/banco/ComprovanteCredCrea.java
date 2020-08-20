@@ -13,19 +13,20 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
 
-public class ComprovanteCredCrea extends ComprovanteBanco{
+public class ComprovanteCredCrea extends ComprovanteBanco {
 
 	@Override
-	public List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException, ComprovanteException {
+	public List<Comprovante> parse(String comprovante, Agenciabancaria agenciabancaria, Parceiro parceiro)
+			throws DiffException, ComprovanteException {
 		String[] _lines = comprovante.split("\\r?\\n");
 		if (_lines == null || _lines.length < 7) {
 			throw new ComprovanteException("Comprovante está sem informação");
 		}
 		String line = StringUtils.normalizeSpace(_lines[1].trim());
-		if(isConvenio(_lines)) {
+		if (isConvenio(_lines)) {
 			return parseConvenio(_lines, agenciabancaria, parceiro);
 		}
-		if(isConvenio2(_lines)) {
+		if (isConvenio2(_lines)) {
 			return parseConvenio2(_lines, agenciabancaria, parceiro);
 		}
 		if (line.equals("COMPROVANTE DE PAGAMENTO")) {
@@ -33,37 +34,37 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 		}
 		throw new ComprovanteException("Comprovante não identificado");
 	}
-	
+
 	private boolean isConvenio(String[] lines) {
 		int i = 0;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
-			if(line.contains("DADOS DO PAGAMENTO")) {
-				if(StringUtils.normalizeSpace(lines[i+1]).contains("Convênio")) {
-					if(StringUtils.normalizeSpace(lines[i+2]).contains("Data Da Aplicação"))
-					return true;
+			if (line.contains("DADOS DO PAGAMENTO")) {
+				if (StringUtils.normalizeSpace(lines[i + 1]).contains("Convênio")) {
+					if (StringUtils.normalizeSpace(lines[i + 2]).contains("Data Da Aplicação"))
+						return true;
 				}
 			}
-			i = i+1;
+			i = i + 1;
 		}
 		return false;
 	}
-	
+
 	private boolean isConvenio2(String[] lines) {
 		int i = 0;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
-			if(line.contains("DADOS DO PAGAMENTO")) {
-				if(StringUtils.normalizeSpace(lines[i+2]).contains("Convênio")) {
-					if(StringUtils.normalizeSpace(lines[i+3]).contains("Data/Hora Transação"))
-					return true;
+			if (line.contains("DADOS DO PAGAMENTO")) {
+				if (StringUtils.normalizeSpace(lines[i + 2]).contains("Convênio")) {
+					if (StringUtils.normalizeSpace(lines[i + 3]).contains("Data/Hora Transação"))
+						return true;
 				}
 			}
-			i = i+1;
+			i = i + 1;
 		}
 		return false;
 	}
-	
+
 	private List<Comprovante> parseComprovPagto(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
@@ -79,7 +80,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 			}
 			if (line.contains("Conta/DV")) {
-				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "Conta/DV").trim(),"-");
+				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "Conta/DV").trim(), "-");
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CONTA);
 				diffValue.setNewValue(value);
@@ -87,7 +88,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 			}
 			if (line.contains("CPF/CNPJ")) {
-				if (StringUtils.normalizeSpace(lines[i-1]).contains("Conta/DV")) {
+				if (StringUtils.normalizeSpace(lines[i - 1]).contains("Conta/DV")) {
 					String value = StringUtils.substringAfter(line, "CPF/CNPJ").trim();
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(CNPJ_PAG);
@@ -97,15 +98,15 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				}
 			}
 			if (line.contains("Beneficiário")) {
-					String value = StringUtils.substringAfter(line, "Beneficiário").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(FORNECEDOR);
-					diffValue.setNewValue(value);
-					diffValue.setLine(i);
-					list.add(diffValue);
+				String value = StringUtils.substringAfter(line, "Beneficiário").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(FORNECEDOR);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
 			}
 			if (line.contains("CPF/CNPJ")) {
-				if (StringUtils.normalizeSpace(lines[i-1]).contains("Beneficiário")) {
+				if (StringUtils.normalizeSpace(lines[i - 1]).contains("Beneficiário")) {
 					String value = StringUtils.substringAfter(line, "CPF/CNPJ").trim();
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(CNPJ_BEN);
@@ -142,13 +143,13 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 
 			}
 			if (line.contains("Valor")) {
-				if (StringUtils.normalizeSpace(lines[i-1]).contains("Data Do Pagamento")) {
-				String value = StringUtils.substringAfter(line, "Valor").trim();
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(VALOR_PGTO);
-				diffValue.setNewValue(value);
-				diffValue.setLine(i);
-				list.add(diffValue);
+				if (StringUtils.normalizeSpace(lines[i - 1]).contains("Data Do Pagamento")) {
+					String value = StringUtils.substringAfter(line, "Valor").trim();
+					DiffValue diffValue = new DiffValue();
+					diffValue.setOldValue(VALOR_PGTO);
+					diffValue.setNewValue(value);
+					diffValue.setLine(i);
+					list.add(diffValue);
 				}
 			}
 			if (line.contains("Protocolo")) {
@@ -170,7 +171,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
 		return comprovantes;
 	}
-	
+
 	private List<Comprovante> parseConvenio(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
@@ -186,7 +187,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 			}
 			if (line.contains("Conta/DV")) {
-				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "Conta/DV").trim(),"-");
+				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "Conta/DV").trim(), "-");
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CONTA);
 				diffValue.setNewValue(value);
@@ -194,28 +195,28 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 			}
 			if (line.contains("Convênio")) {
-					String value = StringUtils.substringAfter(line, "Convênio").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(FORNECEDOR);
-					diffValue.setNewValue(value);
-					diffValue.setLine(i);
-					list.add(diffValue);
-				}
+				String value = StringUtils.substringAfter(line, "Convênio").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(FORNECEDOR);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
 			if (line.contains("Data Da Aplicação")) {
-					String value = StringUtils.substringAfter(line, "Data Da Aplicação").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(DATA_PGTO);
-					diffValue.setNewValue(value.split("\\s")[0]);
-					diffValue.setLine(i);
-					list.add(diffValue);
+				String value = StringUtils.substringAfter(line, "Data Da Aplicação").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(value.split("\\s")[0]);
+				diffValue.setLine(i);
+				list.add(diffValue);
 			}
 			if (line.contains("Identificação da Fatura")) {
-					String value = StringUtils.substringAfter(line, "Identificação da Fatura").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(DOCUMENTO);
-					diffValue.setNewValue(value);
-					diffValue.setLine(i);
-					list.add(diffValue);
+				String value = StringUtils.substringAfter(line, "Identificação da Fatura").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
 			}
 			if (line.contains("Valor")) {
 				String value = StringUtils.substringAfter(line, "Valor").trim();
@@ -226,7 +227,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 
 			}
-			
+
 			i = i + 1;
 		}
 		DiffValue diffValue = new DiffValue();
@@ -238,7 +239,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
 		return comprovantes;
 	}
-	
+
 	private List<Comprovante> parseConvenio2(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
@@ -254,7 +255,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 			}
 			if (line.contains("Conta/DV")) {
-				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "Conta/DV").trim(),"-");
+				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "Conta/DV").trim(), "-");
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CONTA);
 				diffValue.setNewValue(value);
@@ -262,28 +263,28 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 			}
 			if (line.contains("Identificação")) {
-					String value = StringUtils.substringAfter(line, "Identificação").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(FORNECEDOR);
-					diffValue.setNewValue(value);
-					diffValue.setLine(i);
-					list.add(diffValue);
-				}
+				String value = StringUtils.substringAfter(line, "Identificação").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(FORNECEDOR);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
 			if (line.contains("Data do Pagamento")) {
-					String value = StringUtils.substringAfter(line, "Data do Pagamento").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(DATA_PGTO);
-					diffValue.setNewValue(value.split("\\s")[0]);
-					diffValue.setLine(i);
-					list.add(diffValue);
+				String value = StringUtils.substringAfter(line, "Data do Pagamento").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(value.split("\\s")[0]);
+				diffValue.setLine(i);
+				list.add(diffValue);
 			}
 			if (line.contains("Sequência de Autenticação")) {
-					String value = StringUtils.substringAfter(line, "Sequência de Autenticação").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(DOCUMENTO);
-					diffValue.setNewValue(value);
-					diffValue.setLine(i);
-					list.add(diffValue);
+				String value = StringUtils.substringAfter(line, "Sequência de Autenticação").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
 			}
 			if (line.contains("Valor")) {
 				String value = StringUtils.substringAfter(line, "Valor").trim();
@@ -294,7 +295,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 				list.add(diffValue);
 
 			}
-			
+
 			i = i + 1;
 		}
 		DiffValue diffValue = new DiffValue();
@@ -306,34 +307,5 @@ public class ComprovanteCredCrea extends ComprovanteBanco{
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
 		return comprovantes;
 	}
-	
-	
-	
-	private static final String pattern = "                                                                                                                                               Emitido     em   17/05/2020       - 19:58:34\n" + 
-			"                                                                       COMPROVANTE                 DE   PAGAMENTO\n" + 
-			"        DADOS      DO    PAGADOR\n" + 
-			"        Banco                                                                                                                                                                             $3\n" + 
-			"        Agência                                                                                                                                                                         $ag\n" + 
-			"        Conta/DV                                                                                                   $conta     -$1\n" + 
-			"        CPF/CNPJ                                                                                                                                                        $cnpj\n" + 
-			"        DADOS      DO    BENEFICIÁRIO\n" + 
-			"        Beneficiário                                                                                                                                                               $2\n" + 
-			"        CPF/CNPJ                                                                                                                                                  $cnpj_ben\n" + 
-			"        Banco                                                                                                                                                  ITAU    UNIBANCO         S.A.\n" + 
-			"        DADOS      DO    PAGAMENTO\n" + 
-			"        Data/Hora       Transação                                                                                                                                16/05/2020       17:29:32\n" + 
-			"        Data   Do   Vencimento                                                                                                                                               $data_venc\n" + 
-			"        Valor   Título                                                                                                                                                              $valor_doc\n" + 
-			"        Encargos                                                                                                                                                                        0,00\n" + 
-			"        Descontos                                                                                                                                                                       0,00\n" + 
-			"        Sequência      De   Autenticação                                                                                                                                                546\n" + 
-			"        Data   Do   Pagamento                                                                                                                                                $pagto\n" + 
-			"        Valor                                                                                                                                                                       $valor_pag\n" + 
-			"        Linha    Digitável                                                                             34191.75512        46091.662521         50451.630003        8  00000000000000\n" + 
-			"        Protocolo                                                                                                                              $doc\n" + 
-			"                                                   SAC    0800   647   2200    - Atendimento        todos    os  dias   das   06:00   às  22:00\n" + 
-			"                                              OUVIDORIA        0800    644   1100   - Atendimento         todos    os  dias   das  08:00    às  17:00";
-
-
 
 }

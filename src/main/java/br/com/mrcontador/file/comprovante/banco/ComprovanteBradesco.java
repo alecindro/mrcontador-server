@@ -12,7 +12,6 @@ import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
-import liquibase.pro.packaged.cn;
 
 public class ComprovanteBradesco extends ComprovanteBanco {
 
