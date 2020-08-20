@@ -26,7 +26,7 @@ public class TesteItauComprovante {
 	
 	public static void main(String[] args) throws Exception {
 		TesteItauComprovante teste = new TesteItauComprovante();
-		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/WArquivo00188.pdf");
+		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/itau.pdf");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {

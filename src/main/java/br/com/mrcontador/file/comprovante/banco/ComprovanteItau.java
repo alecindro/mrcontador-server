@@ -655,7 +655,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 			}
 			if (line.contains("Operação efetuada em")) {
 				String lineA = StringUtils
-						.substringBefore(StringUtils.substringAfter(line, "Operação efetuada em").trim(), "\s").trim();
+						.substringBefore(StringUtils.substringAfter(line, "Operação efetuada em").trim(), StringUtils.SPACE).trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DATA_PGTO);
 				diffValue.setNewValue(lineA);
