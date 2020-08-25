@@ -40,6 +40,7 @@ public class TestOFXSicred {
 		File initialFile = new File(folder);	
 		FileDTO dto = new FileDTO();
 		Agenciabancaria bancaria = new Agenciabancaria();
+		bancaria.setAgeAgencia("226000");
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
 			dto.setContentType("text/plain");
