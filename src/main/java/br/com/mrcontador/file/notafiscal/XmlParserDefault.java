@@ -99,11 +99,11 @@ public class XmlParserDefault implements FileParser {
 	    	if(parceiro.isPresent()) {
 	    		return parceiro.get();
 	    	}
-	    	throw new MrContadorException("error.parceiro.not.found", cnpj);
+	    	throw new MrContadorException("parceiro.notfound", cnpj);
   }
 	 private void validateParceiro(Parceiro parameter, Parceiro nota) {
 		 if(!parameter.getId().equals(nota.getId())) {
-			 throw new MrContadorException("parceiro.notfromnota", nota.getParCnpjcpf());
+			 throw new MrContadorException("nota.parceiro.notfromnota", nota.getParCnpjcpf());
 		 }
 	 }
 

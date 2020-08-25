@@ -18,6 +18,8 @@ import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 
+import br.com.mrcontador.erros.MrContadorException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
@@ -111,6 +113,17 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     @ExceptionHandler
     public ResponseEntity<Problem> handleBadRequestAlertException(BadRequestAlertException ex, NativeWebRequest request) {
         return create(ex, request, HeaderUtil.createFailureAlert(applicationName, true, ex.getEntityName(), ex.getErrorKey(), ex.getMessage()));
+    }
+    
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleMrContadorRequestAlertException(MrContadorException ex, NativeWebRequest request) {
+    	Problem problem =  Problem.builder()
+          .withStatus(Status.BAD_REQUEST)
+          .withTitle("")
+          .with("message","error."+ex.getErrorKey())
+          .with("params", ex.getMessage())
+          .build();
+        return create(ex, problem,request);
     }
 
     @ExceptionHandler

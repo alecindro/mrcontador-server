@@ -79,7 +79,7 @@ public class ParserComprovanteDefault {
 			log.info("Comprovantes salvos");
 			return erros;
 		} catch (IOException e1) {
-			throw new MrContadorException("error.parsecomprovante", e1);
+			throw new MrContadorException("parsecomprovante.error", e1);
 		} finally {
 			if (first != null) {
 				try {

@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.zalando.problem.Problem;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
@@ -23,7 +25,10 @@ import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ParceiroService;
+import br.com.mrcontador.util.MessageUtil;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
+import org.zalando.problem.Status;
 
 @RestController
 @RequestMapping("/api")
@@ -113,7 +118,16 @@ public class UploadFileResource {
 	public ResponseEntity<Void> uploadNS(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro) throws Exception {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
-		throw new MrContadorException("error.notimplemented");
+		throw new MrContadorException("error.notimplemented","parametro");
+	}
+	
+	@GetMapping("/upload/teste")
+	public ResponseEntity<Void> uploadTeste() throws Exception {
+		log.info("testando erro");
+		//BadRequestAlertException
+        throw new MrContadorException("error.notimplemented","parametro");
+		
+		
 	}
 
 }
