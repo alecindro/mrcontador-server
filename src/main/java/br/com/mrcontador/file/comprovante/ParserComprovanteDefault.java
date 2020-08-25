@@ -27,6 +27,7 @@ import br.com.mrcontador.file.comprovante.banco.ComprovanteCredCrea;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSicoob;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteSicredi;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteUnicred;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.ComprovanteService;
@@ -111,6 +112,8 @@ public class ParserComprovanteDefault {
 			return new ComprovanteSicoob();
 		case UNICRED:
 			return new ComprovanteUnicred();
+		case SICRED:
+			return new ComprovanteSicredi();	
 		default:
 			throw new MrContadorException("parsercomprovante.notfound", codigoBancario);
 

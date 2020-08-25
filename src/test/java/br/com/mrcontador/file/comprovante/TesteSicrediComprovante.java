@@ -46,7 +46,7 @@ public class TesteSicrediComprovante {
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("0226");
+		agencia.setAgeAgencia("226000");
 		agencia.setAgeNumero("03347-3");
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("36.701.160/0001-05");		
@@ -61,7 +61,7 @@ public class TesteSicrediComprovante {
 	
 	private void teste2(String file) throws Exception {
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("226");
+		agencia.setAgeAgencia("226000");
 		agencia.setAgeNumero("3347-3");
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("36.701.160/0001-05");		

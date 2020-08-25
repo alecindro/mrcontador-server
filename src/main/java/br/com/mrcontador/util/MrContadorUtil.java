@@ -69,6 +69,17 @@ public class MrContadorUtil {
 		return result;
 	}
 	
+	public static String removeZerosFromEnd(String value) {
+		String result = value;
+		while (endsWithsZero(result)) {
+			result = result.substring(0, result.length()-1);
+		}
+		return result;
+	}
+	private static boolean endsWithsZero(String value) {
+		return value.endsWith("0");
+	}
+	
 	private static boolean startWithsZero(String value) {
 		return value.startsWith("0");
 	}
