@@ -30,13 +30,13 @@ public class TestOFXBB {
 
 	@Test
 	public void test() {
-	 testSicoob();
-	// testCaixa();
+	 testBB();
+	
 	}
 	
-	public void testSicoob() {
+	public void testBB() {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "/home/alecindro/Documents/drcontabil/docs/sicoob.ofx";
+		String folder = "/home/alecindro/Documents/drcontabil/docs/ofx/072020.ofx";
 		File initialFile = new File(folder);	
 		FileDTO dto = new FileDTO();
 		Agenciabancaria bancaria = new Agenciabancaria();
@@ -51,6 +51,7 @@ public class TestOFXBB {
 			Parceiro parceiro = new Parceiro();
 			parceiro.setId(1L);
 			dto.setParceiro(parceiro);
+			bancaria.setParceiro(parceiro);
 			ofxParserDefault.process(dto,bancaria);
 	    }catch(Exception e) {
 	    	e.printStackTrace();
