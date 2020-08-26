@@ -1,6 +1,5 @@
 package br.com.mrcontador.file.comprovante;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +17,8 @@ import org.springframework.stereotype.Service;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Comprovante;
-import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBB;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteCaixa;
@@ -32,6 +31,7 @@ import br.com.mrcontador.file.comprovante.banco.ComprovanteUnicred;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
 
 @Service
@@ -44,51 +44,49 @@ public class ParserComprovanteDefault {
 
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
-	public List<ComprovanteErro> process(FileDTO fileDTO, Agenciabancaria agencia) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		InputStream first = null;
-		InputStream second = null;
+	public List<FileS3> process(FileDTO fileDTO, Agenciabancaria agencia) {
+		
 		try {
-			fileDTO.getInputStream().transferTo(baos);
-
-			first = new ByteArrayInputStream(baos.toByteArray());
-			second = new ByteArrayInputStream(baos.toByteArray());
-			fileDTO.setInputStream(second);
-			List<String> textComprovantes = parseComprovante(first);
+			PDFTextStripper stripper = new PdfReaderPreserveSpace();
+			List<PDDocument> textComprovantes = parseComprovante(fileDTO.getInputStream(),stripper);
 			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
-			List<Comprovante> comprovantes = new ArrayList<>();
-			List<ComprovanteErro> erros = new ArrayList<ComprovanteErro>();
+			List<FileS3> files = new ArrayList<>();
+			List<FileS3> erros = new ArrayList<FileS3>();
 			int page = 0;
-			for (String comprovante : textComprovantes) {
+			for (PDDocument pddComprovante : textComprovantes) {
+				page = page +1;
+				ByteArrayOutputStream output = new ByteArrayOutputStream();
+				pddComprovante.save(output);
+				String comprovante = stripper.getText(pddComprovante);
 				try {
-					page = page + 1;
 					List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
 					if (_comprovantes != null && !_comprovantes.isEmpty()) {
-						comprovantes.addAll(_comprovantes);
+						service.saveAll(_comprovantes);
+						FileS3 fileS3 = new FileS3();
+						fileS3.setComprovantes(_comprovantes);
+						fileS3.setFileDTO(fileDTO);
+						fileS3.setOutputStream(output);
+						fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
+						fileS3.setPage(page);
+						files.add(fileS3);
 					}
 				} catch (Exception e) {
-					ComprovanteErro comprovanteErro = new ComprovanteErro();
-					comprovanteErro.setAgencia(agencia);
-					comprovanteErro.setComprovante(comprovante);
-					comprovanteErro.setFileDTO(fileDTO);
-					comprovanteErro.setPage(page);
-					comprovanteErro.setErro(e.getMessage());
-					erros.add(comprovanteErro);
+					Comprovante comprovanteErro = new Comprovante();
+					comprovanteErro.setAgenciabancaria(agencia);
+					FileS3 fileS3 = new FileS3();
+					fileS3.getComprovantes().add(comprovanteErro);
+					fileS3.setFileDTO(fileDTO);
+					fileS3.setOutputStream(output);
+					fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
+					fileS3.setPage(page);
+					erros.add(fileS3);
 				}
 			}
-			service.saveAll(comprovantes);
+			s3Service.uploadComporvante(files);
 			log.info("Comprovantes salvos");
 			return erros;
 		} catch (IOException e1) {
 			throw new MrContadorException("parsecomprovante.error", e1);
-		} finally {
-			if (first != null) {
-				try {
-					first.close();
-				} catch (IOException e) {
-					log.info("Erro ao fechar inputstream", e);
-				}
-			}
 		}
 
 	}
@@ -120,18 +118,11 @@ public class ParserComprovanteDefault {
 		}
 	}
 
-	private List<String> parseComprovante(InputStream stream) throws IOException {
+	private List<PDDocument> parseComprovante(InputStream stream, PDFTextStripper stripper) throws IOException {
 		PDDocument document = PDDocument.load(stream);
 		Splitter splitter = new Splitter();
-		PDFTextStripper stripper = new PdfReaderPreserveSpace();
-		List<PDDocument> pages = splitter.split(document);
-		List<String> comprovantes = new ArrayList<String>();
-		for (PDDocument page : pages) {
-			comprovantes.add(stripper.getText(page));
-			page.close();
-		}
-		document.close();
-		return comprovantes;
+		return splitter.split(document);
+		
 	}
 
 }

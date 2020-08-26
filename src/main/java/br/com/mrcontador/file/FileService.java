@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.extrato.OfxParserDefault;
@@ -21,6 +20,7 @@ import br.com.mrcontador.file.planoconta.PdfParserPlanoConta;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
 
 @Service
@@ -103,7 +103,7 @@ public class FileService {
 		ofxParserDefault.process(fileDTO, agenciabancaria.get());
 	}
 	
-	public List<ComprovanteErro> processComprovante(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
+	public List<FileS3> processComprovante(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
 		if(parceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
 		}

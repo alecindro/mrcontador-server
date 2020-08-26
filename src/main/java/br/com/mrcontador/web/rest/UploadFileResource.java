@@ -14,21 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.zalando.problem.Problem;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ParceiroService;
-import br.com.mrcontador.util.MessageUtil;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import br.com.mrcontador.service.dto.FileS3;
 import io.github.jhipster.web.util.HeaderUtil;
-import org.zalando.problem.Status;
 
 @RestController
 @RequestMapping("/api")
@@ -86,7 +82,7 @@ public class UploadFileResource {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
-		List<ComprovanteErro> errors = fileService.processComprovante(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
+		List<FileS3> errors = fileService.processComprovante(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
 		if(!errors.isEmpty()) {
 			throw new MrContadorException("alguns arquivos não foram processados");
 		}

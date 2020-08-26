@@ -2,6 +2,8 @@ package br.com.mrcontador.service.file;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +15,21 @@ import org.springframework.stereotype.Service;
 import br.com.mrcontador.config.S3Properties;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.ArquivoErro;
+import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.service.ArquivoErroService;
 import br.com.mrcontador.service.ArquivoService;
+import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.mapper.ArquivoErroMapper;
 import br.com.mrcontador.service.mapper.ArquivoMapper;
 import br.com.mrcontador.util.MrContadorUtil;
 import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -34,6 +41,10 @@ public class S3Service {
 
 	@Autowired
 	private S3Client s3Client;
+	@Autowired
+	private S3AsyncClient s3AsyncClient;
+	@Autowired
+	private ComprovanteService comprovanteService;
 	@Autowired
 	private S3Properties properties;
 	@Autowired 
@@ -97,6 +108,16 @@ public class S3Service {
 		upload(properties.getComprovanteFolder(), dto);
 		return saveArquivo(dto);
 	}
+	
+	public void uploadComporvante(List<FileS3> files) {
+		for(FileS3 fileS3 : files) {
+			String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(), String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getComprovanteFolder());
+			for(Comprovante comprovante : fileS3.getComprovantes()) {
+			String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),fileS3.getFileDTO().getParceiro().getId(),fileS3.getFileDTO().getContentType(),fileS3.getPage());
+			uploadAsyncStream(filename, dir, fileS3, comprovante);
+			}
+		}
+	}
 
 	public Arquivo uploadPlanoConta(FileDTO dto) {
 		dto.setTipoDocumento(TipoDocumento.PLANO_DE_CONTA);
@@ -143,6 +164,34 @@ public class S3Service {
 		}catch(Exception e) {
 			throw new MrContadorException("upload.aws.error",e);
 		}
+	}
+	
+	private void uploadAsyncStream(String filename, String dir, FileS3 fileS3, Comprovante comprovante) {
+		CompletableFuture<PutObjectResponse> future = s3AsyncClient.putObject(
+                PutObjectRequest.builder()
+                                .bucket(properties.getBucketName())
+                                .key(dir + "/" + filename)
+                                .build(),
+                AsyncRequestBody.fromBytes(fileS3.getOutputStream().toByteArray())
+        );
+        future.whenComplete((resp, err) -> {
+                if (resp != null) {
+                	fileS3.getFileDTO().setName(filename);
+                	fileS3.getFileDTO().setBucket(properties.getBucketName());
+                	fileS3.getFileDTO().setS3Dir(dir);
+                	fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+                	fileS3.getFileDTO().seteTag(resp.eTag());
+                	fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+                	Arquivo arquivo = saveArquivo(fileS3.getFileDTO());
+                	comprovante.setArquivo(arquivo);
+                	comprovanteService.save(comprovante);
+                } else {
+                   log.error(err.getMessage(),err);
+                }
+           
+        });
+
+        future.join();
 	}
 
 	public byte[] downloadByteArray(String s3Url) {
