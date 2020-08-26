@@ -17,9 +17,8 @@ import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.erros.ComprovanteErro;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.dto.FileS3;
 
 @SpringBootTest(classes = MrcontadorServerApp.class)
 @ActiveProfiles("dev")
@@ -102,8 +101,8 @@ public class TestComprovante {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<ComprovanteErro> errors =  p.process(dto, agencia);
-		for(ComprovanteErro erro : errors) {
+		List<FileS3> errors =  p.process(dto, agencia);
+		for(FileS3 erro : errors) {
 			System.out.println(erro.toString());
 		}
 		

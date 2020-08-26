@@ -13,10 +13,10 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.erros.ComprovanteErro;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.dto.FileS3;
 
 public class TesteBBComprovante {
 	
@@ -71,10 +71,10 @@ public class TesteBBComprovante {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<ComprovanteErro> errors =  p.process(dto, agencia);
+		List<FileS3> errors =  p.process(dto, agencia);
 		System.out.println("========== ERROS ==================");
 		System.out.println("========== "+ file + " ==================");
-		for(ComprovanteErro erro : errors) {			
+		for(FileS3 erro : errors) {			
 			System.out.println(erro.toString());
 		}
 	}

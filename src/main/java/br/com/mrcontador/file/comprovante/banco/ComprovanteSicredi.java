@@ -88,8 +88,8 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 					list.add(diffValue);
 				
 			}
-			if (line.contains("Nome do Pagador:")) {
-					String value = StringUtils.substringAfter(line, "Nome do Pagador:").trim();
+			if (line.contains("Razão Social do Beneficiário:")) {
+					String value = StringUtils.substringAfter(line, "Razão Social do Beneficiário:").trim();
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(FORNECEDOR);
 					diffValue.setNewValue(value);
@@ -191,8 +191,8 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 					list.add(diffValue);
 				
 			}
-			if (line.contains("Associado:")) {
-					String value = StringUtils.substringAfter(line, "Associado:").trim();
+			if (line.contains("Favorecido:")) {
+					String value = StringUtils.substringAfter(line, "Favorecido:").trim();
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(FORNECEDOR);
 					diffValue.setNewValue(value);
@@ -261,11 +261,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("Associado:")) {
 					String value = StringUtils.substringAfter(line, "Associado:").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(FORNECEDOR);
-					diffValue.setNewValue(value);
-					diffValue.setLine(i);
-					list.add(diffValue);
+					
 			}
 			if (line.contains("Data do Pagamento:")) {
 				String value = StringUtils.substringAfter(line, "Data do Pagamento:").trim();
@@ -276,8 +272,8 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 				list.add(diffValue);
 
 			}
-			if (line.contains("11 - Valor Total (R$):")) {
-				String value = StringUtils.substringAfter(line, "11 - Valor Total (R$):").trim();
+			if (line.contains("Valor Total (R$):")) {
+				String value = StringUtils.substringAfter(line, "Valor Total (R$):").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(value);
@@ -300,6 +296,11 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(FORNECEDOR);
+				diffValue2.setNewValue(value);
+				diffValue2.setLine(i);
+				list.add(diffValue2);
 			}
 			i = i + 1;
 		}
