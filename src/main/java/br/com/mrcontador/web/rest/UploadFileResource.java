@@ -82,6 +82,7 @@ public class UploadFileResource {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
+		try {
 		List<FileS3> errors = fileService.processComprovante(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
 		if(!errors.isEmpty()) {
 			throw new MrContadorException("alguns arquivos não foram processados");
@@ -90,6 +91,9 @@ public class UploadFileResource {
 				.created(new URI("/api/upload/comprovante/")).headers(HeaderUtil
 						.createEntityCreationAlert(applicationName, true, "uploadComprovante", file.getName()))
 				.build();
+		}catch(org.springframework.dao.DataIntegrityViolationException e) {
+			throw new MrContadorException("nfe.imported");
+		}
 	}
 
 	@PostMapping("/upload/nf")

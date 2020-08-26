@@ -24,6 +24,9 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 		if (_lines == null || _lines.length < 7) {
 			throw new ComprovanteException("Comprovante está sem informação");
 		}
+		if(isNotParse(_lines)) {
+			return null;
+		}
 		String line = StringUtils.normalizeSpace(_lines[3].trim());
 		if (line.equals("Boletos Eletrônicos")) {
 			return parseTitulo(_lines, agenciabancaria, parceiro,"Boletos Eletrônicos");
@@ -45,6 +48,18 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 		}
 
 		throw new ComprovanteException("Comprovante não identificado");
+	}
+	
+	private boolean isNotParse(String[] lines) {
+		for (String line : lines) {
+			line = StringUtils.normalizeSpace(line).trim();
+			if(line.contains("Autenticação Eletrônica:")) {
+				if(StringUtils.contains(line, "Transação pendente de autorização")) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private List<Comprovante> parseTitulo(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro, String obs)

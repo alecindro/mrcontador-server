@@ -45,27 +45,25 @@ public class ParserComprovanteDefault {
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
 	public List<FileS3> process(FileDTO fileDTO, Agenciabancaria agencia) {
-		
+
 		try {
-			PDFTextStripper stripper = new PdfReaderPreserveSpace();
-			List<PDDocument> textComprovantes = parseComprovante(fileDTO.getInputStream(),stripper);
+			List<PPDocumentDTO> textComprovantes = parseComprovante(fileDTO.getInputStream());
 			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
 			List<FileS3> files = new ArrayList<>();
 			List<FileS3> erros = new ArrayList<FileS3>();
+			List<Comprovante> salvar = new ArrayList<Comprovante>();
 			int page = 0;
-			for (PDDocument pddComprovante : textComprovantes) {
-				page = page +1;
-				ByteArrayOutputStream output = new ByteArrayOutputStream();
-				pddComprovante.save(output);
-				String comprovante = stripper.getText(pddComprovante);
+			for (PPDocumentDTO pddComprovante : textComprovantes) {
+				page = page + 1;
 				try {
-					List<Comprovante> _comprovantes = parser.parse(comprovante, agencia, fileDTO.getParceiro());
+					List<Comprovante> _comprovantes = parser.parse(pddComprovante.getComprovante(), agencia, fileDTO.getParceiro());
 					if (_comprovantes != null && !_comprovantes.isEmpty()) {
-						service.saveAll(_comprovantes);
+						salvar.addAll(_comprovantes);
 						FileS3 fileS3 = new FileS3();
 						fileS3.setComprovantes(_comprovantes);
 						fileS3.setFileDTO(fileDTO);
-						fileS3.setOutputStream(output);
+						fileS3.setOutputStream(pddComprovante.getOutstream());
+						fileS3.getFileDTO().setTipoDocumento(TipoDocumento.COMPROVANTE);
 						fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
 						fileS3.setPage(page);
 						files.add(fileS3);
@@ -76,13 +74,14 @@ public class ParserComprovanteDefault {
 					FileS3 fileS3 = new FileS3();
 					fileS3.getComprovantes().add(comprovanteErro);
 					fileS3.setFileDTO(fileDTO);
-					fileS3.setOutputStream(output);
+					fileS3.setOutputStream(pddComprovante.getOutstream());
 					fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
 					fileS3.setPage(page);
 					erros.add(fileS3);
 				}
 			}
-			s3Service.uploadComporvante(files);
+			service.saveAll(salvar);
+			s3Service.uploadComprovante(files);
 			log.info("Comprovantes salvos");
 			return erros;
 		} catch (IOException e1) {
@@ -111,18 +110,30 @@ public class ParserComprovanteDefault {
 		case UNICRED:
 			return new ComprovanteUnicred();
 		case SICRED:
-			return new ComprovanteSicredi();	
+			return new ComprovanteSicredi();
 		default:
 			throw new MrContadorException("parsercomprovante.notfound", codigoBancario);
 
 		}
 	}
 
-	private List<PDDocument> parseComprovante(InputStream stream, PDFTextStripper stripper) throws IOException {
+	private List<PPDocumentDTO> parseComprovante(InputStream stream) throws IOException {
 		PDDocument document = PDDocument.load(stream);
+		List<PPDocumentDTO> list = new ArrayList<>();
 		Splitter splitter = new Splitter();
-		return splitter.split(document);
-		
+		PDFTextStripper stripper = new PdfReaderPreserveSpace();
+		for(PDDocument pdDocument : splitter.split(document)) {
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			String comprovante = stripper.getText(pdDocument);
+			pdDocument.save(output);
+			PPDocumentDTO pddocumentDTO = new PPDocumentDTO(comprovante,output);
+			list.add(pddocumentDTO);
+			pdDocument.close();
+		}
+		document.close();
+		return list;
+
 	}
+
 
 }
