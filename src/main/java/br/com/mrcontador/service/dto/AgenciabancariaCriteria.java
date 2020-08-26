@@ -2,10 +2,12 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
+import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
+import io.github.jhipster.service.filter.FloatFilter;
+import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
@@ -40,6 +42,8 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
 
     private LongFilter parceiroId;
 
+    private LongFilter contaId;
+
     public AgenciabancariaCriteria() {
     }
 
@@ -53,6 +57,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         this.banCodigobancario = other.banCodigobancario == null ? null : other.banCodigobancario.copy();
         this.bancoId = other.bancoId == null ? null : other.bancoId.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
+        this.contaId = other.contaId == null ? null : other.contaId.copy();
     }
 
     @Override
@@ -68,72 +73,80 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-
     public StringFilter getAgeNumero() {
-		return ageNumero;
-	}
+        return ageNumero;
+    }
 
-	public void setAgeNumero(StringFilter ageNumero) {
-		this.ageNumero = ageNumero;
-	}
+    public void setAgeNumero(StringFilter ageNumero) {
+        this.ageNumero = ageNumero;
+    }
 
-	public StringFilter getAgeDigito() {
-		return ageDigito;
-	}
+    public StringFilter getAgeDigito() {
+        return ageDigito;
+    }
 
-	public void setAgeDigito(StringFilter ageDigito) {
-		this.ageDigito = ageDigito;
-	}
+    public void setAgeDigito(StringFilter ageDigito) {
+        this.ageDigito = ageDigito;
+    }
 
-	public StringFilter getAgeAgencia() {
-		return ageAgencia;
-	}
+    public StringFilter getAgeAgencia() {
+        return ageAgencia;
+    }
 
-	public void setAgeAgencia(StringFilter ageAgencia) {
-		this.ageAgencia = ageAgencia;
-	}
+    public void setAgeAgencia(StringFilter ageAgencia) {
+        this.ageAgencia = ageAgencia;
+    }
 
-	public StringFilter getAgeDescricao() {
-		return ageDescricao;
-	}
+    public StringFilter getAgeDescricao() {
+        return ageDescricao;
+    }
 
-	public void setAgeDescricao(StringFilter ageDescricao) {
-		this.ageDescricao = ageDescricao;
-	}
+    public void setAgeDescricao(StringFilter ageDescricao) {
+        this.ageDescricao = ageDescricao;
+    }
 
-	public BooleanFilter getAgeSituacao() {
-		return ageSituacao;
-	}
+    public BooleanFilter getAgeSituacao() {
+        return ageSituacao;
+    }
 
-	public void setAgeSituacao(BooleanFilter ageSituacao) {
-		this.ageSituacao = ageSituacao;
-	}
+    public void setAgeSituacao(BooleanFilter ageSituacao) {
+        this.ageSituacao = ageSituacao;
+    }
 
-	public StringFilter getBanCodigobancario() {
-		return banCodigobancario;
-	}
+    public StringFilter getBanCodigobancario() {
+        return banCodigobancario;
+    }
 
-	public void setBanCodigobancario(StringFilter banCodigobancario) {
-		this.banCodigobancario = banCodigobancario;
-	}
+    public void setBanCodigobancario(StringFilter banCodigobancario) {
+        this.banCodigobancario = banCodigobancario;
+    }
 
-	public LongFilter getBancoId() {
-		return bancoId;
-	}
+    public LongFilter getBancoId() {
+        return bancoId;
+    }
 
-	public void setBancoId(LongFilter bancoId) {
-		this.bancoId = bancoId;
-	}
+    public void setBancoId(LongFilter bancoId) {
+        this.bancoId = bancoId;
+    }
 
-	public LongFilter getParceiroId() {
-		return parceiroId;
-	}
+    public LongFilter getParceiroId() {
+        return parceiroId;
+    }
 
-	public void setParceiroId(LongFilter parceiroId) {
-		this.parceiroId = parceiroId;
-	}
+    public void setParceiroId(LongFilter parceiroId) {
+        this.parceiroId = parceiroId;
+    }
 
-	@Override
+    public LongFilter getContaId() {
+        return contaId;
+    }
+
+    public void setContaId(LongFilter contaId) {
+        this.contaId = contaId;
+    }
+
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -151,7 +164,8 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
             Objects.equals(ageSituacao, that.ageSituacao) &&
             Objects.equals(banCodigobancario, that.banCodigobancario) &&
             Objects.equals(bancoId, that.bancoId) &&
-            Objects.equals(parceiroId, that.parceiroId);
+            Objects.equals(parceiroId, that.parceiroId) &&
+            Objects.equals(contaId, that.contaId);
     }
 
     @Override
@@ -165,7 +179,8 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         ageSituacao,
         banCodigobancario,
         bancoId,
-        parceiroId
+        parceiroId,
+        contaId
         );
     }
 
@@ -182,6 +197,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
                 (banCodigobancario != null ? "ban_codigobancario=" + banCodigobancario + ", " : "") +
                 (bancoId != null ? "bancoId=" + bancoId + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
+                (contaId != null ? "contaId=" + contaId + ", " : "") +
             "}";
     }
 

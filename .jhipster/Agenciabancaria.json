@@ -17,6 +17,15 @@
       "relationshipValidateRules": ["required"],
       "otherEntityField": "id",
       "otherEntityRelationshipName": "agenciabancaria"
+    },
+    {
+      "relationshipName": "conta",
+      "otherEntityName": "conta",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "id",
+      "ownerSide": true,
+      "useJPADerivedIdentifier": false,
+      "otherEntityRelationshipName": "agenciabancaria"
     }
   ],
   "fields": [

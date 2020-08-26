@@ -1,9 +1,6 @@
 package br.com.mrcontador.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import br.com.mrcontador.util.MrContadorUtil;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -51,6 +48,7 @@ public class Agenciabancaria implements Serializable {
     private String banCodigobancario;
 
     @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = "agenciabancarias", allowSetters = true)
     private Banco banco;
 
@@ -58,6 +56,10 @@ public class Agenciabancaria implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "agenciabancarias", allowSetters = true)
     private Parceiro parceiro;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Conta conta;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -68,19 +70,47 @@ public class Agenciabancaria implements Serializable {
         this.id = id;
     }
 
+    public String getAgeNumero() {
+        return ageNumero;
+    }
+
     public Agenciabancaria ageNumero(String ageNumero) {
-        this.ageNumero = MrContadorUtil.removeZerosFromInital(ageNumero);
+        this.ageNumero = ageNumero;
         return this;
     }
-    
+
+    public void setAgeNumero(String age_numero) {
+        this.ageNumero = ageNumero;
+    }
+
+    public String getAgeDigito() {
+        return ageDigito;
+    }
+
     public Agenciabancaria ageDigito(String ageDigito) {
         this.ageDigito = ageDigito;
         return this;
     }
 
+    public void setAgeDigito(String ageDigito) {
+        this.ageDigito = ageDigito;
+    }
+
+    public String getAgeAgencia() {
+        return ageAgencia;
+    }
+
     public Agenciabancaria ageAgencia(String ageAgencia) {
-        this.ageAgencia = MrContadorUtil.removeZerosFromInital(ageAgencia);
+        this.ageAgencia = ageAgencia;
         return this;
+    }
+
+    public void setAgeAgencia(String ageAgencia) {
+        this.ageAgencia = ageAgencia;
+    }
+
+    public String getAgeDescricao() {
+        return ageDescricao;
     }
 
     public Agenciabancaria ageDescricao(String ageDescricao) {
@@ -88,65 +118,37 @@ public class Agenciabancaria implements Serializable {
         return this;
     }
 
+    public void setAgeDescricao(String ageDescricao) {
+        this.ageDescricao = ageDescricao;
+    }
+
+    public Boolean isAgeSituacao() {
+        return ageSituacao;
+    }
+
     public Agenciabancaria ageSituacao(Boolean ageSituacao) {
         this.ageSituacao = ageSituacao;
         return this;
     }
 
+    public void setAgeSituacao(Boolean ageSituacao) {
+        this.ageSituacao = ageSituacao;
+    }
+
+    public String getBanCodigobancario() {
+        return banCodigobancario;
+    }
+
     public Agenciabancaria banCodigobancario(String banCodigobancario) {
-        this.banCodigobancario = MrContadorUtil.removeZerosFromInital(banCodigobancario);
+        this.banCodigobancario = banCodigobancario;
         return this;
     }
 
-    public String getAgeNumero() {
-		return ageNumero;
-	}
+    public void setBanCodigobancario(String banCodigobancario) {
+        this.banCodigobancario = banCodigobancario;
+    }
 
-	public void setAgeNumero(String ageNumero) {
-		this.ageNumero = MrContadorUtil.removeZerosFromInital(ageNumero);
-	}
-
-	public String getAgeDigito() {
-		return ageDigito;
-	}
-
-	public void setAgeDigito(String ageDigito) {
-		this.ageDigito = ageDigito;
-	}
-
-	public String getAgeAgencia() {
-		return ageAgencia;
-	}
-
-	public void setAgeAgencia(String ageAgencia) {
-		this.ageAgencia = MrContadorUtil.removeZerosFromInital(ageAgencia);
-	}
-
-	public String getAgeDescricao() {
-		return ageDescricao;
-	}
-
-	public void setAgeDescricao(String ageDescricao) {
-		this.ageDescricao = ageDescricao;
-	}
-
-	public Boolean getAgeSituacao() {
-		return ageSituacao;
-	}
-
-	public void setAgeSituacao(Boolean ageSituacao) {
-		this.ageSituacao = ageSituacao;
-	}
-
-	public String getBanCodigobancario() {
-		return banCodigobancario;
-	}
-
-	public void setBanCodigobancario(String banCodigobancario) {
-		this.banCodigobancario = MrContadorUtil.removeZerosFromInital(banCodigobancario);
-	}
-
-	public Banco getBanco() {
+    public Banco getBanco() {
         return banco;
     }
 
@@ -156,7 +158,6 @@ public class Agenciabancaria implements Serializable {
     }
 
     public void setBanco(Banco banco) {
-    	this.banCodigobancario = banco.getBanCodigobancario();
         this.banco = banco;
     }
 
@@ -171,6 +172,19 @@ public class Agenciabancaria implements Serializable {
 
     public void setParceiro(Parceiro parceiro) {
         this.parceiro = parceiro;
+    }
+
+    public Conta getConta() {
+        return conta;
+    }
+
+    public Agenciabancaria conta(Conta conta) {
+        this.conta = conta;
+        return this;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -189,14 +203,18 @@ public class Agenciabancaria implements Serializable {
     public int hashCode() {
         return 31;
     }
-    // prettier-ignore
-	@Override
-	public String toString() {
-		return "Agenciabancaria [id=" + id + ", ageNumero=" + ageNumero + ", ageDigito=" + ageDigito + ", ageAgencia="
-				+ ageAgencia + ", ageDescricao=" + ageDescricao + ", ageSituacao=" + ageSituacao
-				+ ", banCodigobancario=" + banCodigobancario + ", banco=" + banco + ", parceiro=" + parceiro + "]";
-	}
 
-   
-    
+    // prettier-ignore
+    @Override
+    public String toString() {
+        return "Agenciabancaria{" +
+            "id=" + getId() +
+            ", age_numero='" + getAgeNumero() + "'" +
+            ", age_digito='" + getAgeDigito() + "'" +
+            ", age_agencia='" + getAgeAgencia() + "'" +
+            ", age_descricao='" + getAgeDescricao() + "'" +
+            ", age_situacao='" + isAgeSituacao() + "'" +
+            ", ban_codigobancario='" + getBanCodigobancario() + "'" +
+            "}";
+    }
 }

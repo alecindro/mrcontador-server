@@ -1,0 +1,109 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "comprovante",
+      "otherEntityName": "comprovante",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "id",
+      "ownerSide": true,
+      "useJPADerivedIdentifier": false,
+      "otherEntityRelationshipName": "inteligent"
+    },
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "inteligent"
+    },
+    {
+      "relationshipName": "notafiscal",
+      "otherEntityName": "notafiscal",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "id",
+      "ownerSide": true,
+      "useJPADerivedIdentifier": false,
+      "otherEntityRelationshipName": "inteligent"
+    },
+    {
+      "relationshipName": "notaservico",
+      "otherEntityName": "notaservico",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "id",
+      "ownerSide": true,
+      "useJPADerivedIdentifier": false,
+      "otherEntityRelationshipName": "inteligent"
+    },
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "inteligent"
+    },
+    {
+      "relationshipName": "agenciabancaria",
+      "otherEntityName": "agenciabancaria",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "inteligent"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "historico",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "historicofinal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "datalancamento",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "associado",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "periodo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "debito",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "credito",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "datainicio",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "datafim",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "cnpj",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "beneficiario",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20200826194655",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "inteligent",
+  "databaseType": "sql",
+  "readOnly": true,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Agenciabancaria_;
 import br.com.mrcontador.domain.Banco_;
+import br.com.mrcontador.domain.Conta_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.AgenciabancariaRepository;
 import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
@@ -36,6 +37,7 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
 
     private final AgenciabancariaRepository agenciabancariaRepository;
 
+   
     public AgenciabancariaQueryService(AgenciabancariaRepository agenciabancariaRepository) {
         this.agenciabancariaRepository = agenciabancariaRepository;
     }
@@ -47,13 +49,6 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
      */
     @Transactional(readOnly = true)
     public List<Agenciabancaria> findByCriteria(AgenciabancariaCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
-        final Specification<Agenciabancaria> specification = createSpecification(criteria);
-        return agenciabancariaRepository.findAll(specification);
-    }
-    
-    @Transactional(readOnly = true)
-    public List<Agenciabancaria> findAgenciaByCriteria(AgenciabancariaCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Agenciabancaria> specification = createSpecification(criteria);
         return agenciabancariaRepository.findAll(specification);
@@ -120,6 +115,10 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
                     root -> root.join(Agenciabancaria_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
+            }
+            if (criteria.getContaId() != null) {
+                specification = specification.and(buildSpecification(criteria.getContaId(),
+                    root -> root.join(Agenciabancaria_.conta, JoinType.LEFT).get(Conta_.id)));
             }
         }
         return specification;

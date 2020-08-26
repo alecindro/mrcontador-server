@@ -32,6 +32,8 @@ public class AgenciabancariaDTO implements Serializable {
     private Long bancoId;
 
     private Long parceiroId;
+
+    private Long contaId;
     
     public Long getId() {
         return id;
@@ -105,6 +107,14 @@ public class AgenciabancariaDTO implements Serializable {
         this.parceiroId = parceiroId;
     }
 
+    public Long getContaId() {
+        return contaId;
+    }
+
+    public void setContaId(Long contaId) {
+        this.contaId = contaId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -135,6 +145,7 @@ public class AgenciabancariaDTO implements Serializable {
             ", ban_codigobancario='" + getBan_codigobancario() + "'" +
             ", bancoId=" + getBancoId() +
             ", parceiroId=" + getParceiroId() +
+            ", contaId=" + getContaId() +
             "}";
     }
 }
