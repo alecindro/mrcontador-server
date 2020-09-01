@@ -1,21 +1,27 @@
 package br.com.mrcontador.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Inteligent.
  */
 @Entity
 @Table(name = "inteligent")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Inteligent implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,6 +63,12 @@ public class Inteligent implements Serializable {
     @Column(name = "beneficiario")
     private String beneficiario;
 
+    @Column(name = "numerocontrole")
+    private String numerocontrole;
+
+    @Column(name = "numerodocumento")
+    private String numerodocumento;
+
     @OneToOne
     @JoinColumn(unique = true)
     private Comprovante comprovante;
@@ -68,6 +80,14 @@ public class Inteligent implements Serializable {
     @OneToOne
     @JoinColumn(unique = true)
     private Notaservico notaservico;
+    
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Conta conta;
+    
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Extrato extrato;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "inteligents", allowSetters = true)
@@ -229,6 +249,32 @@ public class Inteligent implements Serializable {
         this.beneficiario = beneficiario;
     }
 
+    public String getNumerocontrole() {
+        return numerocontrole;
+    }
+
+    public Inteligent numerocontrole(String numerocontrole) {
+        this.numerocontrole = numerocontrole;
+        return this;
+    }
+
+    public void setNumerocontrole(String numerocontrole) {
+        this.numerocontrole = numerocontrole;
+    }
+
+    public String getNumerodocumento() {
+        return numerodocumento;
+    }
+
+    public Inteligent numerodocumento(String numerodocumento) {
+        this.numerodocumento = numerodocumento;
+        return this;
+    }
+
+    public void setNumerodocumento(String numerodocumento) {
+        this.numerodocumento = numerodocumento;
+    }
+
     public Comprovante getComprovante() {
         return comprovante;
     }
@@ -293,6 +339,31 @@ public class Inteligent implements Serializable {
     public void setAgenciabancaria(Agenciabancaria agenciabancaria) {
         this.agenciabancaria = agenciabancaria;
     }
+    
+    public Conta getConta() {
+        return conta;
+    }
+
+    public Inteligent conta(Conta conta) {
+        this.conta = conta;
+        return this;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
+    }
+    public Extrato getExtrato() {
+        return extrato;
+    }
+
+    public Inteligent extrato(Extrato extrato) {
+        this.extrato = extrato;
+        return this;
+    }
+
+    public void setExtrato(Extrato extrato) {
+        this.extrato = extrato;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -327,6 +398,8 @@ public class Inteligent implements Serializable {
             ", datafim='" + getDatafim() + "'" +
             ", cnpj='" + getCnpj() + "'" +
             ", beneficiario='" + getBeneficiario() + "'" +
+            ", numerocontrole='" + getNumerocontrole() + "'" +
+            ", numerodocumento='" + getNumerodocumento() + "'" +
             "}";
     }
 }

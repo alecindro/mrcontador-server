@@ -33,6 +33,7 @@ import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
 public class ParserComprovanteDefault {
@@ -91,6 +92,7 @@ public class ParserComprovanteDefault {
 	}
 
 	private ParserComprovante getParser(String codigoBancario) {
+		codigoBancario = MrContadorUtil.removeZerosFromInital(codigoBancario);
 		BancoCodigoBancario bcb = BancoCodigoBancario.find(codigoBancario);
 		switch (bcb) {
 		case BB:

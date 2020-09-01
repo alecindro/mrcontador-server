@@ -30,8 +30,13 @@
       <include file="config/liquibase/changelog/altercomprovante.sql" relativeToChangelogFile="false"/>
       <include file="config/liquibase/changelog/alternotafiscal.sql" relativeToChangelogFile="false"/>
        <include file="config/liquibase/changelog/altercomprovante2.sql" relativeToChangelogFile="false"/>
-
-    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+       <include file="config/liquibase/changelog/inteligent.sql" relativeToChangelogFile="false"/>
+  <include file="config/liquibase/changelog/alteragenciabancaria.sql" relativeToChangelogFile="false"/>
+   <changeSet author="clientes" id="23">
+    <sqlFile path="config/liquibase/changelog/intelingent_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+   <!-- <include file="config/liquibase/changelog/intelingent_function.sql" relativeToChangelogFile="false"/>
+     jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

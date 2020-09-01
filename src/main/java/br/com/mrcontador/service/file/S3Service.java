@@ -3,7 +3,6 @@ package br.com.mrcontador.service.file;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +12,11 @@ import org.springframework.stereotype.Service;
 //import org.xml.sax.SAXException;
 
 import br.com.mrcontador.config.S3Properties;
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.ArquivoErro;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.TipoDocumento;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ArquivoErroService;
 import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.ComprovanteService;
@@ -29,9 +26,7 @@ import br.com.mrcontador.service.mapper.ArquivoErroMapper;
 import br.com.mrcontador.service.mapper.ArquivoMapper;
 import br.com.mrcontador.util.MrContadorUtil;
 import software.amazon.awssdk.core.ResponseBytes;
-import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -43,8 +38,8 @@ public class S3Service {
 
 	@Autowired
 	private S3Client s3Client;
-	@Autowired
-	private S3AsyncClient s3AsyncClient;
+//	@Autowired
+//	private S3AsyncClient s3AsyncClient;
 	@Autowired
 	private ComprovanteService comprovanteService;
 	@Autowired
@@ -183,7 +178,7 @@ public class S3Service {
 			throw new MrContadorException("upload.aws.error", e);
 		}
 	}
-
+/*
 	private void uploadAsyncStream(String filename, String dir, FileS3 fileS3, Comprovante comprovante, String tenant) {
 		CompletableFuture<PutObjectResponse> future = s3AsyncClient.putObject(
 				PutObjectRequest.builder().bucket(properties.getBucketName()).key(dir + "/" + filename).build(),
@@ -207,7 +202,7 @@ public class S3Service {
 		});
 
 		future.join();
-	}
+	}*/
 
 	public byte[] downloadByteArray(String s3Url) {
 		return downloadS3(s3Url).asByteArray();

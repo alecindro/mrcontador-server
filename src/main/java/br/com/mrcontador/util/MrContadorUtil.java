@@ -1,7 +1,9 @@
 package br.com.mrcontador.util;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -104,6 +106,26 @@ public class MrContadorUtil {
 			return true;
 		}
 		return false;
+	}
+	
+	public static LocalDate initalForPeriodo(String periodo) {
+		LocalDate date = LocalDate.now();
+		String mes = periodo.substring(0, periodo.length()-4);
+		String year = StringUtils.substringAfter(periodo, mes);
+		date.withMonth(Integer.valueOf(mes));
+		date.withYear(Integer.valueOf(year));
+		date.withDayOfMonth(1);
+		return date;
+	}
+	
+	public static LocalDate lastForPeriodo(String periodo) {
+		LocalDate date = LocalDate.now();
+		String mes = periodo.substring(0, periodo.length()-4);
+		String year = StringUtils.substringAfter(periodo, mes);
+		date.withMonth(Integer.valueOf(mes));
+		date.withYear(Integer.valueOf(year));
+		date.with(TemporalAdjusters.lastDayOfMonth());
+		return date;
 	}
 
 }

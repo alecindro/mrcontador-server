@@ -47,6 +47,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
     private StringFilter comObservacao;
     
     private LongFilter parceiroId;
+    
+    private LongFilter agenciabancariaId;
 
     public ComprovanteCriteria() {
     }
@@ -64,6 +66,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         this.comValorpagamento = other.comValorpagamento == null ? null : other.comValorpagamento.copy();
         this.comObservacao = other.comObservacao == null ? null : other.comObservacao.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
+        this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
     }
 
     @Override
@@ -77,6 +80,14 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 
     public void setId(LongFilter id) {
         this.id = id;
+    }
+    
+    public LongFilter getAgenciabancariaId() {
+        return agenciabancariaId;
+    }
+
+    public void setAgenciabancariaId(LongFilter agenciabancariaId) {
+        this.agenciabancariaId = agenciabancariaId;
     }
 
 
@@ -189,7 +200,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
             Objects.equals(comValordocumento, that.comValordocumento) &&
             Objects.equals(comValorpagamento, that.comValorpagamento) &&
             Objects.equals(comObservacao, that.comObservacao) &&
-            Objects.equals(parceiroId, that.parceiroId);
+            Objects.equals(parceiroId, that.parceiroId)&&
+        Objects.equals(agenciabancariaId, that.agenciabancariaId);
     }
 
     @Override
@@ -206,7 +218,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         comValordocumento,
         comValorpagamento,
         comObservacao,
-        parceiroId
+        parceiroId,
+        agenciabancariaId
         );
     }
 
@@ -226,6 +239,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
                 (comValorpagamento != null ? "com_valorpagamento=" + comValorpagamento + ", " : "") +
                 (comObservacao != null ? "com_observacao=" + comObservacao + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
+                (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
             "}";
     }
 

@@ -1,9 +1,12 @@
 package br.com.mrcontador;
 
-import br.com.mrcontador.config.ApplicationProperties;
-import br.com.mrcontador.config.S3Properties;
-import io.github.jhipster.config.DefaultProfileUtil;
-import io.github.jhipster.config.JHipsterConstants;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,11 +17,10 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.PostConstruct;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
+import br.com.mrcontador.config.ApplicationProperties;
+import br.com.mrcontador.config.S3Properties;
+import io.github.jhipster.config.DefaultProfileUtil;
+import io.github.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class, S3Properties.class})
@@ -50,6 +52,8 @@ public class MrcontadorServerApp {
             log.error("You have misconfigured your application! It should not " +
                 "run with both the 'dev' and 'cloud' profiles at the same time.");
         }
+        
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC-3"));
     }
 
     /**

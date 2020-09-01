@@ -7,17 +7,24 @@ import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
+import br.com.mrcontador.domain.Agenciabancaria_;
+import br.com.mrcontador.domain.Comprovante_;
+import br.com.mrcontador.domain.Conta_;
+import br.com.mrcontador.domain.Extrato_;
 import br.com.mrcontador.domain.Inteligent;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Inteligent_;
+import br.com.mrcontador.domain.Notafiscal_;
+import br.com.mrcontador.domain.Notaservico_;
+import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.InteligentRepository;
 import br.com.mrcontador.service.dto.InteligentCriteria;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Inteligent} entities in the database.
@@ -56,10 +63,10 @@ public class InteligentQueryService extends QueryService<Inteligent> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<Inteligent> findByCriteria(InteligentCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+    public List<Inteligent> findByCriteria(InteligentCriteria criteria, Sort sort) {
+        log.debug("find by criteria : {}, page: {}", criteria, sort);
         final Specification<Inteligent> specification = createSpecification(criteria);
-        return inteligentRepository.findAll(specification, page);
+        return inteligentRepository.findAll(specification, sort);
     }
 
     /**
@@ -118,14 +125,17 @@ public class InteligentQueryService extends QueryService<Inteligent> {
             if (criteria.getBeneficiario() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getBeneficiario(), Inteligent_.beneficiario));
             }
+            if (criteria.getNumerocontrole() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNumerocontrole(), Inteligent_.numerocontrole));
+            }
+            if (criteria.getNumerodocumento() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNumerodocumento(), Inteligent_.numerodocumento));
+            }
             if (criteria.getComprovanteId() != null) {
                 specification = specification.and(buildSpecification(criteria.getComprovanteId(),
                     root -> root.join(Inteligent_.comprovante, JoinType.LEFT).get(Comprovante_.id)));
             }
-            if (criteria.getParceiroId() != null) {
-                specification = specification.and(buildSpecification(criteria.getParceiroId(),
-                    root -> root.join(Inteligent_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
-            }
+          
             if (criteria.getNotafiscalId() != null) {
                 specification = specification.and(buildSpecification(criteria.getNotafiscalId(),
                     root -> root.join(Inteligent_.notafiscal, JoinType.LEFT).get(Notafiscal_.id)));
@@ -136,13 +146,23 @@ public class InteligentQueryService extends QueryService<Inteligent> {
             }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
-                    root -> root.join(Inteligent_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
+                    root -> root.join(Inteligent_.parceiro, JoinType.INNER).get(Parceiro_.id)));
             }
             if (criteria.getAgenciabancariaId() != null) {
                 specification = specification.and(buildSpecification(criteria.getAgenciabancariaId(),
-                    root -> root.join(Inteligent_.agenciabancaria, JoinType.LEFT).get(Agenciabancaria_.id)));
+                    root -> root.join(Inteligent_.agenciabancaria, JoinType.INNER).get(Agenciabancaria_.id)));
             }
-        }
+            if (criteria.getContaId() != null) {
+                specification = specification.and(buildSpecification(criteria.getContaId(),
+                    root -> root.join(Inteligent_.conta, JoinType.LEFT).get(Conta_.id)));
+            }
+            if (criteria.getExtratoId() != null) {
+                specification = specification.and(buildSpecification(criteria.getExtratoId(),
+                    root -> root.join(Inteligent_.extrato, JoinType.LEFT).get(Extrato_.id)));
+            }
+        }        
         return specification;
     }
+    
+   
 }

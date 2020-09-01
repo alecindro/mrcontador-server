@@ -1,13 +1,21 @@
 package br.com.mrcontador.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Agenciabancaria.
@@ -57,9 +65,9 @@ public class Agenciabancaria implements Serializable {
     @JsonIgnoreProperties(value = "agenciabancarias", allowSetters = true)
     private Parceiro parceiro;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Conta conta;
+  
+    @Column(name = "con_conta", length = 5, nullable = false)
+    private Integer conConta;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -79,7 +87,7 @@ public class Agenciabancaria implements Serializable {
         return this;
     }
 
-    public void setAgeNumero(String age_numero) {
+    public void setAgeNumero(String ageNumero) {
         this.ageNumero = ageNumero;
     }
 
@@ -174,17 +182,17 @@ public class Agenciabancaria implements Serializable {
         this.parceiro = parceiro;
     }
 
-    public Conta getConta() {
-        return conta;
+    public Integer getconConta() {
+        return conConta;
     }
 
-    public Agenciabancaria conta(Conta conta) {
-        this.conta = conta;
+    public Agenciabancaria conConta(Integer conConta) {
+        this.conConta = conConta;
         return this;
     }
 
-    public void setConta(Conta conta) {
-        this.conta = conta;
+    public void setConConta(Integer conConta) {
+        this.conConta = conConta;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

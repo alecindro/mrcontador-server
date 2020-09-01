@@ -14,12 +14,10 @@ public interface AgenciabancariaMapper extends EntityMapper<AgenciabancariaDTO, 
 
     @Mapping(source = "banco.id", target = "bancoId")
     @Mapping(source = "parceiro.id", target = "parceiroId")
-    @Mapping(source = "conta.id", target = "contaId")
     AgenciabancariaDTO toDto(Agenciabancaria agenciabancaria);
 
     @Mapping(source = "bancoId", target = "banco")
     @Mapping(source = "parceiroId", target = "parceiro")
-    @Mapping(source = "contaId", target = "conta")
     Agenciabancaria toEntity(AgenciabancariaDTO agenciabancariaDTO);
 
     default Agenciabancaria fromId(Long id) {

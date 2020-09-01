@@ -2,11 +2,10 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -42,7 +41,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
 
     private LongFilter parceiroId;
 
-    private LongFilter contaId;
+    private IntegerFilter conConta;
 
     public AgenciabancariaCriteria() {
     }
@@ -57,7 +56,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         this.banCodigobancario = other.banCodigobancario == null ? null : other.banCodigobancario.copy();
         this.bancoId = other.bancoId == null ? null : other.bancoId.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
-        this.contaId = other.contaId == null ? null : other.contaId.copy();
+        this.conConta = other.conConta == null ? null : other.conConta.copy();
     }
 
     @Override
@@ -135,18 +134,17 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
 
     public void setParceiroId(LongFilter parceiroId) {
         this.parceiroId = parceiroId;
-    }
+    }    
 
-    public LongFilter getContaId() {
-        return contaId;
-    }
+    public IntegerFilter getConConta() {
+		return conConta;
+	}
 
-    public void setContaId(LongFilter contaId) {
-        this.contaId = contaId;
-    }
+	public void setConConta(IntegerFilter conConta) {
+		this.conConta = conConta;
+	}
 
-
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -165,7 +163,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
             Objects.equals(banCodigobancario, that.banCodigobancario) &&
             Objects.equals(bancoId, that.bancoId) &&
             Objects.equals(parceiroId, that.parceiroId) &&
-            Objects.equals(contaId, that.contaId);
+            Objects.equals(conConta, that.conConta);
     }
 
     @Override
@@ -180,7 +178,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         banCodigobancario,
         bancoId,
         parceiroId,
-        contaId
+        conConta
         );
     }
 
@@ -197,7 +195,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
                 (banCodigobancario != null ? "ban_codigobancario=" + banCodigobancario + ", " : "") +
                 (bancoId != null ? "bancoId=" + bancoId + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
-                (contaId != null ? "contaId=" + contaId + ", " : "") +
+                (conConta != null ? "conConta=" + conConta + ", " : "") +
             "}";
     }
 

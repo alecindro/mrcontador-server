@@ -29,6 +29,10 @@ public class InteligentCriteria implements Serializable, Criteria {
     private StringFilter historico;
 
     private StringFilter historicofinal;
+    
+    private StringFilter numerocontrole;
+    
+    private StringFilter numerodocumento;
 
     private ZonedDateTimeFilter datalancamento;
 
@@ -57,6 +61,10 @@ public class InteligentCriteria implements Serializable, Criteria {
     private LongFilter notaservicoId;
 
     private LongFilter agenciabancariaId;
+    
+    private LongFilter contaId;
+    
+    private LongFilter extratoId;
 
     public InteligentCriteria() {
     }
@@ -65,6 +73,8 @@ public class InteligentCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.historico = other.historico == null ? null : other.historico.copy();
         this.historicofinal = other.historicofinal == null ? null : other.historicofinal.copy();
+        this.numerocontrole = other.numerocontrole == null ? null : other.numerocontrole.copy();
+        this.numerodocumento = other.numerodocumento == null ? null : other.numerodocumento.copy();
         this.datalancamento = other.datalancamento == null ? null : other.datalancamento.copy();
         this.associado = other.associado == null ? null : other.associado.copy();
         this.periodo = other.periodo == null ? null : other.periodo.copy();
@@ -80,6 +90,8 @@ public class InteligentCriteria implements Serializable, Criteria {
         this.notaservicoId = other.notaservicoId == null ? null : other.notaservicoId.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
+        this.contaId = other.contaId == null ? null : other.contaId.copy();
+        this.extratoId = other.extratoId == null ? null : other.extratoId.copy();
     }
 
     @Override
@@ -222,9 +234,40 @@ public class InteligentCriteria implements Serializable, Criteria {
     public void setAgenciabancariaId(LongFilter agenciabancariaId) {
         this.agenciabancariaId = agenciabancariaId;
     }
+    
+    public LongFilter getContaId() {
+		return contaId;
+	}
 
+	public void setContaId(LongFilter contaId) {
+		this.contaId = contaId;
+	}
 
-    @Override
+	public LongFilter getExtratoId() {
+		return extratoId;
+	}
+
+	public void setExtratoId(LongFilter extratoId) {
+		this.extratoId = extratoId;
+	}
+
+	public StringFilter getNumerocontrole() {
+		return numerocontrole;
+	}
+
+	public void setNumerocontrole(StringFilter numerocontrole) {
+		this.numerocontrole = numerocontrole;
+	}
+
+	public StringFilter getNumerodocumento() {
+		return numerodocumento;
+	}
+
+	public void setNumerodocumento(StringFilter numerodocumento) {
+		this.numerodocumento = numerodocumento;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -239,6 +282,8 @@ public class InteligentCriteria implements Serializable, Criteria {
             Objects.equals(historicofinal, that.historicofinal) &&
             Objects.equals(datalancamento, that.datalancamento) &&
             Objects.equals(associado, that.associado) &&
+            Objects.equals(numerocontrole, that.numerocontrole) &&
+            Objects.equals(numerodocumento, that.numerodocumento) &&
             Objects.equals(periodo, that.periodo) &&
             Objects.equals(debito, that.debito) &&
             Objects.equals(credito, that.credito) &&
@@ -251,7 +296,9 @@ public class InteligentCriteria implements Serializable, Criteria {
             Objects.equals(notafiscalId, that.notafiscalId) &&
             Objects.equals(notaservicoId, that.notaservicoId) &&
             Objects.equals(parceiroId, that.parceiroId) &&
-            Objects.equals(agenciabancariaId, that.agenciabancariaId);
+            Objects.equals(agenciabancariaId, that.agenciabancariaId) &&
+            Objects.equals(contaId, that.contaId) &&
+            Objects.equals(extratoId, that.extratoId);
     }
 
     @Override
@@ -262,6 +309,8 @@ public class InteligentCriteria implements Serializable, Criteria {
         historicofinal,
         datalancamento,
         associado,
+        numerocontrole,
+        numerodocumento,
         periodo,
         debito,
         credito,
@@ -274,7 +323,9 @@ public class InteligentCriteria implements Serializable, Criteria {
         notafiscalId,
         notaservicoId,
         parceiroId,
-        agenciabancariaId
+        agenciabancariaId,
+        contaId,
+        extratoId
         );
     }
 
@@ -287,6 +338,8 @@ public class InteligentCriteria implements Serializable, Criteria {
                 (historicofinal != null ? "historicofinal=" + historicofinal + ", " : "") +
                 (datalancamento != null ? "datalancamento=" + datalancamento + ", " : "") +
                 (associado != null ? "associado=" + associado + ", " : "") +
+                (numerocontrole != null ? "numerocontrole=" + numerocontrole + ", " : "") +
+                (numerodocumento != null ? "numerodocumento=" + numerodocumento + ", " : "") +
                 (periodo != null ? "periodo=" + periodo + ", " : "") +
                 (debito != null ? "debito=" + debito + ", " : "") +
                 (credito != null ? "credito=" + credito + ", " : "") +
@@ -300,6 +353,8 @@ public class InteligentCriteria implements Serializable, Criteria {
                 (notaservicoId != null ? "notaservicoId=" + notaservicoId + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
+                (contaId != null ? "contaId=" + contaId + ", " : "") +
+                (extratoId != null ? "extratoId=" + extratoId + ", " : "") +
             "}";
     }
 
