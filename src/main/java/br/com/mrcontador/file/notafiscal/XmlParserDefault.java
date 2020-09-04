@@ -75,7 +75,7 @@ public class XmlParserDefault implements FileParser {
 		com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada = new DFPersister()
 				.read(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada.class, nota, false);
 		Parceiro parceiro = null;
-		if (nfNotaProcessada.getNota().getInfo().getIdentificacao().getTipo().equals(NFTipo.ENTRADA)) {
+		if (nfNotaProcessada.getNota().getInfo().getIdentificacao().getTipo().equals(NFTipo.SAIDA)) {
 			parceiro = findParceiro(nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
 					? nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj()
 					: nfNotaProcessada.getNota().getInfo().getDestinatario().getCpf());

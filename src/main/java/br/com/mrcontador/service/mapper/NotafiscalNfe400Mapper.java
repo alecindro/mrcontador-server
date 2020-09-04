@@ -40,7 +40,7 @@ public class NotafiscalNfe400Mapper {
 		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada());
 		nf.setNotDescricao(nfe.getNota().getInfo().getIdentificacao().getNaturezaOperacao());
 		nf.setNotValornota(new BigDecimal(nfe.getNota().getInfo().getTotal().getIcmsTotal().getValorTotalNFe()));
-		if(nfTipo.equals(NFTipo.SAIDA)) {
+		if(nfTipo.equals(NFTipo.ENTRADA)) {
 			nf.setNotCnpj(nfe.getNota().getInfo().getDestinatario().getCnpj() != null
 					? nfe.getNota().getInfo().getDestinatario().getCnpj()
 					: nfe.getNota().getInfo().getDestinatario().getCpf());
