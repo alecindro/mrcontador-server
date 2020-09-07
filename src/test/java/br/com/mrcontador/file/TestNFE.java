@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
 
@@ -27,7 +28,7 @@ public class TestNFE {
 	@Test
 	public void test() throws Exception {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "/home/alecindro/Documents/drcontabil/docs/122019/42191283846600000100550010000189731703265004.xml";
+		String folder = "/home/alecindro/Documents/drcontabil/docs/nfe/42191100087537000130550010000611471007995445.xml";
 		File initialFile = new File(folder);	
 		FileDTO dto = new FileDTO();
 	    try {
@@ -35,6 +36,10 @@ public class TestNFE {
 			dto.setContentType("text/xml");
 			dto.setInputStream(stream);
 			dto.setContador("ds_demo");
+			Parceiro parceiro = new Parceiro();
+			parceiro.setParCnpjcpf("10539433000173");
+			parceiro.setId(2L);
+			dto.setParceiro(parceiro);
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());
 			dto.setUsuario("SYSTEM");

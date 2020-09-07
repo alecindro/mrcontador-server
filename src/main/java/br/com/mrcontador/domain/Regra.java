@@ -3,9 +3,13 @@ package br.com.mrcontador.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 /**
  * A Regra.
@@ -21,22 +25,28 @@ public class Regra implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "par_codigo")
-    private Integer par_codigo;
-
     @Column(name = "reg_descricao", length = 60)
-    private String reg_descricao;
+    private String regDescricao;
 
     @Column(name = "reg_conta")
-    private Integer reg_conta;
+    private Integer regConta;
 
     @Column(name = "reg_historico", length = 60)
-    private String reg_historico;
+    private String regHistorico;
 
     @Column(name = "reg_todos", length = 1)
-    private String reg_todos;
+    private String regTodos;
+    
+    @Column(name = "data_cadastro")
+    private ZonedDateTime dataCadastro;
+    
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "regras", allowSetters = true)
+    private Parceiro parceiro;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+    
     public Long getId() {
         return id;
     }
@@ -45,73 +55,88 @@ public class Regra implements Serializable {
         this.id = id;
     }
 
-    public Integer getPar_codigo() {
-        return par_codigo;
+    public String getRegDescricao() {
+        return regDescricao;
     }
 
-    public Regra par_codigo(Integer par_codigo) {
-        this.par_codigo = par_codigo;
+    public Regra regDescricao(String regDescricao) {
+        this.regDescricao = regDescricao;
+        return this;
+    }
+    
+    public Regra regConta(Integer regConta) {
+        this.regConta = regConta;
         return this;
     }
 
-    public void setPar_codigo(Integer par_codigo) {
-        this.par_codigo = par_codigo;
-    }
-
-    public String getReg_descricao() {
-        return reg_descricao;
-    }
-
-    public Regra reg_descricao(String reg_descricao) {
-        this.reg_descricao = reg_descricao;
+    public Regra regHistorico(String regHistorico) {
+        this.regHistorico = regHistorico;
         return this;
     }
 
-    public void setReg_descricao(String reg_descricao) {
-        this.reg_descricao = reg_descricao;
+    public void setRegHistorico(String regHistorico) {
+        this.regHistorico = regHistorico;
     }
 
-    public Integer getReg_conta() {
-        return reg_conta;
+    public String getRegTodos() {
+        return regTodos;
     }
 
-    public Regra reg_conta(Integer reg_conta) {
-        this.reg_conta = reg_conta;
+    public Regra regTodos(String regTodos) {
+        this.regTodos = regTodos;
         return this;
     }
 
-    public void setReg_conta(Integer reg_conta) {
-        this.reg_conta = reg_conta;
-    }
+    public Integer getRegConta() {
+		return regConta;
+	}
 
-    public String getReg_historico() {
-        return reg_historico;
-    }
+	public void setRegConta(Integer regConta) {
+		this.regConta = regConta;
+	}
 
-    public Regra reg_historico(String reg_historico) {
-        this.reg_historico = reg_historico;
-        return this;
-    }
+	public Parceiro getParceiro() {
+		return parceiro;
+	}
 
-    public void setReg_historico(String reg_historico) {
-        this.reg_historico = reg_historico;
-    }
+	public void setParceiro(Parceiro parceiro) {
+		this.parceiro = parceiro;
+	}
+	
+	public Regra parceiro(Parceiro parceiro) {
+		this.parceiro = parceiro;
+		return this;
+	}
 
-    public String getReg_todos() {
-        return reg_todos;
-    }
+	public String getRegHistorico() {
+		return regHistorico;
+	}
 
-    public Regra reg_todos(String reg_todos) {
-        this.reg_todos = reg_todos;
-        return this;
-    }
+	public void setRegDescricao(String regDescricao) {
+		this.regDescricao = regDescricao;
+	}
 
-    public void setReg_todos(String reg_todos) {
-        this.reg_todos = reg_todos;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+	public void setRegTodos(String regTodos) {
+		this.regTodos = regTodos;
+	}
+	
+	public ZonedDateTime getDataCadastro() {
+		return dataCadastro;
+	}
 
-    @Override
+	public void setDataCadastro(ZonedDateTime dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
+	
+	public Regra dataCadastro(ZonedDateTime dataCadastro) {
+		this.dataCadastro = dataCadastro;
+		return this;
+	}
+	
+	  // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -127,16 +152,12 @@ public class Regra implements Serializable {
         return 31;
     }
 
+	@Override
+	public String toString() {
+		return "Regra [id=" + id + ", regDescricao=" + regDescricao + ", regConta=" + regConta + ", regHistorico="
+				+ regHistorico + ", regTodos=" + regTodos + ", parceiro=" + parceiro + "]";
+	}
+
     // prettier-ignore
-    @Override
-    public String toString() {
-        return "Regra{" +
-            "id=" + getId() +
-            ", par_codigo=" + getPar_codigo() +
-            ", reg_descricao='" + getReg_descricao() + "'" +
-            ", reg_conta=" + getReg_conta() +
-            ", reg_historico='" + getReg_historico() + "'" +
-            ", reg_todos='" + getReg_todos() + "'" +
-            "}";
-    }
+ 
 }

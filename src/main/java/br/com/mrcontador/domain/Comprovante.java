@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -72,7 +73,7 @@ public class Comprovante implements Serializable {
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Agenciabancaria agenciabancaria;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Arquivo arquivo;
 

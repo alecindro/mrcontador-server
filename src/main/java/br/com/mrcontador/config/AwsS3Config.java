@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import software.amazon.awssdk.auth.credentials.SystemPropertyCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
@@ -29,6 +30,6 @@ public class AwsS3Config {
 		S3AsyncClient client = S3AsyncClient.builder().credentialsProvider(credentials).region(Region.US_EAST_1).build();
 		logger.info(credentials.resolveCredentials().accessKeyId());
 		return client;
-	}*/
-
+	}
+*/
 }

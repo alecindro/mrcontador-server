@@ -78,15 +78,15 @@ public class NotafiscalService {
         notafiscalRepository.deleteById(id);
     }
     
-    public void process(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo) {
+    public void process(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo, boolean isEmitente) {
     	NotafiscalNfe400Mapper mapper = new NotafiscalNfe400Mapper();
-    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo);
+    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo,isEmitente);
     	notafiscalRepository.saveAll(list);
     	
     }
-    public void process(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo) {
+    public void process(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo,boolean isEmitente) {
     	NotafiscalNfe310Mapper mapper = new NotafiscalNfe310Mapper();
-    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo);
+    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo,isEmitente);
     	notafiscalRepository.saveAll(list);
     }
     
