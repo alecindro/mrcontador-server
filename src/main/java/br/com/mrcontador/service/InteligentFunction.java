@@ -33,7 +33,5 @@ public class InteligentFunction {
 		proc.setDate(4, Date.valueOf(end));
 		proc.execute();
 		proc.close();
-		dataSource.getConnection().close();
-		
 	}
 }
