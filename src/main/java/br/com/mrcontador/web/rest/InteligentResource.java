@@ -1,7 +1,6 @@
 package br.com.mrcontador.web.rest;
 
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.security.SecurityUtils;
-import br.com.mrcontador.service.InteligentFunction;
 import br.com.mrcontador.service.InteligentQueryService;
 import br.com.mrcontador.service.InteligentService;
 import br.com.mrcontador.service.dto.InteligentCriteria;
@@ -39,17 +36,12 @@ public class InteligentResource {
 
     private final InteligentQueryService inteligentQueryService;
     
-    private final InteligentFunction function;
-    
-    private static final String ENTITY_NAME = "inteligent";
-    
 	@Value("${jhipster.clientApp.name}")
 	private String applicationName;
 
-    public InteligentResource(InteligentService inteligentService, InteligentQueryService inteligentQueryService,InteligentFunction function) {
+    public InteligentResource(InteligentService inteligentService, InteligentQueryService inteligentQueryService) {
         this.inteligentService = inteligentService;
         this.inteligentQueryService = inteligentQueryService;
-        this.function = function;
     }
 
     /**
@@ -97,8 +89,8 @@ public class InteligentResource {
     		throws Exception {
     	log.debug("processando funcao. Periodo: {}, Parceiro: {}, Agencia:{}", periodo,parceiroId,agenciabancariaId);
     	try {
-			function.callInteligent(parceiroId, agenciabancariaId, periodo, SecurityUtils.getCurrentTenantHeader());
-		} catch (SQLException e) {
+			inteligentService.processInteligent(parceiroId, agenciabancariaId, periodo);
+		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 			throw new MrContadorException("inteligent.fail", e.getMessage());
 		}

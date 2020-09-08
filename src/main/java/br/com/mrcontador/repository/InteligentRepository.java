@@ -2,7 +2,10 @@ package br.com.mrcontador.repository;
 
 import br.com.mrcontador.domain.Inteligent;
 
+import java.time.LocalDate;
+
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +14,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface InteligentRepository extends JpaRepository<Inteligent, Long>, JpaSpecificationExecutor<Inteligent> {
+	
+	@Procedure(procedureName = "processa_inteligente")
+	int callInteligent(Long parceiroID, Long agenciaBancariaID, LocalDate begin, LocalDate end);
 }

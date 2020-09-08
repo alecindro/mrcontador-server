@@ -2,6 +2,8 @@ package br.com.mrcontador.service;
 
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.repository.InteligentRepository;
+import br.com.mrcontador.util.MrContadorUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -71,5 +74,11 @@ public class InteligentService {
     public void delete(Long id) {
         log.debug("Request to delete Inteligent : {}", id);
         inteligentRepository.deleteById(id);
+    }
+    
+    public int processInteligent(Long parceiroID, Long agenciaBancariaID, String periodo) {
+    	LocalDate begin = MrContadorUtil.initalForPeriodo(periodo);
+		LocalDate end = MrContadorUtil.lastForPeriodo(periodo);
+		return inteligentRepository.callInteligent(parceiroID, agenciaBancariaID, begin, end);
     }
 }
