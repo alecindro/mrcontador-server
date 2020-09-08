@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.mrcontador.domain.Regra;
 import br.com.mrcontador.service.RegraQueryService;
 import br.com.mrcontador.service.RegraService;
 import br.com.mrcontador.service.dto.RegraCriteria;
-import br.com.mrcontador.service.dto.RegraDTO;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -57,41 +57,41 @@ public class RegraResource {
     /**
      * {@code POST  /regras} : Create a new regra.
      *
-     * @param regraDTO the regraDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new regraDTO, or with status {@code 400 (Bad Request)} if the regra has already an ID.
+     * @param Regra the Regra to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new Regra, or with status {@code 400 (Bad Request)} if the regra has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/regras")
-    public ResponseEntity<RegraDTO> createRegra(@RequestBody RegraDTO regraDTO) throws URISyntaxException {
-        log.debug("REST request to save Regra : {}", regraDTO);
-        if (regraDTO.getId() != null) {
+    public ResponseEntity<Regra> createRegra(@RequestBody Regra regra) throws URISyntaxException {
+        log.debug("REST request to save Regra : {}", regra);
+        if (regra.getId() != null) {
             throw new BadRequestAlertException("A new regra cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        RegraDTO result = regraService.save(regraDTO);
-        return ResponseEntity.created(new URI("/api/regras/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        regra = regraService.save(regra);
+        return ResponseEntity.created(new URI("/api/regras/" + regra.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, regra.getId().toString()))
+            .body(regra);
     }
 
     /**
      * {@code PUT  /regras} : Updates an existing regra.
      *
-     * @param regraDTO the regraDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated regraDTO,
-     * or with status {@code 400 (Bad Request)} if the regraDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the regraDTO couldn't be updated.
+     * @param Regra the Regra to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated Regra,
+     * or with status {@code 400 (Bad Request)} if the Regra is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the Regra couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/regras")
-    public ResponseEntity<RegraDTO> updateRegra(@RequestBody RegraDTO regraDTO) throws URISyntaxException {
-        log.debug("REST request to update Regra : {}", regraDTO);
-        if (regraDTO.getId() == null) {
+    public ResponseEntity<Regra> updateRegra(@RequestBody Regra regra) throws URISyntaxException {
+        log.debug("REST request to update Regra : {}", regra);
+        if (regra.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        RegraDTO result = regraService.save(regraDTO);
+        regra = regraService.save(regra);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, regraDTO.getId().toString()))
-            .body(result);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, regra.getId().toString()))
+            .body(regra);
     }
 
     /**
@@ -102,9 +102,9 @@ public class RegraResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of regras in body.
      */
     @GetMapping("/regras")
-    public ResponseEntity<List<RegraDTO>> getAllRegras(RegraCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Regra>> getAllRegras(RegraCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Regras by criteria: {}", criteria);
-        Page<RegraDTO> page = regraQueryService.findByCriteria(criteria, pageable);
+        Page<Regra> page = regraQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -124,20 +124,20 @@ public class RegraResource {
     /**
      * {@code GET  /regras/:id} : get the "id" regra.
      *
-     * @param id the id of the regraDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the regraDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the Regra to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the Regra, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/regras/{id}")
-    public ResponseEntity<RegraDTO> getRegra(@PathVariable Long id) {
+    public ResponseEntity<Regra> getRegra(@PathVariable Long id) {
         log.debug("REST request to get Regra : {}", id);
-        Optional<RegraDTO> regraDTO = regraService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(regraDTO);
+        Optional<Regra> Regra = regraService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Regra);
     }
 
     /**
      * {@code DELETE  /regras/:id} : delete the "id" regra.
      *
-     * @param id the id of the regraDTO to delete.
+     * @param id the id of the Regra to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/regras/{id}")

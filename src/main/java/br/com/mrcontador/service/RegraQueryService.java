@@ -2,6 +2,8 @@ package br.com.mrcontador.service;
 
 import java.util.List;
 
+import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -10,13 +12,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.mrcontador.domain.Parceiro_;
 // for static metamodels
 import br.com.mrcontador.domain.Regra;
 import br.com.mrcontador.domain.Regra_;
 import br.com.mrcontador.repository.RegraRepository;
 import br.com.mrcontador.service.dto.RegraCriteria;
 import br.com.mrcontador.service.dto.RegraDTO;
-import br.com.mrcontador.service.mapper.RegraMapper;
 import io.github.jhipster.service.QueryService;
 
 /**
@@ -32,12 +34,8 @@ public class RegraQueryService extends QueryService<Regra> {
     private final Logger log = LoggerFactory.getLogger(RegraQueryService.class);
 
     private final RegraRepository regraRepository;
-
-    private final RegraMapper regraMapper;
-
-    public RegraQueryService(RegraRepository regraRepository, RegraMapper regraMapper) {
+    public RegraQueryService(RegraRepository regraRepository) {
         this.regraRepository = regraRepository;
-        this.regraMapper = regraMapper;
     }
 
     /**
@@ -46,10 +44,10 @@ public class RegraQueryService extends QueryService<Regra> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<RegraDTO> findByCriteria(RegraCriteria criteria) {
+    public List<Regra> findByCriteria(RegraCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Regra> specification = createSpecification(criteria);
-        return regraMapper.toDto(regraRepository.findAll(specification));
+        return regraRepository.findAll(specification);
     }
 
     /**
@@ -59,11 +57,10 @@ public class RegraQueryService extends QueryService<Regra> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<RegraDTO> findByCriteria(RegraCriteria criteria, Pageable page) {
+    public Page<Regra> findByCriteria(RegraCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Regra> specification = createSpecification(criteria);
-        return regraRepository.findAll(specification, page)
-            .map(regraMapper::toDto);
+        return regraRepository.findAll(specification, page);
     }
 
     /**
@@ -88,21 +85,25 @@ public class RegraQueryService extends QueryService<Regra> {
         if (criteria != null) {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Regra_.id));
+            }            
+            if (criteria.getRegDescricao() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getRegDescricao(), Regra_.regDescricao));
             }
-            if (criteria.getPar_codigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getPar_codigo(), Regra_.par_codigo));
+            if (criteria.getRegConta() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRegConta(), Regra_.regConta));
             }
-            if (criteria.getReg_descricao() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getReg_descricao(), Regra_.reg_descricao));
+            if (criteria.getRegHistorico() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getRegHistorico(), Regra_.regHistorico));
             }
-            if (criteria.getReg_conta() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getReg_conta(), Regra_.reg_conta));
+            if (criteria.getRegTodos() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getRegTodos(), Regra_.regTodos));
             }
-            if (criteria.getReg_historico() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getReg_historico(), Regra_.reg_historico));
+            if (criteria.getDataCadastro() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getDataCadastro(), Regra_.dataCadastro));
             }
-            if (criteria.getReg_todos() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getReg_todos(), Regra_.reg_todos));
+            if (criteria.getParceiroId() != null) {
+                specification = specification.and(buildSpecification(criteria.getParceiroId(),
+                    root -> root.join(Regra_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
             }
         }
         return specification;

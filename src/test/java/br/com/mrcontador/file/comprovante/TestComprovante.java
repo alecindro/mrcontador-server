@@ -14,9 +14,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.AgenciabancariaService;
+import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 
@@ -27,6 +31,10 @@ public class TestComprovante {
 	
 	@Autowired
 	private ParserComprovanteDefault defaultParser;
+	@Autowired
+	private AgenciabancariaService agenciaService;
+	@Autowired
+	private ParceiroService parceiroService; 
 	private static final String usuario = "teste";
 	
 
@@ -88,7 +96,7 @@ public class TestComprovante {
 		
 	}
 	
-	@Test
+	
 	public void testSantander2() throws FileNotFoundException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("1651");
@@ -100,8 +108,7 @@ public class TestComprovante {
 		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/santander/GerarPDF_04082020105944.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
+		List<FileS3> errors =  defaultParser.process(dto, agencia);
 		for(FileS3 erro : errors) {
 			System.out.println(erro.toString());
 		}
@@ -128,6 +135,24 @@ public class TestComprovante {
 		File initialFile = new File(folder);	
 		return new FileInputStream(initialFile);
 		
+	}
+	
+	@Test
+	public void bb() throws Exception {
+		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
+		Agenciabancaria agencia = agenciaService.findOne(1L).get();
+		Parceiro parceiro = parceiroService.findOne(2L).get();
+		FileDTO dto = new FileDTO();
+		dto.setContador("teste");
+		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/01.2019.pdf"));
+		dto.setUsuario(usuario);
+		dto.setContentType("application/pdf");
+		dto.setParceiro(parceiro);
+		List<FileS3> errors =  defaultParser.process(dto, agencia);
+		System.out.println("========== ERROS ==================");
+		for(FileS3 erro : errors) {			
+			System.out.println(erro.toString());
+		}
 	}
 
 }

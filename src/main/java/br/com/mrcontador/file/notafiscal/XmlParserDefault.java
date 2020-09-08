@@ -19,16 +19,17 @@ import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
 public class XmlParserDefault implements FileParser {
-	
+
 	@Autowired
-	private NotafiscalService notafiscalService; 
-	@Autowired 
+	private NotafiscalService notafiscalService;
+	@Autowired
 	private S3Service s3Service;
 	@Autowired
-    private ParceiroService parceiroService;
+	private ParceiroService parceiroService;
 
 	@Override
 	public void process(FileDTO dto) throws Exception {
@@ -44,67 +45,91 @@ public class XmlParserDefault implements FileParser {
 			NotaDefault notaDefault = new DFPersister().read(NotaDefault.class, header, false);
 			switch (notaDefault.getProtocolo().getVersao()) {
 			case "4.00":
-				processNFE40(doc,nota,dto);				
+				processNFE40(doc, nota, dto);
 				break;
 			case "3.10":
-				processNFE301(doc,nota,dto);				
+				processNFE301(doc, nota, dto);
 				break;
 			default:
 				break;
 			}
 		} catch (IOException e) {
-			throw new MrContadorException("notafiscal.notparsed",e.getCause());
+			throw new MrContadorException("notafiscal.notparsed", e.getCause());
 		} finally {
 			try {
 				baos.close();
-				if(header != null) {
+				if (header != null) {
 					header.close();
 				}
-				if(nota != null) {
+				if (nota != null) {
 					doc.close();
 				}
 			} catch (IOException e) {
-				
+
 			}
 		}
 
 	}
 
-	private void processNFE40(InputStream doc,InputStream nota,FileDTO dto) throws Exception {
+	private void processNFE40(InputStream doc, InputStream nota, FileDTO dto) throws Exception {
 		com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada = new DFPersister()
 				.read(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada.class, nota, false);
-		Parceiro parceiro = findParceiro(nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
+		Parceiro parceiro = null;
+		String cnpjDestinatario = nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj()
-				: nfNotaProcessada.getNota().getInfo().getDestinatario().getCpf());
-		validateParceiro(dto.getParceiro(), parceiro);
+				: nfNotaProcessada.getNota().getInfo().getDestinatario().getCpf();
+		String cnpjEmitente = nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj() != null
+				? nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj()
+				: nfNotaProcessada.getNota().getInfo().getEmitente().getCpf();
+		boolean isEmitente = isEmitente(dto.getParceiro().getParCnpjcpf(), cnpjDestinatario, cnpjEmitente);		
+		if (isEmitente) {
+			parceiro = findParceiro(cnpjEmitente);
+		} else {
+			parceiro = findParceiro(cnpjDestinatario);
+		}
 		dto.setInputStream(doc);
 		Arquivo arquivo = s3Service.uploadNota(dto);
-		notafiscalService.process(nfNotaProcessada, parceiro, arquivo);
+		notafiscalService.process(nfNotaProcessada, parceiro, arquivo,isEmitente);
 	}
 
-	private void processNFE301(InputStream doc,InputStream nota,FileDTO dto) throws Exception {
+	private void processNFE301(InputStream doc, InputStream nota, FileDTO dto) throws Exception {
 		com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada = new DFPersister()
 				.read(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada.class, nota, false);
-		Parceiro parceiro = findParceiro(nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
+		Parceiro parceiro = null;
+		String cnpjDestinatario = nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj()
-				: nfNotaProcessada.getNota().getInfo().getDestinatario().getCpf());
-		validateParceiro(dto.getParceiro(), parceiro);
+				: nfNotaProcessada.getNota().getInfo().getDestinatario().getCpf();
+		String cnpjEmitente = nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj() != null
+				? nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj()
+				: nfNotaProcessada.getNota().getInfo().getEmitente().getCpf();
+		boolean isEmitente = isEmitente(dto.getParceiro().getParCnpjcpf(), cnpjDestinatario, cnpjEmitente);		
+		if (isEmitente) {
+			parceiro = findParceiro(cnpjEmitente);
+		} else {
+			parceiro = findParceiro(cnpjDestinatario);
+		}
 		Arquivo arquivo = s3Service.uploadNota(dto);
 		dto.setInputStream(doc);
-		notafiscalService.process(nfNotaProcessada, parceiro, arquivo);
+		notafiscalService.process(nfNotaProcessada, parceiro, arquivo, isEmitente);
 	}
-	
-	 private Parceiro findParceiro(String cnpj) {
-	    	Optional<Parceiro> parceiro = parceiroService.findByParCnpjcpf(cnpj);
-	    	if(parceiro.isPresent()) {
-	    		return parceiro.get();
-	    	}
-	    	throw new MrContadorException("parceiro.notfound", cnpj);
-  }
-	 private void validateParceiro(Parceiro parameter, Parceiro nota) {
-		 if(!parameter.getId().equals(nota.getId())) {
-			 throw new MrContadorException("nota.parceiro.notfromnota", nota.getParCnpjcpf());
-		 }
-	 }
+
+	private Parceiro findParceiro(String cnpj) {
+		Optional<Parceiro> parceiro = parceiroService.findByParCnpjcpf(cnpj);
+		if (parceiro.isPresent()) {
+			return parceiro.get();
+		}
+		throw new MrContadorException("parceiro.notfound", cnpj);
+	}
+
+	private boolean isEmitente(String cnpj, String cnpjDestinatario, String cnpjEmitente) {
+		if(cnpjDestinatario != null && MrContadorUtil.onlyNumbers(cnpj).equals(MrContadorUtil.onlyNumbers(cnpjDestinatario))){
+			return false;
+		}
+		if(cnpjEmitente != null && MrContadorUtil.onlyNumbers(cnpj).equals(MrContadorUtil.onlyNumbers(cnpjEmitente))){
+			return true;
+		}
+			throw new MrContadorException("nota.parceiro.notfromnota");
+		
+	}
 
 }

@@ -24,7 +24,7 @@ public class TesteBBComprovante {
 	
 	public static void main(String[] args) throws Exception {
 		TesteBBComprovante teste = new TesteBBComprovante();
-		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/comprovantes072020.pdf");
+		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/01.2019.pdf");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {
@@ -61,10 +61,11 @@ public class TesteBBComprovante {
 	
 	private void caixa(String file) throws Exception {
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("5248");
-		agencia.setAgeNumero("456550");
+		agencia.setAgeAgencia("31747");
+		agencia.setAgeNumero("40106");
 		Parceiro parceiro = new Parceiro();
-		parceiro.setParCnpjcpf(null);		
+		parceiro.setId(2L);
+		parceiro.setParCnpjcpf("10539433000173");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.BB.getCodigoBancario());
 		FileDTO dto = new FileDTO();
 		dto.setInputStream(load(file));

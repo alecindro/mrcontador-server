@@ -50,8 +50,8 @@ public class MrContadorUtil {
 	public static String genFileName(TipoDocumento tipo, String contentType) {
 		return tipo.getIndexName()+"_"+getDateFileName()+"."+getExtensionFile(contentType);
 	}
-	public static String genFileName(TipoDocumento tipo,Long idParceiro, String contentType, int page, int index) {
-		return tipo.getTipoDoc()+"_parc_"+idParceiro+"_data_"+getDateFileName()+"_page_"+page+"_index"+index+"."+getExtensionFile(contentType);
+	public static String genFileName(TipoDocumento tipo,Long idParceiro, String contentType, int page) {
+		return tipo.getTipoDoc()+"_parc_"+idParceiro+"_data_"+getDateFileName()+"_page_"+"."+getExtensionFile(contentType);
 	}
 	public static String genErroFileName(String ds, String contentType) {
 		return ds+"_"+getDateFileName().toString()+"."+getExtensionFile(contentType);

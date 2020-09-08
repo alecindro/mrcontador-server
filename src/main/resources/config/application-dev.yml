@@ -136,7 +136,7 @@ client:
   cnpj:
     url: https://www.receitaws.com.br/v1/cnpj/{0}
 s3:
-  bucketName: mrcontador-files
+  bucketName: mrcontador-files-test
   planoContaFolder: '{0}/{1}/planocontas'
   notaFolder: '{0}/{1}/notas'
   extratoFolder: '{0}/{1}/extratos'

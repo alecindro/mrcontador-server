@@ -2,14 +2,13 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import io.github.jhipster.service.Criteria;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link br.com.mrcontador.domain.Regra} entity. This class is used
@@ -26,26 +25,29 @@ public class RegraCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private IntegerFilter par_codigo;
+    private LongFilter parceiroId;
 
-    private StringFilter reg_descricao;
+    private StringFilter regDescricao;
 
-    private IntegerFilter reg_conta;
+    private IntegerFilter regConta;
 
-    private StringFilter reg_historico;
+    private StringFilter regHistorico;
 
-    private StringFilter reg_todos;
+    private StringFilter regTodos;
+    
+    private ZonedDateTimeFilter dataCadastro;
 
     public RegraCriteria() {
     }
 
     public RegraCriteria(RegraCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.par_codigo = other.par_codigo == null ? null : other.par_codigo.copy();
-        this.reg_descricao = other.reg_descricao == null ? null : other.reg_descricao.copy();
-        this.reg_conta = other.reg_conta == null ? null : other.reg_conta.copy();
-        this.reg_historico = other.reg_historico == null ? null : other.reg_historico.copy();
-        this.reg_todos = other.reg_todos == null ? null : other.reg_todos.copy();
+        this.regDescricao = other.regDescricao == null ? null : other.regDescricao.copy();
+        this.regConta = other.regConta == null ? null : other.regConta.copy();
+        this.regHistorico = other.regHistorico == null ? null : other.regHistorico.copy();
+        this.regTodos = other.regTodos == null ? null : other.regTodos.copy();
+        this.dataCadastro = other.dataCadastro == null ? null : other.dataCadastro.copy();
+        this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
     }
 
     @Override
@@ -61,48 +63,55 @@ public class RegraCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public IntegerFilter getPar_codigo() {
-        return par_codigo;
+    public StringFilter getRegDescricao() {
+        return regDescricao;
     }
 
-    public void setPar_codigo(IntegerFilter par_codigo) {
-        this.par_codigo = par_codigo;
+    public void setRegDescricao(StringFilter regDescricao) {
+        this.regDescricao = regDescricao;
     }
 
-    public StringFilter getReg_descricao() {
-        return reg_descricao;
+    public IntegerFilter getRegConta() {
+        return regConta;
     }
 
-    public void setReg_descricao(StringFilter reg_descricao) {
-        this.reg_descricao = reg_descricao;
+    public void setRegConta(IntegerFilter regConta) {
+        this.regConta = regConta;
     }
 
-    public IntegerFilter getReg_conta() {
-        return reg_conta;
+    public StringFilter getRegHistorico() {
+        return regHistorico;
     }
 
-    public void setReg_conta(IntegerFilter reg_conta) {
-        this.reg_conta = reg_conta;
+    public void setRegHistorico(StringFilter regHistorico) {
+        this.regHistorico = regHistorico;
     }
 
-    public StringFilter getReg_historico() {
-        return reg_historico;
+    public StringFilter getRegTodos() {
+        return regTodos;
     }
 
-    public void setReg_historico(StringFilter reg_historico) {
-        this.reg_historico = reg_historico;
+    public void setRegTodos(StringFilter regTodos) {
+        this.regTodos = regTodos;
     }
 
-    public StringFilter getReg_todos() {
-        return reg_todos;
-    }
+    public LongFilter getParceiroId() {
+		return parceiroId;
+	}
 
-    public void setReg_todos(StringFilter reg_todos) {
-        this.reg_todos = reg_todos;
-    }
+	public void setParceiroId(LongFilter parceiroId) {
+		this.parceiroId = parceiroId;
+	}
+	
+	public ZonedDateTimeFilter getDataCadastro() {
+		return dataCadastro;
+	}
 
+	public void setDataCadastro(ZonedDateTimeFilter dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -113,22 +122,24 @@ public class RegraCriteria implements Serializable, Criteria {
         final RegraCriteria that = (RegraCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(par_codigo, that.par_codigo) &&
-            Objects.equals(reg_descricao, that.reg_descricao) &&
-            Objects.equals(reg_conta, that.reg_conta) &&
-            Objects.equals(reg_historico, that.reg_historico) &&
-            Objects.equals(reg_todos, that.reg_todos);
+            Objects.equals(regDescricao, that.regDescricao) &&
+            Objects.equals(regConta, that.regConta) &&
+            Objects.equals(regHistorico, that.regHistorico) &&
+            Objects.equals(parceiroId, that.parceiroId) &&
+            Objects.equals(dataCadastro, that.dataCadastro) &&
+            Objects.equals(regTodos, that.regTodos);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
         id,
-        par_codigo,
-        reg_descricao,
-        reg_conta,
-        reg_historico,
-        reg_todos
+        regDescricao,
+        regConta,
+        regHistorico,
+        regTodos,
+        dataCadastro,
+        parceiroId
         );
     }
 
@@ -137,11 +148,12 @@ public class RegraCriteria implements Serializable, Criteria {
     public String toString() {
         return "RegraCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (par_codigo != null ? "par_codigo=" + par_codigo + ", " : "") +
-                (reg_descricao != null ? "reg_descricao=" + reg_descricao + ", " : "") +
-                (reg_conta != null ? "reg_conta=" + reg_conta + ", " : "") +
-                (reg_historico != null ? "reg_historico=" + reg_historico + ", " : "") +
-                (reg_todos != null ? "reg_todos=" + reg_todos + ", " : "") +
+                (regDescricao != null ? "regDescricao=" + regDescricao + ", " : "") +
+                (regConta != null ? "regConta=" + regConta + ", " : "") +
+                (regHistorico != null ? "regHistorico=" + regHistorico + ", " : "") +
+                (regTodos != null ? "regTodos=" + regTodos + ", " : "") +
+                (dataCadastro != null ? "dataCadastro=" + dataCadastro + ", " : "") +
+                (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
             "}";
     }
 

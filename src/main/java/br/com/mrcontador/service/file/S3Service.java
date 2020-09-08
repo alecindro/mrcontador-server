@@ -2,11 +2,13 @@ package br.com.mrcontador.service.file;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 //import org.xml.sax.ContentHandler;
 //import org.xml.sax.SAXException;
@@ -106,30 +108,30 @@ public class S3Service {
 		return saveArquivo(dto);
 	}
 
+	@Async("taskExecutor")
 	public void uploadComprovante(List<FileS3> files) {
-		for (FileS3 fileS3 : files) {
+		ArquivoMapper mapper = new ArquivoMapper();
+		List<Comprovante> comprovantes = new ArrayList<>();
+		files.forEach(fileS3 ->{
 			String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
 					String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getComprovanteFolder());
-			int index = 0;
-			for (Comprovante comprovante : fileS3.getComprovantes()) {
-				String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
-						fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType(),
-						fileS3.getPage(), index);
-				index = index + 1;
-				// uploadAsyncStream(filename, dir, fileS3, comprovante,
-				// SecurityUtils.getCurrentTenantHeader());
-				String eTag = uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
-				fileS3.getFileDTO().setName(filename);
-				fileS3.getFileDTO().setBucket(properties.getBucketName());
-				fileS3.getFileDTO().setS3Dir(dir);
-				fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-				fileS3.getFileDTO().seteTag(eTag);
-				fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-				Arquivo arquivo = saveArquivo(fileS3.getFileDTO());
+			String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
+					fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType(),
+					fileS3.getPage());
+			String eTag = uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
+			fileS3.getFileDTO().setName(filename);
+			fileS3.getFileDTO().setBucket(properties.getBucketName());
+			fileS3.getFileDTO().setS3Dir(dir);
+			fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+			fileS3.getFileDTO().seteTag(eTag);
+			fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+			Arquivo arquivo = mapper.toEntity(fileS3.getFileDTO());
+			fileS3.getComprovantes().forEach(comprovante -> {
 				comprovante.setArquivo(arquivo);
-				comprovanteService.save(comprovante);
-			}
-		}
+				comprovantes.add(comprovante);
+			});
+		});
+		comprovanteService.saveAll(comprovantes);	
 	}
 
 	public Arquivo uploadPlanoConta(FileDTO dto) {
@@ -178,31 +180,16 @@ public class S3Service {
 			throw new MrContadorException("upload.aws.error", e);
 		}
 	}
-/*
-	private void uploadAsyncStream(String filename, String dir, FileS3 fileS3, Comprovante comprovante, String tenant) {
-		CompletableFuture<PutObjectResponse> future = s3AsyncClient.putObject(
-				PutObjectRequest.builder().bucket(properties.getBucketName()).key(dir + "/" + filename).build(),
-				AsyncRequestBody.fromBytes(fileS3.getOutputStream().toByteArray()));
-		future.whenComplete((resp, err) -> {
-			if (resp != null) {
-				TenantContext.setTenantSchema(tenant);
-				fileS3.getFileDTO().setName(filename);
-				fileS3.getFileDTO().setBucket(properties.getBucketName());
-				fileS3.getFileDTO().setS3Dir(dir);
-				fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-				fileS3.getFileDTO().seteTag(resp.eTag());
-				fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-				Arquivo arquivo = saveArquivo(fileS3.getFileDTO());
-				comprovante.setArquivo(arquivo);
-				comprovanteService.save(comprovante);
-			} else {
-				log.error(err.getMessage(), err);
-			}
 
-		});
-
-		future.join();
-	}*/
+	/*
+	 * private CompletableFuture<PutObjectResponse> uploadAsyncStream(String
+	 * filename, String dir, FileS3 fileS3, Comprovante comprovante) {
+	 * CompletableFuture<PutObjectResponse> future = s3AsyncClient.putObject(
+	 * PutObjectRequest.builder().bucket(properties.getBucketName()).key(dir + "/" +
+	 * filename).build(),
+	 * AsyncRequestBody.fromBytes(fileS3.getOutputStream().toByteArray()));
+	 * future.join(); return future; }
+	 */
 
 	public byte[] downloadByteArray(String s3Url) {
 		return downloadS3(s3Url).asByteArray();
