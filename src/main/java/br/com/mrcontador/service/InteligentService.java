@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -79,6 +80,6 @@ public class InteligentService {
     public int processInteligent(Long parceiroID, Long agenciaBancariaID, String periodo) {
     	LocalDate begin = MrContadorUtil.initalForPeriodo(periodo);
 		LocalDate end = MrContadorUtil.lastForPeriodo(periodo);
-		return inteligentRepository.callInteligent(parceiroID, agenciaBancariaID, begin, end);
+		return inteligentRepository.callInteligent(parceiroID, agenciaBancariaID, Date.valueOf(begin), Date.valueOf(end));
     }
 }
