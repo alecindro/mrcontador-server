@@ -28,8 +28,10 @@ public class TestNFE {
 	@Test
 	public void test() throws Exception {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "/home/alecindro/Documents/drcontabil/docs/nfe/42191100087537000130550010000611471007995445.xml";
-		File initialFile = new File(folder);	
+		String folder = "/home/alecindro/Documents/drcontabil/docs/nfe2";
+		File fileEntry = new File(folder);	
+		
+		for(File initialFile : fileEntry.listFiles()) {
 		FileDTO dto = new FileDTO();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
@@ -47,6 +49,7 @@ public class TestNFE {
 	} catch(Exception e) {
 		e.printStackTrace();
 	}
+		}
 	    
 	}
 	/*

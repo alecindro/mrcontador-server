@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.file.TipoDocumento;
 
 public class FileS3 {
@@ -12,6 +13,7 @@ public class FileS3 {
 	private Integer page;
 	private ByteArrayOutputStream outputStream;
 	private List<Comprovante> comprovantes;
+	private List<Notafiscal> notas;
 	private FileDTO fileDTO;
 	private TipoDocumento tipoDocumento;
 	private String messageErro;
@@ -56,6 +58,16 @@ public class FileS3 {
 	public void setMessageErro(String messageErro) {
 		this.messageErro = messageErro;
 	}
+	public List<Notafiscal> getNotas() {
+		if(notas == null) {
+			notas = new ArrayList<>();
+		}
+		return notas;
+	}
+	public void setNotas(List<Notafiscal> notas) {
+		this.notas = notas;
+	}
+	
 	
 	
 	

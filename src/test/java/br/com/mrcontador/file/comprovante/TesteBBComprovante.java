@@ -24,7 +24,7 @@ public class TesteBBComprovante {
 	
 	public static void main(String[] args) throws Exception {
 		TesteBBComprovante teste = new TesteBBComprovante();
-		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/01.2019.pdf");
+		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/2ª Comprovante de Pagamentos  01_2020-199.pdf");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {

@@ -4,21 +4,21 @@ package br.com.mrcontador.service.mapper;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import br.com.mrcontador.domain.Arquivo;
+
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
 
 public class NotafiscalNfe310Mapper  {
 
-	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, Arquivo arquivo, boolean isEmitente) {
+	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente) {
 		List<Notafiscal> list = new ArrayList<>();
 		com.fincatto.documentofiscal.nfe310.classes.NFTipo nfTipo = nfe.getNota().getInfo().getIdentificacao().getTipo();
 		if(nfe.getNota().getInfo().getCobranca() == null || nfe.getNota().getInfo().getCobranca().getDuplicatas()==null) {
-			list.add(parse(nfe, parceiro, arquivo,nfTipo,isEmitente));
+			list.add(parse(nfe, parceiro, nfTipo,isEmitente));
 			return list;
 		}
 		for (com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaInfoDuplicata nfNotaInfoParcela : nfe.getNota().getInfo().getCobranca().getDuplicatas()) {
-			Notafiscal nf = parse(nfe, parceiro, arquivo,nfTipo,isEmitente);	
+			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente);	
 			nf.setNotParcela(nfNotaInfoParcela.getNumeroDuplicata());
 			nf.setNotValorparcela(new BigDecimal(nfNotaInfoParcela.getValorDuplicata()));
 			nf.setNotDataparcela(nfNotaInfoParcela.getDataVencimento());
@@ -27,11 +27,9 @@ public class NotafiscalNfe310Mapper  {
 		return list;
 	}
 	
-	private Notafiscal parse(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, Arquivo arquivo, com.fincatto.documentofiscal.nfe310.classes.NFTipo nfTipo, boolean isEmitente) {
+	private Notafiscal parse(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, com.fincatto.documentofiscal.nfe310.classes.NFTipo nfTipo, boolean isEmitente) {
 		Notafiscal nf = new Notafiscal();
-		nf.setArquivo(arquivo);
 		nf.setParceiro(parceiro);
-		
 		nf.setNotNumero(nfe.getNota().getInfo().getIdentificacao().getNumeroNota());
 		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada());
 		nf.setNotDescricao(nfe.getNota().getInfo().getIdentificacao().getNaturezaOperacao());

@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.repository.NotafiscalRepository;
@@ -41,6 +40,10 @@ public class NotafiscalService {
     public Notafiscal save(Notafiscal notafiscal) {
         log.debug("Request to save Notafiscal : {}", notafiscal);
         return notafiscalRepository.save(notafiscal);
+    }
+    public List<Notafiscal> saveAll(List<Notafiscal> notas) {
+        log.debug("Request to saveAll Notafiscal : {}", notas);
+        return notafiscalRepository.saveAll(notas);
     }
 
     /**
@@ -78,16 +81,16 @@ public class NotafiscalService {
         notafiscalRepository.deleteById(id);
     }
     
-    public void process(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo, boolean isEmitente) {
+    public List<Notafiscal>  process(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, boolean isEmitente) {
     	NotafiscalNfe400Mapper mapper = new NotafiscalNfe400Mapper();
-    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo,isEmitente);
-    	notafiscalRepository.saveAll(list);
+    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
+    	return notafiscalRepository.saveAll(list);
     	
     }
-    public void process(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, Arquivo arquivo,boolean isEmitente) {
+    public List<Notafiscal>  process(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, boolean isEmitente) {
     	NotafiscalNfe310Mapper mapper = new NotafiscalNfe310Mapper();
-    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, arquivo,isEmitente);
-    	notafiscalRepository.saveAll(list);
+    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
+    	return notafiscalRepository.saveAll(list);
     }
     
    

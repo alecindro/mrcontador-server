@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,17 @@ import org.springframework.stereotype.Service;
 
 import com.fincatto.documentofiscal.utils.DFPersister;
 
-import br.com.mrcontador.domain.Arquivo;
+import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileParser;
+import br.com.mrcontador.file.TipoDocumento;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -34,21 +39,17 @@ public class XmlParserDefault implements FileParser {
 	@Override
 	public void process(FileDTO dto) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		InputStream header = null;
 		InputStream doc = null;
-		InputStream nota = null;
 		try {
 			dto.getInputStream().transferTo(baos);
-			header = new ByteArrayInputStream(baos.toByteArray());
 			doc = new ByteArrayInputStream(baos.toByteArray());
-			nota = new ByteArrayInputStream(baos.toByteArray());
-			NotaDefault notaDefault = new DFPersister().read(NotaDefault.class, header, false);
+			NotaDefault notaDefault = new DFPersister().read(NotaDefault.class, doc, false);
 			switch (notaDefault.getProtocolo().getVersao()) {
 			case "4.00":
-				processNFE40(doc, nota, dto);
+				processNFE40(baos, dto);
 				break;
 			case "3.10":
-				processNFE301(doc, nota, dto);
+				processNFE301(baos, dto);
 				break;
 			default:
 				break;
@@ -58,12 +59,6 @@ public class XmlParserDefault implements FileParser {
 		} finally {
 			try {
 				baos.close();
-				if (header != null) {
-					header.close();
-				}
-				if (nota != null) {
-					doc.close();
-				}
 			} catch (IOException e) {
 
 			}
@@ -71,9 +66,11 @@ public class XmlParserDefault implements FileParser {
 
 	}
 
-	private void processNFE40(InputStream doc, InputStream nota, FileDTO dto) throws Exception {
+	private void processNFE40(ByteArrayOutputStream baos, FileDTO dto) throws Exception {
+		InputStream nota = new ByteArrayInputStream(baos.toByteArray());
 		com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada = new DFPersister()
 				.read(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada.class, nota, false);
+		nota.close();
 		Parceiro parceiro = null;
 		String cnpjDestinatario = nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj()
@@ -81,20 +78,27 @@ public class XmlParserDefault implements FileParser {
 		String cnpjEmitente = nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj()
 				: nfNotaProcessada.getNota().getInfo().getEmitente().getCpf();
-		boolean isEmitente = isEmitente(dto.getParceiro().getParCnpjcpf(), cnpjDestinatario, cnpjEmitente);		
+		boolean isEmitente = isEmitente(dto.getParceiro().getParCnpjcpf(), cnpjDestinatario, cnpjEmitente);
 		if (isEmitente) {
 			parceiro = findParceiro(cnpjEmitente);
 		} else {
 			parceiro = findParceiro(cnpjDestinatario);
 		}
-		dto.setInputStream(doc);
-		Arquivo arquivo = s3Service.uploadNota(dto);
-		notafiscalService.process(nfNotaProcessada, parceiro, arquivo,isEmitente);
+		validateParceiro(dto.getParceiro(), parceiro);
+		List<Notafiscal> notas = notafiscalService.process(nfNotaProcessada, parceiro, isEmitente);
+		FileS3 fileS3 = new FileS3();
+		fileS3.setTipoDocumento(TipoDocumento.NOTA);
+		fileS3.setNotas(notas);
+		fileS3.setFileDTO(dto);
+		fileS3.setOutputStream(baos);
+		s3Service.uploadNota(fileS3, nfNotaProcessada, SecurityUtils.getCurrentTenantHeader());
 	}
 
-	private void processNFE301(InputStream doc, InputStream nota, FileDTO dto) throws Exception {
+	private void processNFE301(ByteArrayOutputStream baos, FileDTO dto) throws Exception {
+		InputStream nota = new ByteArrayInputStream(baos.toByteArray());
 		com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada = new DFPersister()
 				.read(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada.class, nota, false);
+		nota.close();
 		Parceiro parceiro = null;
 		String cnpjDestinatario = nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getDestinatario().getCnpj()
@@ -102,15 +106,20 @@ public class XmlParserDefault implements FileParser {
 		String cnpjEmitente = nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj() != null
 				? nfNotaProcessada.getNota().getInfo().getEmitente().getCnpj()
 				: nfNotaProcessada.getNota().getInfo().getEmitente().getCpf();
-		boolean isEmitente = isEmitente(dto.getParceiro().getParCnpjcpf(), cnpjDestinatario, cnpjEmitente);		
+		boolean isEmitente = isEmitente(dto.getParceiro().getParCnpjcpf(), cnpjDestinatario, cnpjEmitente);
 		if (isEmitente) {
 			parceiro = findParceiro(cnpjEmitente);
 		} else {
 			parceiro = findParceiro(cnpjDestinatario);
 		}
-		Arquivo arquivo = s3Service.uploadNota(dto);
-		dto.setInputStream(doc);
-		notafiscalService.process(nfNotaProcessada, parceiro, arquivo, isEmitente);
+		validateParceiro(dto.getParceiro(), parceiro);
+		List<Notafiscal> notas = notafiscalService.process(nfNotaProcessada, parceiro, isEmitente);
+		FileS3 fileS3 = new FileS3();
+		fileS3.setTipoDocumento(TipoDocumento.NOTA);
+		fileS3.setNotas(notas);
+		fileS3.setFileDTO(dto);
+		fileS3.setOutputStream(baos);
+		s3Service.uploadNota(fileS3, nfNotaProcessada, SecurityUtils.getCurrentTenantHeader());
 	}
 
 	private Parceiro findParceiro(String cnpj) {
@@ -121,15 +130,27 @@ public class XmlParserDefault implements FileParser {
 		throw new MrContadorException("parceiro.notfound", cnpj);
 	}
 
+	private void validateParceiro(Parceiro parceiroUpload, Parceiro parceiroDoc) throws ComprovanteException {
+		if (parceiroUpload == null) {
+			throw new ComprovanteException("parceiro.notfound");
+		}
+
+		if (!parceiroUpload.equals(parceiroDoc)) {
+			throw new ComprovanteException("nota.parceironotequal");
+		}
+
+	}
+
 	private boolean isEmitente(String cnpj, String cnpjDestinatario, String cnpjEmitente) {
-		if(cnpjDestinatario != null && MrContadorUtil.onlyNumbers(cnpj).equals(MrContadorUtil.onlyNumbers(cnpjDestinatario))){
+		if (cnpjDestinatario != null
+				&& MrContadorUtil.onlyNumbers(cnpj).equals(MrContadorUtil.onlyNumbers(cnpjDestinatario))) {
 			return false;
 		}
-		if(cnpjEmitente != null && MrContadorUtil.onlyNumbers(cnpj).equals(MrContadorUtil.onlyNumbers(cnpjEmitente))){
+		if (cnpjEmitente != null && MrContadorUtil.onlyNumbers(cnpj).equals(MrContadorUtil.onlyNumbers(cnpjEmitente))) {
 			return true;
 		}
-			throw new MrContadorException("nota.parceiro.notfromnota");
-		
+		throw new MrContadorException("nota.parceiro.notfromnota");
+
 	}
 
 }

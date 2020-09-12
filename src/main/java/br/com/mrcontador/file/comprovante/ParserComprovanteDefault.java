@@ -29,6 +29,7 @@ import br.com.mrcontador.file.comprovante.banco.ComprovanteSicoob;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSicredi;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteUnicred;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
@@ -82,7 +83,7 @@ public class ParserComprovanteDefault {
 				}
 			}
 			service.saveAll(salvar);
-			s3Service.uploadComprovante(files);
+			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
 			log.info("Comprovantes salvos");
 			return erros;
 		} catch (IOException e1) {

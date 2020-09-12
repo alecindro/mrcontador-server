@@ -2,7 +2,6 @@ package br.com.mrcontador.service.file;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,14 +13,17 @@ import org.springframework.stereotype.Service;
 //import org.xml.sax.SAXException;
 
 import br.com.mrcontador.config.S3Properties;
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.ArquivoErro;
-import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.TipoDocumento;
+import br.com.mrcontador.file.notafiscal.pdf.NFDanfeReport;
+import br.com.mrcontador.file.notafiscal.pdf.NFDanfeReport310;
 import br.com.mrcontador.service.ArquivoErroService;
 import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.mapper.ArquivoErroMapper;
@@ -40,10 +42,10 @@ public class S3Service {
 
 	@Autowired
 	private S3Client s3Client;
-//	@Autowired
-//	private S3AsyncClient s3AsyncClient;
 	@Autowired
 	private ComprovanteService comprovanteService;
+	@Autowired
+	private NotafiscalService notafiscalService; 
 	@Autowired
 	private S3Properties properties;
 	@Autowired
@@ -88,11 +90,84 @@ public class S3Service {
 		return arquivoErro;
 	}
 
-	public Arquivo uploadNota(FileDTO dto) {
-		dto.setTipoDocumento(TipoDocumento.NOTA);
-		upload(properties.getNotaFolder(), dto);
+	@Async("taskExecutor")
+	public void uploadNota(FileS3 fileS3, com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada, String tenant) {
+		TenantContext.setTenantSchema(tenant);
+		fileS3.getFileDTO().setTipoDocumento(TipoDocumento.NOTA);
 		ArquivoMapper mapper = new ArquivoMapper();
-		return mapper.toEntity(dto);
+		String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
+				String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getNotaFolder());
+		String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
+				fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType());	
+		String eTag = uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
+		fileS3.getFileDTO().setName(filename);
+		fileS3.getFileDTO().setBucket(properties.getBucketName());
+		fileS3.getFileDTO().setS3Dir(dir);
+		fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+		fileS3.getFileDTO().seteTag(eTag);
+		fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+		Arquivo arquivoXML = arquivoService.save(mapper.toEntity(fileS3.getFileDTO()));
+		fileS3.getNotas().forEach(nota->{
+			nota.setArquivo(arquivoXML);
+			});
+		NFDanfeReport nfDanfeReport = new NFDanfeReport(nfNotaProcessada);
+		try {
+			byte[] bytesArray = nfDanfeReport.gerarDanfeNFe(null);
+			String filenamePDF = MrContadorUtil.genFileNamePDF(fileS3.getTipoDocumento(),
+					fileS3.getFileDTO().getParceiro().getId());
+			String eTagPDF = uploadS3Bytes(filenamePDF, dir, bytesArray);
+			fileS3.getFileDTO().setName(filenamePDF);
+			fileS3.getFileDTO().seteTag(eTagPDF);
+			fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filenamePDF));
+			fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filenamePDF));
+			Arquivo arquivoPDF = arquivoService.save(mapper.toEntity(fileS3.getFileDTO()));
+			fileS3.getNotas().forEach(nota->{
+				nota.setArquivoPDF(arquivoPDF);
+				});
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+		}
+		notafiscalService.saveAll(fileS3.getNotas());		
+	}
+	
+	@Async("taskExecutor")
+	public void uploadNota(FileS3 fileS3, com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada, String tenant) {
+		TenantContext.setTenantSchema(tenant);
+		fileS3.getFileDTO().setTipoDocumento(TipoDocumento.NOTA);
+		ArquivoMapper mapper = new ArquivoMapper();
+		String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
+				String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getNotaFolder());
+		String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
+				fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType());
+		String eTag = uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
+		fileS3.getFileDTO().setName(filename);
+		fileS3.getFileDTO().setBucket(properties.getBucketName());
+		fileS3.getFileDTO().setS3Dir(dir);
+		fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+		fileS3.getFileDTO().seteTag(eTag);
+		fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+		Arquivo arquivoXML = mapper.toEntity(fileS3.getFileDTO());
+		fileS3.getNotas().forEach(nota->{
+			nota.setArquivo(arquivoXML);
+			});
+		NFDanfeReport310 nfDanfeReport = new NFDanfeReport310(nfNotaProcessada);
+		try {
+			byte[] bytesArray = nfDanfeReport.gerarDanfeNFe(null);
+			String filenamePDF = MrContadorUtil.genFileNamePDF(fileS3.getTipoDocumento(),
+					fileS3.getFileDTO().getParceiro().getId());
+			String eTagPDF = uploadS3Bytes(filenamePDF, dir, bytesArray);
+			fileS3.getFileDTO().setName(filenamePDF);
+			fileS3.getFileDTO().seteTag(eTagPDF);
+			fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filenamePDF));
+			fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filenamePDF));
+			Arquivo arquivoPDF = mapper.toEntity(fileS3.getFileDTO());
+			fileS3.getNotas().forEach(nota->{
+				nota.setArquivoPDF(arquivoPDF);
+				});
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+		}
+		notafiscalService.saveAll(fileS3.getNotas());
 	}
 
 	public Arquivo uploadExtrato(FileDTO dto) {
@@ -109,9 +184,9 @@ public class S3Service {
 	}
 
 	@Async("taskExecutor")
-	public void uploadComprovante(List<FileS3> files) {
+	public void uploadComprovante(List<FileS3> files, String tenant) {
 		ArquivoMapper mapper = new ArquivoMapper();
-		List<Comprovante> comprovantes = new ArrayList<>();
+		TenantContext.setTenantSchema(tenant);
 		files.forEach(fileS3 ->{
 			String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
 					String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getComprovanteFolder());
@@ -128,10 +203,10 @@ public class S3Service {
 			Arquivo arquivo = mapper.toEntity(fileS3.getFileDTO());
 			fileS3.getComprovantes().forEach(comprovante -> {
 				comprovante.setArquivo(arquivo);
-				comprovantes.add(comprovante);
 			});
+			comprovanteService.saveAll(fileS3.getComprovantes());	
+
 		});
-		comprovanteService.saveAll(comprovantes);	
 	}
 
 	public Arquivo uploadPlanoConta(FileDTO dto) {
