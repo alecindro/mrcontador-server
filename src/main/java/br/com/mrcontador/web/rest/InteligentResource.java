@@ -90,6 +90,9 @@ public class InteligentResource {
     	log.debug("processando funcao. Periodo: {}, Parceiro: {}, Agencia:{}", periodo,parceiroId,agenciabancariaId);
     	try {
 			inteligentService.processInteligent(parceiroId, agenciabancariaId, periodo);
+    	}catch(org.springframework.dao.InvalidDataAccessResourceUsageException e) {
+    		log.error(e.getMessage(),e);
+			throw new MrContadorException("inteligent.fail", e.getCause().getCause().getMessage());
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 			throw new MrContadorException("inteligent.fail", e.getMessage());

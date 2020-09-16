@@ -7,21 +7,22 @@ import java.util.List;
 import com.fincatto.documentofiscal.nfe400.classes.NFTipo;
 import com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaInfoParcela;
 
+import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
 
 
 public class NotafiscalNfe400Mapper {
 
-	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente) {
+	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente, Arquivo pdf, Arquivo xml) {
 		List<Notafiscal> list = new ArrayList<>();
 		NFTipo nfTipo = nfe.getNota().getInfo().getIdentificacao().getTipo();
 		if(nfe.getNota().getInfo().getCobranca() == null || nfe.getNota().getInfo().getCobranca().getParcelas()==null) {
-			list.add(parse(nfe, parceiro, nfTipo,isEmitente));
+			list.add(parse(nfe, parceiro, nfTipo,isEmitente,false,pdf,xml));
 			return list;
 		}
 		for (NFNotaInfoParcela nfNotaInfoParcela : nfe.getNota().getInfo().getCobranca().getParcelas()) {
-			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente);	
+			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente,true, pdf,xml);	
 			nf.setNotParcela(nfNotaInfoParcela.getNumeroParcela());
 			nf.setNotValorparcela(new BigDecimal(nfNotaInfoParcela.getValorParcela()));
 			nf.setNotDataparcela(nfNotaInfoParcela.getDataVencimento());
@@ -30,14 +31,24 @@ public class NotafiscalNfe400Mapper {
 		return list;
 	}
 	
-	private Notafiscal parse(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, NFTipo nfTipo, boolean isEmitente) {
+	private Notafiscal parse(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, NFTipo nfTipo, boolean isEmitente, boolean contemParcela, Arquivo pdf, Arquivo xml) {
 		Notafiscal nf = new Notafiscal();
+		nf.setArquivo(xml);
+		nf.setArquivoPDF(pdf);
 		nf.setParceiro(parceiro);
 		nf.setTnoCodigo(Integer.valueOf(nfTipo.getCodigo()));
 		nf.setNotNumero(nfe.getNota().getInfo().getIdentificacao().getNumeroNota());
 		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada());
+		if(nf.getNotDatasaida() == null) {
+			nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraEmissao());
+		}
 		nf.setNotDescricao(nfe.getNota().getInfo().getIdentificacao().getNaturezaOperacao());
 		nf.setNotValornota(new BigDecimal(nfe.getNota().getInfo().getTotal().getIcmsTotal().getValorTotalNFe()));
+		if(!contemParcela) {
+			nf.setNotDataparcela(nf.getNotDatasaida().toLocalDate());
+			nf.setNotParcela("001");
+			nf.setNotValorparcela(nf.getNotValorparcela());
+		}
 		if(isEmitente) {
 			nf.setTnoCodigo(1);
 			nf.setNotCnpj(nfe.getNota().getInfo().getDestinatario().getCnpj() != null

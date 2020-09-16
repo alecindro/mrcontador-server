@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +12,7 @@ import br.com.mrcontador.file.TipoDocumento;
 
 public class MrContadorUtil {
 
+	private static Random random = new Random();
 	public static String onlyNumbers(String value) {
 		if (value != null) {
 			return value.replaceAll("\\D", "");
@@ -58,10 +60,14 @@ public class MrContadorUtil {
 	}
 	
 	public static String genFileNamePDF(TipoDocumento tipo,Long idParceiro) {
-		return tipo.getTipoDoc()+"_parc_"+idParceiro+"_data_"+getDateFileName()+".pdf";
+		return tipo.getTipoDoc()+"_parc_"+idParceiro+"_data_"+getDateFileName()+random.nextInt()+".pdf";
 	}
 	public static String genErroFileName(String ds, String contentType) {
 		return ds+"_"+getDateFileName().toString()+"."+getExtensionFile(contentType);
+	}
+	
+	public static String genFileNameXML(TipoDocumento tipo,Long idParceiro) {
+		return tipo.getTipoDoc()+"_parc_"+idParceiro+"_data_"+getDateFileName()+random.nextInt()+".xml";
 	}
 	
 	public static String getExtensionFile(String contentType) {
@@ -70,7 +76,7 @@ public class MrContadorUtil {
 	
 	private static String getDateFileName() {
 		LocalDateTime z = LocalDateTime.now();
-		return z.getYear()+"_"+z.getMonthValue()+"_"+z.getDayOfMonth()+"_"+z.getHour()+"_"+z.getMinute()+"_"+z.getSecond();
+		return z.getYear()+""+z.getMonthValue()+""+z.getDayOfMonth()+"_"+z.getHour()+""+z.getMinute()+""+z.getSecond();
 	}
 	
 	public static String removeZerosFromInital(String value) {
@@ -119,9 +125,9 @@ public class MrContadorUtil {
 		LocalDate date = LocalDate.now();
 		String mes = periodo.substring(0, periodo.length()-4);
 		String year = StringUtils.substringAfter(periodo, mes);
-		date.withMonth(Integer.valueOf(mes));
-		date.withYear(Integer.valueOf(year));
-		date.withDayOfMonth(1);
+		date = date.withMonth(Integer.valueOf(mes));
+		date = date.withYear(Integer.valueOf(year));
+		date = date.withDayOfMonth(1);
 		return date;
 	}
 	
@@ -129,9 +135,9 @@ public class MrContadorUtil {
 		LocalDate date = LocalDate.now();
 		String mes = periodo.substring(0, periodo.length()-4);
 		String year = StringUtils.substringAfter(periodo, mes);
-		date.withMonth(Integer.valueOf(mes));
-		date.withYear(Integer.valueOf(year));
-		date.with(TemporalAdjusters.lastDayOfMonth());
+		date = date.withMonth(Integer.valueOf(mes));
+		date = date.withYear(Integer.valueOf(year));
+		date = date.with(TemporalAdjusters.lastDayOfMonth());
 		return date;
 	}
 

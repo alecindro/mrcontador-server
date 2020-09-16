@@ -86,22 +86,33 @@ public class ComprovanteBB extends ComprovanteBanco{
 				list.add(diffValue);
 			}
 			if (line.contains("BENEFICIARIO:")) {
-				String value = StringUtils.normalizeSpace(lines[i+1]).trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
+				if(StringUtils.normalizeSpace(lines[i+5]).trim().equals("SACADOR AVALISTA:")){
+					String value = StringUtils.normalizeSpace(lines[i+6]).trim();
+					diffValue.setNewValue(value);
+					diffValue.setLine(i+6);
+				}else {				
+				String value = StringUtils.normalizeSpace(lines[i+1]).trim();
 				diffValue.setNewValue(value);
 				diffValue.setLine(i+1);
+				}
 				list.add(diffValue);
 			}
 			if (line.contains("CNPJ:")) {
-				if(StringUtils.normalizeSpace(lines[i+1]).trim().equals("PAGADOR:")){
-					String value = StringUtils.substringAfter(line, "CNPJ:").trim();
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(CNPJ_BEN);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CNPJ_BEN);
+				if(StringUtils.normalizeSpace(lines[i+1]).trim().equals("SACADOR AVALISTA:")){
+					String value =  StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i+3]).trim(), "CNPJ:").trim();
 					diffValue.setNewValue(value);
-					diffValue.setLine(i+1);
+					diffValue.setLine(i+3);
 					list.add(diffValue);
-				}			
+				}else {
+					String value = StringUtils.substringAfter(line, "CNPJ:").trim();
+					diffValue.setNewValue(value);
+					diffValue.setLine(i);
+					list.add(diffValue);
+				}
 			}
 			if (line.contains("CNPJ:")) {
 				if(StringUtils.normalizeSpace(lines[i-2]).trim().equals("PAGADOR:")){
@@ -544,6 +555,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 	private List<Comprovante> parseComprovDarf(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException{
 		List<DiffValue> list = new ArrayList<DiffValue>();
 		int i = 0;
+		String codigoReceita = "";
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
 			if (line.contains("AGENCIA:")) {
@@ -569,6 +581,10 @@ public class ComprovanteBB extends ComprovanteBanco{
 				diffValue.setNewValue(value);
 				diffValue.setLine(i+1);
 				list.add(diffValue);
+			}
+			if (line.contains("CODIGO DA RECEITA")) {
+				codigoReceita = StringUtils.substringAfter(line, "CODIGO DA RECEITA").trim();
+				
 			}
 			if (line.contains("DATA DO PAGAMENTO")) {
 				String value = StringUtils.substringAfter(line, "DATA DO PAGAMENTO").trim();
@@ -615,7 +631,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		}
 		DiffValue diffValue = new DiffValue();
 		diffValue.setOldValue(OBS);
-		diffValue.setNewValue("COMPROVANTE DE PAGAMENTO DE DARF/DARF SIMPLES");
+		diffValue.setNewValue("COMPROVANTE DE PAGAMENTO DE DARF - "+codigoReceita);
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();

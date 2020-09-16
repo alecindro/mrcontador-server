@@ -142,4 +142,4 @@ s3:
   extratoFolder: '{0}/{1}/extratos'
   errorFolder: mrcontador/error
   comprovanteFolder: '{0}/{1}/comprovantes'
-  urlS3: https://mrcontador-files.s3.amazonaws.com
+  urlS3: https://mrcontador-files-test.s3.amazonaws.com

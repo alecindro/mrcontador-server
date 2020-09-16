@@ -14,11 +14,11 @@ public class NotafiscalNfe310Mapper  {
 		List<Notafiscal> list = new ArrayList<>();
 		com.fincatto.documentofiscal.nfe310.classes.NFTipo nfTipo = nfe.getNota().getInfo().getIdentificacao().getTipo();
 		if(nfe.getNota().getInfo().getCobranca() == null || nfe.getNota().getInfo().getCobranca().getDuplicatas()==null) {
-			list.add(parse(nfe, parceiro, nfTipo,isEmitente));
+			list.add(parse(nfe, parceiro, nfTipo,isEmitente,false));
 			return list;
 		}
 		for (com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaInfoDuplicata nfNotaInfoParcela : nfe.getNota().getInfo().getCobranca().getDuplicatas()) {
-			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente);	
+			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente,true);	
 			nf.setNotParcela(nfNotaInfoParcela.getNumeroDuplicata());
 			nf.setNotValorparcela(new BigDecimal(nfNotaInfoParcela.getValorDuplicata()));
 			nf.setNotDataparcela(nfNotaInfoParcela.getDataVencimento());
@@ -27,13 +27,18 @@ public class NotafiscalNfe310Mapper  {
 		return list;
 	}
 	
-	private Notafiscal parse(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, com.fincatto.documentofiscal.nfe310.classes.NFTipo nfTipo, boolean isEmitente) {
+	private Notafiscal parse(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, com.fincatto.documentofiscal.nfe310.classes.NFTipo nfTipo, boolean isEmitente, boolean contemParcela) {
 		Notafiscal nf = new Notafiscal();
 		nf.setParceiro(parceiro);
 		nf.setNotNumero(nfe.getNota().getInfo().getIdentificacao().getNumeroNota());
 		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada());
 		nf.setNotDescricao(nfe.getNota().getInfo().getIdentificacao().getNaturezaOperacao());
 		nf.setNotValornota(new BigDecimal(nfe.getNota().getInfo().getTotal().getIcmsTotal().getValorTotalNFe()));
+		if(!contemParcela) {
+			nf.setNotDataparcela(nf.getNotDatasaida().toLocalDate());
+			nf.setNotParcela("001");
+			nf.setNotValorparcela(nf.getNotValorparcela());
+		}
 		if(isEmitente) {
 			nf.setNotCnpj(nfe.getNota().getInfo().getDestinatario().getCnpj() != null
 					? nfe.getNota().getInfo().getDestinatario().getCnpj()
