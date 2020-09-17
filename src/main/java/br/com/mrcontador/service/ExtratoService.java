@@ -19,6 +19,7 @@ import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.ListOfxDto;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.file.extrato.dto.OfxData;
+import br.com.mrcontador.file.extrato.dto.PdfData;
 import br.com.mrcontador.repository.ExtratoRepository;
 import br.com.mrcontador.service.file.S3Service;
 
@@ -103,6 +104,9 @@ public class ExtratoService {
 				extrato.setExtDescricao(ofxData.getTipoEntrada().toString());
 				extrato.setExtNumerocontrole(ofxData.getControle());
 				extrato.setExtNumerodocumento(ofxData.getDocumento());
+				if(ofxData instanceof PdfData) {
+					extrato.setInfoAdicional(((PdfData)ofxData).getInfAdicional());
+				}
 				extrato.setParceiro(listOfxDto.getFileDTO().getParceiro());
 				if (ofxData.getTipoEntrada().equals(TipoEntrada.CREDIT) || ofxData.getValor().compareTo(BigDecimal.ZERO)>0) {
 					extrato.setExtCredito(ofxData.getValor());

@@ -53,6 +53,9 @@ public class Extrato implements Serializable {
 
     @Column(name = "ext_descricao", length = 30)
     private String extDescricao;
+    
+    @Column(name = "info_adicional", length = 254)
+    private String infoAdicional;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -167,6 +170,19 @@ public class Extrato implements Serializable {
 
 	public void setExtNumerodocumento(String extNumerodocumento) {
 		this.extNumerodocumento = extNumerodocumento;
+	}
+	
+	 public Extrato infoAdicional(String infoAdicional) {
+		 this.infoAdicional = infoAdicional;
+		 return this;
+	 }
+
+	public String getInfoAdicional() {
+		return infoAdicional;
+	}
+
+	public void setInfoAdicional(String infoAdicional) {
+		this.infoAdicional = infoAdicional;
 	}
 
 	public Parceiro getParceiro() {

@@ -20,6 +20,10 @@ public class OfxDTO {
 	public void setDataList(List<OfxData> dataList) {
 		this.dataList = dataList;
 	}
+	@Override
+	public String toString() {
+		return "OfxDTO [banco=" + banco + ", conta=" + conta + ", agencia=" + agencia + "]";
+	}
 	public String getBanco() {
 		return banco;
 	}

@@ -29,13 +29,14 @@ public class MrContadorUtil {
 	}
 	public static String onlyMoney(String value) {
 		if (value != null) {
+			value = value.replace("C", "").trim();
+			value = value.replace("D", "").trim();
 			value = value.replace("R$", "").trim();
 			value = value.replace(".", "");
 			return value.replace(",", ".");
 		}
 		return value;
 	}
-	
 	
 	public static String getFolder(String contador,String parceiro, String s3Folder) {
 		return MessageFormat.format(s3Folder,contador,parceiro);

@@ -115,8 +115,6 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 20MB
       max-request-size: 22MB
-      
-      
 
 server:
   servlet:
@@ -124,7 +122,7 @@ server:
       cookie:
         http-only: true
   encoding:
-    charset: UTF-8      
+    charset: UTF-8
 
 # Properties to be exposed on the /info management endpoint
 info:
