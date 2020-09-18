@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.file.S3Service;
 
@@ -31,11 +33,15 @@ public class DownloadFileResource {
 	private final S3Service s3Service;
 	private final ComprovanteService comprovanteService;
 	private final NotafiscalService notafiscalService;
+	private final ExtratoService extratoService;
 	
-	public DownloadFileResource(S3Service s3Service, ComprovanteService comprovanteService, NotafiscalService notafiscalService) {
+	public DownloadFileResource(S3Service s3Service, ComprovanteService comprovanteService, 
+			NotafiscalService notafiscalService,
+			ExtratoService extratoService) {
 		this.s3Service = s3Service;
 		this.comprovanteService = comprovanteService;
 		this.notafiscalService = notafiscalService;
+		this.extratoService = extratoService;
 	}
 
 
@@ -73,6 +79,28 @@ public class DownloadFileResource {
 		Arquivo arquivo = notafiscal.get().getArquivoPDF();
 		if(arquivo == null) {
 			log.error("arquivo não encontrado. Nota fiscal ID: {} ", id);
+			throw new MrContadorException("arquivo.processing");
+		}
+		String key = arquivo.gets3Dir()+"/"+arquivo.getNome();
+		byte[] file = s3Service.downloadByteArray(key);
+		Resource resource = new ByteArrayResource(file);
+		return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(arquivo.getTipoArquivo()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getNomeOriginal() + "\"")
+                .body(resource);
+	}
+	
+	@GetMapping("/downloadFile/extrato/{id}")
+    public ResponseEntity<Resource> downloadExtrato(@PathVariable Long id) {
+		log.info("download comprovante de id {}",id);
+		Optional<Extrato> extrato =  extratoService.findOne(id);
+		if(extrato.isEmpty()) {
+			log.error("nota fiscal não encontrado. ID: {} ", id);
+			throw new MrContadorException("notafiscal.notfound");
+		}
+		Arquivo arquivo = extrato.get().getArquivo();
+		if(arquivo == null) {
+			log.error("arquivo não encontrado. Nota Extrato ID: {} ", id);
 			throw new MrContadorException("arquivo.processing");
 		}
 		String key = arquivo.gets3Dir()+"/"+arquivo.getNome();

@@ -15,6 +15,7 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.extrato.OfxParserDefault;
+import br.com.mrcontador.file.extrato.PdfParserDefault;
 import br.com.mrcontador.file.notafiscal.XmlParserDefault;
 import br.com.mrcontador.file.planoconta.PdfParserPlanoConta;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
@@ -32,6 +33,8 @@ public class FileService {
 	private XmlParserDefault xmlParserDefault;
 	@Autowired
 	private OfxParserDefault ofxParserDefault;
+	@Autowired
+	private PdfParserDefault pdfParserDefault;
 	@Autowired
 	private S3Service s3Service;
 	@Autowired
@@ -100,7 +103,12 @@ public class FileService {
 			throw new MrContadorException("agencia.notfound");
 		}
 		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
+		String media = com.google.common.net.MediaType.parse(file.getContentType()).subtype();
+		if(media == "pdf") {
+			pdfParserDefault.process(fileDTO, agenciabancaria.get());
+		}else {
 		ofxParserDefault.process(fileDTO, agenciabancaria.get());
+		}
 	}
 	
 	public List<FileS3> processComprovante(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {

@@ -68,11 +68,15 @@ public class UploadFileResource {
 		log.info("Processando Extrato: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
+		try {
 		fileService.processExtrato(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro, agencia);
 		return ResponseEntity
 				.created(new URI("/api/upload/extrato/")).headers(HeaderUtil
 						.createEntityCreationAlert(applicationName, true, "uploadExtrato", file.getName()))
 				.build();
+		}catch(org.springframework.dao.DataIntegrityViolationException e) {
+			throw new MrContadorException("extrato.imported");
+		}
 	}
 
 	@PostMapping("/upload/comprovante")
@@ -92,7 +96,7 @@ public class UploadFileResource {
 						.createEntityCreationAlert(applicationName, true, "uploadComprovante", file.getName()))
 				.build();
 		}catch(org.springframework.dao.DataIntegrityViolationException e) {
-			throw new MrContadorException("nfe.imported");
+			throw new MrContadorException("comprovante.imported");
 		}
 	}
 

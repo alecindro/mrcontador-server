@@ -630,7 +630,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			i = i+1;
 		}
 		DiffValue diffValue = new DiffValue();
-		diffValue.setOldValue(OBS);
+		diffValue.setOldValue(FORNECEDOR);
 		diffValue.setNewValue("COMPROVANTE DE PAGAMENTO DE DARF - "+codigoReceita);
 		diffValue.setLine(i);
 		list.add(diffValue);

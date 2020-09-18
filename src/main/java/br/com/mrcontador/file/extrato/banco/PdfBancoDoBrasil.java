@@ -112,10 +112,13 @@ public class PdfBancoDoBrasil extends PdfParser {
 				.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico + documento), 19));
 		data.setTipoEntrada(getTipo(valor));
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
+		if(data.getTipoEntrada().equals(TipoEntrada.DEBIT)) {
+			data.setValor(data.getValor().negate());
+		}
 	}
 
 	private static TipoEntrada getTipo(String value) {
-		String tipo = StringUtils.right(value, 1);
+		String tipo = StringUtils.right(StringUtils.normalizeSpace(value), 1);
 		TipoEntrada tipoEntrada = TipoEntrada.DEBIT;
 		if (StringUtils.equals(tipo, "C")) {
 			tipoEntrada = TipoEntrada.CREDIT;
