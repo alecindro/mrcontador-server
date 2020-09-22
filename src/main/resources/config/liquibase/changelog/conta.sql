@@ -14,6 +14,7 @@ CREATE TABLE ${schema}.conta (
 	data_cadastro date NULL,
 	parceiro_id int8 NULL,
 	arquivo_id int8 NULL,
+	con_valorboleto numeric(21,2) null,
 	CONSTRAINT conta_pkey PRIMARY KEY (id)
 );
 

@@ -1,6 +1,7 @@
 package br.com.mrcontador.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -52,7 +53,10 @@ public class Conta implements Serializable {
 
     @Column(name = "con_grau")
     private Integer conGrau;
-
+    
+    @Column(name = "con_valorboleto")
+    private BigDecimal conValorboleto;
+    
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "contas", allowSetters = true)
@@ -177,9 +181,20 @@ public class Conta implements Serializable {
 	public void setDataCadastro(Date dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
+	
+	public BigDecimal getConValorboleto() {
+		return conValorboleto;
+	}
+
+	public void setConValorboleto(BigDecimal conValorboleto) {
+		this.conValorboleto = conValorboleto;
+	}
+	
 
 	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 	
+	
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
