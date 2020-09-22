@@ -1,6 +1,7 @@
 package br.com.mrcontador.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +31,9 @@ public class Conta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "data_cadastro")
+    private Date dataCadastro;
 
     @Column(name = "con_conta")
     private Integer conConta;
@@ -164,6 +168,14 @@ public class Conta implements Serializable {
 
 	public void setConGrau(Integer conGrau) {
 		this.conGrau = conGrau;
+	}
+
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 
 	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

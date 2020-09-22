@@ -33,12 +33,6 @@ public class Comprovante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "par_codigo")
-    private Integer parCodigo;
-
-    @Column(name = "age_codigo")
-    private Integer ageCodigo;
-
     @Column(name = "com_cnpj", length = 18)
     private String comCnpj;
 
@@ -59,9 +53,21 @@ public class Comprovante implements Serializable {
 
     @Column(name = "com_valorpagamento", precision = 21, scale = 2)
     private BigDecimal comValorpagamento;
+    
+    @Column(name = "com_juros", precision = 21, scale = 2)
+    private BigDecimal juros;
 
+    @Column(name = "com_desconto", precision = 21, scale = 2)
+    private BigDecimal desconto;
+    
     @Column(name = "com_observacao", length = 90)
     private String comObservacao;
+    
+    @Column(name = "com_competencia", length = 20)
+    private String competencia;
+
+    @Column(name = "com_codigorecolhimento", length = 10)
+    private String codigoRecolhimento;
     
     @ManyToOne(optional = false)
     @NotNull
@@ -88,17 +94,8 @@ public class Comprovante implements Serializable {
 
 
 
-    public Comprovante parCodigo(Integer parCodigo) {
-        this.parCodigo = parCodigo;
-        return this;
-    }
 
 
-
-    public Comprovante ageCodigo(Integer ageCodigo) {
-        this.ageCodigo = ageCodigo;
-        return this;
-    }
 
     public Comprovante com_cnpj(String comCnpj) {
         this.comCnpj = comCnpj;
@@ -127,12 +124,10 @@ public class Comprovante implements Serializable {
         return this;
     }
 
-
     public Comprovante comValordocumento(BigDecimal comValordocumento) {
         this.comValordocumento = comValordocumento;
         return this;
     }
-
 
     public Comprovante comValorpagamento(BigDecimal comValorpagamento) {
         this.comValorpagamento = comValorpagamento;
@@ -142,22 +137,6 @@ public class Comprovante implements Serializable {
         this.comObservacao = comObservacao;
         return this;
     }
-    
-    public Integer getParCodigo() {
-		return parCodigo;
-	}
-
-	public void setParCodigo(Integer parCodigo) {
-		this.parCodigo = parCodigo;
-	}
-
-	public Integer getAgeCodigo() {
-		return ageCodigo;
-	}
-
-	public void setAgeCodigo(Integer ageCodigo) {
-		this.ageCodigo = ageCodigo;
-	}
 
 	public String getComCnpj() {
 		return comCnpj;
@@ -262,7 +241,41 @@ public class Comprovante implements Serializable {
 		return this;
 	}
 	
+	public BigDecimal getJuros() {
+		return juros;
+	}
+
+	public void setJuros(BigDecimal juros) {
+		this.juros = juros;
+	}
+
+	public BigDecimal getDesconto() {
+		return desconto;
+	}
+
+	public void setDesconto(BigDecimal desconto) {
+		this.desconto = desconto;
+	}
+
+	public String getCompetencia() {
+		return competencia;
+	}
+
+	public void setCompetencia(String competencia) {
+		this.competencia = competencia;
+	}
+
+	public String getCodigoRecolhimento() {
+		return codigoRecolhimento;
+	}
+
+	public void setCodigoRecolhimento(String codigoRecolhimento) {
+		this.codigoRecolhimento = codigoRecolhimento;
+	}
+	
+	
 	   // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
 
 	@Override
     public boolean equals(Object o) {
@@ -285,8 +298,6 @@ public class Comprovante implements Serializable {
     public String toString() {
         return "Comprovante{" +
             "id=" + getId() +
-            ", par_codigo=" + getParCodigo() +
-            ", age_codigo=" + getAgeCodigo() +
             ", com_cnpj='" + getComCnpj() + "'" +
             ", com_beneficiario='" + getComBeneficiario() + "'" +
             ", com_documento='" + getComDocumento() + "'" +

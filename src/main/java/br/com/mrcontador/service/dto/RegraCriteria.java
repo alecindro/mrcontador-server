@@ -6,9 +6,9 @@ import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link br.com.mrcontador.domain.Regra} entity. This class is used
@@ -35,7 +35,7 @@ public class RegraCriteria implements Serializable, Criteria {
 
     private StringFilter regTodos;
     
-    private ZonedDateTimeFilter dataCadastro;
+    private LocalDateFilter dataCadastro;
 
     public RegraCriteria() {
     }
@@ -103,11 +103,11 @@ public class RegraCriteria implements Serializable, Criteria {
 		this.parceiroId = parceiroId;
 	}
 	
-	public ZonedDateTimeFilter getDataCadastro() {
+	public LocalDateFilter getDataCadastro() {
 		return dataCadastro;
 	}
 
-	public void setDataCadastro(ZonedDateTimeFilter dataCadastro) {
+	public void setDataCadastro(LocalDateFilter dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
 

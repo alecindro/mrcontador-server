@@ -3,7 +3,6 @@ package br.com.mrcontador.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +46,7 @@ public class Notafiscal implements Serializable {
     private String notEmpresa;
 
     @Column(name = "not_datasaida")
-    private ZonedDateTime notDatasaida;
+    private LocalDate notDatasaida;
 
     @Column(name = "not_valornota", precision = 21, scale = 2)
     private BigDecimal notValornota;
@@ -112,12 +111,12 @@ public class Notafiscal implements Serializable {
         return this;
     }
 
-    public Notafiscal notDatasaida(ZonedDateTime notDatasaida) {
+    public Notafiscal notDatasaida(LocalDate notDatasaida) {
         this.notDatasaida = notDatasaida;
         return this;
     }
 
-    public void setNotDatasaida(ZonedDateTime notDatasaida) {
+    public void setNotDatasaida(LocalDate notDatasaida) {
         this.notDatasaida = notDatasaida;
     }
 
@@ -221,7 +220,7 @@ public class Notafiscal implements Serializable {
 		this.notParcela = notParcela;
 	}
 
-	public ZonedDateTime getNotDatasaida() {
+	public LocalDate getNotDatasaida() {
 		return notDatasaida;
 	}
 

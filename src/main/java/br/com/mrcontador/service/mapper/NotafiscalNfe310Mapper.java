@@ -31,11 +31,11 @@ public class NotafiscalNfe310Mapper  {
 		Notafiscal nf = new Notafiscal();
 		nf.setParceiro(parceiro);
 		nf.setNotNumero(nfe.getNota().getInfo().getIdentificacao().getNumeroNota());
-		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada());
+		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraEmissao().toLocalDate());
 		nf.setNotDescricao(nfe.getNota().getInfo().getIdentificacao().getNaturezaOperacao());
 		nf.setNotValornota(new BigDecimal(nfe.getNota().getInfo().getTotal().getIcmsTotal().getValorTotalNFe()));
 		if(!contemParcela) {
-			nf.setNotDataparcela(nf.getNotDatasaida().toLocalDate());
+			nf.setNotDataparcela(nf.getNotDatasaida());
 			nf.setNotParcela("001");
 			nf.setNotValorparcela(nf.getNotValorparcela());
 		}

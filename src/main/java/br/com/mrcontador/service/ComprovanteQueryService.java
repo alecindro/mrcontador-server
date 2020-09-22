@@ -88,12 +88,6 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Comprovante_.id));
             }
-            if (criteria.getParCodigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getParCodigo(), Comprovante_.parCodigo));
-            }
-            if (criteria.getAgeCodigo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getAgeCodigo(), Comprovante_.ageCodigo));
-            }
             if (criteria.getComCnpj() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getComCnpj(), Comprovante_.comCnpj));
             }

@@ -20,7 +20,7 @@ public class TestDanfe {
 	@Test
 	public void test() throws Exception {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "/home/alecindro/Documents/drcontabil/docs/nfe2/42200602171661000105550010006413301355432632.xml";
+		String folder = "/home/alecindro/Documents/drcontabil/docs/nfe_erro/42200182873068000140550010193342991992633550.xml";
 		String fileDest = "/home/alecindro/Documents/drcontabil/docs/nfe2/nfe.pdf";
 		File fileEntry = new File(folder);	
 		InputStream stream = new FileInputStream(fileEntry);

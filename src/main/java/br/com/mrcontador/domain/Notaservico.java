@@ -1,15 +1,22 @@
 package br.com.mrcontador.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Notaservico.
@@ -38,13 +45,13 @@ public class Notaservico implements Serializable {
     private String nseEmpresa;
 
     @Column(name = "nse_datasaida")
-    private ZonedDateTime nseDatasaida;
+    private LocalDate nseDatasaida;
 
     @Column(name = "nse_valornota", precision = 21, scale = 2)
     private BigDecimal nseValornota;
 
     @Column(name = "nse_dataparcela")
-    private ZonedDateTime nseDataparcela;
+    private LocalDate nseDataparcela;
 
     @Column(name = "nse_valorparcela", precision = 21, scale = 2)
     private BigDecimal nseValorparcela;
@@ -89,7 +96,7 @@ public class Notaservico implements Serializable {
         return this;
     }
 
-    public Notaservico nseDatasaida(ZonedDateTime nseDatasaida) {
+    public Notaservico nseDatasaida(LocalDate nseDatasaida) {
         this.nseDatasaida = nseDatasaida;
         return this;
     }
@@ -99,7 +106,7 @@ public class Notaservico implements Serializable {
         return this;
     }
 
-    public Notaservico nseDataparcela(ZonedDateTime nseDataparcela) {
+    public Notaservico nseDataparcela(LocalDate nseDataparcela) {
         this.nseDataparcela = nseDataparcela;
         return this;
     }
@@ -151,11 +158,11 @@ public class Notaservico implements Serializable {
 		this.nseEmpresa = nseEmpresa;
 	}
 
-	public ZonedDateTime getNseDatasaida() {
+	public LocalDate getNseDatasaida() {
 		return nseDatasaida;
 	}
 
-	public void setNseDatasaida(ZonedDateTime nseDatasaida) {
+	public void setNseDatasaida(LocalDate nseDatasaida) {
 		this.nseDatasaida = nseDatasaida;
 	}
 
@@ -167,11 +174,11 @@ public class Notaservico implements Serializable {
 		this.nseValornota = nseValornota;
 	}
 
-	public ZonedDateTime getNseDataparcela() {
+	public LocalDate getNseDataparcela() {
 		return nseDataparcela;
 	}
 
-	public void setNseDataparcela(ZonedDateTime nseDataparcela) {
+	public void setNseDataparcela(LocalDate nseDataparcela) {
 		this.nseDataparcela = nseDataparcela;
 	}
 

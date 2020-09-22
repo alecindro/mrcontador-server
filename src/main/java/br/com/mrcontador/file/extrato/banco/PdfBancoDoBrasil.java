@@ -87,7 +87,7 @@ public class PdfBancoDoBrasil extends PdfParser {
 			if (i < lines.length - 1) {
 				if (StringUtils.isWhitespace(StringUtils.left(lines[i + 1], 83))) {
 					i = i + 1;
-					data.setInfAdicional(StringUtils.trim(StringUtils.substring(lines[i], 83)));
+					data.setInfAdicional(StringUtils.normalizeSpace(StringUtils.substring(lines[i], 83)));
 				}
 			}
 
@@ -102,12 +102,12 @@ public class PdfBancoDoBrasil extends PdfParser {
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dtbalancete), dateFormatter)));
 		String agencia = StringUtils.left(StringUtils.substringAfter(line, dtbalancete), 38);
 		String lote = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia), 13);
-		data.setControle(StringUtils.trim(lote));
+		data.setControle(StringUtils.normalizeSpace(lote));
 		String historico = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote), 40);
-		data.setHistorico(StringUtils.trim(historico));
+		data.setHistorico(StringUtils.normalizeSpace(historico));
 		String documento = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico),
 				27);
-		data.setDocumento(StringUtils.trim(documento));
+		data.setDocumento(StringUtils.normalizeSpace(documento));
 		String valor = StringUtils.trim(StringUtils
 				.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico + documento), 19));
 		data.setTipoEntrada(getTipo(valor));

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.pdfbox.multipdf.Splitter;
@@ -63,7 +64,10 @@ public class PdfParserPlanoConta {
 			contaService.save(contas);
 			dto.setInputStream(second);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
-			contas.forEach(conta -> conta.setArquivo(arquivo));
+			contas.forEach(conta -> {
+				conta.setArquivo(arquivo);
+				conta.setDataCadastro(new Date());
+			});
 			contaService.save(contas);
 			return parceiro;
 		} catch (CnpjAlreadyExistException e) {

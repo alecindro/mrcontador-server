@@ -603,7 +603,7 @@
                         <font fontName="SansSerif" size="8"/>
                     </textElement>
                     <textFieldExpression>
-                        <![CDATA["(" + $F{DestFone}.substring(0, 2) + ") " + $F{DestFone}.substring(2, 6) + "-" + $F{DestFone}.substring(6, 10)]]></textFieldExpression>
+                        <![CDATA[$F{DestFone}]]></textFieldExpression>
                 </textField>
                 <textField isBlankWhenNull="true">
                     <reportElement x="264" y="59" width="26" height="12" uuid="2d3efb40-b749-4ca8-8718-b782c411b59a"/>

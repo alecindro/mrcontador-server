@@ -1,14 +1,21 @@
 package br.com.mrcontador.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.io.Serializable;
-import java.time.ZonedDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * A Arquivo.
@@ -31,7 +38,7 @@ public class Arquivo implements Serializable {
     private String nomeOriginal;
 
     @Column(name = "data_cadastro")
-    private ZonedDateTime dataCadastro;
+    private LocalDate dataCadastro;
 
     @Column(name = "tipo_arquivo")
     private String tipoArquivo;
@@ -94,16 +101,16 @@ public class Arquivo implements Serializable {
         this.nomeOriginal = nomeOriginal;
     }
 
-    public ZonedDateTime getDataCadastro() {
+    public LocalDate getDataCadastro() {
         return dataCadastro;
     }
 
-    public Arquivo dataCadastro(ZonedDateTime dataCadastro) {
+    public Arquivo dataCadastro(LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
         return this;
     }
 
-    public void setDataCadastro(ZonedDateTime dataCadastro) {
+    public void setDataCadastro(LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 

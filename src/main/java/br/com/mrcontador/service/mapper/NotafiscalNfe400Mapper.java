@@ -38,14 +38,14 @@ public class NotafiscalNfe400Mapper {
 		nf.setParceiro(parceiro);
 		nf.setTnoCodigo(Integer.valueOf(nfTipo.getCodigo()));
 		nf.setNotNumero(nfe.getNota().getInfo().getIdentificacao().getNumeroNota());
-		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada());
+		nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraEmissao().toLocalDate());
 		if(nf.getNotDatasaida() == null) {
-			nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraEmissao());
+			nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada().toLocalDate());
 		}
 		nf.setNotDescricao(nfe.getNota().getInfo().getIdentificacao().getNaturezaOperacao());
 		nf.setNotValornota(new BigDecimal(nfe.getNota().getInfo().getTotal().getIcmsTotal().getValorTotalNFe()));
 		if(!contemParcela) {
-			nf.setNotDataparcela(nf.getNotDatasaida().toLocalDate());
+			nf.setNotDataparcela(nf.getNotDatasaida());
 			nf.setNotParcela("001");
 			nf.setNotValorparcela(nf.getNotValorparcela());
 		}

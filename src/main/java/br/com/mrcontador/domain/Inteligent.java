@@ -2,7 +2,7 @@ package br.com.mrcontador.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,7 +37,7 @@ public class Inteligent implements Serializable {
     private String historicofinal;
 
     @Column(name = "datalancamento")
-    private ZonedDateTime datalancamento;
+    private LocalDate datalancamento;
 
     @Column(name = "associado")
     private Boolean associado;
@@ -52,10 +52,10 @@ public class Inteligent implements Serializable {
     private BigDecimal credito;
 
     @Column(name = "datainicio")
-    private ZonedDateTime datainicio;
+    private LocalDate datainicio;
 
     @Column(name = "datafim")
-    private ZonedDateTime datafim;
+    private LocalDate datafim;
 
     @Column(name = "cnpj")
     private String cnpj;
@@ -132,16 +132,16 @@ public class Inteligent implements Serializable {
         this.historicofinal = historicofinal;
     }
 
-    public ZonedDateTime getDatalancamento() {
+    public LocalDate getDatalancamento() {
         return datalancamento;
     }
 
-    public Inteligent datalancamento(ZonedDateTime datalancamento) {
+    public Inteligent datalancamento(LocalDate datalancamento) {
         this.datalancamento = datalancamento;
         return this;
     }
 
-    public void setDatalancamento(ZonedDateTime datalancamento) {
+    public void setDatalancamento(LocalDate datalancamento) {
         this.datalancamento = datalancamento;
     }
 
@@ -197,29 +197,29 @@ public class Inteligent implements Serializable {
         this.credito = credito;
     }
 
-    public ZonedDateTime getDatainicio() {
+    public LocalDate getDatainicio() {
         return datainicio;
     }
 
-    public Inteligent datainicio(ZonedDateTime datainicio) {
+    public Inteligent datainicio(LocalDate datainicio) {
         this.datainicio = datainicio;
         return this;
     }
 
-    public void setDatainicio(ZonedDateTime datainicio) {
+    public void setDatainicio(LocalDate datainicio) {
         this.datainicio = datainicio;
     }
 
-    public ZonedDateTime getDatafim() {
+    public LocalDate getDatafim() {
         return datafim;
     }
 
-    public Inteligent datafim(ZonedDateTime datafim) {
+    public Inteligent datafim(LocalDate datafim) {
         this.datafim = datafim;
         return this;
     }
 
-    public void setDatafim(ZonedDateTime datafim) {
+    public void setDatafim(LocalDate datafim) {
         this.datafim = datafim;
     }
 

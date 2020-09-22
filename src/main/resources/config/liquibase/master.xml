@@ -17,28 +17,23 @@
        <include file="config/liquibase/changelog/parceiro.sql" relativeToChangelogFile="false"/>
         <include file="config/liquibase/changelog/arquivo.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/banco.sql" relativeToChangelogFile="false"/>
+        <include file="config/liquibase/changelog/agenciabancaria.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/comprovante.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/conta.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/notafiscal.sql" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/agenciabancaria.sql" relativeToChangelogFile="false"/>
+
     <include file="config/liquibase/changelog/extrato.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/notaservico.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/regra.sql" relativeToChangelogFile="false"/>
      <include file="config/liquibase/changelog/atividade.sql" relativeToChangelogFile="false"/>
       <include file="config/liquibase/changelog/socio.sql" relativeToChangelogFile="false"/>
       	<include file="config/liquibase/changelog/data.sql" relativeToChangelogFile="false"/>
-      <include file="config/liquibase/changelog/altercomprovante.sql" relativeToChangelogFile="false"/>
-      <include file="config/liquibase/changelog/alternotafiscal.sql" relativeToChangelogFile="false"/>
-       <include file="config/liquibase/changelog/altercomprovante2.sql" relativeToChangelogFile="false"/>
        <include file="config/liquibase/changelog/inteligent.sql" relativeToChangelogFile="false"/>
-  <include file="config/liquibase/changelog/alteragenciabancaria.sql" relativeToChangelogFile="false"/>
-   <changeSet author="clientes" id="23">
+   <changeSet author="clientes" id="16">
     <sqlFile path="config/liquibase/changelog/intelingent_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-  <include file="config/liquibase/changelog/alterregra.sql" relativeToChangelogFile="false"/>
-  <include file="config/liquibase/changelog/alterextrato.sql" relativeToChangelogFile="false"/>
-   <!-- <include file="config/liquibase/changelog/intelingent_function.sql" relativeToChangelogFile="false"/>
-     jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+ 
+   <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

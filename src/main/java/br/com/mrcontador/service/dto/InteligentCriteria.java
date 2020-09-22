@@ -7,6 +7,7 @@ import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 import io.github.jhipster.service.filter.ZonedDateTimeFilter;
@@ -34,7 +35,7 @@ public class InteligentCriteria implements Serializable, Criteria {
     
     private StringFilter numerodocumento;
 
-    private ZonedDateTimeFilter datalancamento;
+    private LocalDateFilter datalancamento;
 
     private BooleanFilter associado;
 
@@ -44,9 +45,9 @@ public class InteligentCriteria implements Serializable, Criteria {
 
     private BigDecimalFilter credito;
 
-    private ZonedDateTimeFilter datainicio;
+    private LocalDateFilter datainicio;
 
-    private ZonedDateTimeFilter datafim;
+    private LocalDateFilter datafim;
 
     private StringFilter cnpj;
 
@@ -123,11 +124,11 @@ public class InteligentCriteria implements Serializable, Criteria {
         this.historicofinal = historicofinal;
     }
 
-    public ZonedDateTimeFilter getDatalancamento() {
+    public LocalDateFilter getDatalancamento() {
         return datalancamento;
     }
 
-    public void setDatalancamento(ZonedDateTimeFilter datalancamento) {
+    public void setDatalancamento(LocalDateFilter datalancamento) {
         this.datalancamento = datalancamento;
     }
 
@@ -163,19 +164,19 @@ public class InteligentCriteria implements Serializable, Criteria {
         this.credito = credito;
     }
 
-    public ZonedDateTimeFilter getDatainicio() {
+    public LocalDateFilter getDatainicio() {
         return datainicio;
     }
 
-    public void setDatainicio(ZonedDateTimeFilter datainicio) {
+    public void setDatainicio(LocalDateFilter datainicio) {
         this.datainicio = datainicio;
     }
 
-    public ZonedDateTimeFilter getDatafim() {
+    public LocalDateFilter getDatafim() {
         return datafim;
     }
 
-    public void setDatafim(ZonedDateTimeFilter datafim) {
+    public void setDatafim(LocalDateFilter datafim) {
         this.datafim = datafim;
     }
 

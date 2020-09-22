@@ -10,7 +10,6 @@ import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link br.com.mrcontador.domain.Notafiscal} entity. This class is used
@@ -35,7 +34,7 @@ public class NotafiscalCriteria implements Serializable, Criteria {
 
     private StringFilter notEmpresa;
 
-    private ZonedDateTimeFilter notDatasaida;
+    private LocalDateFilter notDatasaida;
 
     private BigDecimalFilter notValornota;
 
@@ -115,11 +114,11 @@ public class NotafiscalCriteria implements Serializable, Criteria {
 		this.notEmpresa = notEmpresa;
 	}
 
-	public ZonedDateTimeFilter getNotDatasaida() {
+	public LocalDateFilter getNotDatasaida() {
 		return notDatasaida;
 	}
 
-	public void setNotDatasaida(ZonedDateTimeFilter notDatasaida) {
+	public void setNotDatasaida(LocalDateFilter notDatasaida) {
 		this.notDatasaida = notDatasaida;
 	}
 

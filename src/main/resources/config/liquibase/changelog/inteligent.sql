@@ -1,13 +1,13 @@
 --liquibase formatted sql  
 
 
---changeset clientes:21
+--changeset clientes:15
 
 CREATE TABLE ${schema}.inteligent (
 	id bigserial,
 	historico varchar(254) NULL,
 	historicofinal varchar(254) NULL,
-	datalancamento timestamp NULL,
+	datalancamento date NULL,
 	associado bool NULL,
 	numerodocumento varchar(254) NULL,
 	numerocontrole varchar(254) NULL,

@@ -1,15 +1,21 @@
 package br.com.mrcontador.domain;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import java.io.Serializable;
-import java.time.ZonedDateTime;
 
 /**
  * A Regra.
@@ -38,7 +44,10 @@ public class Regra implements Serializable {
     private String regTodos;
     
     @Column(name = "data_cadastro")
-    private ZonedDateTime dataCadastro;
+    private LocalDate dataCadastro;
+    
+    @Column(name = "aplicacao")
+    private Boolean aplicacao;
     
     @ManyToOne(optional = false)
     @NotNull
@@ -120,20 +129,29 @@ public class Regra implements Serializable {
 		this.regTodos = regTodos;
 	}
 	
-	public ZonedDateTime getDataCadastro() {
+	public LocalDate getDataCadastro() {
 		return dataCadastro;
 	}
 
-	public void setDataCadastro(ZonedDateTime dataCadastro) {
+	public void setDataCadastro(LocalDate dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
 	
-	public Regra dataCadastro(ZonedDateTime dataCadastro) {
+	public Regra dataCadastro(LocalDate dataCadastro) {
 		this.dataCadastro = dataCadastro;
 		return this;
 	}
 	
-	  // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+	public Boolean getAplicacao() {
+		return aplicacao;
+	}
+
+	public void setAplicacao(Boolean aplicacao) {
+		this.aplicacao = aplicacao;
+	}
+
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
 
 
 	@Override

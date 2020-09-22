@@ -11,6 +11,7 @@ CREATE TABLE ${schema}.agenciabancaria (
 	age_descricao varchar(30) NULL,
 	age_situacao bool NULL,
 	ban_codigobancario varchar(5) NOT NULL,
+	con_conta int4 NULL,
 	banco_id int8 NULL,
 	parceiro_id int8 NOT NULL,
 	CONSTRAINT agenciabancaria_pkey PRIMARY KEY (id)

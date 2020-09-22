@@ -26,10 +26,6 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private IntegerFilter parCodigo;
-
-    private IntegerFilter ageCodigo;
-
     private StringFilter comCnpj;
 
     private StringFilter comBeneficiario;
@@ -55,8 +51,6 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 
     public ComprovanteCriteria(ComprovanteCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.parCodigo = other.parCodigo == null ? null : other.parCodigo.copy();
-        this.ageCodigo = other.ageCodigo == null ? null : other.ageCodigo.copy();
         this.comCnpj = other.comCnpj == null ? null : other.comCnpj.copy();
         this.comBeneficiario = other.comBeneficiario == null ? null : other.comBeneficiario.copy();
         this.comDocumento = other.comDocumento == null ? null : other.comDocumento.copy();
@@ -89,23 +83,6 @@ public class ComprovanteCriteria implements Serializable, Criteria {
     public void setAgenciabancariaId(LongFilter agenciabancariaId) {
         this.agenciabancariaId = agenciabancariaId;
     }
-
-
-    public IntegerFilter getParCodigo() {
-		return parCodigo;
-	}
-
-	public void setParCodigo(IntegerFilter parCodigo) {
-		this.parCodigo = parCodigo;
-	}
-
-	public IntegerFilter getAgeCodigo() {
-		return ageCodigo;
-	}
-
-	public void setAgeCodigo(IntegerFilter ageCodigo) {
-		this.ageCodigo = ageCodigo;
-	}
 
 	public StringFilter getComCnpj() {
 		return comCnpj;
@@ -190,8 +167,6 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         final ComprovanteCriteria that = (ComprovanteCriteria) o;
         return
             Objects.equals(id, that.id) &&
-            Objects.equals(parCodigo, that.parCodigo) &&
-            Objects.equals(ageCodigo, that.ageCodigo) &&
             Objects.equals(comCnpj, that.comCnpj) &&
             Objects.equals(comBeneficiario, that.comBeneficiario) &&
             Objects.equals(comDocumento, that.comDocumento) &&
@@ -208,8 +183,6 @@ public class ComprovanteCriteria implements Serializable, Criteria {
     public int hashCode() {
         return Objects.hash(
         id,
-        parCodigo,
-        ageCodigo,
         comCnpj,
         comBeneficiario,
         comDocumento,
@@ -228,8 +201,6 @@ public class ComprovanteCriteria implements Serializable, Criteria {
     public String toString() {
         return "ComprovanteCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (parCodigo != null ? "par_codigo=" + parCodigo + ", " : "") +
-                (ageCodigo != null ? "age_codigo=" + ageCodigo + ", " : "") +
                 (comCnpj != null ? "com_cnpj=" + comCnpj + ", " : "") +
                 (comBeneficiario != null ? "com_beneficiario=" + comBeneficiario + ", " : "") +
                 (comDocumento != null ? "com_documento=" + comDocumento + ", " : "") +

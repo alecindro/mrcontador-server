@@ -11,6 +11,7 @@ CREATE TABLE ${schema}.conta (
 	con_descricao varchar(60) NULL,
 	con_cnpj varchar(18) NULL,
 	con_grau int4 NULL,
+	data_cadastro date NULL,
 	parceiro_id int8 NULL,
 	arquivo_id int8 NULL,
 	CONSTRAINT conta_pkey PRIMARY KEY (id)

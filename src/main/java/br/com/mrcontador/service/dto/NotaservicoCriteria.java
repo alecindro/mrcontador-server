@@ -7,9 +7,9 @@ import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link br.com.mrcontador.domain.Notaservico} entity. This class is used
@@ -34,11 +34,11 @@ public class NotaservicoCriteria implements Serializable, Criteria {
 
     private StringFilter nseEmpresa;
 
-    private ZonedDateTimeFilter nseDatasaida;
+    private LocalDateFilter nseDatasaida;
 
     private BigDecimalFilter nseValornota;
 
-    private ZonedDateTimeFilter nseDataparcela;
+    private LocalDateFilter nseDataparcela;
 
     private BigDecimalFilter nseValorparcela;
 
@@ -120,11 +120,11 @@ public class NotaservicoCriteria implements Serializable, Criteria {
 		this.nseEmpresa = nseEmpresa;
 	}
 
-	public ZonedDateTimeFilter getNseDatasaida() {
+	public LocalDateFilter getNseDatasaida() {
 		return nseDatasaida;
 	}
 
-	public void setNseDatasaida(ZonedDateTimeFilter nseDatasaida) {
+	public void setNseDatasaida(LocalDateFilter nseDatasaida) {
 		this.nseDatasaida = nseDatasaida;
 	}
 
@@ -136,11 +136,11 @@ public class NotaservicoCriteria implements Serializable, Criteria {
 		this.nseValornota = nseValornota;
 	}
 
-	public ZonedDateTimeFilter getNseDataparcela() {
+	public LocalDateFilter getNseDataparcela() {
 		return nseDataparcela;
 	}
 
-	public void setNseDataparcela(ZonedDateTimeFilter nseDataparcela) {
+	public void setNseDataparcela(LocalDateFilter nseDataparcela) {
 		this.nseDataparcela = nseDataparcela;
 	}
 

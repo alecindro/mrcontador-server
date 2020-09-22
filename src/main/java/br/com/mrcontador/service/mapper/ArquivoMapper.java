@@ -1,6 +1,6 @@
 package br.com.mrcontador.service.mapper;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import br.com.mrcontador.domain.Arquivo;
@@ -11,7 +11,7 @@ public class ArquivoMapper implements EntityMapper<FileDTO,Arquivo>{
 	@Override
 	public Arquivo toEntity(FileDTO dto) {
 		Arquivo arquivo = new Arquivo();
-		arquivo.setDataCadastro(ZonedDateTime.now());
+		arquivo.setDataCadastro(LocalDate.now());
 		arquivo.setEtag(dto.geteTag());
 		arquivo.setNome(dto.getName());
 		arquivo.setNomeOriginal(dto.getOriginalFilename());

@@ -8,6 +8,7 @@ import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 import io.github.jhipster.service.filter.ZonedDateTimeFilter;
@@ -31,7 +32,7 @@ public class ArquivoCriteria implements Serializable, Criteria {
 
     private StringFilter nomeOriginal;
 
-    private ZonedDateTimeFilter dataCadastro;
+    private LocalDateFilter dataCadastro;
 
     private StringFilter tipoArquivo;
 
@@ -96,11 +97,11 @@ public class ArquivoCriteria implements Serializable, Criteria {
         this.nomeOriginal = nomeOriginal;
     }
 
-    public ZonedDateTimeFilter getDataCadastro() {
+    public LocalDateFilter getDataCadastro() {
         return dataCadastro;
     }
 
-    public void setDataCadastro(ZonedDateTimeFilter dataCadastro) {
+    public void setDataCadastro(LocalDateFilter dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
