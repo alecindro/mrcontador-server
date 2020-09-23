@@ -21,7 +21,6 @@
     <include file="config/liquibase/changelog/comprovante.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/conta.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/notafiscal.sql" relativeToChangelogFile="false"/>
-
     <include file="config/liquibase/changelog/extrato.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/notaservico.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/regra.sql" relativeToChangelogFile="false"/>
@@ -32,6 +31,7 @@
    <changeSet author="clientes" id="16">
     <sqlFile path="config/liquibase/changelog/intelingent_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
+  <include file="config/liquibase/changelog/inteligent_temp.sql" relativeToChangelogFile="false"/>
  
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

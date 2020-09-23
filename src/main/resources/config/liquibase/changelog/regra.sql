@@ -2,7 +2,7 @@
 
 --changeset clientes:12
 
-REATE TABLE ${schema}.regra (
+CREATE TABLE ${schema}.regra (
 	id bigserial,
 	reg_descricao varchar(60) NULL,
 	reg_conta int4 NULL,
@@ -10,6 +10,7 @@ REATE TABLE ${schema}.regra (
 	reg_todos varchar(1) NULL,
 	data_cadastro timestamp NULL,
 	parceiro_id int8 NOT NULL,
+	aplicacao bool not null,
 	CONSTRAINT regra_pkey PRIMARY KEY (id)
 );
 
