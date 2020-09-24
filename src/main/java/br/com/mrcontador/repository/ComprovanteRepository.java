@@ -2,7 +2,11 @@ package br.com.mrcontador.repository;
 
 import br.com.mrcontador.domain.Comprovante;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +15,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>, JpaSpecificationExecutor<Comprovante> {
+	
+	@EntityGraph(attributePaths = "arquivo")
+	Page<Comprovante> findAll(@Nullable Specification<Comprovante> spec, Pageable pageable);
 }

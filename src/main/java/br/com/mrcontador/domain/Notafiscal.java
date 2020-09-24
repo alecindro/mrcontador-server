@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -63,16 +64,16 @@ public class Notafiscal implements Serializable {
     @Column(name = "not_parcela", length = 10)
     private String notParcela;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "notafiscals", allowSetters = true)
     private Parceiro parceiro;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = "notas", allowSetters = true)
     private Arquivo arquivo;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="arquivopdf_id")
     @JsonIgnoreProperties(value = "notas", allowSetters = true)
     private Arquivo arquivoPDF;
@@ -267,7 +268,7 @@ public class Notafiscal implements Serializable {
 		return "Notafiscal [id=" + id + ", notNumero=" + notNumero + ", notDescricao=" + notDescricao + ", notCnpj="
 				+ notCnpj + ", notEmpresa=" + notEmpresa + ", notDatasaida=" + notDatasaida + ", notValornota="
 				+ notValornota + ", notDataparcela=" + notDataparcela + ", notValorparcela=" + notValorparcela
-				+ ", tnoCodigo=" + tnoCodigo + ", notParcela=" + notParcela + ", parceiro=" + parceiro + "]";
+				+ ", tnoCodigo=" + tnoCodigo + ", notParcela=" + notParcela +"]";
 	}
     
     

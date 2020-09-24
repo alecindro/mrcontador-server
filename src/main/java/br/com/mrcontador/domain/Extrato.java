@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -57,17 +58,18 @@ public class Extrato implements Serializable {
     @Column(name = "info_adicional", length = 254)
     private String infoAdicional;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "extratos", allowSetters = true)
+    
     private Parceiro parceiro;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "extratos", allowSetters = true)
     private Agenciabancaria agenciabancaria;
     
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "extratos", allowSetters = true)
     private Arquivo arquivo;
@@ -244,7 +246,7 @@ public class Extrato implements Serializable {
 		return "Extrato [id=" + id + ", extDatalancamento=" + extDatalancamento + ", extHistorico=" + extHistorico
 				+ ", extNumerodocumento=" + extNumerodocumento + ", extNumerocontrole=" + extNumerocontrole
 				+ ", extDebito=" + extDebito + ", extCredito=" + extCredito + ", extDescricao=" + extDescricao
-				+ ", parceiro=" + parceiro + ", agenciabancaria=" + agenciabancaria + ", arquivo=" + arquivo + "]";
+	 + "]";
 	}
 
   

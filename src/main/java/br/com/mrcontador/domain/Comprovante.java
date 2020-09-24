@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -69,17 +70,17 @@ public class Comprovante implements Serializable {
     @Column(name = "com_codigorecolhimento", length = 10)
     private String codigoRecolhimento;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Parceiro parceiro;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Agenciabancaria agenciabancaria;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Arquivo arquivo;
 

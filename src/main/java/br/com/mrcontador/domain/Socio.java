@@ -29,7 +29,7 @@ public class Socio implements Serializable {
     @Column(name = "nome")
     private String nome;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "socios", allowSetters = true)
     private Parceiro parceiro;
