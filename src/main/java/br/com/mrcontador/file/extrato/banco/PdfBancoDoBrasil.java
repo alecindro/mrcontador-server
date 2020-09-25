@@ -106,10 +106,10 @@ public class PdfBancoDoBrasil extends PdfParser {
 		String historico = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote), 40);
 		data.setHistorico(StringUtils.normalizeSpace(historico));
 		String documento = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico),
-				27);
+				29);
 		data.setDocumento(StringUtils.normalizeSpace(documento));
 		String valor = StringUtils.trim(StringUtils
-				.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico + documento), 19));
+				.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico + documento), 16));
 		data.setTipoEntrada(getTipo(valor));
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 		if(data.getTipoEntrada().equals(TipoEntrada.DEBIT)) {

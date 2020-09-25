@@ -18,4 +18,5 @@ import br.com.mrcontador.domain.Parceiro;
 public interface ContaRepository extends JpaRepository<Conta, Long>, JpaSpecificationExecutor<Conta> {
 	
 	Optional<Conta> findFirstByParceiro(Parceiro parceiro);
+	Optional<Conta> findByConConta(Integer conConta);
 }

@@ -2,6 +2,7 @@ package br.com.mrcontador.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,11 +68,14 @@ public class RegraResource {
         if (regra.getId() != null) {
             throw new BadRequestAlertException("A new regra cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        regra.setDataCadastro(LocalDate.now());
+        regra.setAplicacao(false);
         regra = regraService.save(regra);
         return ResponseEntity.created(new URI("/api/regras/" + regra.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, regra.getId().toString()))
             .body(regra);
     }
+    
 
     /**
      * {@code PUT  /regras} : Updates an existing regra.

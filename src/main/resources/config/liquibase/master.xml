@@ -32,7 +32,7 @@
     <sqlFile path="config/liquibase/changelog/intelingent_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
   <include file="config/liquibase/changelog/inteligent_temp.sql" relativeToChangelogFile="false"/>
- 
+ <include file="config/liquibase/changelog/alter_extrato.sql" relativeToChangelogFile="false"/>
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

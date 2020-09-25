@@ -51,4 +51,8 @@ public class ContaService {
     	return contaRepository.findFirstByParceiro(parceiro);
     }
     
+    public Optional<Conta> findByConConta(Integer conConta){
+    	return contaRepository.findByConConta(conConta);
+    }
+    
 }

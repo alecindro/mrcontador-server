@@ -1,5 +1,7 @@
 package br.com.mrcontador.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
+import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Notafiscal;
 
 /**
@@ -19,4 +22,7 @@ import br.com.mrcontador.domain.Notafiscal;
 public interface NotafiscalRepository extends JpaRepository<Notafiscal, Long>, JpaSpecificationExecutor<Notafiscal> {
 
 	Page<Notafiscal> findAll(@Nullable Specification<Notafiscal> spec, Pageable pageable);
+	
+	@EntityGraph(attributePaths = {"arquivo","arquivoPDF"})
+	Optional<Notafiscal> findById(Long id);
 }

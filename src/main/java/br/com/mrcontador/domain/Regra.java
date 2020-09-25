@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import br.com.mrcontador.config.type.TipoRegra;
 
 /**
  * A Regra.
@@ -54,6 +58,10 @@ public class Regra implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "regras", allowSetters = true)
     private Parceiro parceiro;
+    
+    @Column(name = "tipo_regra")
+    @Enumerated(EnumType.STRING)
+    private TipoRegra tipoRegra;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     
@@ -150,6 +158,16 @@ public class Regra implements Serializable {
 	public void setAplicacao(Boolean aplicacao) {
 		this.aplicacao = aplicacao;
 	}
+	
+
+	public TipoRegra getTipoRegra() {
+		return tipoRegra;
+	}
+
+	public void setTipoRegra(TipoRegra tipoRegra) {
+		this.tipoRegra = tipoRegra;
+	}
+
 
 	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
