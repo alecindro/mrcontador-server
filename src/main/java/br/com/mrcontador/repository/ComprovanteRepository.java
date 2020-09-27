@@ -18,9 +18,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>, JpaSpecificationExecutor<Comprovante> {
 	
-	@EntityGraph(attributePaths = "arquivo")
+	@EntityGraph(attributePaths = {"arquivo"})
 	Page<Comprovante> findAll(@Nullable Specification<Comprovante> spec, Pageable pageable);
 	
-	@EntityGraph(attributePaths = "arquivo")
+	@EntityGraph(attributePaths = {"arquivo"})
 	Optional<Comprovante> findById(Long id);
 }

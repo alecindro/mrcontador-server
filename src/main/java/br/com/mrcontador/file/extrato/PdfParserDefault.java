@@ -39,6 +39,7 @@ public class PdfParserDefault {
 			Splitter splitter = new Splitter();
 			List<PDDocument> pages = splitter.split(document);
 			OfxDTO dto = pdfParser.process(pages);
+			pdfParser.validate(dto.getBanco(), dto.getAgencia(), dto.getConta(), fileDTO.getParceiro(), agenciaBancaria);
 			ListOfxDto listOfxDto = new ListOfxDto();
 			listOfxDto.setFileDTO(fileDTO);
 			fileDTO.setInputStream(new ByteArrayInputStream(baos.toByteArray()));

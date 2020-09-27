@@ -21,9 +21,9 @@ import br.com.mrcontador.domain.Extrato;
 @Repository
 public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpecificationExecutor<Extrato> {
 	
-	@EntityGraph(attributePaths = "arquivo")
+	@EntityGraph(attributePaths = {"arquivo"})
 	Page<Extrato> findAll(@Nullable Specification<Extrato> spec, Pageable pageable);
 	
-	@EntityGraph(attributePaths = "arquivo")
+	@EntityGraph(attributePaths = {"arquivo"})
 	Optional<Extrato> findById(Long id);
 }

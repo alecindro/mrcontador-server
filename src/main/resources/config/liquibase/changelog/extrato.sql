@@ -21,4 +21,4 @@ CREATE TABLE ${schema}.extrato (
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_agenciabancaria_id FOREIGN KEY (agenciabancaria_id) REFERENCES ${schema}.agenciabancaria(id);
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);
-CREATE UNIQUE INDEX extrato_unique_idx ON ${schema}.extrato (ext_datalancamento,ext_numerodocumento,parceiro_id,agenciabancaria_id);
+CREATE UNIQUE INDEX extrato_unique_idx ON ${schema}.extrato (ext_datalancamento,ext_numerodocumento,ext_credito,ext_debito,parceiro_id,agenciabancaria_id);

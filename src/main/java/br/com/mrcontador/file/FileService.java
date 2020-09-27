@@ -90,6 +90,7 @@ public class FileService {
 			throw new MrContadorException("parceiro.notfound");
 		}
 		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
+		fileDTO.setTipoDocumento(TipoDocumento.NOTA);
 		xmlParserDefault.process(fileDTO);
 		
 	}

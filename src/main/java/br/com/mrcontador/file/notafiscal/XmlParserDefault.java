@@ -101,7 +101,6 @@ public class XmlParserDefault implements FileParser {
 	}
 	
 	private Arquivo processXml(FileS3 fileS3) {
-		fileS3.getFileDTO().setTipoDocumento(TipoDocumento.NOTA);
 		ArquivoMapper mapper = new ArquivoMapper();
 		String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
 				String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getNotaFolder());
@@ -116,7 +115,6 @@ public class XmlParserDefault implements FileParser {
 	}
 	
 	private Arquivo processPDF(FileS3 fileS3) {
-		fileS3.getFileDTO().setTipoDocumento(TipoDocumento.NOTA);
 		ArquivoMapper mapper = new ArquivoMapper();
 		String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
 				String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getNotaFolder());

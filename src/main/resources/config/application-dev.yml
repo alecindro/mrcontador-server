@@ -38,7 +38,10 @@ spring:
   datasource:
     platform: postgres
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://192.168.10.3:5432/mrcontador
+    #url: jdbc:postgresql://mrcontadordb.cd4all6waihc.us-east-1.rds.amazonaws.com:5432/postgres
+    #username: postgres
+    #password: mrcontador2018!
+    url: jdbc:postgresql://192.168.10.3:5432/mrc_dev
     #url: jdbc:postgresql://localhost:5432/mrcontador
     username: postgres
     password: banana2018!

@@ -14,7 +14,7 @@ public class TestPDFExtrato {
 	
 	public static void main(String[] args) throws Exception {
 		TestPDFExtrato t = new TestPDFExtrato();
-		t.teste1("/home/alecindro/Documents/drcontabil/docs/nfepdf/extratobb.pdf");
+		t.teste1("/home/alecindro/Documents/drcontabil/docs/extratopdf/extratobb.pdf");
 	}
 	
 	private void teste1(String file) throws Exception {

@@ -113,10 +113,17 @@ public class ExtratoService {
 				}else {
 					extrato.setExtDebito(ofxData.getValor());
 				}
-				extratos.add(extrato);
+				try {
+				extratos.add(extratoRepository.save(extrato));
+				}catch(Exception e ) {
+					log.error(e.getMessage());
+				}
 			}
 		}
-		extratoRepository.saveAll(extratos);
+		if(extratos.isEmpty()) {
+			throw new org.springframework.dao.DataIntegrityViolationException("extrato já importado");
+		}
+		
 	}
 
 

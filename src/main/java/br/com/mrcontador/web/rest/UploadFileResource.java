@@ -109,7 +109,7 @@ public class UploadFileResource {
 			fileService.processNFE(file, SecurityUtils.getCurrentUserLogin(), SecurityUtils.getCurrentTenantHeader(), parceiro);
 			return ResponseEntity
 					.created(new URI("/api/uploadplanoconta/")).headers(HeaderUtil
-							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName()))
+							.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName()))
 					.build();
 		} catch (MrContadorException e) {
 			throw e;

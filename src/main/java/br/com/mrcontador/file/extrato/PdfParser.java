@@ -8,9 +8,13 @@ import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.extrato.banco.PdfBancoDoBrasil;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public abstract class PdfParser extends PdfReaderPreserveSpace{
 	
@@ -121,6 +125,29 @@ public abstract class PdfParser extends PdfReaderPreserveSpace{
 				this.descricao = "";
 			}
 			this.descricao = this.descricao + value;
+		}
+
+	}
+	public void validate(String banco, String agencia, String conta, Parceiro parceiro, Agenciabancaria agenciaBancaria) {		
+		if (agencia != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia(), agencia) && !MrContadorUtil.only9(agencia)) {
+				throw new MrContadorException("agencia.notequals");
+			}
+		}
+		if(banco != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getBanCodigobancario(),banco) && !MrContadorUtil.only9(banco)) {				
+				throw new MrContadorException("banco.notequals");
+			}
+		}
+		if(conta != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeNumero(), conta)) {
+				if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia()+agenciaBancaria.getAgeNumero(),conta)&& !MrContadorUtil.only9(conta)){
+				throw new MrContadorException("conta.notequals");
+				}
+			}
+		}
+		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {
+			throw new MrContadorException("parceiro.notequals");
 		}
 
 	}

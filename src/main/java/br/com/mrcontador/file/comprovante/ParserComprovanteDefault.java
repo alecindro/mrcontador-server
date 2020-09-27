@@ -54,6 +54,7 @@ public class ParserComprovanteDefault {
 			List<FileS3> files = new ArrayList<>();
 			List<FileS3> erros = new ArrayList<FileS3>();
 			List<Comprovante> salvar = new ArrayList<Comprovante>();
+			List<Comprovante> salvos = new ArrayList<Comprovante>();
 			int page = 0;
 			for (PPDocumentDTO pddComprovante : textComprovantes) {
 				page = page + 1;
@@ -82,7 +83,16 @@ public class ParserComprovanteDefault {
 					erros.add(fileS3);
 				}
 			}
-			service.saveAll(salvar);
+			for(Comprovante c : salvar) {
+				try {
+					salvos.add(service.save(c));
+				}catch(Exception e ) {
+					log.error(e.getMessage());
+				}
+			}
+			if(salvos.isEmpty()) {
+				throw new org.springframework.dao.DataIntegrityViolationException("comprovante já importado");
+			}
 			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
 			log.info("Comprovantes salvos");
 			return erros;
