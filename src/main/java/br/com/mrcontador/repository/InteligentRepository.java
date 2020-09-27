@@ -42,7 +42,7 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   void updateFromInformacaoRegra(@Param("historico") String historico, @Param("descricao") String descricao, @Param("contaId") Long contaId, @Param("parceiroId") Long parceiroId);
   
   @Modifying(flushAutomatically = true)
-  @Query(value="update inteligent set historicofinal = :historico, conta_id = :contaId, associado = true where descricao = :descricao and parceiro_id = :parceiroId  and associado = false",nativeQuery = true)
+  @Query(value="update inteligent set historicofinal = :historico, conta_id = :contaId, associado = true where historico = :descricao and parceiro_id = :parceiroId  and associado = false",nativeQuery = true)
   void updateFromHistoricoRegra(@Param("historico") String historico, @Param("descricao") String descricao, @Param("contaId") Long contaId, @Param("parceiroId") Long parceiroId);
   
 }
