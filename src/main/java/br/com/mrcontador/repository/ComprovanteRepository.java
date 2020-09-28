@@ -21,6 +21,6 @@ public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>,
 	@EntityGraph(attributePaths = {"arquivo"})
 	Page<Comprovante> findAll(@Nullable Specification<Comprovante> spec, Pageable pageable);
 	
-	@EntityGraph(attributePaths = {"arquivo"})
+	@Query("FROM Comprovante AS co LEFT JOIN FETCH co.arquivo WHERE co.id = ?1")
 	Optional<Comprovante> findById(Long id);
 }

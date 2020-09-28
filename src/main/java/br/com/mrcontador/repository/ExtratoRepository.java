@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,6 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@EntityGraph(attributePaths = {"arquivo"})
 	Page<Extrato> findAll(@Nullable Specification<Extrato> spec, Pageable pageable);
 	
-	@EntityGraph(attributePaths = {"arquivo"})
+	@Query("FROM Extrato AS ex LEFT JOIN FETCH ex.arquivo WHERE ex.id = ?1")
 	Optional<Extrato> findById(Long id);
 }
