@@ -61,6 +61,9 @@ public class Notaservico implements Serializable {
 
     @Column(name = "nse_parcela", length = 10)
     private String nseParcela;
+    
+    @Column(name = "processado")
+    private Boolean processado;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -218,6 +221,19 @@ public class Notaservico implements Serializable {
     public void setParceiro(Parceiro parceiro) {
         this.parceiro = parceiro;
     }
+    
+	public Boolean isProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(Boolean processado) {
+		this.processado = processado;
+	}
+	
+	public Notaservico processado(Boolean processado) {
+		this.processado = processado;
+		return this;
+	}
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

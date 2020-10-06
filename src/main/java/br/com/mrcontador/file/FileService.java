@@ -44,6 +44,11 @@ public class FileService {
 		FileDTO dto = getFileDTO(file, usuario, contador, null);
 		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, cnpjParceiro);
 	}
+	
+	public void updatePlanoConta(MultipartFile file, Optional<String> usuario, String contador,Long idParceiro,  SistemaPlanoConta sistemaPlanoConta) {
+		FileDTO dto = getFileDTO(file, usuario, contador, null);
+		pdfParserPlanoConta.update(dto, sistemaPlanoConta, idParceiro);
+	}
 
 	
 	private FileDTO getFileDTO(MultipartFile file, Optional<String> usuario, String contador, Parceiro parceiro) {
@@ -104,7 +109,11 @@ public class FileService {
 			throw new MrContadorException("agencia.notfound");
 		}
 		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
+		fileDTO.setTipoDocumento(TipoDocumento.EXTRATO);
 		String media = com.google.common.net.MediaType.parse(file.getContentType()).subtype();
+		if(media != "pdf" && media !="octet-stream") {
+			throw new MrContadorException("ofx.notextrato");
+		}
 		if(media == "pdf") {
 			pdfParserDefault.process(fileDTO, agenciabancaria.get());
 		}else {

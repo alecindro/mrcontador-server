@@ -10,7 +10,6 @@ import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link br.com.mrcontador.domain.Inteligent} entity. This class is used
@@ -63,6 +62,8 @@ public class InteligentCriteria implements Serializable, Criteria {
 
     private LongFilter agenciabancariaId;
     
+    private LongFilter regraId;
+    
     private LongFilter contaId;
     
     private LongFilter extratoId;
@@ -93,6 +94,7 @@ public class InteligentCriteria implements Serializable, Criteria {
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
         this.contaId = other.contaId == null ? null : other.contaId.copy();
         this.extratoId = other.extratoId == null ? null : other.extratoId.copy();
+        this.regraId = other.regraId == null ? null : other.regraId.copy();
     }
 
     @Override
@@ -267,6 +269,14 @@ public class InteligentCriteria implements Serializable, Criteria {
 	public void setNumerodocumento(StringFilter numerodocumento) {
 		this.numerodocumento = numerodocumento;
 	}
+	
+	public LongFilter getRegraId() {
+		return regraId;
+	}
+
+	public void setRegraId(LongFilter regraId) {
+		this.regraId = regraId;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -299,6 +309,7 @@ public class InteligentCriteria implements Serializable, Criteria {
             Objects.equals(parceiroId, that.parceiroId) &&
             Objects.equals(agenciabancariaId, that.agenciabancariaId) &&
             Objects.equals(contaId, that.contaId) &&
+            Objects.equals(regraId, that.regraId) &&
             Objects.equals(extratoId, that.extratoId);
     }
 
@@ -326,7 +337,8 @@ public class InteligentCriteria implements Serializable, Criteria {
         parceiroId,
         agenciabancariaId,
         contaId,
-        extratoId
+        extratoId,
+        regraId
         );
     }
 
@@ -356,6 +368,7 @@ public class InteligentCriteria implements Serializable, Criteria {
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
                 (contaId != null ? "contaId=" + contaId + ", " : "") +
                 (extratoId != null ? "extratoId=" + extratoId + ", " : "") +
+                (regraId != null ? "regraId=" + regraId + ", " : "") +
             "}";
     }
 

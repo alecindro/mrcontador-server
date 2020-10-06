@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -26,10 +25,10 @@ public class RegraCriteria implements Serializable, Criteria {
     private LongFilter id;
 
     private LongFilter parceiroId;
+    
+    private LongFilter contaId;
 
     private StringFilter regDescricao;
-
-    private IntegerFilter regConta;
 
     private StringFilter regHistorico;
 
@@ -43,11 +42,11 @@ public class RegraCriteria implements Serializable, Criteria {
     public RegraCriteria(RegraCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.regDescricao = other.regDescricao == null ? null : other.regDescricao.copy();
-        this.regConta = other.regConta == null ? null : other.regConta.copy();
         this.regHistorico = other.regHistorico == null ? null : other.regHistorico.copy();
         this.regTodos = other.regTodos == null ? null : other.regTodos.copy();
         this.dataCadastro = other.dataCadastro == null ? null : other.dataCadastro.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
+        this.contaId = other.contaId == null ? null : other.contaId.copy();
     }
 
     @Override
@@ -69,14 +68,6 @@ public class RegraCriteria implements Serializable, Criteria {
 
     public void setRegDescricao(StringFilter regDescricao) {
         this.regDescricao = regDescricao;
-    }
-
-    public IntegerFilter getRegConta() {
-        return regConta;
-    }
-
-    public void setRegConta(IntegerFilter regConta) {
-        this.regConta = regConta;
     }
 
     public StringFilter getRegHistorico() {
@@ -111,6 +102,14 @@ public class RegraCriteria implements Serializable, Criteria {
 		this.dataCadastro = dataCadastro;
 	}
 
+	public LongFilter getContaId() {
+		return contaId;
+	}
+
+	public void setContaId(LongFilter contaId) {
+		this.contaId = contaId;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -123,10 +122,10 @@ public class RegraCriteria implements Serializable, Criteria {
         return
             Objects.equals(id, that.id) &&
             Objects.equals(regDescricao, that.regDescricao) &&
-            Objects.equals(regConta, that.regConta) &&
             Objects.equals(regHistorico, that.regHistorico) &&
             Objects.equals(parceiroId, that.parceiroId) &&
             Objects.equals(dataCadastro, that.dataCadastro) &&
+            Objects.equals(contaId, that.contaId) &&
             Objects.equals(regTodos, that.regTodos);
     }
 
@@ -135,11 +134,11 @@ public class RegraCriteria implements Serializable, Criteria {
         return Objects.hash(
         id,
         regDescricao,
-        regConta,
         regHistorico,
         regTodos,
         dataCadastro,
-        parceiroId
+        parceiroId,
+        contaId
         );
     }
 
@@ -149,11 +148,11 @@ public class RegraCriteria implements Serializable, Criteria {
         return "RegraCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (regDescricao != null ? "regDescricao=" + regDescricao + ", " : "") +
-                (regConta != null ? "regConta=" + regConta + ", " : "") +
                 (regHistorico != null ? "regHistorico=" + regHistorico + ", " : "") +
                 (regTodos != null ? "regTodos=" + regTodos + ", " : "") +
                 (dataCadastro != null ? "dataCadastro=" + dataCadastro + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
+                (contaId != null ? "planoContaId=" + contaId + ", " : "") +
             "}";
     }
 

@@ -117,6 +117,9 @@ public class NotafiscalQueryService extends QueryService<Notafiscal> {
             if (criteria.getNotParcela() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNotParcela(), Notafiscal_.notParcela));
             }
+            if (criteria.getProcessado() != null) {
+                specification = specification.and(buildSpecification(criteria.getProcessado(), Notafiscal_.processado));
+            }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
                     root -> root.join(Notafiscal_.parceiro, JoinType.LEFT).get(Parceiro_.id)));

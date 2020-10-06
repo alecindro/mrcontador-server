@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.mrcontador.domain.Conta_;
 import br.com.mrcontador.domain.Parceiro_;
 // for static metamodels
 import br.com.mrcontador.domain.Regra;
@@ -89,9 +90,6 @@ public class RegraQueryService extends QueryService<Regra> {
             if (criteria.getRegDescricao() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getRegDescricao(), Regra_.regDescricao));
             }
-            if (criteria.getRegConta() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getRegConta(), Regra_.regConta));
-            }
             if (criteria.getRegHistorico() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getRegHistorico(), Regra_.regHistorico));
             }
@@ -104,6 +102,10 @@ public class RegraQueryService extends QueryService<Regra> {
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
                     root -> root.join(Regra_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
+            }
+            if (criteria.getContaId() != null) {
+                specification = specification.and(buildSpecification(criteria.getContaId(),
+                    root -> root.join(Regra_.conta, JoinType.LEFT).get(Conta_.id)));
             }
         }
         return specification;

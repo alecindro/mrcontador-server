@@ -57,6 +57,9 @@ public class Extrato implements Serializable {
     
     @Column(name = "info_adicional", length = 254)
     private String infoAdicional;
+    
+    @Column(name = "processado")
+    private Boolean processado;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
@@ -212,7 +215,18 @@ public class Extrato implements Serializable {
     public void setAgenciabancaria(Agenciabancaria agenciabancaria) {
         this.agenciabancaria = agenciabancaria;
     }
-    
+	public Boolean isProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(Boolean processado) {
+		this.processado = processado;
+	}
+	
+	public Extrato processado(Boolean processado) {
+		this.processado = processado;
+		return this;
+	}
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

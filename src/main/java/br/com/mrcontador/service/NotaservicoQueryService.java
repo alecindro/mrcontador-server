@@ -117,6 +117,9 @@ public class NotaservicoQueryService extends QueryService<Notaservico> {
             if (criteria.getNseParcela() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNseParcela(), Notaservico_.nseParcela));
             }
+            if (criteria.getProcessado() != null) {
+                specification = specification.and(buildSpecification(criteria.getProcessado(), Notaservico_.processado));
+            }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
                     root -> root.join(Notaservico_.parceiro, JoinType.LEFT).get(Parceiro_.id)));

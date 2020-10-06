@@ -17,12 +17,13 @@ CREATE TABLE ${schema}.notafiscal (
 	parceiro_id int8 NOT NULL,
 	arquivo_id int8 NULL,
 	arquivopdf_id int8 NULL,
+	processado boolean null, 
 	CONSTRAINT notafiscal_pkey PRIMARY KEY (id)
 );
 
 CREATE INDEX fki_notaparceiro ON ${schema}.notafiscal USING btree (parceiro_id);
 CREATE UNIQUE INDEX notafiscal_not_numero_idx ON ${schema}.notafiscal (not_numero,not_cnpj,not_dataparcela,parceiro_id);
-
+ALTER TABLE ${schema}.notafiscal ALTER COLUMN processado SET DEFAULT FALSE;
 ALTER TABLE ${schema}.notafiscal ADD CONSTRAINT fk_notafiscal_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
 ALTER TABLE ${schema}.notafiscal ADD CONSTRAINT fk_notafiscal_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);
 ALTER TABLE ${schema}.notafiscal ADD CONSTRAINT fk_notafiscal_arquivopdf_id FOREIGN KEY (arquivopdf_id) REFERENCES ${schema}.arquivo(id);

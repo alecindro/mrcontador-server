@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mrcontador.config.type.TipoRegra;
-import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.domain.Regra;
-import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.repository.InteligentRepository;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -30,11 +28,9 @@ public class InteligentService {
 
     private final InteligentRepository inteligentRepository;
     
-    private final ContaService contaService;
 
-    public InteligentService(InteligentRepository inteligentRepository, ContaService contaService) {
+    public InteligentService(InteligentRepository inteligentRepository) {
         this.inteligentRepository = inteligentRepository;
-        this.contaService = contaService;
     }
 
     /**
@@ -90,16 +86,19 @@ public class InteligentService {
     }
     
    
-    public void updateFromRegra(Regra regra) {
-    	Optional<Conta> _conta = contaService.findByConConta(regra.getRegConta());
-    	if(_conta.isEmpty()) {
-    		throw new MrContadorException("conta.notfound");
-    	}
+    public void createFromRegra(Regra regra) {
     	if(regra.getTipoRegra().equals(TipoRegra.HISTORICO)) {
-    		inteligentRepository.updateFromHistoricoRegra(regra.getRegHistorico(), regra.getRegDescricao(), _conta.get().getId(), regra.getParceiro().getId());
+    		inteligentRepository.updateFromHistoricoRegra(regra.getRegHistorico(), regra.getRegDescricao(), regra.getConta().getId(), regra.getParceiro().getId(), regra.getId());
     	}
     	if(regra.getTipoRegra().equals(TipoRegra.INFORMACAO_ADICIONAL)) {
-    		inteligentRepository.updateFromInformacaoRegra(regra.getRegHistorico(), regra.getRegDescricao(), _conta.get().getId(), regra.getParceiro().getId());
+    		inteligentRepository.updateFromInformacaoRegra(regra.getRegHistorico(), regra.getRegDescricao(), regra.getConta().getId(), regra.getParceiro().getId(),regra.getId());
     	}
+    }
+    public void updateFromRegra(Regra regra) {
+    	inteligentRepository.updateRegra(regra.getRegHistorico(), regra.getParceiro().getId(), regra.getId(), regra.getConta().getId());
+    }
+    
+    public void deleteRegra(Regra regra) {
+    	inteligentRepository.deleteRegra(regra.getId(),regra.getParceiro().getId());
     }
 }

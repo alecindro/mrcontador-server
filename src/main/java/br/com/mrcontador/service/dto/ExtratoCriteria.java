@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BigDecimalFilter;
+import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
@@ -47,6 +48,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
     private LongFilter agenciabancariaId;
     
     private LongFilter arquivoId;
+    
+    private BooleanFilter processado;
 
     public ExtratoCriteria() {
     }
@@ -63,6 +66,7 @@ public class ExtratoCriteria implements Serializable, Criteria {
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
         this.arquivoId = other.arquivoId == null ? null : other.arquivoId.copy();
+        this.processado = other.processado == null ? null : other.processado.copy();
     }
 
     @Override
@@ -158,6 +162,14 @@ public class ExtratoCriteria implements Serializable, Criteria {
 	public void setArquivoId(LongFilter arquivoId) {
 		this.arquivoId = arquivoId;
 	}
+	
+	public BooleanFilter getProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(BooleanFilter processado) {
+		this.processado = processado;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -179,7 +191,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
             Objects.equals(extDescricao, that.extDescricao) &&
             Objects.equals(parceiroId, that.parceiroId) &&
             Objects.equals(agenciabancariaId, that.agenciabancariaId) &&
-            Objects.equals(arquivoId, that.arquivoId);
+            Objects.equals(arquivoId, that.arquivoId) &&
+            Objects.equals(processado, that.processado);
     }
 
     @Override
@@ -195,8 +208,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
         extDescricao,
         parceiroId,
         agenciabancariaId,
-        arquivoId
-        );
+        arquivoId,
+        processado);
     }
 
     // prettier-ignore
@@ -214,6 +227,7 @@ public class ExtratoCriteria implements Serializable, Criteria {
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
                 (arquivoId != null ? "arquivoId=" + arquivoId + ", " : "") +
+                (processado != null ? "processado=" + processado + ", " : "") +
             "}";
     }
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +57,20 @@ public class UploadFileResource {
 					.created(new URI("/api/upload/planoconta/")).headers(HeaderUtil
 							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName()))
 					.body(parceiro);
+		} catch (MrContadorException e) {
+			throw e;
+		}
+	}
+	@PutMapping("/upload/planoconta")
+	public ResponseEntity<Void> updatePlanoConta(@RequestParam("file") MultipartFile file,
+			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
+		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		try {
+			 fileService.updatePlanoConta(file, SecurityUtils.getCurrentUserLogin(),
+					SecurityUtils.getCurrentTenantHeader(), parceiroId, SistemaPlanoConta.DOMINIO_SISTEMAS);
+			return ResponseEntity
+					.created(new URI("/api/upload/planoconta/")).headers(HeaderUtil
+							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName())).build();
 		} catch (MrContadorException e) {
 			throw e;
 		}

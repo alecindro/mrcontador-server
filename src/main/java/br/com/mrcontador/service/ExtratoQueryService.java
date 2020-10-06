@@ -110,6 +110,9 @@ public class ExtratoQueryService extends QueryService<Extrato> {
             if (criteria.getExtDescricao() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getExtDescricao(), Extrato_.extDescricao));
             }
+            if (criteria.getProcessado() != null) {
+                specification = specification.and(buildSpecification(criteria.getProcessado(), Extrato_.processado));
+            }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
                     root -> root.join(Extrato_.parceiro, JoinType.LEFT).get(Parceiro_.id)));

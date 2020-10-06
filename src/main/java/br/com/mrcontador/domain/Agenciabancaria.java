@@ -66,8 +66,10 @@ public class Agenciabancaria implements Serializable {
     private Parceiro parceiro;
 
   
-    @Column(name = "con_conta", length = 5, nullable = false)
-    private Integer conConta;
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "agenciabancarias", allowSetters = true)
+    private Conta conta;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -182,17 +184,17 @@ public class Agenciabancaria implements Serializable {
         this.parceiro = parceiro;
     }
 
-    public Integer getconConta() {
-        return conConta;
+    public Conta getConta() {
+        return conta;
     }
 
-    public Agenciabancaria conConta(Integer conConta) {
-        this.conConta = conConta;
+    public Agenciabancaria conta(Conta conta) {
+        this.conta = conta;
         return this;
     }
 
-    public void setConConta(Integer conConta) {
-        this.conConta = conConta;
+    public void setConta(Conta conta) {
+        this.conta = conta;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

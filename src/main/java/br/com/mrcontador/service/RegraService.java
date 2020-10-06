@@ -37,8 +37,13 @@ public class RegraService {
 	 */
 	public Regra save(Regra regra) {
 		log.debug("Request to save Regra : {}", regra);
+		boolean create = regra.getId() == null ? true : false;
 		regra = regraRepository.save(regra);
-		inteligentService.updateFromRegra(regra);
+		if(create) {
+		inteligentService.createFromRegra(regra);
+		}else {
+			inteligentService.updateFromRegra(regra);
+		}
 		return regra;
 	}
 
@@ -73,6 +78,11 @@ public class RegraService {
 	 */
 	public void delete(Long id) {
 		log.debug("Request to delete Regra : {}", id);
+		Optional<Regra> _regra = regraRepository.findById(id);
+		if(_regra.isEmpty()) {
+			throw new RuntimeException("não encontrao a regra");
+		}
+		inteligentService.deleteRegra(_regra.get());
 		regraRepository.deleteById(id);
 	}
 }

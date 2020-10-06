@@ -15,8 +15,9 @@ CREATE TABLE ${schema}.notaservico (
 	tno_codigo int4 NULL,
 	nse_parcela varchar(10) NULL,
 	parceiro_id int8 NOT NULL,
+	processado boolean null, 
 	CONSTRAINT notaservico_pkey PRIMARY KEY (id)
 );
 CREATE INDEX fki_notaservico_nse_cnpj ON ${schema}.notaservico USING btree (nse_cnpj);
-
+ALTER TABLE ${schema}.notaservico ALTER COLUMN processado SET DEFAULT FALSE;
 ALTER TABLE ${schema}.notaservico ADD CONSTRAINT fk_notaservico_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);

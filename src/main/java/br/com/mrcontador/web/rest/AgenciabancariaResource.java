@@ -69,6 +69,7 @@ public class AgenciabancariaResource {
         if (agenciabancaria.getId() != null) {
             throw new BadRequestAlertException("A new agenciabancaria cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        agenciabancaria.setAgeSituacao(true);
         Agenciabancaria result = agenciabancariaService.save(agenciabancaria);
         return ResponseEntity.created(new URI("/api/agenciabancarias/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

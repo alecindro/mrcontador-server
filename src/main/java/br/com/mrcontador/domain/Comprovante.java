@@ -70,6 +70,9 @@ public class Comprovante implements Serializable {
     @Column(name = "com_codigorecolhimento", length = 10)
     private String codigoRecolhimento;
     
+    @Column(name = "processado")
+    private Boolean processado;
+    
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
@@ -92,11 +95,6 @@ public class Comprovante implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-
-
-
-
 
     public Comprovante com_cnpj(String comCnpj) {
         this.comCnpj = comCnpj;
@@ -274,8 +272,22 @@ public class Comprovante implements Serializable {
 		this.codigoRecolhimento = codigoRecolhimento;
 	}
 	
+	public Boolean isProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(Boolean processado) {
+		this.processado = processado;
+	}
+	
+	public Comprovante processado(Boolean processado) {
+		this.processado = processado;
+		return this;
+	}
 	
 	   // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+
 
 
 	@Override

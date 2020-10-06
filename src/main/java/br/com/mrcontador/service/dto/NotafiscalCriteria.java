@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BigDecimalFilter;
+import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LocalDateFilter;
@@ -47,6 +48,8 @@ public class NotafiscalCriteria implements Serializable, Criteria {
     private StringFilter notParcela;
 
     private LongFilter parceiroId;
+    
+    private BooleanFilter processado;
 
     public NotafiscalCriteria() {
     }
@@ -64,6 +67,7 @@ public class NotafiscalCriteria implements Serializable, Criteria {
         this.tnoCodigo = other.tnoCodigo == null ? null : other.tnoCodigo.copy();
         this.notParcela = other.notParcela == null ? null : other.notParcela.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
+        this.processado = other.processado == null ? null : other.processado.copy();
     }
 
     @Override
@@ -169,6 +173,14 @@ public class NotafiscalCriteria implements Serializable, Criteria {
 	public void setParceiroId(LongFilter parceiroId) {
 		this.parceiroId = parceiroId;
 	}
+	
+	public BooleanFilter getProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(BooleanFilter processado) {
+		this.processado = processado;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -191,7 +203,8 @@ public class NotafiscalCriteria implements Serializable, Criteria {
             Objects.equals(notValorparcela, that.notValorparcela) &&
             Objects.equals(tnoCodigo, that.tnoCodigo) &&
             Objects.equals(notParcela, that.notParcela) &&
-            Objects.equals(parceiroId, that.parceiroId);
+            Objects.equals(parceiroId, that.parceiroId) &&
+            Objects.equals(processado, that.processado);
     }
 
     @Override
@@ -208,7 +221,8 @@ public class NotafiscalCriteria implements Serializable, Criteria {
         notValorparcela,
         tnoCodigo,
         notParcela,
-        parceiroId
+        parceiroId,
+        processado
         );
     }
 
@@ -228,6 +242,7 @@ public class NotafiscalCriteria implements Serializable, Criteria {
                 (tnoCodigo != null ? "tno_codigo=" + tnoCodigo + ", " : "") +
                 (notParcela != null ? "not_parcela=" + notParcela + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
+                (processado != null ? "processado=" + processado + ", " : "") +
             "}";
     }
 

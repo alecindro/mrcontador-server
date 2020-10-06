@@ -6,7 +6,6 @@ import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
@@ -41,7 +40,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
 
     private LongFilter parceiroId;
 
-    private IntegerFilter conConta;
+    private LongFilter contaId;
 
     public AgenciabancariaCriteria() {
     }
@@ -56,7 +55,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         this.banCodigobancario = other.banCodigobancario == null ? null : other.banCodigobancario.copy();
         this.bancoId = other.bancoId == null ? null : other.bancoId.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
-        this.conConta = other.conConta == null ? null : other.conConta.copy();
+        this.contaId = other.contaId == null ? null : other.contaId.copy();
     }
 
     @Override
@@ -136,12 +135,12 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         this.parceiroId = parceiroId;
     }    
 
-    public IntegerFilter getConConta() {
-		return conConta;
+    public LongFilter getContaId() {
+		return contaId;
 	}
 
-	public void setConConta(IntegerFilter conConta) {
-		this.conConta = conConta;
+	public void setContaId(LongFilter contaId) {
+		this.contaId = contaId;
 	}
 
 	@Override
@@ -163,7 +162,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
             Objects.equals(banCodigobancario, that.banCodigobancario) &&
             Objects.equals(bancoId, that.bancoId) &&
             Objects.equals(parceiroId, that.parceiroId) &&
-            Objects.equals(conConta, that.conConta);
+            Objects.equals(contaId, that.contaId);
     }
 
     @Override
@@ -178,7 +177,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         banCodigobancario,
         bancoId,
         parceiroId,
-        conConta
+        contaId
         );
     }
 
@@ -195,7 +194,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
                 (banCodigobancario != null ? "ban_codigobancario=" + banCodigobancario + ", " : "") +
                 (bancoId != null ? "bancoId=" + bancoId + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
-                (conConta != null ? "conConta=" + conConta + ", " : "") +
+                (contaId != null ? "contaId=" + contaId + ", " : "") +
             "}";
     }
 

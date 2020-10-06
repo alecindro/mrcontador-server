@@ -19,11 +19,12 @@ CREATE TABLE ${schema}.comprovante (
 	com_codigorecolhimento varchar(254) NULL,
 	agenciabancaria_id int8 NOT NULL,
 	parceiro_id int8 NOT NULL,
-	 arquivo_id int8 NULL,
-	 
+	arquivo_id int8 NULL,
+	processado boolean null, 
 	CONSTRAINT comprovante_pkey PRIMARY KEY (id)
 );
 CREATE INDEX fki_comprovante_com_cnpj ON ${schema}.comprovante USING btree (com_cnpj);
+ALTER TABLE ${schema}.comprovante ALTER COLUMN processado SET DEFAULT FALSE;
 ALTER TABLE ${schema}.comprovante ADD CONSTRAINT fk_comprovante_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
 ALTER TABLE ${schema}.comprovante ADD CONSTRAINT fk_comprovante_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);
 ALTER TABLE ${schema}.comprovante ADD CONSTRAINT fk_comprovante_agenciabancaria_id FOREIGN KEY (agenciabancaria_id) REFERENCES ${schema}.agenciabancaria(id);

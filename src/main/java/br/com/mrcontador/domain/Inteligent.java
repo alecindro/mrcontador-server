@@ -97,6 +97,10 @@ public class Inteligent implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = "inteligents", allowSetters = true)
     private Agenciabancaria agenciabancaria;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = "inteligents", allowSetters = true)
+    private Regra regra;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -365,9 +369,25 @@ public class Inteligent implements Serializable {
     public void setExtrato(Extrato extrato) {
         this.extrato = extrato;
     }
+    
+    public Regra getRegra() {
+  		return regra;
+  	}
+
+  	public void setRegra(Regra regra) {
+  		this.regra = regra;
+  	}
+  	
+    public Inteligent regra(Regra regra) {
+        this.regra = regra;
+        return this;
+    }
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
+  
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

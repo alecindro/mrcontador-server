@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "conta")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Conta implements Serializable {
+public class Conta extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -54,9 +54,6 @@ public class Conta implements Serializable {
 
     @Column(name = "con_grau")
     private Integer conGrau;
-    
-    @Column(name = "con_valorboleto")
-    private BigDecimal conValorboleto;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
@@ -183,15 +180,6 @@ public class Conta implements Serializable {
 		this.dataCadastro = dataCadastro;
 	}
 	
-	public BigDecimal getConValorboleto() {
-		return conValorboleto;
-	}
-
-	public void setConValorboleto(BigDecimal conValorboleto) {
-		this.conValorboleto = conValorboleto;
-	}
-	
-
 	 // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 	
 	

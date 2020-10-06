@@ -36,13 +36,22 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   List<Inteligent> findAll(@Nullable Specification<Inteligent> spec);
   
   @Modifying(flushAutomatically = true)
-  @Query(value ="update inteligent set historicofinal = :historico, conta_id = :contaId, associado = true where id in (select i.id from inteligent i inner join extrato e on i.extrato_id = e.id " + 
+  @Query(value ="update inteligent set historicofinal = :historico, conta_id = :contaId, regra_id = :regraId, associado = true where id in (select i.id from inteligent i inner join extrato e on i.extrato_id = e.id " + 
   		"where e.info_adicional = :descricao and " + 
   		"i.parceiro_id = :parceiroId and i.associado = false )",nativeQuery = true )
-  void updateFromInformacaoRegra(@Param("historico") String historico, @Param("descricao") String descricao, @Param("contaId") Long contaId, @Param("parceiroId") Long parceiroId);
+  void updateFromInformacaoRegra(@Param("historico") String historico, @Param("descricao") String descricao, @Param("contaId") Long contaId, @Param("parceiroId") Long parceiroId, @Param("regraId") Long regraId);
   
   @Modifying(flushAutomatically = true)
-  @Query(value="update inteligent set historicofinal = :historico, conta_id = :contaId, associado = true where historico = :descricao and parceiro_id = :parceiroId  and associado = false",nativeQuery = true)
-  void updateFromHistoricoRegra(@Param("historico") String historico, @Param("descricao") String descricao, @Param("contaId") Long contaId, @Param("parceiroId") Long parceiroId);
+  @Query(value="update inteligent set historicofinal = :historico, conta_id = :contaId, , regra_id = :regraId, associado = true where historico = :descricao and parceiro_id = :parceiroId  and associado = false",nativeQuery = true)
+  void updateFromHistoricoRegra(@Param("historico") String historico, @Param("descricao") String descricao, @Param("contaId") Long contaId, @Param("parceiroId") Long parceiroId, @Param("regraId") Long regraId);
+  
+  @Modifying(flushAutomatically = true)
+  @Query(value="update inteligent set historicofinal = :historico, conta_id = :contaId where parceiro_id = :parceiroId  and regra_id = :regraId",nativeQuery = true)
+  void updateRegra(@Param("historico") String historico, @Param("parceiroId") Long parceiroId, @Param("regraId") Long regraId, @Param("contaId") Long contaId);
+  
+  
+  @Modifying(flushAutomatically = true)
+  @Query(value="update inteligent set historicofinal = null, conta_id = null, associado = false, regra_id = null  where regra_id = :regraId and parceiro_id = :parceiroId",nativeQuery = true)
+  void deleteRegra(@Param("regraId") Long regraId, @Param("parceiroId") Long parceiroId);
   
 }

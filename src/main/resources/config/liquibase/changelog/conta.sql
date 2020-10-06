@@ -14,9 +14,13 @@ CREATE TABLE ${schema}.conta (
 	data_cadastro date NULL,
 	parceiro_id int8 NULL,
 	arquivo_id int8 NULL,
-	con_valorboleto numeric(21,2) null,
+    created_by varchar(50) not null,
+    created_date timestamp,
+    last_modified_by varchar(50),
+    last_modified_date timestamp,
 	CONSTRAINT conta_pkey PRIMARY KEY (id)
 );
 
 ALTER TABLE ${schema}.conta ADD CONSTRAINT fk_conta_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
 ALTER TABLE ${schema}.conta ADD CONSTRAINT fk_conta_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);
+CREATE UNIQUE INDEX conta_conconta__unique_idx ON ${schema}.conta (con_conta);

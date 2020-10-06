@@ -39,9 +39,6 @@ public class Regra implements Serializable {
     @Column(name = "reg_descricao", length = 60)
     private String regDescricao;
 
-    @Column(name = "reg_conta")
-    private Integer regConta;
-
     @Column(name = "reg_historico", length = 60)
     private String regHistorico;
 
@@ -58,6 +55,11 @@ public class Regra implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "regras", allowSetters = true)
     private Parceiro parceiro;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @NotNull
+    @JsonIgnoreProperties(value = "regras", allowSetters = true)
+    private Conta conta;
     
     @Column(name = "tipo_regra")
     @Enumerated(EnumType.STRING)
@@ -82,11 +84,6 @@ public class Regra implements Serializable {
         return this;
     }
     
-    public Regra regConta(Integer regConta) {
-        this.regConta = regConta;
-        return this;
-    }
-
     public Regra regHistorico(String regHistorico) {
         this.regHistorico = regHistorico;
         return this;
@@ -104,14 +101,6 @@ public class Regra implements Serializable {
         this.regTodos = regTodos;
         return this;
     }
-
-    public Integer getRegConta() {
-		return regConta;
-	}
-
-	public void setRegConta(Integer regConta) {
-		this.regConta = regConta;
-	}
 
 	public Parceiro getParceiro() {
 		return parceiro;
@@ -167,11 +156,25 @@ public class Regra implements Serializable {
 	public void setTipoRegra(TipoRegra tipoRegra) {
 		this.tipoRegra = tipoRegra;
 	}
+	
+	public Conta getConta() {
+		return conta;
+	}
 
+	public void setConta(Conta conta) {
+		this.conta = conta;
+	}
+
+	public Regra conta(Conta conta) {
+		this.conta = conta;
+		return this;
+	}
 
 	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
 
+
+	
 
 	@Override
     public boolean equals(Object o) {
@@ -191,7 +194,7 @@ public class Regra implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Regra [id=" + id + ", regDescricao=" + regDescricao + ", regConta=" + regConta + ", regHistorico="
+		return "Regra [id=" + id + ", regDescricao=" + regDescricao + ", regHistorico="
 				+ regHistorico + ", regTodos=" + regTodos + ", parceiro=" + parceiro + "]";
 	}
 

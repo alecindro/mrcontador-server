@@ -17,9 +17,9 @@
        <include file="config/liquibase/changelog/parceiro.sql" relativeToChangelogFile="false"/>
         <include file="config/liquibase/changelog/arquivo.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/banco.sql" relativeToChangelogFile="false"/>
-        <include file="config/liquibase/changelog/agenciabancaria.sql" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/comprovante.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/conta.sql" relativeToChangelogFile="false"/>
+        <include file="config/liquibase/changelog/agenciabancaria.sql" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/comprovante.sql" relativeToChangelogFile="false"/>    
     <include file="config/liquibase/changelog/notafiscal.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/extrato.sql" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/notaservico.sql" relativeToChangelogFile="false"/>
@@ -32,7 +32,7 @@
     <sqlFile path="config/liquibase/changelog/intelingent_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
   <include file="config/liquibase/changelog/inteligent_temp.sql" relativeToChangelogFile="false"/>
- <include file="config/liquibase/changelog/alter_extrato.sql" relativeToChangelogFile="false"/>
+
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

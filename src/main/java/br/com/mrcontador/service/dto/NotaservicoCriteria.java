@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BigDecimalFilter;
+import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LocalDateFilter;
@@ -47,6 +48,8 @@ public class NotaservicoCriteria implements Serializable, Criteria {
     private StringFilter nseParcela;
 
     private LongFilter parceiroId;
+    
+    private BooleanFilter processado;
 
     public NotaservicoCriteria() {
     }
@@ -64,6 +67,7 @@ public class NotaservicoCriteria implements Serializable, Criteria {
         this.tnoCodigo = other.tnoCodigo == null ? null : other.tnoCodigo.copy();
         this.nseParcela = other.nseParcela == null ? null : other.nseParcela.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
+        this.processado = other.processado == null ? null : other.processado.copy();
     }
 
     @Override
@@ -167,6 +171,14 @@ public class NotaservicoCriteria implements Serializable, Criteria {
 	public void setNseParcela(StringFilter nseParcela) {
 		this.nseParcela = nseParcela;
 	}
+	
+	public BooleanFilter getProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(BooleanFilter processado) {
+		this.processado = processado;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -189,6 +201,7 @@ public class NotaservicoCriteria implements Serializable, Criteria {
             Objects.equals(nseValorparcela, that.nseValorparcela) &&
             Objects.equals(tnoCodigo, that.tnoCodigo) &&
             Objects.equals(nseParcela, that.nseParcela) &&
+            Objects.equals(processado, that.processado) &&
             Objects.equals(parceiroId, that.parceiroId);
     }
 
@@ -206,7 +219,8 @@ public class NotaservicoCriteria implements Serializable, Criteria {
         nseValorparcela,
         tnoCodigo,
         nseParcela,
-        parceiroId
+        parceiroId,
+        processado
         );
     }
 
@@ -226,6 +240,7 @@ public class NotaservicoCriteria implements Serializable, Criteria {
                 (tnoCodigo != null ? "tno_codigo=" + tnoCodigo + ", " : "") +
                 (nseParcela != null ? "nse_parcela=" + nseParcela + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
+                (processado != null ? "processado=" + processado + ", " : "") +
             "}";
     }
 

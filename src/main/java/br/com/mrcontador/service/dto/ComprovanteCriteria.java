@@ -5,8 +5,8 @@ import java.util.Objects;
 
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BigDecimalFilter;
+import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -45,6 +45,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
     private LongFilter parceiroId;
     
     private LongFilter agenciabancariaId;
+    
+    private BooleanFilter processado;
 
     public ComprovanteCriteria() {
     }
@@ -61,6 +63,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         this.comObservacao = other.comObservacao == null ? null : other.comObservacao.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
+        this.processado = other.processado == null ? null : other.processado.copy();
     }
 
     @Override
@@ -155,6 +158,14 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 	public void setParceiroId(LongFilter parceiroId) {
 		this.parceiroId = parceiroId;
 	}
+	
+	public BooleanFilter getProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(BooleanFilter processado) {
+		this.processado = processado;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -176,7 +187,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
             Objects.equals(comValorpagamento, that.comValorpagamento) &&
             Objects.equals(comObservacao, that.comObservacao) &&
             Objects.equals(parceiroId, that.parceiroId)&&
-        Objects.equals(agenciabancariaId, that.agenciabancariaId);
+        Objects.equals(agenciabancariaId, that.agenciabancariaId)&&
+        Objects.equals(processado, that.processado);
     }
 
     @Override
@@ -192,7 +204,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         comValorpagamento,
         comObservacao,
         parceiroId,
-        agenciabancariaId
+        agenciabancariaId,
+        processado
         );
     }
 
@@ -211,6 +224,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
                 (comObservacao != null ? "com_observacao=" + comObservacao + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
+                (processado != null ? "processado=" + processado + ", " : "") +
             "}";
     }
 

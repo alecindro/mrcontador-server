@@ -22,6 +22,7 @@ import br.com.mrcontador.domain.Inteligent_;
 import br.com.mrcontador.domain.Notafiscal_;
 import br.com.mrcontador.domain.Notaservico_;
 import br.com.mrcontador.domain.Parceiro_;
+import br.com.mrcontador.domain.Regra_;
 import br.com.mrcontador.repository.InteligentRepository;
 import br.com.mrcontador.service.dto.InteligentCriteria;
 import io.github.jhipster.service.QueryService;
@@ -159,6 +160,10 @@ public class InteligentQueryService extends QueryService<Inteligent> {
             if (criteria.getExtratoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getExtratoId(),
                     root -> root.join(Inteligent_.extrato, JoinType.LEFT).get(Extrato_.id)));
+            }
+            if (criteria.getRegraId() != null) {
+                specification = specification.and(buildSpecification(criteria.getRegraId(),
+                    root -> root.join(Inteligent_.regra, JoinType.LEFT).get(Regra_.id)));
             }
         }        
         return specification;

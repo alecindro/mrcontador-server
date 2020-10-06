@@ -15,9 +15,11 @@ CREATE TABLE ${schema}.extrato (
 	arquivo_id int8 NOT NULL,
 	parceiro_id int8 NOT NULL,
 	agenciabancaria_id int8 NOT NULL,
+	processado boolean null, 
 	CONSTRAINT extrato_pkey PRIMARY KEY (id)
 );
 
+ALTER TABLE ${schema}.extrato ALTER COLUMN processado SET DEFAULT FALSE;
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_agenciabancaria_id FOREIGN KEY (agenciabancaria_id) REFERENCES ${schema}.agenciabancaria(id);
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);

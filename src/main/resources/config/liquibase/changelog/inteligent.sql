@@ -25,6 +25,7 @@ CREATE TABLE ${schema}.inteligent (
 	agenciabancaria_id int8 NULL,
 	extrato_id int8 NULL,
 	conta_id int8 NULL,
+	regra_id int8 NULL,
 	CONSTRAINT inteligent_pkey PRIMARY KEY (id),
 	CONSTRAINT inteligent_agenciabancaria FOREIGN KEY (agenciabancaria_id) REFERENCES ${schema}.agenciabancaria(id),
 	CONSTRAINT inteligent_comprovante FOREIGN KEY (comprovante_id) REFERENCES ${schema}.comprovante(id),
@@ -32,6 +33,7 @@ CREATE TABLE ${schema}.inteligent (
 	CONSTRAINT inteligent_notafiscal FOREIGN KEY (notafiscal_id) REFERENCES ${schema}.notafiscal(id),
 	CONSTRAINT inteligent_notaservico FOREIGN KEY (notaservico_id) REFERENCES ${schema}.notaservico(id),
 	CONSTRAINT inteligent_parceiro FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id),
-	CONSTRAINT inteligent_conta FOREIGN KEY (conta_id) REFERENCES ${schema}.conta(id)
+	CONSTRAINT inteligent_conta FOREIGN KEY (conta_id) REFERENCES ${schema}.conta(id),
+	CONSTRAINT inteligent_regra FOREIGN KEY (regra_id) REFERENCES ${schema}.regra(id)
 );
 CREATE INDEX fki_inteligent_associado ON ${schema}.inteligent USING btree (associado);

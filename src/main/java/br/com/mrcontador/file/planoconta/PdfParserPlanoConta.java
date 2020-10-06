@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -47,10 +48,7 @@ public class PdfParserPlanoConta {
 			second = new ByteArrayInputStream(baos.toByteArray());
 			first = new ByteArrayInputStream(baos.toByteArray());
 			document = PDDocument.load(first);
-			PdfReader reader = getIdentifier(sistemaPlanoConta);
-			Splitter splitter = new Splitter();
-			List<PDDocument> pages = splitter.split(document);
-			PlanoConta planoConta = reader.process(pages);
+			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
 			if (parceiroCnpj != null) {
 				if (!MrContadorUtil.onlyNumbers(parceiroCnpj)
 						.equals(MrContadorUtil.onlyNumbers(planoConta.getCnpjCliente()))) {
@@ -89,7 +87,58 @@ public class PdfParserPlanoConta {
 
 			}
 		}
+	}
 
+	public void update(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, Long parceiroId) {
+		PDDocument document;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		InputStream first = null;
+		InputStream second = null;
+		try {
+			dto.getInputStream().transferTo(baos);
+			second = new ByteArrayInputStream(baos.toByteArray());
+			first = new ByteArrayInputStream(baos.toByteArray());
+			document = PDDocument.load(first);
+			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
+			Optional<Parceiro> _parceiro = parceiroService.findOne(parceiroId);
+			if (_parceiro.isEmpty()) {
+				throw new MrContadorException("file.parceirorequired");
+			}
+			Parceiro parceiro = _parceiro.get();
+			if (parceiro.getId() != parceiroId) {
+				throw new MrContadorException("file.notparceiro");
+			}
+			dto.setParceiro(parceiro);
+			dto.setInputStream(second);
+			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
+			PlanoContaMapper mapper = new PlanoContaMapper();
+			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro, planoConta.getArquivo());
+			contaService.update(contas, dto.getUsuario(), arquivo, parceiro);
+		}
+		catch (MrContadorException e) {
+			throw e;
+		} catch (Exception e) {
+			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+			dto.setInputStream(new ByteArrayInputStream(baos.toByteArray()));
+			s3Service.uploadErro(dto);
+			throw new MrContadorException("planodeconta.parse.error", e.getMessage(), e);
+		} finally {
+			try {
+				baos.close();
+				if (first != null) {
+					first.close();
+				}
+			} catch (IOException e) {
+
+			}
+		}
+	}
+
+	private PlanoConta parsePlanoConta(SistemaPlanoConta sistemaPlanoConta, PDDocument document) throws IOException {
+		PdfReader reader = getIdentifier(sistemaPlanoConta);
+		Splitter splitter = new Splitter();
+		List<PDDocument> pages = splitter.split(document);
+		return reader.process(pages);
 	}
 
 	private PdfReader getIdentifier(SistemaPlanoConta sistemaPlanoConta) throws IOException {
