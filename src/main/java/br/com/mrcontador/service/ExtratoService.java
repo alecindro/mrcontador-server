@@ -38,12 +38,15 @@ public class ExtratoService {
 	private final ExtratoRepository extratoRepository;
 
 	private final S3Service s3Service;
+	
+	private final ComprovanteService comprovanteService;
 
 
 	public ExtratoService(ExtratoRepository extratoRepository,
-			S3Service s3Service) {
+			S3Service s3Service, ComprovanteService comprovanteService) {
 		this.extratoRepository = extratoRepository;
 		this.s3Service = s3Service;
+		this.comprovanteService = comprovanteService;
 	}
 
 	/**
@@ -120,7 +123,7 @@ public class ExtratoService {
 				try {
 				periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
 					extrato =extratoRepository.save(extrato);
-				int value = extratoRepository.callExtratoBB(extrato.getParceiro().getId(), agenciaBancaria.getId(), extrato.getId());
+				int value = extratoRepository.callExtratoBB(extrato.getId());
 				if(value > 0) {
 					extratoRepository.processadoTrue(extrato.getId());
 				}
@@ -133,6 +136,7 @@ public class ExtratoService {
 		if(extratos.isEmpty()) {
 			throw new org.springframework.dao.DataIntegrityViolationException("extrato já importado");
 		}
+		comprovanteService.callComprovanteGeral(listOfxDto.getFileDTO().getParceiro().getId());
 		for(String periodo : periodos) {
 			extratoRepository.regraInteligent(listOfxDto.getFileDTO().getParceiro().getId(),periodo);
 		}

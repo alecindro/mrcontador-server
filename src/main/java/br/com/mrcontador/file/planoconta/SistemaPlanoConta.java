@@ -2,16 +2,11 @@ package br.com.mrcontador.file.planoconta;
 
 public enum SistemaPlanoConta {
 
-	DOMINIO_SISTEMAS("Dominio Sistemas");
+	DOMINIO_SISTEMAS;
 	
-	private String descricao;
 	
-	private SistemaPlanoConta(String descricao) {
-		this.descricao = descricao;
+	private SistemaPlanoConta() {
 	}
 	
-	public String getDescricao() {
-		return descricao;
-	}
 	
 }

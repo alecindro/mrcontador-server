@@ -31,8 +31,8 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@Query("FROM Extrato AS ex LEFT JOIN FETCH ex.arquivo WHERE ex.id = ?1")
 	Optional<Extrato> findById(Long id);
 
-	@Query(nativeQuery = true, value = "select processa_extratobb(?,?,?)")
-	int callExtratoBB(Long parceiroId, Long agenciaBancariaId, Long extratoId);
+	@Query(nativeQuery = true, value = "select processa_extratobb(?)")
+	int callExtratoBB(Long extratoId);
 
 	@Modifying(flushAutomatically = true)
 	@Query(value = "update extrato set processado = true where id = :extratoId", nativeQuery = true)

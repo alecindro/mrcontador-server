@@ -134,6 +134,10 @@ public class Parceiro implements Serializable {
 
     @Column(name = "enabled")
     private Boolean enabled;
+    
+    @Column(name = "cod_ext")
+    private String codExt;
+    
 
     @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -662,7 +666,17 @@ public class Parceiro implements Serializable {
 		this.motivoSituacao = motivoSituacao;
 	}
 	
+	public String getCodExt() {
+		return codExt;
+	}
+
+	public void setCodExt(String codExt) {
+		this.codExt = codExt;
+	}
+	
   // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+
 
 
 	@Override

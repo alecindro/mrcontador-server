@@ -37,6 +37,12 @@
    <changeSet author="alecindro" id="18">
     <sqlFile path="config/liquibase/changelog/notafiscal_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
+   <changeSet author="alecindro" id="19">
+    <sqlFile path="config/liquibase/changelog/notafiscal_function_geral.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+   <changeSet author="alecindro" id="20">
+    <sqlFile path="config/liquibase/changelog/comprovantebb_function_geral.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
 
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

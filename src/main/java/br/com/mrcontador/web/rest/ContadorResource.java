@@ -107,6 +107,7 @@ public class ContadorResource {
     @PutMapping("/contadors")
     public ResponseEntity<ContadorDTO> updateContador(@RequestBody ContadorDTO contadorDTO) throws URISyntaxException {
         log.debug("REST request to update Contador : {}", contadorDTO);
+        TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         if (contadorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -126,6 +127,7 @@ public class ContadorResource {
     @GetMapping("/contadors")
     public ResponseEntity<List<ContadorDTO>> getAllContadors(ContadorCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Contadors by criteria: {}", criteria);
+        TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         Page<ContadorDTO> page = contadorQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -140,6 +142,7 @@ public class ContadorResource {
     @GetMapping("/contadors/count")
     public ResponseEntity<Long> countContadors(ContadorCriteria criteria) {
         log.debug("REST request to count Contadors by criteria: {}", criteria);
+        TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         return ResponseEntity.ok().body(contadorQueryService.countByCriteria(criteria));
     }
 
@@ -152,7 +155,16 @@ public class ContadorResource {
     @GetMapping("/contadors/{id}")
     public ResponseEntity<ContadorDTO> getContador(@PathVariable Long id) {
         log.debug("REST request to get Contador : {}", id);
+        TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         Optional<ContadorDTO> contadorDTO = contadorService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(contadorDTO);
+    }
+    
+    @GetMapping("/contadors/tenant/{datasource}")
+    public ResponseEntity<ContadorDTO> getContador(@PathVariable String datasource) {
+        log.debug("REST request to get Contador : {}", datasource);
+        TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+        Optional<ContadorDTO> contadorDTO = contadorService.findOneByDatasource(datasource);
         return ResponseUtil.wrapOrNotFound(contadorDTO);
     }
 
@@ -165,6 +177,7 @@ public class ContadorResource {
     @DeleteMapping("/contadors/{id}")
     public ResponseEntity<Void> deleteContador(@PathVariable Long id) {
         log.debug("REST request to delete Contador : {}", id);
+        TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         contadorService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }

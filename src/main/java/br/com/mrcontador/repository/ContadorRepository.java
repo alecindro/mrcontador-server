@@ -16,4 +16,5 @@ import br.com.mrcontador.domain.Contador;
 public interface ContadorRepository extends JpaRepository<Contador, Long>, JpaSpecificationExecutor<Contador> {
 	
 	Optional<Contador> findOneByCnpjOrCrc(String cnpj, String crc);
+	Optional<Contador> findOneByDatasource(String datasource);
 }

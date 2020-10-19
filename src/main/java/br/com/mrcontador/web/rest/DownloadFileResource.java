@@ -23,7 +23,6 @@ import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.export.ExportDominio;
 import br.com.mrcontador.export.ExportLancamento;
 import br.com.mrcontador.export.ExportLancamentoFactory;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
@@ -129,8 +128,8 @@ public class DownloadFileResource {
 				.body(resource);
 	}
 
-	@GetMapping("/downloadFile/lancamento/{periodo}/{agenciabancariaId}/{parceiroId}")
-	public ResponseEntity<Resource> downloadLancamento(@PathVariable String periodo,@PathVariable Long agenciabancariaId, @PathVariable Long parceiroId) {
+	@GetMapping("/downloadFile/lancamento/{periodo}/{agenciabancariaId}/{parceiroId}/{cod_ext}/{sistema}")
+	public ResponseEntity<Resource> downloadLancamento(@PathVariable String periodo,@PathVariable Long agenciabancariaId, @PathVariable Long parceiroId, @PathVariable String cod_ext, @PathVariable String sistema) {
 		InteligentCriteria criteria = new InteligentCriteria();
 		LongFilter _parceiro = new LongFilter();
 		_parceiro.setEquals(parceiroId);
@@ -147,8 +146,8 @@ public class DownloadFileResource {
 		List<Inteligent> inteligents = inteligentQueryService.findByCriteria(criteria);
 		Agenciabancaria agencia = agenciabancariaService.findOne(agenciabancariaId).get();
 		Parceiro parceiro = parceiroService.findOne(parceiroId).get();
-		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.DOMINIO_SISTEMAS);
-		String result = lancamento.process(inteligents, agencia, "45", parceiro.getParCnpjcpf());
+		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.valueOf(sistema));
+		String result = lancamento.process(inteligents, agencia, cod_ext, parceiro.getParCnpjcpf());
 		Resource resource = new ByteArrayResource(result.getBytes());
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/plain"))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"lancamento_" + org.apache.commons.lang3.StringUtils.deleteWhitespace(parceiro.getParRazaosocial())+"_"+periodo + ".txt\"")

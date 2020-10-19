@@ -122,7 +122,7 @@ BEGIN
                                   VALUES ( vCODIGOFORNECEDOR, RCONTA.ID, RCONTA.CON_CNPJ, RCONTA.CON_DESCRICAO, RCONTA.CON_CONTA, 
                                            RCONTA.CON_VALORBOLETO, vPARCEIRONOTA  
                                          ); 
-       vCODIGOCONTABIL       := RCONTA.CON_CONTA;
+       vCODIGOCONTABIL       := RCONTA.ID;
        vACHOUFORNECEDOR      := 1; 
       END IF;    
      END LOOP; 
@@ -144,7 +144,7 @@ BEGIN
                                            RCONTA.CON_VALORBOLETO, vPARCEIRONOTA  
                                          ); 
        vCONTAFORNECEDOR:= vCONTAFORNECEDOR + 1;
-       vGUARDACONTA    := RCONTA.CON_CONTA;
+       vGUARDACONTA    := RCONTA.ID;
        vACHOUFORNECEDOR:= 1;
       END LOOP; 
 
@@ -201,7 +201,7 @@ BEGIN
 
        
        IF (vCONTAFORNECEDOR>1) THEN
-        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CONTACONTABIL; 
+        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CODIGO; 
        END IF; 
 
       IF (RNOTA.COM_VALORDOCUMENTO>0) AND (RNOTA.COM_VALORDOCUMENTO<>RNOTA.COM_VALORPAGAMENTO) AND (RNOTA.COM_DATAPAGAMENTO<>RNOTA.COM_DATAVENCIMENTO) THEN 
@@ -238,7 +238,7 @@ BEGIN
 
        
        IF (vCONTAFORNECEDOR>1) THEN
-        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CONTACONTABIL; 
+        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CODIGO; 
        END IF; 
 
       IF (RNOTA.COM_VALORDOCUMENTO>0) AND (RNOTA.COM_VALORDOCUMENTO<>RNOTA.COM_VALORPAGAMENTO) AND (RNOTA.COM_DATAPAGAMENTO<>RNOTA.COM_DATAVENCIMENTO) THEN 
@@ -281,7 +281,7 @@ BEGIN
 
        
        IF (vCONTAFORNECEDOR>1) THEN
-        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CONTACONTABIL; 
+        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CODIGO; 
        END IF; 
 
        IF (RNOTA.COM_VALORDOCUMENTO>0) AND (RNOTA.COM_VALORDOCUMENTO<>RNOTA.COM_VALORPAGAMENTO) AND (RNOTA.COM_DATAPAGAMENTO<>RNOTA.COM_DATAVENCIMENTO) THEN 
@@ -317,7 +317,7 @@ BEGIN
 
        
        IF (vCONTAFORNECEDOR>1) THEN
-        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CONTACONTABIL; 
+        vCODIGOCONTABIL   := RFORNECEDOR.FOR_CODIGO; 
        END IF; 
 
        IF (RNOTA.COM_VALORDOCUMENTO>0) AND (RNOTA.COM_VALORDOCUMENTO<>RNOTA.COM_VALORPAGAMENTO) AND (RNOTA.COM_DATAPAGAMENTO<>RNOTA.COM_DATAVENCIMENTO) THEN 
@@ -364,6 +364,10 @@ BEGIN
                                     HISTORICOFINAL= vHISTORICOFINAL,
                                     ASSOCIADO= vASSOCIADO
       WHERE ID = vCODIGOINTELIGENTE;
+
+      UPDATE ${schema}.NOTAFISCAL SET PROCESSADO= TRUE  
+      WHERE ID = vCODIGONOTA;
+      
       vRETORNO:= vRETORNO + 1;
     END IF;
 
@@ -376,6 +380,10 @@ BEGIN
                                    DEBITO= vVALORDOCUMENTO,
                                    ASSOCIADO= vASSOCIADO
       WHERE ID = vCODIGOINTELIGENTE;
+
+      UPDATE ${schema}.NOTAFISCAL SET PROCESSADO= TRUE  
+      WHERE ID = vCODIGONOTA;
+      
       vRETORNO:= vRETORNO + 1;
 
       SELECT (replace(vHISTORICOFINAL, 'Pagto.', 'Pagto. de Juros sobre')) 
@@ -387,7 +395,7 @@ BEGIN
                                       )
                               VALUES ( vCODIGEXTRATO, vPARCEIRONOTA , pAGE_CODIGO, vDATAEXTRATO,
                                        vHISTORICO, vNUMERODOCUMENTO, vNUMEROCONTROLE, vVALORDIFERENTE, vCREDITO, vCOMPROVANTE,
-                                       vCNPJ, vBENEFICIARIO, 1136, vCODIGONOTA, vHISTORICOFINAL, concat(extract(month from vDATAEXTRATO),extract(year from vDATAEXTRATO)), vASSOCIADO
+                                       vCNPJ, vBENEFICIARIO, 1126, vCODIGONOTA, vHISTORICOFINAL, concat(extract(month from vDATAEXTRATO),extract(year from vDATAEXTRATO)), vASSOCIADO
                                      );
     END IF;
 
@@ -399,6 +407,10 @@ BEGIN
                                    DEBITO= vVALORDOCUMENTO,
                                    ASSOCIADO= vASSOCIADO
       WHERE ID = vCODIGOINTELIGENTE;
+
+      UPDATE ${schema}.NOTAFISCAL SET PROCESSADO= TRUE  
+      WHERE ID = vCODIGONOTA;
+      
       vRETORNO:= vRETORNO + 1;
                                     
 
@@ -410,7 +422,7 @@ BEGIN
                                       )
                               VALUES ( vCODIGEXTRATO,  vPARCEIRONOTA, pAGE_CODIGO,  vDATAEXTRATO,
                                        vHISTORICO, vNUMERODOCUMENTO, vNUMEROCONTROLE, vVALORDIFERENTE, vCREDITO, vCOMPROVANTE,
-                                       vCNPJ, vBENEFICIARIO, 1139, vCODIGONOTA, vHISTORICOFINAL, concat(extract(month from vDATAEXTRATO),extract(year from vDATAEXTRATO)), vASSOCIADO
+                                       vCNPJ, vBENEFICIARIO, 1129, vCODIGONOTA, vHISTORICOFINAL, concat(extract(month from vDATAEXTRATO),extract(year from vDATAEXTRATO)), vASSOCIADO
                                      );
    END IF;
 

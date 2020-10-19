@@ -35,6 +35,7 @@ CREATE TABLE ${schema}.parceiro (
 	data_situacao_especial varchar(25) NULL,
     capital_social varchar(255) NULL,
     outras varchar(255) NULL,
+    cod_ext varchar(50) NULL,
     enabled bool NOT NULL DEFAULT true,
     CONSTRAINT parceiro_cnpjcpf_unique UNIQUE (par_cnpjcpf),	
 	CONSTRAINT parceiro_pkey PRIMARY KEY (id)

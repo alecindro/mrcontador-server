@@ -110,5 +110,9 @@ public class NotafiscalService {
     	return list;
     }
     
+    public void callProcessaAllNotafiscal(Long parceiroId) {
+    	 notafiscalRepository.callProcessaAllNotafiscal(parceiroId);
+    }
+    
    
 }
