@@ -18,6 +18,7 @@ CREATE TABLE ${schema}.inteligent (
 	datafim date NULL,
 	cnpj varchar(20) NULL,
 	beneficiario varchar(254) NULL,
+	tipo_inteligent varchar(254) NULL,
 	comprovante_id int8 NULL,
 	notafiscal_id int8 NULL,
 	notaservico_id int8 NULL,

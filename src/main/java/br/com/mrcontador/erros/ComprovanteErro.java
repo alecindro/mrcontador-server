@@ -1,7 +1,6 @@
 package br.com.mrcontador.erros;
 
 import br.com.mrcontador.domain.Agenciabancaria;
-import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.service.dto.FileDTO;
 
 public class ComprovanteErro {

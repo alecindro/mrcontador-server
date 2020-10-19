@@ -1,5 +1,6 @@
 package br.com.mrcontador.service.file;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -58,8 +59,8 @@ public class S3Service {
 		String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());
 		log.info("Carregando arquivo: {}", filename);
 		String eTag = "";
-		if (dto.getSize() != null && dto.getInputStream() != null) {
-			eTag = uploadS3Stream(filename, dir, dto.getSize(), dto.getInputStream());
+		if (dto.getSize() != null) {
+			eTag = uploadS3Stream(filename, dir, dto.getSize(), new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
 		} else {
 			eTag = uploadS3Bytes(filename, dir, dto.getBytes());
 		}
@@ -144,11 +145,10 @@ public class S3Service {
 			fileS3.getFileDTO().seteTag(eTag);
 			fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
 			Arquivo arquivo = mapper.toEntity(fileS3.getFileDTO());
+			arquivoService.save(arquivo);
 			fileS3.getComprovantes().forEach(comprovante -> {
-				comprovante.setArquivo(arquivo);
+				comprovanteService.updateArquivo(comprovante.getId(), arquivo.getId());
 			});
-			comprovanteService.saveAll(fileS3.getComprovantes());	
-
 		});
 	}
 
@@ -163,8 +163,8 @@ public class S3Service {
 		String eTag = "";
 		String filename = MrContadorUtil.genFileName(dto.getTipoDocumento(), dto.getContentType());
 		log.info("Carregando arquivo: {}", filename);
-		if (dto.getSize() != null && dto.getInputStream() != null) {
-			eTag = uploadS3Stream(filename, dir, dto.getSize(), dto.getInputStream());
+		if (dto.getSize() != null ) {
+			eTag = uploadS3Stream(filename, dir, dto.getSize(), new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
 		} else {
 			eTag = uploadS3Bytes(filename, dir, dto.getBytes());
 		}

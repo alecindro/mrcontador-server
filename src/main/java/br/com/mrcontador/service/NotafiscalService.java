@@ -84,18 +84,30 @@ public class NotafiscalService {
     
     public List<Notafiscal>  process(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, boolean isEmitente,Arquivo pdf, Arquivo xml) {
     	NotafiscalNfe400Mapper mapper = new NotafiscalNfe400Mapper();
-    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente,pdf,xml);    
-    	return notafiscalRepository.saveAll(list);
+    	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente,pdf,xml);
+    	list.forEach(nota->{
+    		nota = notafiscalRepository.save(nota);
+    		int value = notafiscalRepository.callProcessaNotafiscal(nota.getId());
+    		if(value >0) {
+    			notafiscalRepository.processadoTrue(nota.getId());
+    		}
+    		
+    	});
+    	return list;
     	
     }
     public List<Notafiscal>  process(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada, Parceiro parceiro, boolean isEmitente,Arquivo pdf, Arquivo xml) {
     	NotafiscalNfe310Mapper mapper = new NotafiscalNfe310Mapper();
     	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
-    	list.forEach(nota ->{
-    		nota.setArquivo(xml);
-    		nota.setArquivoPDF(pdf);
+    	list.forEach(nota->{
+    		nota = notafiscalRepository.save(nota);
+    		int value = notafiscalRepository.callProcessaNotafiscal(nota.getId());
+    		if(value >0) {
+    			notafiscalRepository.processadoTrue(nota.getId());
+    		}
+    		
     	});
-    	return notafiscalRepository.saveAll(list);
+    	return list;
     }
     
    

@@ -195,7 +195,7 @@ public class Regra implements Serializable {
 	@Override
 	public String toString() {
 		return "Regra [id=" + id + ", regDescricao=" + regDescricao + ", regHistorico="
-				+ regHistorico + ", regTodos=" + regTodos + ", parceiro=" + parceiro + "]";
+				+ regHistorico + ", regTodos=" + regTodos + "]";
 	}
 
     // prettier-ignore

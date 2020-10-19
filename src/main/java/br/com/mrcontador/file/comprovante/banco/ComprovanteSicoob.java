@@ -13,6 +13,8 @@ import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.file.comprovante.TipoComprovante;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public class ComprovanteSicoob extends ComprovanteBanco {
 
@@ -61,6 +63,7 @@ public class ComprovanteSicoob extends ComprovanteBanco {
 			if (line.contains("Nº documento:")) {
 				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Nº documento:"), "\\s")
 						.trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
@@ -77,6 +80,7 @@ public class ComprovanteSicoob extends ComprovanteBanco {
 			}
 			if (line.contains("CPF/CNPJ Beneficiário:")) {
 				String lineA = StringUtils.substringAfter(line, "CPF/CNPJ Beneficiário:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_BEN);
 				diffValue.setNewValue(lineA);
@@ -85,6 +89,7 @@ public class ComprovanteSicoob extends ComprovanteBanco {
 			}
 			if (line.contains("CPF/CNPJ Pagador:")) {
 				String lineA = StringUtils.substringAfter(line, "CPF/CNPJ Pagador:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_PAG);
 				diffValue.setNewValue(lineA);
@@ -109,6 +114,7 @@ public class ComprovanteSicoob extends ComprovanteBanco {
 			}
 			if (line.contains("Valor Documento:")) {
 				String lineA = StringUtils.substringAfter(line, "Valor Documento:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_DOC);
 				diffValue.setNewValue(lineA);
@@ -134,7 +140,7 @@ public class ComprovanteSicoob extends ComprovanteBanco {
 			i = i + 1;
 		}
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
 		return comprovantes;
 	}
 

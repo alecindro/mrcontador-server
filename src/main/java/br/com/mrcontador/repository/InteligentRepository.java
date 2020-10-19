@@ -35,6 +35,9 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   @EntityGraph(attributePaths = {"comprovante","notafiscal","conta","extrato"})
   List<Inteligent> findAll(@Nullable Specification<Inteligent> spec);
   
+  @Query(value="select periodo from inteligent where parceiro_id = :parceiroId and agenciabancaria_id = :agenciabancariaId group by periodo order by cast(periodo as integer) desc", nativeQuery = true)
+  public List<String> periodos(@Param("parceiroId") Long parceiroId, @Param("agenciabancariaId") Long agenciabancariaId);
+  
   @Modifying(flushAutomatically = true)
   @Query(value ="update inteligent set historicofinal = :historico, conta_id = :contaId, regra_id = :regraId, associado = true where id in (select i.id from inteligent i inner join extrato e on i.extrato_id = e.id " + 
   		"where e.info_adicional = :descricao and " + 

@@ -1,10 +1,11 @@
 package br.com.mrcontador.service.mapper;
 
 
-import br.com.mrcontador.domain.*;
-import br.com.mrcontador.service.dto.NotaservicoDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import org.mapstruct.*;
+import br.com.mrcontador.domain.Notaservico;
+import br.com.mrcontador.service.dto.NotaservicoDTO;
 
 /**
  * Mapper for the entity {@link Notaservico} and its DTO {@link NotaservicoDTO}.

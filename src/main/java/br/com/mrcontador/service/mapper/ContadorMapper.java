@@ -1,12 +1,12 @@
 package br.com.mrcontador.service.mapper;
 
 
-import br.com.mrcontador.domain.*;
+import org.mapstruct.Mapper;
+
+import br.com.mrcontador.domain.Contador;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.ContadorDTO;
 import br.com.mrcontador.util.MrContadorUtil;
-
-import org.mapstruct.*;
 
 /**
  * Mapper for the entity {@link Contador} and its DTO {@link ContadorDTO}.

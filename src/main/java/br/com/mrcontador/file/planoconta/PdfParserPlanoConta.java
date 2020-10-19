@@ -1,10 +1,8 @@
 package br.com.mrcontador.file.planoconta;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,13 +38,10 @@ public class PdfParserPlanoConta {
 
 	public Parceiro process(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, String parceiroCnpj) {
 		PDDocument document;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream first = null;
-		InputStream second = null;
 		try {
-			dto.getInputStream().transferTo(baos);
-			second = new ByteArrayInputStream(baos.toByteArray());
-			first = new ByteArrayInputStream(baos.toByteArray());
+
+			first = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
 			if (parceiroCnpj != null) {
@@ -60,13 +55,8 @@ public class PdfParserPlanoConta {
 			PlanoContaMapper mapper = new PlanoContaMapper();
 			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro, planoConta.getArquivo());
 			contaService.save(contas);
-			dto.setInputStream(second);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
-			contas.forEach(conta -> {
-				conta.setArquivo(arquivo);
-				conta.setDataCadastro(new Date());
-			});
-			contaService.save(contas);
+			contaService.updateArquivo(arquivo.getId());
 			return parceiro;
 		} catch (CnpjAlreadyExistException e) {
 			throw e;
@@ -74,30 +64,23 @@ public class PdfParserPlanoConta {
 			throw e;
 		} catch (Exception e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-			dto.setInputStream(new ByteArrayInputStream(baos.toByteArray()));
 			s3Service.uploadErro(dto);
 			throw new MrContadorException("planodeconta.parse.error", e.getMessage(), e);
 		} finally {
 			try {
-				baos.close();
 				if (first != null) {
 					first.close();
 				}
 			} catch (IOException e) {
-
 			}
 		}
 	}
 
 	public void update(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, Long parceiroId) {
 		PDDocument document;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		InputStream first = null;
-		InputStream second = null;
 		try {
-			dto.getInputStream().transferTo(baos);
-			second = new ByteArrayInputStream(baos.toByteArray());
-			first = new ByteArrayInputStream(baos.toByteArray());
+			first = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
 			Optional<Parceiro> _parceiro = parceiroService.findOne(parceiroId);
@@ -109,22 +92,18 @@ public class PdfParserPlanoConta {
 				throw new MrContadorException("file.notparceiro");
 			}
 			dto.setParceiro(parceiro);
-			dto.setInputStream(second);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
 			PlanoContaMapper mapper = new PlanoContaMapper();
 			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro, planoConta.getArquivo());
 			contaService.update(contas, dto.getUsuario(), arquivo, parceiro);
-		}
-		catch (MrContadorException e) {
+		} catch (MrContadorException e) {
 			throw e;
 		} catch (Exception e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-			dto.setInputStream(new ByteArrayInputStream(baos.toByteArray()));
 			s3Service.uploadErro(dto);
 			throw new MrContadorException("planodeconta.parse.error", e.getMessage(), e);
 		} finally {
 			try {
-				baos.close();
 				if (first != null) {
 					first.close();
 				}

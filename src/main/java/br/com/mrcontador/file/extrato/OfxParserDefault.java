@@ -1,7 +1,6 @@
 package br.com.mrcontador.file.extrato;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -55,17 +54,11 @@ public class OfxParserDefault{
 
 	public void process(FileDTO fileDTO,  Agenciabancaria agenciaBancaria) {
 		List<BankStatementResponseTransaction> responses;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();	
 		InputStream first = null;
 		InputStream second = null;
-		InputStream third = null;
-		InputStream fourth = null;
 		try {
-			fileDTO.getInputStream().transferTo(baos);
-			fourth = new ByteArrayInputStream(baos.toByteArray());
-			third = new ByteArrayInputStream(baos.toByteArray());
-			second = new ByteArrayInputStream(baos.toByteArray());
-			first = new ByteArrayInputStream(baos.toByteArray());
+			first = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
+			second = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
 			ListOfxDto listOfxDto = new ListOfxDto();
 			listOfxDto.setFileDTO(fileDTO);
 			BankingResponseMessageSet bankingResponseMessageSet = init(first);
@@ -73,32 +66,26 @@ public class OfxParserDefault{
 			if(responses.isEmpty()) {
 				throw new MrContadorException("ofx.empty");
 			}
-			process(responses.get(0),fourth,listOfxDto,agenciaBancaria);
-			fileDTO.setInputStream(second);
+			process(responses.get(0),second,listOfxDto,agenciaBancaria);
+			
 			extratoService.save(listOfxDto, agenciaBancaria);
 		}catch(MrContadorException e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(),e);
-			fileDTO.setInputStream(third);
 			s3Service.uploadErro(fileDTO);
 			throw e;
 		} catch (Exception e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(),e);
-			fileDTO.setInputStream(third);
 			s3Service.uploadErro(fileDTO);
 			throw new MrContadorException("ofx.process", e.getMessage());
 		} finally {
 			try {
-				baos.close();
 				if(first!= null) {
 					first.close();
 				}
-				if(third!= null) {
-					third.close();
-				}
-				if(fourth!= null) {
-					fourth.close();
+				if(second!= null) {
+					second.close();
 				}
 			} catch (IOException e) {
 			}

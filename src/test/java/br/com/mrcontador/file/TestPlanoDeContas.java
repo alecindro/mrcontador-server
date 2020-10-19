@@ -1,8 +1,9 @@
 package br.com.mrcontador.file;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
 
@@ -35,15 +37,17 @@ public class TestPlanoDeContas {
 		FileDTO dto = new FileDTO();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
-			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			stream.transferTo(baos);
+			stream.close();
 			dto.setContentType("application/pdf");
-			dto.setInputStream(stream);
+			dto.setOutputStream(baos);
 			dto.setContador("ds_demo");
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());
 			dto.setUsuario("SYSTEM");
-     		//fileService.processPlanoConta(dto,SistemaPlanoConta.DOMINIO_SISTEMAS);
-		} catch (FileNotFoundException e) {
+     		fileService.processPlanoConta(dto,"10.539.433/0001-73",SistemaPlanoConta.DOMINIO_SISTEMAS);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

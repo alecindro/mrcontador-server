@@ -1,6 +1,6 @@
 package br.com.mrcontador.service.dto;
 
-import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.TipoDocumento;
@@ -9,7 +9,7 @@ public class FileDTO {
 	
 	private byte[] bytes;
 	private String contentType;
-	private InputStream inputStream;
+	private ByteArrayOutputStream outputStream;
 	private String name;
 	private String originalFilename;
 	private Long size;
@@ -36,11 +36,12 @@ public class FileDTO {
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
-	public InputStream getInputStream() {
-		return inputStream;
+	
+	public ByteArrayOutputStream getOutputStream() {
+		return outputStream;
 	}
-	public void setInputStream(InputStream inputStream) {
-		this.inputStream = inputStream;
+	public void setOutputStream(ByteArrayOutputStream outputStream) {
+		this.outputStream = outputStream;
 	}
 	public String getName() {
 		return name;

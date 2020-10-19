@@ -13,6 +13,7 @@ import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.file.comprovante.TipoComprovante;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class ComprovanteSicredi extends ComprovanteBanco {
@@ -88,6 +89,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 				
 			if (line.contains("CPF/CNPJ do Pagador Efetivo:")) {
 				String value = StringUtils.substringAfter(line, "CPF/CNPJ do Pagador Efetivo:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_PAG);
 				diffValue.setNewValue(value);
@@ -96,6 +98,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("CPF/CNPJ do Beneficiário:")) {
 					String value = StringUtils.substringAfter(line, "CPF/CNPJ do Beneficiário:").trim();
+					value = MrContadorUtil.removeDots(value);
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(CNPJ_BEN);
 					diffValue.setNewValue(value);
@@ -148,6 +151,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("Nº Ident. DDA:")) {
 				String value = StringUtils.substringAfter(line, "Nº Ident. DDA:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -156,6 +160,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("Descrição do Pagamento:")) {
 				String value = StringUtils.substringAfter(line, "Descrição do Pagamento:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -170,7 +175,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 		diffValue.setLine(2);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TITULO));
 		return comprovantes;
 	}
 	
@@ -199,6 +204,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("CPF/CNPJ:")) {
 					String value = StringUtils.substringAfter(line, "CPF/CNPJ:").trim();
+					value = MrContadorUtil.removeDots(value);
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(CNPJ_BEN);
 					diffValue.setNewValue(value);
@@ -234,6 +240,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("Número de Controle:")) {
 				String value = StringUtils.substringAfter(line, "Número de Controle:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -248,7 +255,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 		diffValue.setLine(2);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TITULO));
 		return comprovantes;
 	}
 	private List<Comprovante> parseTributos(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
@@ -298,6 +305,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("Descrição do Pagamento:")) {
 				String value = StringUtils.substringAfter(line, "Descrição do Pagamento:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -320,7 +328,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			i = i + 1;
 		}
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 

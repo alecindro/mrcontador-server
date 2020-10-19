@@ -17,6 +17,7 @@ CREATE TABLE ${schema}.comprovante (
 	com_observacao varchar(254) NULL,
 	com_competencia varchar(254) NULL,
 	com_codigorecolhimento varchar(254) NULL,
+	tipo_comprovante varchar(254) NULL,
 	agenciabancaria_id int8 NOT NULL,
 	parceiro_id int8 NOT NULL,
 	arquivo_id int8 NULL,

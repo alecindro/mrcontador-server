@@ -23,4 +23,4 @@ CREATE TABLE ${schema}.conta (
 
 ALTER TABLE ${schema}.conta ADD CONSTRAINT fk_conta_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
 ALTER TABLE ${schema}.conta ADD CONSTRAINT fk_conta_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);
-CREATE UNIQUE INDEX conta_conconta__unique_idx ON ${schema}.conta (con_conta);
+CREATE UNIQUE INDEX conta_con_conta_idx ON ${schema}.conta (con_conta,parceiro_id);

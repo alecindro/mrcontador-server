@@ -4,56 +4,44 @@
 --changeset clientes:17
 
 CREATE SEQUENCE ${schema}.seq_aguardando
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 5125
-  CACHE 1;
-ALTER TABLE ${schema}.seq_aguardando
-  OWNER TO postgres;
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 5125
+	CACHE 1
+	NO CYCLE;
 
-CREATE TABLE ${schema}.aguardando
-(
-  agu_sequencia integer NOT NULL,
-  agu_codigo integer,
-  agu_cnpj character varying(20),
-  agu_beneficiario character varying(60),
-  agu_datavencimento timestamp with time zone,
-  agu_valordocumento double precision,
-  agu_observacao character varying(80),
-  par_codigo integer,
-  age_codigo integer,
-  CONSTRAINT pk_aguardando PRIMARY KEY (agu_sequencia)
-)
-WITH (
-  OIDS=FALSE
+
+
+CREATE TABLE ${schema}.aguardando (
+	agu_sequencia int4 NOT NULL,
+	agu_codigo int4 NULL,
+	agu_cnpj varchar(20) NULL,
+	agu_beneficiario varchar(60) NULL,
+	agu_datavencimento timestamptz NULL,
+	agu_valordocumento float8 NULL,
+	agu_observacao varchar(80) NULL,
+	par_codigo int4 NULL,
+	age_codigo int4 NULL,
+	CONSTRAINT pk_aguardando PRIMARY KEY (agu_sequencia)
 );
-ALTER TABLE ${schema}.aguardando
-  OWNER TO postgres;
 --------------------------------------------------------------------------------
 CREATE SEQUENCE ${schema}.seq_fornecedor
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 5876
-  CACHE 1;
-ALTER TABLE ${schema}.seq_fornecedor
-  OWNER TO postgres;
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 5876
+	CACHE 1
+	NO CYCLE;
 
-CREATE TABLE ${schema}.fornecedor
-(
-  for_sequencia integer NOT NULL,
-  for_codigo integer NOT NULL,
-  for_cnpj character varying(20),
-  for_parceiro character varying(60),
-  for_contacontabil integer,
-  for_valorboleto double precision,
-  par_codigo integer,
-  age_codigo integer,
-  CONSTRAINT pk_fornecedor PRIMARY KEY (for_sequencia, for_codigo)
-)
-WITH (
-  OIDS=FALSE
+CREATE TABLE ${schema}.fornecedor (
+	for_sequencia int4 NOT NULL,
+	for_codigo int4 NOT NULL,
+	for_cnpj varchar(20) NULL,
+	for_parceiro varchar(60) NULL,
+	for_contacontabil int4 NULL,
+	for_valorboleto float8 NULL,
+	par_codigo int4 NULL,
+	age_codigo int4 NULL,
+	CONSTRAINT pk_fornecedor PRIMARY KEY (for_sequencia, for_codigo)
 );
-ALTER TABLE ${schema}.fornecedor
-  OWNER TO postgres;

@@ -12,6 +12,8 @@ import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.file.comprovante.TipoComprovante;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public class ComprovanteSantander extends ComprovanteBanco {
 
@@ -65,6 +67,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 			}
 			if (line.contains("Arrecadacao")) {
 				String lineA = StringUtils.normalizeSpace(lines[i + 1]).trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
@@ -105,7 +108,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 
@@ -157,6 +160,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 			}
 			if (line.contains("Identificador:")) {
 				String lineA = StringUtils.substringAfter(line, "Identificador:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
@@ -179,7 +183,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 
@@ -215,6 +219,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 			}
 			if (line.contains("CNPJ:")) {
 				String lineA = StringUtils.substringAfter(line, "CNPJ:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_BEN);
 				diffValue.setNewValue(lineA);
@@ -239,6 +244,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 			}
 			if (line.contains("Autenticacao:")) {
 				String lineA = StringUtils.substringAfter(line, "Autenticacao:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
@@ -261,7 +267,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 
@@ -313,6 +319,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 			}
 			if (line.contains("Numero do Documento:")) {
 				String lineA = StringUtils.substringAfter(line, "Numero do Documento:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
@@ -335,7 +342,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 
@@ -362,6 +369,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 			}
 			if (line.contains("Nosso Número:")) {
 				String lineA = StringUtils.substringAfter(line, "Nosso Número:").trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
@@ -370,6 +378,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 			}
 			if (line.contains("Instituição Financeira Favorecida:")) {
 				String lineA = StringUtils.normalizeSpace(lines[i + 1]).trim();
+				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
@@ -391,6 +400,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 					}
 					if (lineA.contains("CNPJ:")) {
 						lineA = StringUtils.substringAfter(lineA, "CNPJ:").trim();
+						lineA = MrContadorUtil.removeDots(lineA);
 						DiffValue diffValue = new DiffValue();
 						diffValue.setOldValue(CNPJ_BEN);
 						diffValue.setNewValue(lineA);
@@ -407,6 +417,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 					String lineA = StringUtils.normalizeSpace(lines[j]).trim();
 					if (lineA.contains("CNPJ:")) {
 						lineA = StringUtils.substringAfterLast(lineA, "CNPJ:").trim();
+						lineA = MrContadorUtil.removeDots(lineA);
 						DiffValue diffValue = new DiffValue();
 						diffValue.setOldValue(CNPJ_PAG);
 						diffValue.setNewValue(lineA);
@@ -458,7 +469,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
 		return comprovantes;
 	}
 

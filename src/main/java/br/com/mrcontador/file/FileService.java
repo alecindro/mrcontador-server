@@ -1,13 +1,13 @@
 package br.com.mrcontador.file;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
 
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
@@ -39,98 +39,70 @@ public class FileService {
 	private S3Service s3Service;
 	@Autowired
 	private ParserComprovanteDefault parserComprovante;
-	
-	public Parceiro processPlanoConta(MultipartFile file, Optional<String> usuario, String contador,String cnpjParceiro,  SistemaPlanoConta sistemaPlanoConta) {
-		FileDTO dto = getFileDTO(file, usuario, contador, null);
+
+	public Parceiro processPlanoConta(FileDTO dto, String cnpjParceiro, SistemaPlanoConta sistemaPlanoConta) {
 		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, cnpjParceiro);
 	}
-	
-	public void updatePlanoConta(MultipartFile file, Optional<String> usuario, String contador,Long idParceiro,  SistemaPlanoConta sistemaPlanoConta) {
-		FileDTO dto = getFileDTO(file, usuario, contador, null);
+
+	public void updatePlanoConta(FileDTO dto, Long idParceiro, SistemaPlanoConta sistemaPlanoConta) {
 		pdfParserPlanoConta.update(dto, sistemaPlanoConta, idParceiro);
 	}
 
-	
-	private FileDTO getFileDTO(MultipartFile file, Optional<String> usuario, String contador, Parceiro parceiro) {
+	public FileDTO getFileDTO(String contentType, String originalFilename, Long size, InputStream stream, Optional<String> usuario, String contador, Parceiro parceiro) {
 		FileDTO fileDTO = new FileDTO();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			file.getInputStream().transferTo(baos);
-			String media = com.google.common.net.MediaType.parse(file.getContentType()).subtype();
+			stream.transferTo(baos);
+			String media = com.google.common.net.MediaType.parse(contentType).subtype();
 			switch (media) {
 			case "pdf":
 				break;
-			case "xml": 
+			case "xml":
 				break;
 			case "octet-stream":
-				break;			
+				break;
 			default:
 				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
 			}
 			fileDTO.setParceiro(parceiro);
-			fileDTO.setContentType(file.getContentType());
-			fileDTO.setOriginalFilename(file.getOriginalFilename());
-			fileDTO.setSize(file.getSize());
-			fileDTO.setUsuario(usuario.isPresent()?usuario.get():"");
+			fileDTO.setContentType(contentType);
+			fileDTO.setOriginalFilename(originalFilename);
+			fileDTO.setSize(size);
+			fileDTO.setUsuario(usuario.isPresent() ? usuario.get() : "");
 			fileDTO.setContador(contador);
-			fileDTO.setInputStream(file.getInputStream());
+			fileDTO.setOutputStream(baos);
 			return fileDTO;
-		}catch (MrContadorException e){
+		} catch (MrContadorException e) {
 			throw e;
-		}
-		catch (Exception e) {
-        	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-			fileDTO.setInputStream(new ByteArrayInputStream(baos.toByteArray()));
+		} catch (Exception e) {
+			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+			fileDTO.setOutputStream(baos);
 			s3Service.uploadErro(fileDTO);
-			throw new MrContadorException("file.process.error", file.getOriginalFilename());
+			throw new MrContadorException("file.process.error", originalFilename);
 		}
-	}
-	public void processNFE(FileDTO fileDTO) throws Exception{
-		xmlParserDefault.process(fileDTO);
-		
-	}
-	
-	public void processNFE(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro) throws Exception {
-		if (parceiro.isEmpty()) {
-			throw new MrContadorException("parceiro.notfound");
-		}
-		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
-		fileDTO.setTipoDocumento(TipoDocumento.NOTA);
-		xmlParserDefault.process(fileDTO);
-		
-	}
-	
-	
-	public void processExtrato(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
-		if(parceiro.isEmpty()) {
-			throw new MrContadorException("parceiro.notfound");
-		}
-		if(agenciabancaria.isEmpty()) {
-			throw new MrContadorException("agencia.notfound");
-		}
-		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
-		fileDTO.setTipoDocumento(TipoDocumento.EXTRATO);
-		String media = com.google.common.net.MediaType.parse(file.getContentType()).subtype();
-		if(media != "pdf" && media !="octet-stream") {
-			throw new MrContadorException("ofx.notextrato");
-		}
-		if(media == "pdf") {
-			pdfParserDefault.process(fileDTO, agenciabancaria.get());
-		}else {
-		ofxParserDefault.process(fileDTO, agenciabancaria.get());
-		}
-	}
-	
-	public List<FileS3> processComprovante(MultipartFile file, Optional<String> usuario, String contador, Optional<Parceiro> parceiro, Optional<Agenciabancaria> agenciabancaria) {
-		if(parceiro.isEmpty()) {
-			throw new MrContadorException("parceiro.notfound");
-		}
-		if(agenciabancaria.isEmpty()) {
-			throw new MrContadorException("agencia.notfound");
-		}
-		FileDTO fileDTO = getFileDTO(file, usuario, contador, parceiro.get());
-		return parserComprovante.process(fileDTO, agenciabancaria.get());
 	}
 
+	public void processNFE(FileDTO fileDTO) throws Exception {
+		fileDTO.setTipoDocumento(TipoDocumento.NOTA);
+		xmlParserDefault.process(fileDTO);
+
+	}
+
+	public void processExtrato(FileDTO fileDTO, Agenciabancaria agenciabancaria, String contentType) {
+		fileDTO.setTipoDocumento(TipoDocumento.EXTRATO);
+		String media = com.google.common.net.MediaType.parse(contentType).subtype();
+		if (media != "pdf" && media != "octet-stream") {
+			throw new MrContadorException("ofx.notextrato");
+		}
+		if (media == "pdf") {
+			pdfParserDefault.process(fileDTO, agenciabancaria);
+		} else {
+			ofxParserDefault.process(fileDTO, agenciabancaria);
+		}
+	}
+
+	public List<FileS3> processComprovante(FileDTO fileDTO, Agenciabancaria agenciabancaria) {
+		return parserComprovante.process(fileDTO, agenciabancaria);
+	}
 
 }

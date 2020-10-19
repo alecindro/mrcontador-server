@@ -1,7 +1,8 @@
 package br.com.mrcontador.file;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class PDFToString {
 		parceiro.setParCnpjcpf("09.165.847/0001-09");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.CAIXA.getCodigoBancario());
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa/Aciplas - ND-33470-1 - 06.05.2020.pdf"));
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa/Aciplas - ND-33470-1 - 06.05.2020.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -97,7 +98,7 @@ public class PDFToString {
 		comprovanteItau.parse(comprovante, agencia, parceiro);
 	}
 	
-	public void itau2() throws FileNotFoundException {
+	public void itau2() throws IOException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("1575");
 		agencia.setAgeNumero("12906");
@@ -105,7 +106,7 @@ public class PDFToString {
 		parceiro.setParCnpjcpf("08.892.611/0001-01");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.ITAU.getCodigoBancario());
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/Comprovantes_Itaú_Moto_Bombas_04.2020_.pdf"));
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/Comprovantes_Itaú_Moto_Bombas_04.2020_.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -119,7 +120,6 @@ public class PDFToString {
 	}
 	
 	private void bradesco() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/comprovantes.pdf"));
 	 	Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("348");
 		agencia.setAgeNumero("128527");
@@ -127,7 +127,7 @@ public class PDFToString {
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("003.551.834/0001-83");
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(inputstream);
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/comprovantes.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -140,7 +140,6 @@ public class PDFToString {
 	}
 	
 	private void sicoob() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/sicoob.pdf"));
 	 	Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("3069-4");
 		agencia.setAgeNumero("97.731-4");
@@ -148,7 +147,7 @@ public class PDFToString {
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("18.976.447/0001-66");
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(inputstream);
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/sicoob.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -160,15 +159,14 @@ public class PDFToString {
 		}
 	}
 	private void unicred() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/unicred.pdf"));
-	 	Agenciabancaria agencia = new Agenciabancaria();
+		Agenciabancaria agencia = new Agenciabancaria();
 		//agencia.setAgeAgencia("3069-4");
 		agencia.setAgeNumero("1022695");
 		agencia.setBanCodigobancario(BancoCodigoBancario.UNICRED.getCodigoBancario());
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("15.584.243/0001-91");
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(inputstream);
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/unicred.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -181,15 +179,14 @@ public class PDFToString {
 	}
 	
 	private void credcrea() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/credcrea.pdf"));
-	 	Agenciabancaria agencia = new Agenciabancaria();
+		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("106");
 		agencia.setAgeNumero("66540");
 		agencia.setBanCodigobancario(BancoCodigoBancario.CREDCREA.getCodigoBancario());
 		Parceiro parceiro = new Parceiro();
 		parceiro.setParCnpjcpf("004.516.599-88");
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(inputstream);
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/credcrea.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -204,7 +201,7 @@ public class PDFToString {
 	
 	private static final String usuario = "teste";
 	
-	public void testSantander2() throws FileNotFoundException {
+	public void testSantander2() throws IOException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("348");
 		agencia.setAgeNumero("128527");
@@ -212,7 +209,7 @@ public class PDFToString {
 		parceiro.setParCnpjcpf("003.551.834/0001-83");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"));
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -225,7 +222,7 @@ public class PDFToString {
 		
 	}
 	
-	public void testBB() throws FileNotFoundException {
+	public void testBB() throws IOException {
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("3174");
 		agencia.setAgeNumero("40106");
@@ -233,7 +230,7 @@ public class PDFToString {
 		parceiro.setParCnpjcpf("10.539.433/0001-73");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.BB.getCodigoBancario());
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/06.2020.pdf"));
+		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/06.2020.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -245,9 +242,13 @@ public class PDFToString {
 		
 	}
 	
-	private InputStream load(String folder) throws FileNotFoundException {
+	private ByteArrayOutputStream load(String folder) throws IOException {
 		File initialFile = new File(folder);	
-		return new FileInputStream(initialFile);
+		InputStream stream = new FileInputStream(initialFile);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		stream.transferTo(baos);
+		stream.close();
+		return baos;
 		
 	}
 

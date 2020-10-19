@@ -8,9 +8,11 @@ import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
+import br.com.mrcontador.service.ComprovanteService;
 
 public interface ParserComprovante {
 	
-	abstract List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException, ComprovanteException;
+	List<Comprovante> parse(String comprovante,Agenciabancaria agenciabancaria, Parceiro parceiro) throws DiffException, ComprovanteException;
+	Comprovante save(Comprovante comprovante, ComprovanteService service);
 
 }

@@ -12,6 +12,8 @@ import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.file.comprovante.TipoComprovante;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public class ComprovanteUnicred extends ComprovanteBanco {
 
@@ -68,6 +70,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			if (line.contains("CNPJ/CPF:")) {
 				if (lines[i - 6].contains(" Beneficiário")) {
 					String value = StringUtils.substringAfter(line, "CNPJ/CPF:").trim();
+					value = MrContadorUtil.removeDots(value);
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(CNPJ_BEN);
 					diffValue.setNewValue(value);
@@ -78,6 +81,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			if (line.contains("CNPJ/CPF:")) {
 				if (lines[i - 4].contains(" Pagador")) {
 					String value = StringUtils.substringAfter(line, "CNPJ/CPF:").trim();
+					value = MrContadorUtil.removeDots(value);
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(CNPJ_BEN);
 					diffValue.setNewValue(value);
@@ -122,6 +126,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			}
 			if (line.contains("ID do Documento:")) {
 				String value = StringUtils.substringAfter(line, "ID do Documento:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -136,7 +141,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TITULO));
 		return comprovantes;
 	}
 
@@ -158,6 +163,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			if (line.contains("CPF ou CNPJ")) {
 				String value = StringUtils.substringAfterLast(StringUtils.substringAfter(line, "CPF ou CNPJ"), ".")
 						.trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_PAG);
 				diffValue.setNewValue(value);
@@ -194,6 +200,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			if (line.contains("N. DA AUTENTICACAO:")) {
 				String value = StringUtils
 						.substringAfterLast(StringUtils.substringAfter(line, "N. DA AUTENTICACAO:"), ".").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -207,7 +214,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 
@@ -254,6 +261,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			}
 			if (line.contains("Id. do Documento:")) {
 				String value = StringUtils.substringAfter(line, "Id. do Documento:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -268,7 +276,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 
@@ -315,6 +323,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			}
 			if (line.contains("Id. do Documento:")) {
 				String value = StringUtils.substringAfter(line, "Id. do Documento:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -329,7 +338,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 
@@ -360,6 +369,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			if (line.contains("Identificador:")) {
 				String value = StringUtils.substringAfterLast(StringUtils.substringAfter(line, "Identificador:"), ".")
 						.trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -391,7 +401,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 

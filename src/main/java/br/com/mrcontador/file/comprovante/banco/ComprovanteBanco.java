@@ -25,14 +25,20 @@ import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffText;
 import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.ParserComprovante;
+import br.com.mrcontador.file.comprovante.TipoComprovante;
+import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public abstract class ComprovanteBanco implements ParserComprovante {
 
 	private static final String diff = "$";
+	
+	public Comprovante save(Comprovante comprovante, ComprovanteService service) {
+			return service.save(comprovante);
+	}
 
 	public List<Comprovante> parse(String comprovante, String pattern, Agenciabancaria agenciabancaria,
-			Parceiro parceiro) throws DiffException, ComprovanteException {
+			Parceiro parceiro, TipoComprovante tipoComprovante) throws DiffException, ComprovanteException {
 		DiffText d = new DiffText();
 		Map<Integer, DiffValue> map = d.doDiff(pattern, comprovante);
 		List<DiffValue> list = new ArrayList<DiffValue>();
@@ -43,7 +49,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 			}
 		}
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,tipoComprovante));
 		return comprovantes;
 	}
 
@@ -100,7 +106,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	
 	private static int count = 1;
 
-	protected Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException {
+	protected Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro, TipoComprovante tipoComprovante) throws ComprovanteException {
 		Comprovante comprovante = new Comprovante();
 
 		Optional<DiffValue> agencia = diffValues.stream()
@@ -139,6 +145,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		comprovante.setComDatavencimento(data_vcto.isPresent() ? toDate(data_vcto.get().getNewValue()) : null);
 		comprovante.setAgenciabancaria(agenciabancaria);
 		comprovante.setParceiro(parceiro);
+		comprovante.setTipoComprovante(tipoComprovante);
 		validateAgencia(agencia, conta, agenciabancaria);
 		//validateParceiro(cnpj_pagador, parceiro, diffValues);
 		System.out.println(count + " - " + comprovante.toString());

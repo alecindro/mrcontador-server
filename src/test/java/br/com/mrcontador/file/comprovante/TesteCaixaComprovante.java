@@ -1,8 +1,10 @@
 package br.com.mrcontador.file.comprovante;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,7 +51,7 @@ public class TesteCaixaComprovante {
 		parceiro.setParCnpjcpf("01.282.978/0001-56");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.CAIXA.getCodigoBancario());
 		FileDTO dto = new FileDTO();
-		dto.setInputStream(load(file));
+		dto.setOutputStream(load(file));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
@@ -61,9 +63,13 @@ public class TesteCaixaComprovante {
 		}
 	}
 	
-	private InputStream load(String folder) throws FileNotFoundException {
+	private ByteArrayOutputStream load(String folder) throws IOException {
 		File initialFile = new File(folder);	
-		return new FileInputStream(initialFile);
+		InputStream stream = new FileInputStream(initialFile);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		stream.transferTo(baos);
+		stream.close();
+		return baos;
 		
 	}
 

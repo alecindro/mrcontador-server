@@ -1,5 +1,6 @@
 package br.com.mrcontador.file.comprovante;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,9 +48,10 @@ public class ParserComprovanteDefault {
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
 	public List<FileS3> process(FileDTO fileDTO, Agenciabancaria agencia) {
-
+		InputStream first = null;
 		try {
-			List<PPDocumentDTO> textComprovantes = parseComprovante(fileDTO.getInputStream());
+			first = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
+			List<PPDocumentDTO> textComprovantes = parseComprovante(first);
 			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
 			List<FileS3> files = new ArrayList<>();
 			List<FileS3> erros = new ArrayList<FileS3>();
@@ -85,7 +87,8 @@ public class ParserComprovanteDefault {
 			}
 			for(Comprovante c : salvar) {
 				try {
-					salvos.add(service.save(c));
+					c = parser.save(c, service);
+					salvos.add(c);
 				}catch(Exception e ) {
 					log.error(e.getMessage());
 				}
@@ -98,6 +101,14 @@ public class ParserComprovanteDefault {
 			return erros;
 		} catch (IOException e1) {
 			throw new MrContadorException("parsecomprovante.error", e1);
+		}finally {
+			if(first!= null) {
+				try {
+					first.close();
+				} catch (IOException e) {
+					log.error(e.getMessage());
+				}
+			}
 		}
 
 	}

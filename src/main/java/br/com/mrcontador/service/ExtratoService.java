@@ -2,8 +2,10 @@ package br.com.mrcontador.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import br.com.mrcontador.file.extrato.dto.OfxData;
 import br.com.mrcontador.file.extrato.dto.PdfData;
 import br.com.mrcontador.repository.ExtratoRepository;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.util.MrContadorUtil;
 
 /**
  * Service Implementation for managing {@link Extrato}.
@@ -94,6 +97,7 @@ public class ExtratoService {
 		}
 		Arquivo arquivo = s3Service.uploadExtrato(listOfxDto.getFileDTO());
 		List<Extrato> extratos = new ArrayList<Extrato>();
+		Set<String> periodos = new HashSet<>();
 		for (OfxDTO _ofxDto : listOfxDto.getOfxDTOs()) {
 			for (OfxData ofxData : _ofxDto.getDataList()) {
 				Extrato extrato = new Extrato();
@@ -114,7 +118,13 @@ public class ExtratoService {
 					extrato.setExtDebito(ofxData.getValor());
 				}
 				try {
-				extratos.add(extratoRepository.save(extrato));
+				periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
+					extrato =extratoRepository.save(extrato);
+				int value = extratoRepository.callExtratoBB(extrato.getParceiro().getId(), agenciaBancaria.getId(), extrato.getId());
+				if(value > 0) {
+					extratoRepository.processadoTrue(extrato.getId());
+				}
+				extratos.add(extrato);
 				}catch(Exception e ) {
 					log.error(e.getMessage());
 				}
@@ -122,6 +132,9 @@ public class ExtratoService {
 		}
 		if(extratos.isEmpty()) {
 			throw new org.springframework.dao.DataIntegrityViolationException("extrato já importado");
+		}
+		for(String periodo : periodos) {
+			extratoRepository.regraInteligent(listOfxDto.getFileDTO().getParceiro().getId(),periodo);
 		}
 		
 	}

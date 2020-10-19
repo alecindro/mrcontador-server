@@ -1,10 +1,10 @@
 package br.com.mrcontador.service.mapper;
 
 
-import br.com.mrcontador.domain.*;
-import br.com.mrcontador.service.dto.RegraDTO;
+import org.mapstruct.Mapper;
 
-import org.mapstruct.*;
+import br.com.mrcontador.domain.Regra;
+import br.com.mrcontador.service.dto.RegraDTO;
 
 /**
  * Mapper for the entity {@link Regra} and its DTO {@link RegraDTO}.

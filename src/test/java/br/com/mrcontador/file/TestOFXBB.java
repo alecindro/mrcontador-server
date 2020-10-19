@@ -1,5 +1,6 @@
 package br.com.mrcontador.file;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -42,8 +43,11 @@ public class TestOFXBB {
 		Agenciabancaria bancaria = new Agenciabancaria();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
-			dto.setContentType("text/plain");
-			dto.setInputStream(stream);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			stream.transferTo(baos);
+			stream.close();
+			dto.setContentType("octet-stream");
+			dto.setOutputStream(baos);
 			dto.setContador("ds_demo");
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());
@@ -66,8 +70,11 @@ public class TestOFXBB {
 		FileDTO dto = new FileDTO();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			stream.transferTo(baos);
+			stream.close();
 			dto.setContentType("text/plain");
-			dto.setInputStream(stream);
+			dto.setOutputStream(baos);
 			dto.setContador("ds_demo");
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());

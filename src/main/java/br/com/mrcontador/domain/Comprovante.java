@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +21,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import br.com.mrcontador.file.comprovante.TipoComprovante;
 
 /**
  * A Comprovante.
@@ -72,6 +76,10 @@ public class Comprovante implements Serializable {
     
     @Column(name = "processado")
     private Boolean processado;
+    
+    @Column(name = "tipo_comprovante")
+    @Enumerated(EnumType.STRING)
+    private TipoComprovante tipoComprovante;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
@@ -285,9 +293,20 @@ public class Comprovante implements Serializable {
 		return this;
 	}
 	
+	public TipoComprovante getTipoComprovante() {
+		return tipoComprovante;
+	}
+
+	public void setTipoComprovante(TipoComprovante tipoComprovante) {
+		this.tipoComprovante = tipoComprovante;
+	}
+	
+	public Comprovante tipoComprovante(TipoComprovante tipoComprovante) {
+		this.tipoComprovante = tipoComprovante;
+		return this;
+	}
+	
 	   // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-
 
 
 	@Override

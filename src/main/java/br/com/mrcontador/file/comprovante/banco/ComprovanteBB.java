@@ -12,8 +12,21 @@ import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
+import br.com.mrcontador.file.comprovante.TipoComprovante;
+import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public class ComprovanteBB extends ComprovanteBanco{
+	
+	@Override
+	public Comprovante save(Comprovante comprovante, ComprovanteService service) {
+		comprovante = service.save(comprovante);
+		 int result = service.callComprovanteBB(comprovante);
+	        if(result >0) {
+	        	service.processadoTrue(comprovante);
+	        }
+		return comprovante;
+	}
 
 	@Override
 	public List<Comprovante> parse(String comprovante, Agenciabancaria agenciabancaria, Parceiro parceiro)
@@ -104,11 +117,13 @@ public class ComprovanteBB extends ComprovanteBanco{
 				diffValue.setOldValue(CNPJ_BEN);
 				if(StringUtils.normalizeSpace(lines[i+1]).trim().equals("SACADOR AVALISTA:")){
 					String value =  StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i+3]).trim(), "CNPJ:").trim();
+					value = MrContadorUtil.onlyNumbers(value);
 					diffValue.setNewValue(value);
 					diffValue.setLine(i+3);
 					list.add(diffValue);
 				}else {
 					String value = StringUtils.substringAfter(line, "CNPJ:").trim();
+					value = MrContadorUtil.onlyNumbers(value);
 					diffValue.setNewValue(value);
 					diffValue.setLine(i);
 					list.add(diffValue);
@@ -117,6 +132,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			if (line.contains("CNPJ:")) {
 				if(StringUtils.normalizeSpace(lines[i-2]).trim().equals("PAGADOR:")){
 					String value = StringUtils.substringAfter(line, "CNPJ:").trim();
+					value = MrContadorUtil.onlyNumbers(value);
 					DiffValue diffValue = new DiffValue();
 					diffValue.setOldValue(CNPJ_PAG);
 					diffValue.setNewValue(value);
@@ -126,6 +142,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("NR. DOCUMENTO")) {
 				String value = StringUtils.substringAfter(line, "NR. DOCUMENTO").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -172,7 +189,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TITULO));
 		return comprovantes;
 	}
 	
@@ -207,6 +224,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("DOCUMENTO:")) {
 				String value = StringUtils.substringAfter(line, "DOCUMENTO:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -238,7 +256,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 	
@@ -273,6 +291,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("NR.REMESSA:")) {
 				String value = StringUtils.substringAfter(line, "NR.REMESSA:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -316,7 +335,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		}
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 	
@@ -351,6 +370,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("DOCUMENTO:")) {
 				String value = StringUtils.substringAfter(line, "DOCUMENTO:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -376,6 +396,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("CPF/CNPJ:")) {
 				String value = StringUtils.substringAfter(line, "CPF/CNPJ:").trim();
+				value = MrContadorUtil.onlyNumbers(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_BEN);
 				diffValue.setNewValue(value);
@@ -393,7 +414,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		list.add(diffValue);
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
 		return comprovantes;
 	}
 	
@@ -428,6 +449,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("NR. DOCUMENTO")) {
 				String value = StringUtils.substringAfter(line, "NR. DOCUMENTO").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -453,6 +475,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("CNPJ")) {
 				String value = StringUtils.substringAfter(line, "CNPJ").trim();
+				value = MrContadorUtil.onlyNumbers(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_BEN);
 				diffValue.setNewValue(value);
@@ -461,6 +484,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("CPF")) {
 				String value = StringUtils.substringAfter(line, "CPF").trim();
+				value = MrContadorUtil.onlyNumbers(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_BEN);
 				diffValue.setNewValue(value);
@@ -478,7 +502,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		list.add(diffValue);
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
 		return comprovantes;
 	}
 	
@@ -513,6 +537,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("NR. DOCUMENTO")) {
 				String value = StringUtils.substringAfter(line, "NR. DOCUMENTO").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -548,7 +573,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		list.add(diffValue);
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 	
@@ -576,6 +601,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("DOCUMENTO:")) {
 				String value = StringUtils.substringAfter(line, "DOCUMENTO:").trim();
+				value = MrContadorUtil.removeDots(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -620,6 +646,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if(line.contains("NUMERO DO CPNJ")) {
 				String value = StringUtils.substringAfter(line, "NUMERO DO CPNJ").trim();
+				value = MrContadorUtil.onlyNumbers(value);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_PAG);
 				diffValue.setNewValue(value);
@@ -635,7 +662,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
 		return comprovantes;
 	}
 }

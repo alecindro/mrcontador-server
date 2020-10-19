@@ -12,14 +12,15 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
 import br.com.mrcontador.domain.Conta;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Conta_;
+import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.ContaRepository;
 import br.com.mrcontador.service.dto.ContaCriteria;
 import br.com.mrcontador.service.dto.ContaDTO;
 import br.com.mrcontador.service.mapper.ContaMapper;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Conta} entities in the database.

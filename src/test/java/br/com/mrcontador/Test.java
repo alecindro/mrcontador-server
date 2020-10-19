@@ -1,5 +1,7 @@
 package br.com.mrcontador;
 
+import java.time.LocalDate;
+
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class Test {
@@ -8,8 +10,11 @@ public class Test {
 	
 	public static void main(String[] args) {
 		
-		String value = "999999-999999";
-		System.out.println(MrContadorUtil.only9(value));
+		LocalDate localDate = LocalDate.now();
+		localDate = localDate.minusMonths(8);
+		String value = localDate.getMonthValue()+""+localDate.getYear();
+		
+		System.out.println(value);
 		/*String t = "CIELO VENDAS D�BITO";
 		ByteBuffer buffer = StandardCharsets.UTF_8.encode(t); 
 		 

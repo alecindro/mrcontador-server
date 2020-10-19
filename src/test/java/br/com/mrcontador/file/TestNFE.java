@@ -1,7 +1,9 @@
 package br.com.mrcontador.file;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
@@ -35,8 +37,11 @@ public class TestNFE {
 		FileDTO dto = new FileDTO();
 	    try {
 			InputStream stream = new FileInputStream(initialFile);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			stream.transferTo(baos);
+			stream.close();
 			dto.setContentType("text/xml");
-			dto.setInputStream(stream);
+			dto.setOutputStream(baos);
 			dto.setContador("ds_demo");
 			Parceiro parceiro = new Parceiro();
 			parceiro.setParCnpjcpf("10539433000173");
@@ -52,14 +57,13 @@ public class TestNFE {
 		}
 	    
 	}
-	/*
-	 * @Test public void test() throws Exception { String folder =
-	 * "/home/alecindro/Documents/drcontabil/docs/012020/42200102914460028594550010002551801257373047.xml";
-	 * File initialFile = new File(folder); InputStream stream = new
-	 * FileInputStream(initialFile); final NFNotaProcessada nota = new
-	 * DFPersister().read(NFNotaProcessada.class, stream, false); nota.getNota();
-	 * System.out.println(nota.toString());
-	 * 
-	 * }
-	 */
+	private ByteArrayOutputStream load(String folder) throws IOException {
+		File initialFile = new File(folder);	
+		InputStream stream = new FileInputStream(initialFile);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		stream.transferTo(baos);
+		stream.close();
+		return baos;
+		
+	}
 }

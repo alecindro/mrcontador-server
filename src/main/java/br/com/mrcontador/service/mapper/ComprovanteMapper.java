@@ -1,10 +1,10 @@
 package br.com.mrcontador.service.mapper;
 
 
-import br.com.mrcontador.domain.*;
-import br.com.mrcontador.service.dto.ComprovanteDTO;
+import org.mapstruct.Mapper;
 
-import org.mapstruct.*;
+import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.service.dto.ComprovanteDTO;
 
 /**
  * Mapper for the entity {@link Comprovante} and its DTO {@link ComprovanteDTO}.

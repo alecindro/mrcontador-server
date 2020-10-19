@@ -77,4 +77,17 @@ public class ComprovanteService {
     public List<Comprovante> saveAll(List<Comprovante> comprovantes) {
     	return comprovanteRepository.saveAll(comprovantes);
     }
+    
+    public int callComprovanteBB(Comprovante comprovante) {
+    	return comprovanteRepository.callComprovanteBB(comprovante.getParceiro().getId(), comprovante.getAgenciabancaria().getId(), comprovante.getId());
+    }
+	
+	
+	public void processadoTrue(Comprovante comprovante) {
+		comprovanteRepository.processadoTrue(comprovante.getId());
+	}
+	
+	public void updateArquivo(Long id, Long arquivoId) {
+		comprovanteRepository.updateArquivo(id, arquivoId);
+	}
 }

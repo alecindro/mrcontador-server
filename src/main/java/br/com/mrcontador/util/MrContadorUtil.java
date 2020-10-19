@@ -33,7 +33,15 @@ public class MrContadorUtil {
 			value = value.replace("D", "").trim();
 			value = value.replace("R$", "").trim();
 			value = value.replace(".", "");
+			value = value.split(" ")[0];
 			return value.replace(",", ".");
+		}
+		return value;
+	}
+	
+	public static String removeDots(String value) {
+		if (value != null) {
+			return  value.replaceAll("\\.", "");
 		}
 		return value;
 	}
@@ -140,6 +148,10 @@ public class MrContadorUtil {
 		date = date.withYear(Integer.valueOf(year));
 		date = date.with(TemporalAdjusters.lastDayOfMonth());
 		return date;
+	}
+	
+	public static String periodo(LocalDate localDate) {
+		return localDate.getMonthValue()+""+localDate.getYear();
 	}
 
 }

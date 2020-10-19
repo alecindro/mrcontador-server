@@ -6,6 +6,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -69,6 +71,10 @@ public class Inteligent implements Serializable {
 
     @Column(name = "numerodocumento")
     private String numerodocumento;
+    
+   /* @Column(name = "tipo_inteligent")
+    @Enumerated(EnumType.STRING)
+    private TipoInteligent tipoInteligent;*/
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
@@ -382,10 +388,25 @@ public class Inteligent implements Serializable {
         this.regra = regra;
         return this;
     }
+/*
+	public TipoInteligent getTipoInteligent() {
+		return tipoInteligent;
+	}
+
+	public void setTipoInteligent(TipoInteligent tipoInteligent) {
+		this.tipoInteligent = tipoInteligent;
+	}
+	
+	public Inteligent tipoInteligent(TipoInteligent tipoInteligent) {
+		this.tipoInteligent = tipoInteligent;
+		return this;
+	}
+    */
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
   
+
 
 	@Override
     public boolean equals(Object o) {

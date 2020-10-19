@@ -68,4 +68,16 @@ public class ContaService {
     	return contaRepository.findByConConta(conConta);
     }
     
+    public Optional<Conta> findById(Long id){
+    	return contaRepository.findById(id);
+    }
+    
+    public void updateArquivo( Long id, Long arquivoId) {
+    	contaRepository.updateArquivo(id, arquivoId);
+    }
+    
+    public void updateArquivo(Long arquivoId) {
+    	contaRepository.updateArquivo(arquivoId);
+    }
+    
 }

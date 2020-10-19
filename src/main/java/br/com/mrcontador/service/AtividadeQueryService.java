@@ -12,12 +12,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
+// for static metamodels
 import br.com.mrcontador.domain.Atividade;
-import br.com.mrcontador.domain.*; // for static metamodels
+import br.com.mrcontador.domain.Atividade_;
+import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.AtividadeRepository;
 import br.com.mrcontador.service.dto.AtividadeCriteria;
+import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Atividade} entities in the database.

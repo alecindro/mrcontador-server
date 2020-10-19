@@ -2,6 +2,7 @@ package br.com.mrcontador.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -100,5 +101,9 @@ public class InteligentService {
     
     public void deleteRegra(Regra regra) {
     	inteligentRepository.deleteRegra(regra.getId(),regra.getParceiro().getId());
+    }
+    
+    public List<String> periodos(Long parceiroId, Long agenciabancariaId){
+    	return inteligentRepository.periodos(parceiroId, agenciabancariaId);
     }
 }
