@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscalbb("pNOT_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ds_demo.processa_notafiscal("pNOT_CODIGO" bigint)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -73,7 +73,7 @@ DECLARE
   
   cEXTRATOBANCARIO CURSOR FOR
   SELECT ID, NOT_NUMERO, NOT_CNPJ, NOT_EMPRESA, NOT_DATASAIDA, NOT_VALORNOTA, NOT_DATAPARCELA, NOT_VALORPARCELA, NOT_PARCELA, PARCEIRO_ID 
-  FROM ${schema}.NOTAFISCAL  
+  FROM ds_demo.NOTAFISCAL  
   WHERE ID>0 AND TNO_CODIGO=0
     AND ID = pNOT_CODIGO;
   
@@ -100,10 +100,10 @@ BEGIN
    vCODIGOINTELIGENTE:= 0;
    vVALORDIFERENTE   := 0;
 
-   SELECT nextval('${schema}.seq_aguardando')
+   SELECT nextval('ds_demo.seq_aguardando')
    INTO vCODIGOAGUARDANDO;
 
-   SELECT nextval('${schema}.seq_fornecedor')
+   SELECT nextval('ds_demo.seq_fornecedor')
    INTO vCODIGOFORNECEDOR;
 
 
@@ -111,13 +111,13 @@ BEGIN
      --INICIO - VERIFICAR CONTA CONTABIL...................................................
      FOR RCONTA IN
      SELECT *
-     FROM ${schema}.CONTA  
+     FROM ds_demo.CONTA  
      WHERE PARCEIRO_ID= vPARCEIRONOTA 
        AND TRIM(CON_CNPJ) = TRIM(vCNPJNOTA)
        AND CON_CNPJ <> ''
      LOOP 
       IF (vCODIGOCONTABIL = 0)THEN
-       INSERT INTO ${schema}.FORNECEDOR    ( FOR_SEQUENCIA, FOR_CODIGO, FOR_CNPJ, FOR_PARCEIRO, FOR_CONTACONTABIL, FOR_VALORBOLETO, PAR_CODIGO
+       INSERT INTO ds_demo.FORNECEDOR    ( FOR_SEQUENCIA, FOR_CODIGO, FOR_CNPJ, FOR_PARCEIRO, FOR_CONTACONTABIL, FOR_VALORBOLETO, PAR_CODIGO
                                          )
                                   VALUES ( vCODIGOFORNECEDOR, RCONTA.ID, RCONTA.CON_CNPJ, RCONTA.CON_DESCRICAO, RCONTA.CON_CONTA, 
                                            RCONTA.CON_VALORBOLETO, vPARCEIRONOTA  
@@ -133,12 +133,12 @@ BEGIN
    
       FOR RCONTA IN
       SELECT *
-      FROM ${schema}.CONTA  
+      FROM ds_demo.CONTA  
       WHERE PARCEIRO_ID= vPARCEIRONOTA 
         AND SUBSTRING(TRIM(CON_CNPJ), 1 , 8) = SUBSTRING(TRIM(vCNPJNOTA), 1 , 8)
         AND CON_CNPJ <> ''
       LOOP 
-       INSERT INTO ${schema}.FORNECEDOR ( FOR_SEQUENCIA, FOR_CODIGO, FOR_CNPJ, FOR_PARCEIRO, FOR_CONTACONTABIL, FOR_VALORBOLETO, PAR_CODIGO
+       INSERT INTO ds_demo.FORNECEDOR ( FOR_SEQUENCIA, FOR_CODIGO, FOR_CNPJ, FOR_PARCEIRO, FOR_CONTACONTABIL, FOR_VALORBOLETO, PAR_CODIGO
                                          )
                                   VALUES ( vCODIGOFORNECEDOR, RCONTA.ID, RCONTA.CON_CNPJ, RCONTA.CON_DESCRICAO, RCONTA.CON_CONTA, 
                                            RCONTA.CON_VALORBOLETO, vPARCEIRONOTA  
@@ -167,7 +167,7 @@ BEGIN
     
     FOR RFORNECEDOR IN 
     SELECT *
-    FROM  ${schema}.FORNECEDOR
+    FROM  ds_demo.FORNECEDOR
     WHERE FOR_SEQUENCIA = vCODIGOFORNECEDOR
       AND PAR_CODIGO= vPARCEIRONOTA 
     LOOP
@@ -175,8 +175,8 @@ BEGIN
      FOR RNOTA IN
      SELECT  INTELIGENT.ID, COM_CNPJ, COM_BENEFICIARIO, COM_DATAVENCIMENTO, COM_DATAPAGAMENTO, COM_VALORDOCUMENTO, COM_VALORPAGAMENTO, NUMERODOCUMENTO, 
              INTELIGENT.COMPROVANTE_ID, INTELIGENT.EXTRATO_ID, INTELIGENT.AGENCIABANCARIA_ID 
-     FROM ${schema}.INTELIGENT 
-       INNER JOIN ${schema}.COMPROVANTE ON COMPROVANTE.ID=INTELIGENT.COMPROVANTE_ID
+     FROM ds_demo.INTELIGENT 
+       INNER JOIN ds_demo.COMPROVANTE ON COMPROVANTE.ID=INTELIGENT.COMPROVANTE_ID
      WHERE INTELIGENT.PARCEIRO_ID= vPARCEIRONOTA
         AND ASSOCIADO= FALSE
         AND COALESCE(INTELIGENT.NOTAFISCAL_ID,0) = 0  
@@ -359,13 +359,13 @@ BEGIN
   IF vCODIGOINTELIGENTE > 0 THEN
 
     IF vCONTROLAVALOR = 0 THEN  
-      UPDATE ${schema}.INTELIGENT SET CONTA_ID= vCODIGOCONTABIL,
+      UPDATE ds_demo.INTELIGENT SET CONTA_ID= vCODIGOCONTABIL,
                                     NOTAFISCAL_ID= vCODIGONOTA,
                                     HISTORICOFINAL= vHISTORICOFINAL,
                                     ASSOCIADO= vASSOCIADO
       WHERE ID = vCODIGOINTELIGENTE;
 
-      UPDATE ${schema}.NOTAFISCAL SET PROCESSADO= TRUE  
+      UPDATE ds_demo.NOTAFISCAL SET PROCESSADO= TRUE  
       WHERE ID = vCODIGONOTA;
       
       vRETORNO:= vRETORNO + 1;
@@ -374,14 +374,14 @@ BEGIN
 
 
     IF vCONTROLAVALOR = 2 THEN
-      UPDATE ${schema}.INTELIGENT SET CONTA_ID= vCODIGOCONTABIL,
+      UPDATE ds_demo.INTELIGENT SET CONTA_ID= vCODIGOCONTABIL,
                                    NOTAFISCAL_ID= vCODIGONOTA,
                                    HISTORICOFINAL= vHISTORICOFINAL,
                                    DEBITO= vVALORDOCUMENTO,
                                    ASSOCIADO= vASSOCIADO
       WHERE ID = vCODIGOINTELIGENTE;
 
-      UPDATE ${schema}.NOTAFISCAL SET PROCESSADO= TRUE  
+      UPDATE ds_demo.NOTAFISCAL SET PROCESSADO= TRUE  
       WHERE ID = vCODIGONOTA;
       
       vRETORNO:= vRETORNO + 1;
@@ -389,7 +389,7 @@ BEGIN
       SELECT (replace(vHISTORICOFINAL, 'Pagto.', 'Pagto. de Juros sobre')) 
       INTO vHISTORICOFINAL;
 
-      INSERT INTO ${schema}.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
+      INSERT INTO ds_demo.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
                                        historico, NUMERODOCUMENTO, NUMEROCONTROLE, DEBITO, CREDITO, comprovante_id,
                                        CNPJ, BENEFICIARIO, conta_id, notafiscal_id, HISTORICOFINAL, periodo, associado
                                       )
@@ -401,14 +401,14 @@ BEGIN
 
 
   IF vCONTROLAVALOR = 1 THEN
-      UPDATE ${schema}.INTELIGENT SET CONTA_ID= vCODIGOCONTABIL,
+      UPDATE ds_demo.INTELIGENT SET CONTA_ID= vCODIGOCONTABIL,
                                    NOTAFISCAL_ID= vCODIGONOTA,
                                    HISTORICOFINAL= vHISTORICOFINAL,
                                    DEBITO= vVALORDOCUMENTO,
                                    ASSOCIADO= vASSOCIADO
       WHERE ID = vCODIGOINTELIGENTE;
 
-      UPDATE ${schema}.NOTAFISCAL SET PROCESSADO= TRUE  
+      UPDATE ds_demo.NOTAFISCAL SET PROCESSADO= TRUE  
       WHERE ID = vCODIGONOTA;
       
       vRETORNO:= vRETORNO + 1;
@@ -416,7 +416,7 @@ BEGIN
 
       vHISTORICOFINAL   := 'Desconto '||vHISTORICOFINAL;    
                                  
-      INSERT INTO ${schema}.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
+      INSERT INTO ds_demo.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
                                        historico, NUMERODOCUMENTO, NUMEROCONTROLE, DEBITO, CREDITO, comprovante_id,
                                        CNPJ, BENEFICIARIO, conta_id, notafiscal_id, HISTORICOFINAL, periodo, associado
                                       )
@@ -433,8 +433,8 @@ BEGIN
 
 
 
-   DELETE FROM ${schema}.FORNECEDOR WHERE FOR_SEQUENCIA= vCODIGOFORNECEDOR;    
-   DELETE FROM ${schema}.AGUARDANDO WHERE AGU_SEQUENCIA= vCODIGOAGUARDANDO;    
+   DELETE FROM ds_demo.FORNECEDOR WHERE FOR_SEQUENCIA= vCODIGOFORNECEDOR;    
+   DELETE FROM ds_demo.AGUARDANDO WHERE AGU_SEQUENCIA= vCODIGOAGUARDANDO;    
    
 
   END LOOP;
@@ -446,3 +446,4 @@ BEGIN
 END;
 $function$
 ;
+

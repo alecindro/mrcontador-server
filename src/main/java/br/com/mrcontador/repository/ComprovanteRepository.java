@@ -25,7 +25,7 @@ public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>,
 	@Query("FROM Comprovante AS co LEFT JOIN FETCH co.arquivo WHERE co.id = ?1")
 	Optional<Comprovante> findById(Long id);
 	
-	@Query(nativeQuery = true, value = "select processa_comprovantebb(?)")
+	@Query(nativeQuery = true, value = "select processa_comprovante(?)")
 	int callComprovanteBB(Long comprovanteId);
 	
 	@Query(nativeQuery = true, value = "select processa_comprovantegeral(?)")

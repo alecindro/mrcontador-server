@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.processa_extratobb("pEXT_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ${schema}.processa_extrato("pEXT_CODIGO" bigint)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$

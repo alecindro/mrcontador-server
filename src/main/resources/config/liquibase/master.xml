@@ -29,10 +29,10 @@
       	<include file="config/liquibase/changelog/data.sql" relativeToChangelogFile="false"/>
        <include file="config/liquibase/changelog/inteligent.sql" relativeToChangelogFile="false"/>
    <changeSet author="alecindro" id="16">
-    <sqlFile path="config/liquibase/changelog/comprovantebb_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+    <sqlFile path="config/liquibase/changelog/comprovante_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="17">
-    <sqlFile path="config/liquibase/changelog/extratobb_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+    <sqlFile path="config/liquibase/changelog/extrato_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="18">
     <sqlFile path="config/liquibase/changelog/notafiscal_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
@@ -41,7 +41,7 @@
     <sqlFile path="config/liquibase/changelog/notafiscal_function_geral.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="20">
-    <sqlFile path="config/liquibase/changelog/comprovantebb_function_geral.sql" splitStatements="false" relativeToChangelogFile="false"/>
+    <sqlFile path="config/liquibase/changelog/comprovante_geral_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
 
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
