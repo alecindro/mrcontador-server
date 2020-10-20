@@ -87,10 +87,10 @@ public class NotafiscalService {
     	List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente,pdf,xml);
     	list.forEach(nota->{
     		nota = notafiscalRepository.save(nota);
-    		int value = notafiscalRepository.callProcessaNotafiscal(nota.getId());
+    		/*int value = notafiscalRepository.callProcessaNotafiscal(nota.getId());
     		if(value >0) {
     			notafiscalRepository.processadoTrue(nota.getId());
-    		}
+    		}*/
     		
     	});
     	return list;

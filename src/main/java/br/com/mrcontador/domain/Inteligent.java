@@ -70,9 +70,8 @@ public class Inteligent implements Serializable {
     @Column(name = "numerodocumento")
     private String numerodocumento;
     
-   /* @Column(name = "tipo_inteligent")
-    @Enumerated(EnumType.STRING)
-    private TipoInteligent tipoInteligent;*/
+    @Column(name = "tipo_inteligent")
+    private String tipoInteligent;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
@@ -386,20 +385,20 @@ public class Inteligent implements Serializable {
         this.regra = regra;
         return this;
     }
-/*
-	public TipoInteligent getTipoInteligent() {
+
+	public String getTipoInteligent() {
 		return tipoInteligent;
 	}
 
-	public void setTipoInteligent(TipoInteligent tipoInteligent) {
+	public void setTipoInteligent(String tipoInteligent) {
 		this.tipoInteligent = tipoInteligent;
 	}
 	
-	public Inteligent tipoInteligent(TipoInteligent tipoInteligent) {
+	public Inteligent tipoInteligent(String tipoInteligent) {
 		this.tipoInteligent = tipoInteligent;
 		return this;
 	}
-    */
+    
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

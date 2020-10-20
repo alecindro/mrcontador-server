@@ -181,6 +181,22 @@ public class ComprovanteBB extends ComprovanteBanco{
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
+			if (line.contains("JUROS/MULTA")) {
+				String value = StringUtils.substringAfter(line, "JUROS/MULTA").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(JUROS);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("DESCONTO/ABATIMENTO")) {
+				String value = StringUtils.substringAfter(line, "DESCONTO/ABATIMENTO").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DESCONTO);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
 			i = i+1;
 		}
 		DiffValue diffValue = new DiffValue();
@@ -652,6 +668,28 @@ public class ComprovanteBB extends ComprovanteBanco{
 				diffValue.setNewValue(value);
 				diffValue.setLine(i+1);
 				list.add(diffValue);
+			}
+			if(line.contains("VALOR DA MULTA")) {
+				String value = StringUtils.substringAfter(line, "VALOR DA MULTA").trim();
+				value = MrContadorUtil.onlyNumbers(value);
+				if(value != "") {
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(MULTA);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i+1);
+				list.add(diffValue);
+				}
+			}
+			if(line.contains("VALOR DOS JUROS")) {
+				String value = StringUtils.substringAfter(line, "VALOR DOS JUROS").trim();
+				value = MrContadorUtil.onlyNumbers(value);
+				if(value != "") {
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(JUROS);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i+1);
+				list.add(diffValue);
+				}
 			}
 			
 			i = i+1;

@@ -99,6 +99,10 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	protected static final String DATA_PGTO = "$pagto";
 	protected static final String VALOR_PGTO = "$valor_pag";
 	protected static final String VALOR_DOC = "$valor_doc";
+	protected static final String JUROS = "$juros";
+	protected static final String MULTA = "$multa";
+	protected static final String DESCONTO = "$desconto";
+	
 	// private static final String PARCEIRO = "$1";
 	protected static final String OBS = "$4";
 	private static DateTimeFormatter formatterBar = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -108,7 +112,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 
 	protected Comprovante toEntity(List<DiffValue> diffValues, Agenciabancaria agenciabancaria, Parceiro parceiro, TipoComprovante tipoComprovante) throws ComprovanteException {
 		Comprovante comprovante = new Comprovante();
-
+try {
 		Optional<DiffValue> agencia = diffValues.stream()
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(AGENCIA)).findFirst();
 		Optional<DiffValue> conta = diffValues.stream()
@@ -131,6 +135,12 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(VALOR_DOC)).findFirst();
 		Optional<DiffValue> obs = diffValues.stream().filter(diffvalue -> diffvalue.getOldValue().trim().equals(OBS))
 				.findFirst();
+		Optional<DiffValue> multa = diffValues.stream()
+				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(MULTA)).findFirst();
+		Optional<DiffValue> juros = diffValues.stream()
+				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(JUROS)).findFirst();
+		Optional<DiffValue> desconto = diffValues.stream()
+				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(DESCONTO)).findFirst();
 		comprovante.setComCnpj(cnpj_beneficiario.isPresent() ? MrContadorUtil.onlyNumbers(cnpj_beneficiario.get().getNewValue().trim()) : "");
 		comprovante.setComDocumento(documento.isPresent() ? StringUtils.normalizeSpace(documento.get().getNewValue()) : "");
 		comprovante.setComObservacao(obs.isPresent() ? StringUtils.normalizeSpace(obs.get().getNewValue()) : "");
@@ -140,17 +150,27 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		comprovante.setComValorpagamento(valor_pagamento.isPresent()
 				? new BigDecimal(MrContadorUtil.onlyMoney(valor_pagamento.get().getNewValue()))
 				: BigDecimal.ZERO);
+		comprovante.setJuros(juros.isPresent()  && MrContadorUtil.containsNumber(juros.get().getNewValue())
+				? new BigDecimal(MrContadorUtil.onlyMoney(juros.get().getNewValue()))
+				: BigDecimal.ZERO);
+		comprovante.setMulta(multa.isPresent() && MrContadorUtil.containsNumber(multa.get().getNewValue())
+				? new BigDecimal(MrContadorUtil.onlyMoney(multa.get().getNewValue()))
+				: BigDecimal.ZERO);
+		comprovante.setDesconto(desconto.isPresent() && MrContadorUtil.containsNumber(desconto.get().getNewValue())
+				? (new BigDecimal(MrContadorUtil.onlyMoney(desconto.get().getNewValue())).negate())
+				: BigDecimal.ZERO);		
 		comprovante.setComBeneficiario(fornecedor.isPresent() ? StringUtils.normalizeSpace(fornecedor.get().getNewValue()) : "");
 		comprovante.setComDatapagamento(data_pagto.isPresent() ? toDate(data_pagto.get().getNewValue()) : null);
-		comprovante.setComDatavencimento(data_vcto.isPresent() ? toDate(data_vcto.get().getNewValue()) : null);
+		comprovante.setComDatavencimento(data_vcto.isPresent() ? toDate(data_vcto.get().getNewValue()) : comprovante.getComDatapagamento());
 		comprovante.setAgenciabancaria(agenciabancaria);
 		comprovante.setParceiro(parceiro);
 		comprovante.setTipoComprovante(tipoComprovante);
 		validateAgencia(agencia, conta, agenciabancaria);
 		comprovante.setProcessado(false);
-		//validateParceiro(cnpj_pagador, parceiro, diffValues);
-		System.out.println(count + " - " + comprovante.toString());
 		count = count + 1;
+}catch (Exception e) {
+	e.printStackTrace();
+}
 		return comprovante;
 	}
 
@@ -180,12 +200,10 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		}
 	}
 
-	protected LocalDate toDate(String value) {
-		
+	protected LocalDate toDate(String value) {		
 		if(value.trim().equals("00/00/0000")) {
 			return null;
-		}
-		
+		}		
 		if (StringUtils.contains(value, ".")){ 
 		return LocalDate.parse(value.trim(), formatterPoint);
 		}

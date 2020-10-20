@@ -61,6 +61,9 @@ public class Comprovante implements Serializable {
     
     @Column(name = "com_juros", precision = 21, scale = 2)
     private BigDecimal juros;
+    
+    @Column(name = "multa", precision = 21, scale = 2)
+    private BigDecimal multa;
 
     @Column(name = "com_desconto", precision = 21, scale = 2)
     private BigDecimal desconto;
@@ -306,7 +309,24 @@ public class Comprovante implements Serializable {
 		return this;
 	}
 	
+	public BigDecimal getMulta() {
+		return multa;
+	}
+
+	public void setMulta(BigDecimal multa) {
+		this.multa = multa;
+	}
+	
+	public Comprovante multa(BigDecimal multa) {
+		this.multa = multa;
+		return this;
+	}
+
+	
+	
+	
 	   // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
 
 
 	@Override

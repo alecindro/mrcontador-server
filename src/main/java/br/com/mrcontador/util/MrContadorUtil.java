@@ -27,6 +27,13 @@ public class MrContadorUtil {
 		}
 		return false;
 	}
+	
+	public static boolean containsNumber(String value) {
+		if(value != null) {
+			return !value.replaceAll("[^0-9]", "").isEmpty();
+		}
+		return false;
+	}
 	public static String onlyMoney(String value) {
 		if (value != null) {
 			value = value.replace("C", "").trim();
