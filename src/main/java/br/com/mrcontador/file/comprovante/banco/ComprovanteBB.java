@@ -238,6 +238,9 @@ public class ComprovanteBB extends ComprovanteBanco{
 			if (line.contains("DOCUMENTO:")) {
 				String value = StringUtils.substringAfter(line, "DOCUMENTO:").trim();
 				value = MrContadorUtil.removeDots(value);
+				while(value.startsWith("0")) {
+					value = value.substring(1, value.length());
+				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);
@@ -296,21 +299,23 @@ public class ComprovanteBB extends ComprovanteBanco{
 			}
 			if (line.contains("CONVENIO:")) {
 				String value = StringUtils.substringAfter(line, "CONVENIO:").trim();
+				String doc = value.split(StringUtils.SPACE)[0];
+				while(doc.startsWith("0")) {
+					doc = doc.substring(1, doc.length());
+				}
+				String fornecedor = StringUtils.substringAfter(value,doc).trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
-				diffValue.setNewValue(value);
+				diffValue.setNewValue(fornecedor);
 				diffValue.setLine(i+1);
 				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(DOCUMENTO);
+				diffValue2.setNewValue(doc);
+				diffValue2.setLine(i+1);
+				list.add(diffValue2);
 			}
-			if (line.contains("NR.REMESSA:")) {
-				String value = StringUtils.substringAfter(line, "NR.REMESSA:").trim();
-				value = MrContadorUtil.removeDots(value);
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(DOCUMENTO);
-				diffValue.setNewValue(value);
-				diffValue.setLine(i+1);
-				list.add(diffValue);
-			}
+			
 			if (line.contains("DATA DO DEBITO:")) {
 				String value = StringUtils.substringAfter(line, "DATA DO DEBITO:").trim();
 				DiffValue diffValue = new DiffValue();
@@ -615,6 +620,9 @@ public class ComprovanteBB extends ComprovanteBanco{
 			if (line.contains("DOCUMENTO:")) {
 				String value = StringUtils.substringAfter(line, "DOCUMENTO:").trim();
 				value = MrContadorUtil.removeDots(value);
+				while(value.startsWith("0")) {
+					value = value.substring(1, value.length());
+				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);

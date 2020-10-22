@@ -28,13 +28,11 @@ public interface NotafiscalRepository extends JpaRepository<Notafiscal, Long>, J
 	@Query("FROM Notafiscal AS nf LEFT JOIN FETCH nf.arquivoPDF WHERE nf.id = ?1")
 	Optional<Notafiscal> findById(Long id);
 	
-	@Modifying(flushAutomatically = true)
-	@Query(nativeQuery = true, value = "select processa_notafiscal(?)")
+	@Query(nativeQuery = true, value = "select * from processa_notafiscal(?)")
 	int callProcessaNotafiscal(Long notaId);
 	
-	@Modifying(flushAutomatically = true)
-	@Query(nativeQuery = true, value = "select processa_notafiscalgeral(?)")
-	void callProcessaAllNotafiscal(Long parceiroId);
+	@Query(nativeQuery = true, value = "select * from processa_notafiscalgeral(?)")
+	int callProcessaAllNotafiscal(Long parceiroId);
 	
 	  @Modifying(flushAutomatically = true)
 	  @Query(value="update notafiscal set processado = true where id = :notaId",nativeQuery = true)

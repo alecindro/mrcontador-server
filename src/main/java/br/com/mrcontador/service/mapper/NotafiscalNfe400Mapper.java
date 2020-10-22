@@ -33,6 +33,7 @@ public class NotafiscalNfe400Mapper {
 	
 	private Notafiscal parse(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, NFTipo nfTipo, boolean isEmitente, boolean contemParcela, Arquivo pdf, Arquivo xml) {
 		Notafiscal nf = new Notafiscal();
+		nf.setProcessado(false);
 		nf.setArquivo(xml);
 		nf.setArquivoPDF(pdf);
 		nf.setParceiro(parceiro);
@@ -47,7 +48,7 @@ public class NotafiscalNfe400Mapper {
 		if(!contemParcela) {
 			nf.setNotDataparcela(nf.getNotDatasaida());
 			nf.setNotParcela("001");
-			nf.setNotValorparcela(nf.getNotValorparcela());
+			nf.setNotValorparcela(nf.getNotValornota());
 		}
 		if(isEmitente) {
 			nf.setTnoCodigo(1);

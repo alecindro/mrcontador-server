@@ -3,6 +3,7 @@ package br.com.mrcontador.file.notafiscal;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.fincatto.documentofiscal.utils.DFPersister;
 
 import br.com.mrcontador.config.S3Properties;
 import br.com.mrcontador.domain.Arquivo;
+import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.erros.MrContadorException;
@@ -24,6 +26,8 @@ import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
 import br.com.mrcontador.service.mapper.ArquivoMapper;
+import br.com.mrcontador.service.mapper.NotafiscalNfe310Mapper;
+import br.com.mrcontador.service.mapper.NotafiscalNfe400Mapper;
 import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
@@ -95,7 +99,13 @@ public class XmlParserDefault implements FileParser {
 		fileS3.setOutputStream(dto.getOutputStream());
 		Arquivo xml = processXml(fileS3);
 		Arquivo pdf = processPDF(fileS3);
-		notafiscalService.process(nfNotaProcessada, parceiro, isEmitente, pdf, xml);
+		NotafiscalNfe400Mapper mapper = new NotafiscalNfe400Mapper();
+		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente,pdf,xml);
+		list.forEach(_nota->{
+    		_nota = notafiscalService.save(_nota);
+    		notafiscalService.callProcessaNotafiscal(_nota);
+    	});
+		
 		s3Service.uploadNota(pdf, xml, nfNotaProcessada, dto.getOutputStream());
 	}
 
@@ -149,7 +159,12 @@ public class XmlParserDefault implements FileParser {
 		fileS3.setFileDTO(dto);
 		Arquivo xml = processXml(fileS3);
 		Arquivo pdf = processPDF(fileS3);
-		notafiscalService.process(nfNotaProcessada, parceiro, isEmitente, pdf, xml);
+		NotafiscalNfe310Mapper mapper = new NotafiscalNfe310Mapper();
+		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente,pdf,xml);
+		list.forEach(_nota->{
+    		_nota = notafiscalService.save(_nota);
+    		notafiscalService.callProcessaNotafiscal(_nota);
+    	});
 		s3Service.uploadNota(pdf, xml, nfNotaProcessada, dto.getOutputStream());
 	}
 

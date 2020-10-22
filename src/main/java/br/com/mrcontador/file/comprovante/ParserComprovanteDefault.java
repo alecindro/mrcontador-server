@@ -99,11 +99,11 @@ public class ParserComprovanteDefault {
 			if(salvos.isEmpty()) {
 				throw new org.springframework.dao.DataIntegrityViolationException("comprovante já importado");
 			}
-		/*	try {
+			try {
 			notafiscalService.callProcessaAllNotafiscal(fileDTO.getParceiro().getId());
 			}catch(Exception e) {
 				log.error(e.getMessage());
-			}*/
+			}
 			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
 			log.info("Comprovantes salvos");
 			return erros;

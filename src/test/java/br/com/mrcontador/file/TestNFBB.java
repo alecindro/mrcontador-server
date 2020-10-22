@@ -37,14 +37,16 @@ public class TestNFBB {
 
 	public void testBB() {
 		try {
-			TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-			String folder = "/home/alecindro/Documents/drcontabil/docs/012020/42200101314317000165550020033988481186907849.xml";
+			TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);			
+			String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\nfe2\\012020";
 			Optional<Parceiro> parceiro = parceiroService.findOne(1L);
-			File file = new File(folder);
+			File fileEntry = new File(folder);	
+			for(File file : fileEntry.listFiles()) {
 			FileInputStream stream = new FileInputStream(file);
 			FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream,
 					Optional.of("demo@localhost.com"), SecurityUtils.DEMO_TENANT, parceiro.get());
 			fileService.processNFE(dto);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

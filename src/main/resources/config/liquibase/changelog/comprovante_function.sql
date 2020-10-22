@@ -87,15 +87,15 @@ BEGIN
    END IF;
 
    IF (vDETALHECOMP = vNUMERODOCUMENTO) AND (vDATAPAGAMENTO = vDATAEXTRATO) AND (vVALORPAGAMENTO = vDEBITO*-1 ) THEN
-     UPDATE  ${schema}.INTELIGENT SET COMPROVANTE_ID= vCOMPROVANTE,CNPJ= vCNPJ,  BENEFICIARIO= vBENEFICIARIO, TIPO_INTELIGENT = vTIPOINTELIGENTE WHERE ID = vCODIGOINTELIGENTE;
+     UPDATE  ${schema}.INTELIGENT SET COMPROVANTE_ID= vCOMPROVANTE,CNPJ= vCNPJ,  BENEFICIARIO= vBENEFICIARIO, TIPO_INTELIGENT = vTIPOINTELIGENTE, TIPO_VALOR = 'PRINCIPAL' WHERE ID = vCODIGOINTELIGENTE;
      IF ((vCOMMULTA > 0) OR (vCOMJUROS >0)) THEN
-     	INSERT INTO  ${schema}.INTELIGENT (historico,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id) VALUES ('Pagto. de Juros',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO,  CASE WHEN vCOMJUROS > 0 THEN vCOMJUROS*-1 ELSE vCOMMULTA*-1 END,false,
+     	INSERT INTO  ${schema}.INTELIGENT (historico,historicofinal,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
+     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id) VALUES ('Pagto. de Juros','Pagto. de Juros','JUROS',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO,  CASE WHEN vCOMJUROS > 0 THEN vCOMJUROS*-1 ELSE vCOMMULTA*-1 END,false,
      		vCNPJ,vBENEFICIARIO, vTIPOINTELIGENTE,vCOMPROVANTE,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO);
      END IF;
      IF (VCOMDESCONTO > 0) THEN
-     	INSERT INTO  ${schema}.INTELIGENT (historico,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
-     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id) VALUES ('Receb. de desconto',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO, VCOMDESCONTO,false,
+     	INSERT INTO  ${schema}.INTELIGENT (historico, historicofinal,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
+     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id) VALUES ('Receb. de desconto','Receb. de desconto','DESCONTO',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO, VCOMDESCONTO,false,
      		vCNPJ,vBENEFICIARIO, vTIPOINTELIGENTE,vCOMPROVANTE,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO);
      END IF;
      

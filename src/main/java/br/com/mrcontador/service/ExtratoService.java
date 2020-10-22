@@ -133,13 +133,10 @@ public class ExtratoService {
 		if (extratos.isEmpty()) {
 			throw new org.springframework.dao.DataIntegrityViolationException("extrato já importado");
 		}
-		
 		for (String periodo : periodos) {
 			extratoRepository.regraInteligent(listOfxDto.getFileDTO().getParceiro().getId(), periodo);
 		}
 		comprovanteService.callComprovanteGeral(listOfxDto.getFileDTO().getParceiro().getId());
-		
-
 	}
 
 }
