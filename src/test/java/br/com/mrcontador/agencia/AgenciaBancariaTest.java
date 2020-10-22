@@ -55,10 +55,10 @@ public class AgenciaBancariaTest {
 	}
 	
 	private Conta findConta() {
-		return contaService.findById(2570L).get();
+		return contaService.findById(22L).get();
 	}
 	
 	private Parceiro findParceiro() {
-		return parceiroService.findOne(2L).get();
+		return parceiroService.findOne(1L).get();
 	}
 }

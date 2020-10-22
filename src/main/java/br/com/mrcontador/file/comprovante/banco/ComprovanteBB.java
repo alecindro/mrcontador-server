@@ -21,11 +21,8 @@ public class ComprovanteBB extends ComprovanteBanco{
 	@Override
 	public Comprovante save(Comprovante comprovante, ComprovanteService service) {
 		comprovante = service.save(comprovante);
-		 int result = service.callComprovanteBB(comprovante);
-	        if(result >0) {
-	        	service.processadoTrue(comprovante);
-	        }
-		return comprovante;
+		service.callComprovante(comprovante);
+	    return comprovante;
 	}
 
 	@Override

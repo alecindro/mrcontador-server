@@ -13,7 +13,7 @@ CREATE TABLE ${schema}.comprovante (
 	com_valordocumento numeric(21,2) NULL,
 	com_valorpagamento numeric(21,2) NULL,
 	com_juros numeric(21,2) NULL,
-	multa numeric(21,2) NULL,
+	com_multa numeric(21,2) NULL,
 	com_desconto numeric(21,2) NULL,
 	com_observacao varchar(254) NULL,
 	com_competencia varchar(254) NULL,

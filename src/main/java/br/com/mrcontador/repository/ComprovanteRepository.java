@@ -26,7 +26,7 @@ public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>,
 	Optional<Comprovante> findById(Long id);
 	
 	@Query(nativeQuery = true, value = "select processa_comprovante(?)")
-	int callComprovanteBB(Long comprovanteId);
+	int callComprovante(Long comprovanteId);
 	
 	@Query(nativeQuery = true, value = "select processa_comprovantegeral(?)")
 	void callComprovanteGeral(Long parceiroId);

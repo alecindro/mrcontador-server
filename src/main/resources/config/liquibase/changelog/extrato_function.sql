@@ -17,6 +17,7 @@ DECLARE
   vASSOCIADO BOOLEAN;
   vAGENCIABANCARIAID NUMERIC;
   vPARCEIROID NUMERIC;
+  vTIPOINTELIGENTE VARCHAR(1);
    
   cEXTRATOBANCARIO CURSOR FOR
   SELECT  DISTINCT EXTRATO.ID, EXT_DATALANCAMENTO, EXT_HISTORICO, EXT_NUMERODOCUMENTO, EXT_NUMEROCONTROLE, EXT_DESCRICAO, EXT_DEBITO, EXT_CREDITO, 
@@ -35,19 +36,21 @@ BEGIN
   vAGENCIABANCARIAID, vPARCEIROID;
   EXIT WHEN NOT FOUND;
    vASSOCIADO      := FALSE; 
+   vTIPOINTELIGENTE := 'x';
    INSERT INTO ${schema}.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
                                     historico, NUMERODOCUMENTO, NUMEROCONTROLE, DEBITO, CREDITO, 
-                                     periodo, associado
+                                     periodo, associado, tipo_inteligent
                                   )
                            VALUES ( vCODIGEXTRATO, vPARCEIROID, vAGENCIABANCARIAID, vDATAEXTRATO,
                                     vHISTORICO, vNUMERODOCUMENTO, vNUMEROCONTROLE, vDEBITO, vCREDITO, 
-                                    concat(extract(month from vDATAEXTRATO),extract(year from vDATAEXTRATO)), vASSOCIADO
+                                    concat(extract(month from vDATAEXTRATO),extract(year from vDATAEXTRATO)), vASSOCIADO, vTIPOINTELIGENTE
                                   );
-   
   vRETORNO:= vRETORNO + 1;
   END LOOP;
   CLOSE cEXTRATOBANCARIO;  
-
+  
+  UPDATE ${schema}.EXTRATO SET processado = true where id = pEXT_CODIGO;
+          
   RETURN COALESCE(vRETORNO ,0);
 
 END;

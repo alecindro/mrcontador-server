@@ -32,7 +32,7 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	Optional<Extrato> findById(Long id);
 
 	@Query(nativeQuery = true, value = "select processa_extrato(?)")
-	int callExtratoBB(Long extratoId);
+	int callExtrato(Long extratoId);
 
 	@Modifying(flushAutomatically = true)
 	@Query(value = "update extrato set processado = true where id = :extratoId", nativeQuery = true)

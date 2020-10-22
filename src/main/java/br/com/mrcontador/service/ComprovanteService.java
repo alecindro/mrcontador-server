@@ -78,8 +78,8 @@ public class ComprovanteService {
     	return comprovanteRepository.saveAll(comprovantes);
     }
     
-    public int callComprovanteBB(Comprovante comprovante) {
-    	return comprovanteRepository.callComprovanteBB(comprovante.getId());
+    public int callComprovante(Comprovante comprovante) {
+    	return comprovanteRepository.callComprovante(comprovante.getId());
     }
     
     public void callComprovanteGeral(Long parceiroId) {

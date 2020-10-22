@@ -62,7 +62,7 @@ public class Comprovante implements Serializable {
     @Column(name = "com_juros", precision = 21, scale = 2)
     private BigDecimal juros;
     
-    @Column(name = "multa", precision = 21, scale = 2)
+    @Column(name = "com_multa", precision = 21, scale = 2)
     private BigDecimal multa;
 
     @Column(name = "com_desconto", precision = 21, scale = 2)

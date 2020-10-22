@@ -38,12 +38,11 @@ public class ExtratoService {
 	private final ExtratoRepository extratoRepository;
 
 	private final S3Service s3Service;
-	
+
 	private final ComprovanteService comprovanteService;
 
-
-	public ExtratoService(ExtratoRepository extratoRepository,
-			S3Service s3Service, ComprovanteService comprovanteService) {
+	public ExtratoService(ExtratoRepository extratoRepository, S3Service s3Service,
+			ComprovanteService comprovanteService) {
 		this.extratoRepository = extratoRepository;
 		this.s3Service = s3Service;
 		this.comprovanteService = comprovanteService;
@@ -94,7 +93,7 @@ public class ExtratoService {
 		extratoRepository.deleteById(id);
 	}
 
-	public void save(ListOfxDto listOfxDto,  Agenciabancaria agenciaBancaria) {
+	public void save(ListOfxDto listOfxDto, Agenciabancaria agenciaBancaria) {
 		if (listOfxDto.getOfxDTOs().isEmpty()) {
 			return;
 		}
@@ -111,39 +110,36 @@ public class ExtratoService {
 				extrato.setExtDescricao(ofxData.getTipoEntrada().toString());
 				extrato.setExtNumerocontrole(ofxData.getControle());
 				extrato.setExtNumerodocumento(ofxData.getDocumento());
-				if(ofxData instanceof PdfData) {
-					extrato.setInfoAdicional(((PdfData)ofxData).getInfAdicional());
+				if (ofxData instanceof PdfData) {
+					extrato.setInfoAdicional(((PdfData) ofxData).getInfAdicional());
 				}
 				extrato.setParceiro(listOfxDto.getFileDTO().getParceiro());
-				if (ofxData.getTipoEntrada().equals(TipoEntrada.CREDIT) || ofxData.getValor().compareTo(BigDecimal.ZERO)>0) {
+				if (ofxData.getTipoEntrada().equals(TipoEntrada.CREDIT)
+						|| ofxData.getValor().compareTo(BigDecimal.ZERO) > 0) {
 					extrato.setExtCredito(ofxData.getValor());
-				}else {
+				} else {
 					extrato.setExtDebito(ofxData.getValor());
 				}
 				try {
-				periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
-					extrato =extratoRepository.save(extrato);
-				int value = extratoRepository.callExtratoBB(extrato.getId());
-				if(value > 0) {
-					extratoRepository.processadoTrue(extrato.getId());
-				}
-				extratos.add(extrato);
-				}catch(Exception e ) {
+					periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
+					extrato = extratoRepository.save(extrato);
+					extratoRepository.callExtrato(extrato.getId());
+					extratos.add(extrato);
+				} catch (Exception e) {
 					log.error(e.getMessage());
 				}
 			}
 		}
-		if(extratos.isEmpty()) {
+		if (extratos.isEmpty()) {
 			throw new org.springframework.dao.DataIntegrityViolationException("extrato já importado");
 		}
-		comprovanteService.callComprovanteGeral(listOfxDto.getFileDTO().getParceiro().getId());
-		for(String periodo : periodos) {
-			extratoRepository.regraInteligent(listOfxDto.getFileDTO().getParceiro().getId(),periodo);
-		}
 		
+		for (String periodo : periodos) {
+			extratoRepository.regraInteligent(listOfxDto.getFileDTO().getParceiro().getId(), periodo);
+		}
+		comprovanteService.callComprovanteGeral(listOfxDto.getFileDTO().getParceiro().getId());
+		
+
 	}
 
-
-	
-	
 }
