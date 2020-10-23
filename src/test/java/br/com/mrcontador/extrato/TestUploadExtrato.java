@@ -39,7 +39,7 @@ public class TestUploadExtrato {
 	public void create() {
 		  try {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\Documentos para testes - Alecindro - Mercado Dassoler\\04-2020\\04-2020.pdf";
+		String folder = "/home/alecindro/Documents/drcontabil/docs/teste/06-2020/06-2020.pdf";
 		Agenciabancaria agencia = agenciaService.findOne(1L).get();
 		Optional<Parceiro> parceiro = parceiroService.findOne(1L);
 		File file = new File(folder);

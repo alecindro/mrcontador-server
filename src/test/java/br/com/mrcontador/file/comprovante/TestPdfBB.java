@@ -42,7 +42,7 @@ public class TestPdfBB {
 	public void testBB() {
 		try {
 			TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-			String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\Documentos para testes - Alecindro - Mercado Dassoler\\04-2020\\2ª Comprovante de Pagamentos  04_2020.pdf";
+			String folder = "/home/alecindro/Documents/drcontabil/docs/teste/06-2020/2ª Comprovante de Pagamentos  06_2020.pdf";
 			Agenciabancaria agencia = agenciaService.findOne(1L).get();
 			Optional<Parceiro> parceiro = parceiroService.findOne(1L);
 			File file = new File(folder);

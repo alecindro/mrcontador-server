@@ -389,6 +389,9 @@ public class ComprovanteBB extends ComprovanteBanco{
 			if (line.contains("DOCUMENTO:")) {
 				String value = StringUtils.substringAfter(line, "DOCUMENTO:").trim();
 				value = MrContadorUtil.removeDots(value);
+				while(value.startsWith("0")) {
+					value = value.substring(1, value.length());
+				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(value);

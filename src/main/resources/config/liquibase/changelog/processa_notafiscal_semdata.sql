@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ds_demo.processa_notafiscal("pNOT_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ds_demo.processa_notafiscal_semdata("pNOT_CODIGO" bigint)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -19,7 +19,6 @@ NF.NOT_PARCELA AS vPARCELANOTA,NF.NOT_EMPRESA AS vEMPRESANOTA, I.ID AS INTELIGEN
     and (C.COM_CNPJ = NF.NOT_CNPJ or substring(C.COM_CNPJ,1,8) = substring(NF.NOT_CNPJ,1,8))
     and NF.NOT_VALORPARCELA+10 >= C.COM_VALORDOCUMENTO
     and NF.NOT_VALORPARCELA <= C.COM_VALORDOCUMENTO
-    AND C.COM_DATAVENCIMENTO = NF.NOT_DATAPARCELA
     AND C.TIPO_COMPROVANTE = 'TITULO'
     and NF.tno_codigo =0
     AND NF.ID = pNOT_CODIGO
@@ -35,8 +34,6 @@ NF.NOT_PARCELA AS vPARCELANOTA,NF.NOT_EMPRESA AS vEMPRESANOTA, I.ID AS INTELIGEN
  END LOOP; 
 	if (vRETORNO > 0) THEN
 	update ds_demo.notafiscal set processado = true where ID = pNOT_CODIGO;
-	else
-	select from ds_demo.processa_notafiscal_semdata(pNOT_CODIGO) into vRETORNO;
 	end if;
 RETURN COALESCE(vRETORNO ,0);
 END;

@@ -31,7 +31,7 @@ public class ParcerioCreateTest {
 	public void create() {
 		  try {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\planoconta_2020108_41411.pdf";
+		String folder = "/home/alecindro/Documents/drcontabil/docs/Plano de Contas - mercado dassoler.pdf";
 		File file = new File(folder);
 		FileInputStream stream = new FileInputStream(file);
 		FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream, Optional.of("demo@localhost.com"),
