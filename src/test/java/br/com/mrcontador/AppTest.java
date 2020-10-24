@@ -1,15 +1,18 @@
 package br.com.mrcontador;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-@SpringBootTest
+@SpringBootTest(classes = MrcontadorServerApp.class)
 @ActiveProfiles("dev")
+@RunWith(SpringRunner.class)
 public class AppTest {
 	
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }

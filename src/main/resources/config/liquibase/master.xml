@@ -46,6 +46,9 @@
    <changeSet author="alecindro" id="21">
     <sqlFile path="config/liquibase/changelog/conta_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
+   <changeSet author="alecindro" id="22">
+    <sqlFile path="config/liquibase/changelog/processa_notafiscal_semdata.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
 
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

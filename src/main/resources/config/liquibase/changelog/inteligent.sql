@@ -6,7 +6,7 @@
 CREATE TABLE ${schema}.inteligent (
 	id bigserial,
 	historico varchar(254) NULL,
-	historicofinal varchar(254) NULL,
+	historicofinal varchar(1000) NULL,
 	datalancamento date NULL,
 	associado bool NULL,
 	numerodocumento varchar(254) NULL,
