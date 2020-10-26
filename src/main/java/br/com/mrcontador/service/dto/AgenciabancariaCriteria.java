@@ -3,6 +3,7 @@ package br.com.mrcontador.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
+import br.com.mrcontador.domain.TipoAgencia;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -19,6 +20,24 @@ import io.github.jhipster.service.filter.StringFilter;
  * fix type specific filters.
  */
 public class AgenciabancariaCriteria implements Serializable, Criteria {
+	
+    public static class TipoAgenciaFilter extends Filter<TipoAgencia> {
+
+      private static final long serialVersionUID = 1L;
+
+		public TipoAgenciaFilter() {
+        }
+
+        public TipoAgenciaFilter(TipoAgenciaFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public TipoAgenciaFilter copy() {
+            return new TipoAgenciaFilter(this);
+        }
+
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -41,6 +60,8 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
     private LongFilter parceiroId;
 
     private LongFilter contaId;
+    
+    private TipoAgenciaFilter tipoAgencia;
 
     public AgenciabancariaCriteria() {
     }
@@ -56,6 +77,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         this.bancoId = other.bancoId == null ? null : other.bancoId.copy();
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
         this.contaId = other.contaId == null ? null : other.contaId.copy();
+        this.tipoAgencia = other.tipoAgencia == null ? null : other.tipoAgencia.copy();
     }
 
     @Override
@@ -142,6 +164,14 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
 	public void setContaId(LongFilter contaId) {
 		this.contaId = contaId;
 	}
+	
+	public TipoAgenciaFilter getTipoAgencia() {
+		return tipoAgencia;
+	}
+
+	public void setTipoAgencia(TipoAgenciaFilter tipoAgencia) {
+		this.tipoAgencia = tipoAgencia;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -162,7 +192,8 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
             Objects.equals(banCodigobancario, that.banCodigobancario) &&
             Objects.equals(bancoId, that.bancoId) &&
             Objects.equals(parceiroId, that.parceiroId) &&
-            Objects.equals(contaId, that.contaId);
+            Objects.equals(contaId, that.contaId) &&
+            Objects.equals(tipoAgencia, that.tipoAgencia);
     }
 
     @Override
@@ -177,7 +208,8 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
         banCodigobancario,
         bancoId,
         parceiroId,
-        contaId
+        contaId,
+        tipoAgencia
         );
     }
 
@@ -195,6 +227,7 @@ public class AgenciabancariaCriteria implements Serializable, Criteria {
                 (bancoId != null ? "bancoId=" + bancoId + ", " : "") +
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
                 (contaId != null ? "contaId=" + contaId + ", " : "") +
+                (tipoAgencia != null ? "tipoAgencia=" + tipoAgencia + ", " : "") +
             "}";
     }
 

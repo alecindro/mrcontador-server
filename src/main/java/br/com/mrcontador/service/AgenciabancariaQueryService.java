@@ -108,6 +108,10 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
             if (criteria.getBanCodigobancario() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getBanCodigobancario(), Agenciabancaria_.banCodigobancario));
             }
+            
+            if (criteria.getTipoAgencia() != null) {
+                specification = specification.and(buildSpecification(criteria.getTipoAgencia(), Agenciabancaria_.tipoAgencia));
+            }
             if (criteria.getBancoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getBancoId(),
                     root -> root.join(Agenciabancaria_.banco, JoinType.LEFT).get(Banco_.id)));

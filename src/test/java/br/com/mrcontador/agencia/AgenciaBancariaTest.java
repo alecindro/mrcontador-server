@@ -13,6 +13,7 @@ import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Banco;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.BancoService;
@@ -44,6 +45,7 @@ public class AgenciaBancariaTest {
 		agencia.setAgeSituacao(true);
 		Banco banco = findBanco();
 		agencia.setBanco(banco);
+		agencia.setTipoAgencia(TipoAgencia.CONTA);
 		agencia.setBanCodigobancario(banco.getBanCodigobancario());
 		agencia.setConta(findConta());
 		agencia.setParceiro(findParceiro());

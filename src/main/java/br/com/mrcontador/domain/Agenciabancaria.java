@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,6 +56,10 @@ public class Agenciabancaria implements Serializable {
     @Size(max = 5)
     @Column(name = "ban_codigobancario", length = 5, nullable = false)
     private String banCodigobancario;
+    
+    @Column(name = "tipo_agencia")
+    @Enumerated(EnumType.STRING)
+    private TipoAgencia tipoAgencia;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -196,9 +202,26 @@ public class Agenciabancaria implements Serializable {
     public void setConta(Conta conta) {
         this.conta = conta;
     }
+    
+    public TipoAgencia getTipoAgencia() {
+		return tipoAgencia;
+	}
+    
+    public Agenciabancaria tipoAgencia(TipoAgencia tipoAgencia) {
+		this.tipoAgencia = tipoAgencia;
+		return this;
+	}
+
+	public void setTipoAgencia(TipoAgencia tipoAgencia) {
+		this.tipoAgencia = tipoAgencia;
+	}
+    
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
+    
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

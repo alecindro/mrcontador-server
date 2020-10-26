@@ -39,7 +39,7 @@ public class TestUploadExtrato {
 	public void create() {
 		  
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder1 = "/home/alecindro/Documents/drcontabil/docs/teste/01-2020/01-2020.pdf";
+		String folder1 = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\Documentos para testes - Alecindro - Mercado Dassoler\\01-2020\\01-2020.pdf";
 		String folder2 = "/home/alecindro/Documents/drcontabil/docs/teste/02-2020/02-2020.pdf";
 		String folder3 = "/home/alecindro/Documents/drcontabil/docs/teste/03-2020/03-2020.pdf";
 		String folder4 = "/home/alecindro/Documents/drcontabil/docs/teste/04-2020/04-2020.pdf";
@@ -51,11 +51,11 @@ public class TestUploadExtrato {
 		Agenciabancaria agencia = agenciaService.findOne(1L).get();
 		Optional<Parceiro> parceiro = parceiroService.findOne(1L);
 		process(folder1, agencia, parceiro);
-		process(folder2, agencia, parceiro);
-		process(folder3, agencia, parceiro);
-		process(folder4, agencia, parceiro);
-		process(folder5, agencia, parceiro);
-		process(folder6, agencia, parceiro);
+		//process(folder2, agencia, parceiro);
+		//process(folder3, agencia, parceiro);
+		//process(folder4, agencia, parceiro);
+		//process(folder5, agencia, parceiro);
+		//process(folder6, agencia, parceiro);
 	}
 	
 	private void process(String folder,Agenciabancaria agencia, Optional<Parceiro> parceiro) {
