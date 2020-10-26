@@ -49,7 +49,7 @@ public class TestPdfBB {
 			String folder6 = "/home/alecindro/Documents/drcontabil/docs/teste/06-2020/2ª Comprovante de Pagamentos  06_2020.pdf";
 			Agenciabancaria agencia = agenciaService.findOne(1L).get();
 			Optional<Parceiro> parceiro = parceiroService.findOne(1L);
-		//	process(folder1, agencia, parceiro);
+			process(folder1, agencia, parceiro);
 			process(folder2, agencia, parceiro);
 			process(folder3, agencia, parceiro);
 			process(folder4, agencia, parceiro);

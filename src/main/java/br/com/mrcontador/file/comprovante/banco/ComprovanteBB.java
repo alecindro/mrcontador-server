@@ -109,7 +109,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 				}
 				list.add(diffValue);
 			}
-			if (line.contains("CNPJ:")) {
+			if (line.contains("CNPJ:") && !StringUtils.normalizeSpace(lines[i-2]).trim().equals("PAGADOR:")) {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_BEN);
 				if(StringUtils.normalizeSpace(lines[i+1]).trim().equals("SACADOR AVALISTA:")){

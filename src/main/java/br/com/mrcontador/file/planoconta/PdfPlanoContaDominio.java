@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.dto.PlanoConta;
 import br.com.mrcontador.file.dto.PlanoContaDetail;
+import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
 
 public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 
@@ -76,6 +77,10 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 					planoContaDetail.setCodigo(value);
 					break;
 				case CPNJ:
+					value = StringUtils.normalizeSpace(value);
+					if(value == "") {
+						value = null;
+					}
 					planoContaDetail.setCnpj(value);
 					break;
 				case DESCRICAO:

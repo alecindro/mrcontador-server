@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscal2("pNOT_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscal1("pNOT_CODIGO" bigint)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -22,8 +22,8 @@ C.com_valorpagamento as vVALORPAGAMENTO, C.com_juros as vCOMJUROS, C.com_multa a
     ${schema}.COMPROVANTE C ON I.COMPROVANTE_ID = C.ID
     , ${schema}.NOTAFISCAL NF 
     WHERE I.ASSOCIADO = false
-     and I.tipo_valor = 'PRINCIPAL'
-    and (C.COM_CNPJ = NF.NOT_CNPJ or substring(C.COM_CNPJ,1,8) = substring(NF.NOT_CNPJ,1,8))
+    and I.tipo_valor = 'PRINCIPAL'
+    and C.COM_CNPJ = NF.NOT_CNPJ
     and NF.NOT_VALORPARCELA+10 >= C.COM_VALORDOCUMENTO
     and NF.NOT_VALORPARCELA <= C.COM_VALORDOCUMENTO
     AND C.COM_DATAVENCIMENTO = NF.NOT_DATAPARCELA
@@ -40,11 +40,11 @@ C.com_valorpagamento as vVALORPAGAMENTO, C.com_juros as vCOMJUROS, C.com_multa a
 	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,false,
 	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,REC.vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, REC.NOTAFISCAL_ID);
    	else
-	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = REC.NOTAFISCAL_ID  where id = REC.INTELIGENT_ID;
+ 	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = REC.NOTAFISCAL_ID  where id = REC.INTELIGENT_ID;
    	END IF;
    	SELECT ${schema}.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
 	vRETORNO:= vRETORNO + 1;
-END LOOP; 
+ END LOOP; 
 RETURN COALESCE(vRETORNO ,0);
 END;
 $function$

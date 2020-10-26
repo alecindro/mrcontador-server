@@ -38,7 +38,7 @@ public class TestNFBB {
 	public void testBB() {
 		try {
 			TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);			
-			String folder = "/home/alecindro/Documents/drcontabil/docs/DASSOLER/012020";
+			String folder = "/home/alecindro/Documents/drcontabil/docs/DASSOLER/052020";
 			Optional<Parceiro> parceiro = parceiroService.findOne(1L);
 			File fileEntry = new File(folder);	
 			for(File file : fileEntry.listFiles()) {

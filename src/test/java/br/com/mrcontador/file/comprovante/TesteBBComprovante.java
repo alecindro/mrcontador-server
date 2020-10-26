@@ -15,6 +15,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteBB;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -26,7 +27,7 @@ public class TesteBBComprovante {
 	
 	public static void main(String[] args) throws Exception {
 		TesteBBComprovante teste = new TesteBBComprovante();
-		teste.caixa("/home/alecindro/Documents/drcontabil/docs/teste/01-2020/2ª Comprovante de Pagamentos  01_2020.pdf");
+		teste.teste1("/home/alecindro/Documents/drcontabil/docs/teste/01-2020/2ª Comprovante de Pagamentos  01_2020.pdf");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {
@@ -49,13 +50,14 @@ public class TesteBBComprovante {
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("5248");
-		agencia.setAgeNumero("456550");
+		agencia.setAgeAgencia("31747");
+		agencia.setAgeNumero("40106");
 		Parceiro parceiro = new Parceiro();
-		parceiro.setParCnpjcpf(null);		
+		parceiro.setId(1L);
+		parceiro.setParCnpjcpf("10539433000173");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.BB.getCodigoBancario());
-		String comprovante = stripper.getText(pages.get(1));
-		ComprovanteBradesco cb = new ComprovanteBradesco();
+		String comprovante = stripper.getText(pages.get(223));
+		ComprovanteBB cb = new ComprovanteBB();
 		cb.parse(comprovante, agencia, parceiro);
 		
 		document.close();
