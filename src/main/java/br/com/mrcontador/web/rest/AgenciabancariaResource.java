@@ -27,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.service.AgenciabancariaQueryService;
 import br.com.mrcontador.service.AgenciabancariaService;
+import br.com.mrcontador.service.dto.AgenciabancariaAplicacao;
 import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -75,7 +76,16 @@ public class AgenciabancariaResource {
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
-
+    
+    @PostMapping("/agenciabancarias/aplicacao")
+    public ResponseEntity<Agenciabancaria> createAgenciaAplicacao(@Valid @RequestBody AgenciabancariaAplicacao agenciabancaria) throws URISyntaxException {
+        log.debug("REST request to save Agenciabancaria : {}", agenciabancaria);
+        Agenciabancaria result = agenciabancariaService.createAplicacao(agenciabancaria);
+        return ResponseEntity.created(new URI("/api/agenciabancarias/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+    
     /**
      * {@code PUT  /agenciabancarias} : Updates an existing agenciabancaria.
      *
@@ -91,7 +101,7 @@ public class AgenciabancariaResource {
         if (agenciabancaria.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Agenciabancaria result = agenciabancariaService.save(agenciabancaria);
+        Agenciabancaria result = agenciabancariaService.update(agenciabancaria);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, agenciabancaria.getId().toString()))
             .body(result);

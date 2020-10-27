@@ -29,13 +29,17 @@ public class ParceiroService {
 	private final Logger log = LoggerFactory.getLogger(ParceiroService.class);
 
 	private final ParceiroRepository parceiroRepository;
+	
+	private final AgenciabancariaService agenciaService;
 
 	private final CnpjClient cnpjClient;
 
 	public ParceiroService(ParceiroRepository parceiroRepository, 
-			CnpjClient cnpjClient) {
+			CnpjClient cnpjClient,
+			AgenciabancariaService agenciaService) {
 		this.parceiroRepository = parceiroRepository;
 		this.cnpjClient = cnpjClient;
+		this.agenciaService = agenciaService;
 	}
 
 	/**
@@ -46,7 +50,15 @@ public class ParceiroService {
 	 */
 
 	public Parceiro save(Parceiro parceiro) {
-		return parceiroRepository.save(parceiro);
+		boolean createCaixa = false;
+		if(parceiro.getId() == null) {
+			createCaixa = true;
+		}
+		parceiro = parceiroRepository.save(parceiro);
+		if(createCaixa) {
+		agenciaService.createCaixa(parceiro);
+		}
+		return parceiro;
 	}
 
 	/**
@@ -127,6 +139,7 @@ public class ParceiroService {
 		} else {
 			PessoaJuridica pessoaJuridica = getPessoa(cnpj);
 			parceiro = saveParceiro(pessoaJuridica);
+			agenciaService.createCaixa(parceiro);			
 		}
 		return parceiro;
 	}

@@ -28,19 +28,16 @@ public class ParcerioCreateTest {
 	private FileService fileService;
 	
 	@Test
-	public void create() {
-		  try {
-		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\planoconta_2020108_41411.pdf";
+	public void create() throws Exception {
+		 TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
+		String folder = "/home/alecindro/Documents/drcontabil/docs/Plano de Contas - mercado dassoler.pdf";
 		File file = new File(folder);
 		FileInputStream stream = new FileInputStream(file);
 		FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream, Optional.of("demo@localhost.com"),
 				SecurityUtils.DEMO_TENANT, null);
 		Parceiro parceiro = fileService.processPlanoConta(dto, null, SistemaPlanoConta.DOMINIO_SISTEMAS);
 		System.out.println(parceiro.toString());
-	    }catch(Exception e) {
-	    	e.printStackTrace();
-	    }
+	   
 	}
 
 }

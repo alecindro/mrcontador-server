@@ -52,17 +52,15 @@ public class Agenciabancaria implements Serializable {
     @Column(name = "age_situacao")
     private Boolean ageSituacao;
 
-    @NotNull
     @Size(max = 5)
-    @Column(name = "ban_codigobancario", length = 5, nullable = false)
+    @Column(name = "ban_codigobancario", length = 5)
     private String banCodigobancario;
     
     @Column(name = "tipo_agencia")
     @Enumerated(EnumType.STRING)
     private TipoAgencia tipoAgencia;
 
-    @ManyToOne(optional = false)
-    @NotNull
+    @ManyToOne
     @JsonIgnoreProperties(value = "agenciabancarias", allowSetters = true)
     private Banco banco;
 
@@ -72,8 +70,7 @@ public class Agenciabancaria implements Serializable {
     private Parceiro parceiro;
 
   
-    @ManyToOne(optional = false)
-    @NotNull
+    @ManyToOne
     @JsonIgnoreProperties(value = "agenciabancarias", allowSetters = true)
     private Conta conta;
 

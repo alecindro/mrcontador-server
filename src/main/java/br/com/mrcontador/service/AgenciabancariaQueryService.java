@@ -20,14 +20,12 @@ import br.com.mrcontador.domain.Conta_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.AgenciabancariaRepository;
 import br.com.mrcontador.service.dto.AgenciabancariaCriteria;
-import br.com.mrcontador.service.dto.AgenciabancariaDTO;
 import io.github.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link Agenciabancaria} entities in the database.
  * The main input is a {@link AgenciabancariaCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link AgenciabancariaDTO} or a {@link Page} of {@link AgenciabancariaDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -43,7 +41,7 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
     }
 
     /**
-     * Return a {@link List} of {@link AgenciabancariaDTO} which matches the criteria from the database.
+     * Return a {@link List} of {@link Agenciabancaria} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
@@ -55,7 +53,7 @@ public class AgenciabancariaQueryService extends QueryService<Agenciabancaria> {
     }
 
     /**
-     * Return a {@link Page} of {@link AgenciabancariaDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Agenciabancaria} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.

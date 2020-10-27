@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.repository.AgenciabancariaRepository;
+import br.com.mrcontador.service.dto.AgenciabancariaAplicacao;
 
 /**
  * Service Implementation for managing {@link Agenciabancaria}.
@@ -38,6 +41,18 @@ public class AgenciabancariaService {
     //@CacheEvict(value = {"br.com.mrcontador.domain.Parceiro","br.com.mrcontador.domain.Parceiro.agenciabancarias","br.com.mrcontador.domain.Parceiro.atividades","br.com.mrcontador.domain.Parceiro.socios"})
     public Agenciabancaria save(Agenciabancaria agenciabancaria) {
         log.debug("Request to save Agenciabancaria : {}", agenciabancaria);
+        return  agenciabancariaRepository.save(agenciabancaria);
+    }
+    
+    public Agenciabancaria update(Agenciabancaria agenciabancaria) {
+        log.debug("Request to save Agenciabancaria : {}", agenciabancaria);
+        if(!agenciabancaria.isAgeSituacao()) {
+        	Optional<Agenciabancaria> aplicacao = agenciabancariaRepository.findByParceiroAndTipoAgencia(agenciabancaria.getParceiro(), TipoAgencia.APLICACAO);
+        	if(aplicacao.isPresent()) {
+        		aplicacao.get().setAgeSituacao(false);
+        		agenciabancariaRepository.save(aplicacao.get());
+        	}
+        }
         return  agenciabancariaRepository.save(agenciabancaria);
     }
 
@@ -73,6 +88,37 @@ public class AgenciabancariaService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Agenciabancaria : {}", id);
-        agenciabancariaRepository.deleteById(id);
+        Agenciabancaria agencia = agenciabancariaRepository.findById(id).get();
+        agencia.setAgeSituacao(false);
+        agenciabancariaRepository.save(agencia);
+    }
+    
+    public Agenciabancaria createCaixa(Parceiro parceiro) {
+    	Optional<Agenciabancaria> _agencia = agenciabancariaRepository.findByParceiroAndTipoAgencia(parceiro, TipoAgencia.CAIXA);
+    	if(!_agencia.isEmpty()) {
+    		return _agencia.get();
+    	}
+    	Agenciabancaria agencia = new Agenciabancaria();
+    	agencia.setAgeAgencia(TipoAgencia.CAIXA.name());
+    	agencia.setAgeDescricao(TipoAgencia.CAIXA.name());
+    	agencia.setAgeSituacao(false);
+    	agencia.setParceiro(parceiro);
+    	agencia.setTipoAgencia(TipoAgencia.CAIXA);
+    	return agenciabancariaRepository.save(agencia);
+    }
+    public Agenciabancaria createAplicacao(AgenciabancariaAplicacao aplicacao) {
+    	Agenciabancaria agenciabancaria = aplicacao.getAgenciaBancaria();
+    	Agenciabancaria agencia = new Agenciabancaria();
+    	agencia.setAgeAgencia(agenciabancaria.getAgeAgencia());
+    	agencia.setAgeDescricao(TipoAgencia.APLICACAO.name());
+    	agencia.setAgeDigito(agenciabancaria.getAgeDigito());
+    	agencia.setAgeNumero(agenciabancaria.getAgeNumero());
+    	agencia.setBanCodigobancario(agenciabancaria.getBanCodigobancario());
+    	agencia.setAgeSituacao(true);
+    	agencia.setBanco(agenciabancaria.getBanco());
+    	agencia.setParceiro(agenciabancaria.getParceiro());
+    	agencia.setTipoAgencia(TipoAgencia.APLICACAO);
+    	agencia.setConta(aplicacao.getConta());
+    	return agenciabancariaRepository.save(agencia);
     }
 }
