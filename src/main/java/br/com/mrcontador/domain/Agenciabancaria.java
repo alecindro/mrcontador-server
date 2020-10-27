@@ -56,6 +56,9 @@ public class Agenciabancaria implements Serializable {
     @Column(name = "ban_codigobancario", length = 5)
     private String banCodigobancario;
     
+    @Column(name = "possueAplicacao")
+    private Boolean possueAplicacao;
+    
     @Column(name = "tipo_agencia")
     @Enumerated(EnumType.STRING)
     private TipoAgencia tipoAgencia;
@@ -212,11 +215,26 @@ public class Agenciabancaria implements Serializable {
 	public void setTipoAgencia(TipoAgencia tipoAgencia) {
 		this.tipoAgencia = tipoAgencia;
 	}
-    
+	
+	public Boolean isPossueAplicacao() {
+		return possueAplicacao;
+	}
+
+	public void setPossueAplicacao(Boolean possueAplicacao) {
+		this.possueAplicacao = possueAplicacao;
+	}
+	
+	public Agenciabancaria possueAplicacao(Boolean possueAplicacao) {
+		this.possueAplicacao = possueAplicacao;
+		return this;
+	}
+	
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     
+
+
 
 	@Override
     public boolean equals(Object o) {

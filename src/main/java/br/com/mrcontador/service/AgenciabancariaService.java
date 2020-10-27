@@ -119,6 +119,9 @@ public class AgenciabancariaService {
     	agencia.setParceiro(agenciabancaria.getParceiro());
     	agencia.setTipoAgencia(TipoAgencia.APLICACAO);
     	agencia.setConta(aplicacao.getConta());
-    	return agenciabancariaRepository.save(agencia);
+    	agencia = agenciabancariaRepository.save(agencia);
+    	agenciabancaria.setPossueAplicacao(true);
+    	agenciabancariaRepository.save(agenciabancaria);
+    	return agencia;
     }
 }
