@@ -55,6 +55,9 @@ public class Extrato implements Serializable {
     @Column(name = "ext_descricao", length = 30)
     private String extDescricao;
     
+    @Column(name = "agencia_origem", length = 30)
+    private String agenciaOrigem;
+    
     @Column(name = "info_adicional", length = 254)
     private String infoAdicional;
     
@@ -218,6 +221,18 @@ public class Extrato implements Serializable {
 	public Boolean isProcessado() {
 		return processado;
 	}
+	public String getAgenciaOrigem() {
+		return agenciaOrigem;
+	}
+
+	public void setAgenciaOrigem(String agenciaOrigem) {
+		this.agenciaOrigem = agenciaOrigem;
+	}
+	
+	public Extrato agenciaOrigem(String agenciaOrigem) {
+		this.agenciaOrigem = agenciaOrigem;
+		return this;
+	}
 
 	public void setProcessado(Boolean processado) {
 		this.processado = processado;
@@ -227,16 +242,19 @@ public class Extrato implements Serializable {
 		this.processado = processado;
 		return this;
 	}
+	
+	
+	 public Arquivo getArquivo() {
+			return arquivo;
+		}
+
+		public void setArquivo(Arquivo arquivo) {
+			this.arquivo = arquivo;
+		}
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    public Arquivo getArquivo() {
-		return arquivo;
-	}
-
-	public void setArquivo(Arquivo arquivo) {
-		this.arquivo = arquivo;
-	}
+   
 
 	@Override
     public boolean equals(Object o) {

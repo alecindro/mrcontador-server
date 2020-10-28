@@ -101,6 +101,7 @@ public class PdfBancoDoBrasil extends PdfParser {
 		String dtbalancete = StringUtils.left(StringUtils.trim(line), 10);
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dtbalancete), dateFormatter)));
 		String agencia = StringUtils.left(StringUtils.substringAfter(line, dtbalancete), 38);
+		data.setAgenciaOrigem(StringUtils.normalizeSpace(agencia));
 		String lote = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia), 13);
 		data.setControle(StringUtils.normalizeSpace(lote));
 		String historico = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote), 40);

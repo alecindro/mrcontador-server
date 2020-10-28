@@ -13,6 +13,8 @@ public class OfxData {
 	private String controle;
 	private String documento;
 	private TipoEntrada tipoEntrada;
+	private String agenciaOrigem;
+	
 	public String getHistorico() {
 		return historico;
 	}
@@ -49,8 +51,11 @@ public class OfxData {
 	public void setTipoEntrada(TipoEntrada tipoEntrada) {
 		this.tipoEntrada = tipoEntrada;
 	}
-	
-	
-	
+	public String getAgenciaOrigem() {
+		return agenciaOrigem;
+	}
+	public void setAgenciaOrigem(String agenciaOrigem) {
+		this.agenciaOrigem = agenciaOrigem;
+	}
 	
 }

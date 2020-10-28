@@ -19,6 +19,7 @@ import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.BancoService;
 import br.com.mrcontador.service.ContaService;
 import br.com.mrcontador.service.ParceiroService;
+import br.com.mrcontador.service.dto.AgenciabancariaAplicacao;
 
 @SpringBootTest(classes = MrcontadorServerApp.class)
 @ActiveProfiles("dev")
@@ -37,6 +38,7 @@ public class AgenciaBancariaTest {
 	@Test
 	public void save() {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
+		AgenciabancariaAplicacao aa = new AgenciabancariaAplicacao();
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("3174-7");
 		agencia.setAgeDescricao("Banco do Brasil - USFC");
@@ -49,7 +51,10 @@ public class AgenciaBancariaTest {
 		agencia.setBanCodigobancario(banco.getBanCodigobancario());
 		agencia.setConta(findConta());
 		agencia.setParceiro(findParceiro());
-		agenciaService.save(agencia);
+		aa.setAgenciaBancaria(agencia);
+		aa.setContemAplicacao(true);
+		aa.setConta(findContaAplicacao());
+		agenciaService.createAplicacao(aa);
 	}
 	
 	private Banco findBanco() {
@@ -58,6 +63,10 @@ public class AgenciaBancariaTest {
 	
 	private Conta findConta() {
 		return contaService.findById(22L).get();
+	}
+	
+	private Conta findContaAplicacao() {
+		return contaService.findById(993L).get();
 	}
 	
 	private Parceiro findParceiro() {

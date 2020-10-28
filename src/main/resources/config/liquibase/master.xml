@@ -56,6 +56,10 @@
     <sqlFile path="config/liquibase/changelog/comprovante_geral_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
 <include file="config/liquibase/changelog/alter_agenciabancaria.sql" relativeToChangelogFile="false"/>
+   <changeSet author="alecindro" id="26">
+    <sqlFile path="config/liquibase/changelog/extrato_aplicacao_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<include file="config/liquibase/changelog/alter_extrato.sql" relativeToChangelogFile="false"/>
 
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

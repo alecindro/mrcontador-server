@@ -25,10 +25,13 @@ public class AgenciabancariaService {
     private final Logger log = LoggerFactory.getLogger(AgenciabancariaService.class);
 
     private final AgenciabancariaRepository agenciabancariaRepository;
+    
+    private final ExtratoService extratoService;
 
 
-    public AgenciabancariaService(AgenciabancariaRepository agenciabancariaRepository) {
+    public AgenciabancariaService(AgenciabancariaRepository agenciabancariaRepository, ExtratoService extratoService) {
         this.agenciabancariaRepository = agenciabancariaRepository;
+        this.extratoService = extratoService;
     }
 
     /**
@@ -108,6 +111,10 @@ public class AgenciabancariaService {
     }
     public Agenciabancaria createAplicacao(AgenciabancariaAplicacao aplicacao) {
     	Agenciabancaria agenciabancaria = aplicacao.getAgenciaBancaria();
+    	agenciabancaria.setPossueAplicacao(true);
+    	agenciabancaria.setAgeSituacao(true);
+    	agenciabancaria.setTipoAgencia(TipoAgencia.CONTA);
+    	save(agenciabancaria);
     	Agenciabancaria agencia = new Agenciabancaria();
     	agencia.setAgeAgencia(agenciabancaria.getAgeAgencia());
     	agencia.setAgeDescricao(TipoAgencia.APLICACAO.name());
@@ -119,11 +126,8 @@ public class AgenciabancariaService {
     	agencia.setParceiro(agenciabancaria.getParceiro());
     	agencia.setTipoAgencia(TipoAgencia.APLICACAO);
     	agencia.setConta(aplicacao.getConta());
-    	agencia = agenciabancariaRepository.save(agencia);
-    	agenciabancaria.setPossueAplicacao(true);
-    	agenciabancaria.setAgeSituacao(true);
-    	agenciabancaria.setTipoAgencia(TipoAgencia.CONTA);
-    	agenciabancariaRepository.save(agenciabancaria);
+    	agencia = save(agencia);
+    	extratoService.callExtratoAplicacao(agenciabancaria.getId());
     	return agencia;
     }
 }

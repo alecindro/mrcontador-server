@@ -110,6 +110,7 @@ public class ExtratoService {
 				extrato.setExtDescricao(ofxData.getTipoEntrada().toString());
 				extrato.setExtNumerocontrole(ofxData.getControle());
 				extrato.setExtNumerodocumento(ofxData.getDocumento());
+				extrato.setAgenciaOrigem(ofxData.getAgenciaOrigem());
 				if (ofxData instanceof PdfData) {
 					extrato.setInfoAdicional(((PdfData) ofxData).getInfAdicional());
 				}
@@ -133,10 +134,15 @@ public class ExtratoService {
 		if (extratos.isEmpty()) {
 			throw new org.springframework.dao.DataIntegrityViolationException("extrato já importado");
 		}
+		callExtratoAplicacao(agenciaBancaria.getId());
 		for (String periodo : periodos) {
 			extratoRepository.regraInteligent(listOfxDto.getFileDTO().getParceiro().getId(), periodo);
 		}
 		comprovanteService.callComprovanteGeral(listOfxDto.getFileDTO().getParceiro().getId());
+	}
+	
+	public void callExtratoAplicacao(Long agenciaId) {
+		extratoRepository.callExtratoAplicacao(agenciaId);
 	}
 
 }
