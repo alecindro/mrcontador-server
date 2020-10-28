@@ -121,6 +121,8 @@ public class AgenciabancariaService {
     	agencia.setConta(aplicacao.getConta());
     	agencia = agenciabancariaRepository.save(agencia);
     	agenciabancaria.setPossueAplicacao(true);
+    	agenciabancaria.setAgeSituacao(true);
+    	agenciabancaria.setTipoAgencia(TipoAgencia.CONTA);
     	agenciabancariaRepository.save(agenciabancaria);
     	return agencia;
     }
