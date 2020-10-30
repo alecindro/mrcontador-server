@@ -36,10 +36,10 @@ public class TestUploadExtrato {
 	private ParceiroService parceiroService;
 	
 	@Test
-	public void create() {
+	public void create() throws Exception{
 		  
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder1 = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\Documentos para testes - Alecindro - Mercado Dassoler\\01-2020\\01-2020.pdf";
+		String folder1 = "/home/alecindro/Documents/drcontabil/docs/teste/01-2020/01-2020.pdf";
 		String folder2 = "/home/alecindro/Documents/drcontabil/docs/teste/02-2020/02-2020.pdf";
 		String folder3 = "/home/alecindro/Documents/drcontabil/docs/teste/03-2020/03-2020.pdf";
 		String folder4 = "/home/alecindro/Documents/drcontabil/docs/teste/04-2020/04-2020.pdf";
@@ -48,7 +48,7 @@ public class TestUploadExtrato {
 		
 		
 		
-		Agenciabancaria agencia = agenciaService.findOne(1L).get();
+		Agenciabancaria agencia = agenciaService.findOne(3L).get();
 		Optional<Parceiro> parceiro = parceiroService.findOne(1L);
 		process(folder1, agencia, parceiro);
 		//process(folder2, agencia, parceiro);
@@ -58,16 +58,14 @@ public class TestUploadExtrato {
 		//process(folder6, agencia, parceiro);
 	}
 	
-	private void process(String folder,Agenciabancaria agencia, Optional<Parceiro> parceiro) {
-		try {
+	private void process(String folder,Agenciabancaria agencia, Optional<Parceiro> parceiro) throws Exception{
+		
 		File file = new File(folder);
 		FileInputStream stream = new FileInputStream(file);
 		FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream, Optional.of("demo@localhost.com"),
 				SecurityUtils.DEMO_TENANT, parceiro.get());
 		fileService.processExtrato(dto, agencia, "application/pdf");
-	    }catch(Exception e) {
-	    	e.printStackTrace();
-	    }
+	   
 	}
 
 }
