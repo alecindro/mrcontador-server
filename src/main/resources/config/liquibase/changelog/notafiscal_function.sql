@@ -12,10 +12,7 @@ SELECT ${schema}.PROCESSA_NOTAFISCAL1(CAST(pNOT_CODIGO AS int8)) INTO vRETORNO;
  	if (vRETORNO = 0) THEN
 		SELECT ${schema}.PROCESSA_NOTAFISCAL2(CAST(pNOT_CODIGO AS int8)) INTO vRETORNO;
 	end if;
-	if (vRETORNO = 0) THEN
-		SELECT ${schema}.PROCESSA_NOTAFISCAL3(CAST(pNOT_CODIGO AS int8)) INTO vRETORNO;
-	end if;
- 	if (vRETORNO > 0) THEN
+	if (vRETORNO > 0) THEN
 	update ${schema}.notafiscal set processado = true where ID = pNOT_CODIGO;
 	end if;	
 RETURN COALESCE(vRETORNO ,0);
