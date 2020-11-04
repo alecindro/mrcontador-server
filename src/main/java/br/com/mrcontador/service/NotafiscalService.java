@@ -1,5 +1,7 @@
 package br.com.mrcontador.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,6 +92,15 @@ public class NotafiscalService {
     
     public void callProcessaAllNotafiscal(Long parceiroId) {
     	 notafiscalRepository.callProcessaAllNotafiscal(parceiroId);
+    }
+    
+    public List<Notafiscal> find(String cnpj, BigDecimal valor,
+			LocalDate data){
+    	valor = valor.negate();
+    	BigDecimal valorFinal = valor.multiply(new BigDecimal(1.3));
+    	LocalDate datainicial = data.minusMonths(2);
+    	LocalDate datafinal = data.plusMonths(1);
+    	return notafiscalRepository.find(cnpj, valor, valorFinal, datainicial, datafinal);
     }
     
    

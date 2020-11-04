@@ -41,7 +41,7 @@ public interface NotafiscalRepository extends JpaRepository<Notafiscal, Long>, J
 	  void processadoTrue(@Param("notaId") Long id);
 	  
 	  @Query(value="select * from notafiscal n where  substring(not_cnpj,1,8) = substring(:cnpj,1,8) and  NOT_VALORPARCELA between :valorInicial and :valorFinal "
-	  		+ " and (not_dataparcela between :datainicial and  :datafinal) and tno_codigo = 0 and processado = false ", nativeQuery = true)
+	  		+ " and (not_dataparcela between :datainicial and  :datafinal) and tno_codigo = 0 and processado = false order by not_dataparcela asc", nativeQuery = true)
 		List<Notafiscal> find(@Param("cnpj") String cnpj, @Param("valorInicial") BigDecimal valorInicial, @Param("valorFinal") BigDecimal valorFinal, 
 				@Param("datainicial") LocalDate datainicial, @Param("datafinal") LocalDate datafinal );
 }

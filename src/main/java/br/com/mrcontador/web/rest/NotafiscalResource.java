@@ -1,7 +1,9 @@
 package br.com.mrcontador.web.rest;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -109,6 +112,12 @@ public class NotafiscalResource {
         Page<Notafiscal> page = notafiscalQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/notafiscals/near")
+    public ResponseEntity<List<Notafiscal>> findNotafiscals(@RequestParam("cnpj") Long cnpj, @RequestParam("valor") BigDecimal valor, @RequestParam("dataInicial") LocalDate dataInicial) {
+    	List<Notafiscal> notas = notafiscalService.find(String.valueOf(cnpj), valor, dataInicial);
+        return ResponseEntity.ok().body(notas);
     }
 
     /**
