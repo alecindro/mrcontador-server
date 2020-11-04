@@ -1,6 +1,8 @@
 package br.com.mrcontador.repository;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -37,4 +39,9 @@ public interface NotafiscalRepository extends JpaRepository<Notafiscal, Long>, J
 	  @Modifying(flushAutomatically = true)
 	  @Query(value="update notafiscal set processado = true where id = :notaId",nativeQuery = true)
 	  void processadoTrue(@Param("notaId") Long id);
+	  
+	  @Query(value="select * from notafiscal n where  substring(not_cnpj,1,8) = substring(:cnpj,1,8) and  NOT_VALORPARCELA between :valorInicial and :valorFinal "
+	  		+ " and (not_dataparcela between :datainicial and  :datafinal) and tno_codigo = 0 and processado = false ", nativeQuery = true)
+		List<Notafiscal> find(@Param("cnpj") String cnpj, @Param("valorInicial") BigDecimal valorInicial, @Param("valorFinal") BigDecimal valorFinal, 
+				@Param("datainicial") LocalDate datainicial, @Param("datafinal") LocalDate datafinal );
 }
