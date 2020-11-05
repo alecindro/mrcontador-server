@@ -30,15 +30,15 @@ public class TestNFBB {
 
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		testBB();
 
 	}
 
-	public void testBB() {
-		try {
+	public void testBB() throws Exception{
+		
 			TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);			
-			String folder = "/home/alecindro/Documents/drcontabil/docs/DASSOLER/052020";
+			String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\nfe";
 			Optional<Parceiro> parceiro = parceiroService.findOne(1L);
 			File fileEntry = new File(folder);	
 			for(File file : fileEntry.listFiles()) {
@@ -47,8 +47,6 @@ public class TestNFBB {
 					Optional.of("demo@localhost.com"), SecurityUtils.DEMO_TENANT, parceiro.get());
 			fileService.processNFE(dto);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 }

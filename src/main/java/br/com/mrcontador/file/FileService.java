@@ -12,6 +12,7 @@ import java.io.InputStream;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.extrato.OfxParserDefault;
@@ -89,6 +90,7 @@ public class FileService {
 	}
 
 	public void processExtrato(FileDTO fileDTO, Agenciabancaria agenciabancaria, String contentType) {
+		validateConta(agenciabancaria);
 		fileDTO.setTipoDocumento(TipoDocumento.EXTRATO);
 		String media = com.google.common.net.MediaType.parse(contentType).subtype();
 		if (media != "pdf" && media != "octet-stream") {
@@ -102,7 +104,14 @@ public class FileService {
 	}
 
 	public List<FileS3> processComprovante(FileDTO fileDTO, Agenciabancaria agenciabancaria) {
+		validateConta(agenciabancaria);
 		return parserComprovante.process(fileDTO, agenciabancaria);
+	}
+	
+	private void validateConta(Agenciabancaria agencia) {
+		if(!agencia.getTipoAgencia().equals(TipoAgencia.CONTA)) {
+			throw new MrContadorException("agencia.not.valida");
+		}
 	}
 
 }

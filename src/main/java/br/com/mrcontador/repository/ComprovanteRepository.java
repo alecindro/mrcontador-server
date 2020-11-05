@@ -29,7 +29,7 @@ public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>,
 	int callComprovante(Long comprovanteId);
 	
 	@Query(nativeQuery = true, value = "select processa_comprovantegeral(?)")
-	void callComprovanteGeral(Long parceiroId);
+	int callComprovanteGeral(Long parceiroId);
 	
 	@Modifying(flushAutomatically = true)
 	@Query(value = "update comprovante set processado = true where id = :comprovanteId", nativeQuery = true)

@@ -33,9 +33,10 @@ C.com_valorpagamento as vVALORPAGAMENTO, C.com_juros as vCOMJUROS, C.com_multa a
     vTAXA:= REC.vVALORPAGAMENTO - REC.vPARCELANOTA - REC.vCOMJUROS - REC.vCOMMULTA + REC.vDESCONTO;
  	    vHISTORICOFINAL   := 'Pagto. NFe '|| REC.vNUMERONOTA || '/' || REC.vNPARCELA || ' de ' || REC.vEMPRESANOTA;
     IF (vTAXA > 0) THEN
+    	 vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| REC.vNUMERONOTA || '/' || REC.vNPARCELA || ' de ' || REC.vEMPRESANOTA;
 	   	update ds_demo.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = REC.NOTAFISCAL_ID, tipo_inteligent ='C'  where id = REC.INTELIGENT_ID;
 	   	INSERT INTO  ds_demo.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
+	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
 	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,false,
 	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,REC.vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, REC.NOTAFISCAL_ID);
    	else
