@@ -54,6 +54,9 @@ public class ParceiroService {
 		if(parceiro.getId() == null) {
 			createCaixa = true;
 		}
+		if(parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
+			parceiro.setCadastroStatus( parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() +1);
+		}
 		parceiro = parceiroRepository.save(parceiro);
 		if(createCaixa) {
 		agenciaService.createCaixa(parceiro);
@@ -110,6 +113,9 @@ public class ParceiroService {
 		ParceiroPJMapper mapper = new ParceiroPJMapper();
 		Parceiro parceiro = mapper.toEntity(pessoaJuridica);
 		parceiro.setEnabled(true);
+		if(parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
+			parceiro.setCadastroStatus( parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() +1);
+		}
 		return parceiroRepository.save(parceiro);
 	}
 

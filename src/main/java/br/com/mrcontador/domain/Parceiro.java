@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -62,6 +64,9 @@ public class Parceiro implements Serializable {
     @Column(name = "par_datacadastro")
     private ZonedDateTime parDatacadastro;
 
+    @Column(name = "cadastro_status")
+    private Integer cadastroStatus;
+    
     @Column(name = "spa_codigo")
     private Integer spaCodigo;
 
@@ -153,6 +158,40 @@ public class Parceiro implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Agenciabancaria> agenciabancarias;
+    
+    @ManyToOne
+    @JoinColumn(name="despesa_juros")
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Conta despesaJuros;
+    
+    @ManyToOne
+    @JoinColumn(name="despesa_iof")
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Conta despesaIof;
+    
+    @ManyToOne
+    @JoinColumn(name="juros_ativos")
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Conta jurosAtivos;
+    
+    @ManyToOne
+    @JoinColumn(name="descontos_ativos")
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Conta descontosAtivos;
+    
+    @ManyToOne
+    @JoinColumn(name="caixa_conta")
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Conta caixaConta;
+    
+    @ManyToOne
+    @JoinColumn(name="despesas_bancarias")
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Conta despesasBancarias;
+    @ManyToOne
+    @JoinColumn(name="despesa_tarifa")
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Conta despesaTarifa;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -674,8 +713,74 @@ public class Parceiro implements Serializable {
 		this.codExt = codExt;
 	}
 	
-  // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+	public Conta getDespesaJuros() {
+		return despesaJuros;
+	}
 
+	public void setDespesaJuros(Conta despesaJuros) {
+		this.despesaJuros = despesaJuros;
+	}
+
+	public Conta getDespesaIof() {
+		return despesaIof;
+	}
+
+	public void setDespesaIof(Conta despesaIof) {
+		this.despesaIof = despesaIof;
+	}
+
+	public Conta getJurosAtivos() {
+		return jurosAtivos;
+	}
+
+	public void setJurosAtivos(Conta jurosAtivos) {
+		this.jurosAtivos = jurosAtivos;
+	}
+
+	public Conta getDescontosAtivos() {
+		return descontosAtivos;
+	}
+
+	public void setDescontosAtivos(Conta descontosAtivos) {
+		this.descontosAtivos = descontosAtivos;
+	}
+	
+	public Conta getCaixaConta() {
+		return caixaConta;
+	}
+
+	public void setCaixaConta(Conta caixaConta) {
+		this.caixaConta = caixaConta;
+	}
+
+	public Conta getDespesasBancarias() {
+		return despesasBancarias;
+	}
+
+	public void setDespesasBancarias(Conta despesasBancarias) {
+		this.despesasBancarias = despesasBancarias;
+	}
+
+	public Conta getDespesaTarifa() {
+		return despesaTarifa;
+	}
+
+	public void setDespesaTarifa(Conta despesaTarifa) {
+		this.despesaTarifa = despesaTarifa;
+	}
+	
+	public Integer getCadastroStatus() {
+		return cadastroStatus;
+	}
+
+	public void setCadastroStatus(Integer cadastroStatus) {
+		this.cadastroStatus = cadastroStatus;
+	}
+	
+	
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+	
 
 
 
