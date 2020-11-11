@@ -50,7 +50,7 @@ public class PdfParserPlanoConta {
 					throw new MrContadorException("file.notparceiro", parceiroCnpj);
 				}
 			}
-			Parceiro parceiro = parceiroService.saveByServiceCnpj(planoConta.getCnpjCliente(), contaService);
+			Parceiro parceiro = parceiroService.saveByServiceCnpj(planoConta.getCnpjCliente());
 			dto.setParceiro(parceiro);
 			PlanoContaMapper mapper = new PlanoContaMapper();
 			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro, planoConta.getArquivo());

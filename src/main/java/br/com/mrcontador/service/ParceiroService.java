@@ -17,7 +17,6 @@ import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.repository.ParceiroRepository;
 import br.com.mrcontador.service.mapper.ParceiroPJMapper;
 import br.com.mrcontador.util.MrContadorUtil;
-import br.com.mrcontador.web.rest.errors.CnpjAlreadyExistException;
 
 /**
  * Service Implementation for managing {@link Parceiro}.
@@ -134,19 +133,18 @@ public class ParceiroService {
 		}
 	}
 
-	public Parceiro saveByServiceCnpj(String cnpj, ContaService contaService) {
+	public Parceiro saveByServiceCnpj(String cnpj) {
 		Optional<Parceiro> oParceiro = findByParCnpjcpf(cnpj);
 		Parceiro parceiro = null;
 		if (oParceiro.isPresent()) {
 			parceiro = oParceiro.get();
-			if (contaService.findFirstByParceiro(parceiro).isPresent()) {
-				throw new CnpjAlreadyExistException();
-			}
+			parceiro = save(parceiro);
 		} else {
 			PessoaJuridica pessoaJuridica = getPessoa(cnpj);
 			parceiro = saveParceiro(pessoaJuridica);
-			agenciaService.createCaixa(parceiro);			
+			agenciaService.createCaixa(parceiro);
 		}
+		
 		return parceiro;
 	}
 }
