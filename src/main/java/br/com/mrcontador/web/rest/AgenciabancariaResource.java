@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.service.AgenciabancariaQueryService;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.dto.AgenciabancariaAplicacao;
@@ -81,6 +82,15 @@ public class AgenciabancariaResource {
     public ResponseEntity<Agenciabancaria> createAgenciaAplicacao(@Valid @RequestBody AgenciabancariaAplicacao agenciabancaria) throws URISyntaxException {
         log.debug("REST request to save Agenciabancaria : {}", agenciabancaria);
         Agenciabancaria result = agenciabancariaService.createAplicacao(agenciabancaria);
+        return ResponseEntity.created(new URI("/api/agenciabancarias/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+    
+    @PostMapping("/agenciabancarias/caixa")
+    public ResponseEntity<Agenciabancaria> createAgenciaCaixa(@Valid @RequestBody Conta conta) throws URISyntaxException {
+        log.debug("REST request to save Agenciabancaria caixa : {}", conta.getConConta());
+        Agenciabancaria result = agenciabancariaService.createCaixa(conta);
         return ResponseEntity.created(new URI("/api/agenciabancarias/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);

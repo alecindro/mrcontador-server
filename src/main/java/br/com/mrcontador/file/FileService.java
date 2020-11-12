@@ -41,8 +41,8 @@ public class FileService {
 	@Autowired
 	private ParserComprovanteDefault parserComprovante;
 
-	public Parceiro processPlanoConta(FileDTO dto, String cnpjParceiro, SistemaPlanoConta sistemaPlanoConta) {
-		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, cnpjParceiro);
+	public Parceiro processPlanoConta(FileDTO dto, Long parceiroId, SistemaPlanoConta sistemaPlanoConta) {
+		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, parceiroId);
 	}
 
 	public void updatePlanoConta(FileDTO dto, Long idParceiro, SistemaPlanoConta sistemaPlanoConta) {

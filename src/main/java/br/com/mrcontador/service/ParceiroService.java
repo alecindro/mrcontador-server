@@ -29,16 +29,13 @@ public class ParceiroService {
 
 	private final ParceiroRepository parceiroRepository;
 	
-	private final AgenciabancariaService agenciaService;
 
 	private final CnpjClient cnpjClient;
 
 	public ParceiroService(ParceiroRepository parceiroRepository, 
-			CnpjClient cnpjClient,
-			AgenciabancariaService agenciaService) {
+			CnpjClient cnpjClient) {
 		this.parceiroRepository = parceiroRepository;
 		this.cnpjClient = cnpjClient;
-		this.agenciaService = agenciaService;
 	}
 
 	/**
@@ -49,18 +46,10 @@ public class ParceiroService {
 	 */
 
 	public Parceiro save(Parceiro parceiro) {
-		boolean createCaixa = false;
-		if(parceiro.getId() == null) {
-			createCaixa = true;
-		}
 		if(parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
 			parceiro.setCadastroStatus( parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() +1);
 		}
-		parceiro = parceiroRepository.save(parceiro);
-		if(createCaixa) {
-		agenciaService.createCaixa(parceiro);
-		}
-		return parceiro;
+		return parceiroRepository.save(parceiro);
 	}
 
 	/**
@@ -142,7 +131,6 @@ public class ParceiroService {
 		} else {
 			PessoaJuridica pessoaJuridica = getPessoa(cnpj);
 			parceiro = saveParceiro(pessoaJuridica);
-			agenciaService.createCaixa(parceiro);
 		}
 		
 		return parceiro;

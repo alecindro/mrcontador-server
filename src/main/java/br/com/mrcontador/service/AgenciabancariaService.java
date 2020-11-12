@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mrcontador.domain.Agenciabancaria;
-import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.repository.AgenciabancariaRepository;
 import br.com.mrcontador.service.dto.AgenciabancariaAplicacao;
@@ -96,8 +96,8 @@ public class AgenciabancariaService {
         agenciabancariaRepository.save(agencia);
     }
     
-    public Agenciabancaria createCaixa(Parceiro parceiro) {
-    	Optional<Agenciabancaria> _agencia = agenciabancariaRepository.findByParceiroAndTipoAgencia(parceiro, TipoAgencia.CAIXA);
+    public Agenciabancaria createCaixa(Conta conta) {
+    	Optional<Agenciabancaria> _agencia = agenciabancariaRepository.findByParceiroAndTipoAgencia(conta.getParceiro(), TipoAgencia.CAIXA);
     	if(!_agencia.isEmpty()) {
     		return _agencia.get();
     	}
@@ -105,8 +105,9 @@ public class AgenciabancariaService {
     	agencia.setAgeAgencia(TipoAgencia.CAIXA.name());
     	agencia.setAgeDescricao(TipoAgencia.CAIXA.name());
     	agencia.setAgeSituacao(false);
-    	agencia.setParceiro(parceiro);
+    	agencia.setParceiro(conta.getParceiro());
     	agencia.setTipoAgencia(TipoAgencia.CAIXA);
+    	agencia.setConta(conta);
     	return agenciabancariaRepository.save(agencia);
     }
     public Agenciabancaria createAplicacao(AgenciabancariaAplicacao aplicacao) {

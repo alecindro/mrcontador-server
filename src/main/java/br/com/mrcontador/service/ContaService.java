@@ -76,8 +76,4 @@ public class ContaService {
     	contaRepository.updateArquivo(id, arquivoId);
     }
     
-    public void updateArquivo(Long arquivoId) {
-    	contaRepository.updateArquivo(arquivoId);
-    }
-    
 }

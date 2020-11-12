@@ -43,8 +43,5 @@ public interface ContaRepository extends JpaRepository<Conta, Long>, JpaSpecific
 	  @Query(value ="update conta set arquivo_id = :arquivoId where id = :id ",nativeQuery = true )
 	  void updateArquivo(@Param("id") Long id, @Param("arquivoId") Long arquivoId);
 	  
-	  @Modifying(flushAutomatically = true)
-	  @Query(value ="update conta set arquivo_id = :arquivoId ",nativeQuery = true )
-	  void updateArquivo(@Param("arquivoId") Long arquivoId);
 	  
 }

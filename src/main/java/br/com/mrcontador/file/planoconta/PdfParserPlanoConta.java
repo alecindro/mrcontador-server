@@ -36,7 +36,7 @@ public class PdfParserPlanoConta {
 	@Autowired
 	private ParceiroService parceiroService;
 
-	public Parceiro process(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, String parceiroCnpj) {
+	public Parceiro process(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, Long parceiroId) {
 		PDDocument document;
 		InputStream first = null;
 		try {
@@ -44,19 +44,14 @@ public class PdfParserPlanoConta {
 			first = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
-			if (parceiroCnpj != null) {
-				if (!MrContadorUtil.onlyNumbers(parceiroCnpj)
-						.equals(MrContadorUtil.onlyNumbers(planoConta.getCnpjCliente()))) {
-					throw new MrContadorException("file.notparceiro", parceiroCnpj);
-				}
-			}
-			Parceiro parceiro = parceiroService.saveByServiceCnpj(planoConta.getCnpjCliente());
+			Parceiro parceiro = validatePlano(parceiroId, planoConta.getCnpjCliente());
 			dto.setParceiro(parceiro);
 			PlanoContaMapper mapper = new PlanoContaMapper();
 			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro, planoConta.getArquivo());
 			contaService.save(contas);
+			parceiroService.save(parceiro);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
-			contaService.updateArquivo(arquivo.getId());
+			contas.forEach(conta -> contaService.updateArquivo(conta.getId(),arquivo.getId()));
 			return parceiro;
 		} catch (CnpjAlreadyExistException e) {
 			throw e;
@@ -74,6 +69,21 @@ public class PdfParserPlanoConta {
 			} catch (IOException e) {
 			}
 		}
+	}
+	
+	private Parceiro validatePlano(Long parceiroId, String cnpj) {
+		Optional<Parceiro> parceiro = parceiroService.findByParCnpjcpf(cnpj);
+		Optional<Parceiro> parceiroParam = parceiroService.findOne(parceiroId);
+		if(parceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notexists",cnpj);
+		}
+		if(parceiroParam.isEmpty()) {
+			throw new MrContadorException("parceiro.notexists",String.valueOf(parceiroId));
+		}
+		if (!parceiro.get().getId().equals(parceiroParam.get().getId())) {
+			throw new MrContadorException("plano.notparceiro", cnpj);
+		}
+		return parceiroParam.get();
 	}
 
 	public void update(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, Long parceiroId) {

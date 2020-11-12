@@ -46,7 +46,7 @@ public class TestPlanoDeContas {
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());
 			dto.setUsuario("SYSTEM");
-     		fileService.processPlanoConta(dto,"10.539.433/0001-73",SistemaPlanoConta.DOMINIO_SISTEMAS);
+     		fileService.processPlanoConta(dto,1L,SistemaPlanoConta.DOMINIO_SISTEMAS);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

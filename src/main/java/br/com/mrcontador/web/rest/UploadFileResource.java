@@ -50,12 +50,12 @@ public class UploadFileResource {
 
 	@PostMapping("/upload/planoconta")
 	public ResponseEntity<Parceiro> uploadPlanoConta(@RequestParam("file") MultipartFile file,
-			@RequestParam(required = false, name = "parceiroCNPJ") String parceiroCnpj) throws Exception {
+			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		try {
 			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
 					SecurityUtils.getCurrentTenantHeader(), null);
-			Parceiro parceiro = fileService.processPlanoConta(dto, parceiroCnpj, SistemaPlanoConta.DOMINIO_SISTEMAS);
+			Parceiro parceiro = fileService.processPlanoConta(dto, parceiroId, SistemaPlanoConta.DOMINIO_SISTEMAS);
 			return ResponseEntity
 					.created(new URI("/api/upload/planoconta/")).headers(HeaderUtil
 							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName()))
