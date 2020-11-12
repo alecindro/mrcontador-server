@@ -94,11 +94,11 @@ public class S3Service {
 		NFDanfeReport nfDanfeReport = new NFDanfeReport(nfNotaProcessada);
 		try {
 			byte[] bytesArray = nfDanfeReport.gerarDanfeNFe(null);
-			uploadS3Bytes(pdf.getNome(), pdf.gets3Dir(), bytesArray);
-			uploadS3Bytes(xml.getNome(), xml.gets3Dir(), xmlByte.toByteArray());
+			uploadS3Bytes(pdf.getNome(), pdf.gets3Dir(), bytesArray);			
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 		}
+		uploadS3Bytes(xml.getNome(), xml.gets3Dir(), xmlByte.toByteArray());
 	}
 	
 	@Async("taskExecutor")
