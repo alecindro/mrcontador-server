@@ -23,7 +23,7 @@ import java.util.HashSet;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
-@Profile(JHipsterConstants.SPRING_PROFILE_SWAGGER)
+@Profile(value = {JHipsterConstants.SPRING_PROFILE_SWAGGER, JHipsterConstants.SPRING_PROFILE_PRODUCTION})
 public class OpenApiConfiguration {
 
     @Bean
