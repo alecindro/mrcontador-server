@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscal2("pNOT_CODIGO" bigint)
 AS $function$
 declare
 pNOT_CODIGO ALIAS for $1;
-REC   RECORD; 
+REC2   RECORD; 
 vRETORNO NUMERIC;
 vHISTORICOFINAL TEXT;
 vTAXA NUMERIC;
@@ -29,7 +29,7 @@ from ${schema}.NOTAFISCAL NF WHERE NF.tno_codigo =0 AND NF.ID  = pNOT_CODIGO;
 
 SELECT DESPESA_TARIFA INTO vCONTATARIFA FROM  ${schema}.PARCEIRO WHERE ID = vPARCEIROID;
 
-FOR REC IN 
+FOR REC2 IN 
 SELECT I.ID AS INTELIGENT_ID, I.HISTORICOFINAL as vHISTORICOFINAL, I.TIPO_VALOR as vTIPOVALOR, 
 I.datalancamento as vDATAEXTRATO, I.numerodocumento as vNUMERODOCUMENTO,
 I.numerocontrole as vNUMEROCONTROLE, I.periodo as vPERIODO, I.cnpj as vCNPJ, 
@@ -51,26 +51,26 @@ C.com_multa as vCOMMULTA, C.com_desconto AS vDESCONTO
 	LIMIT 1
 	
  LOOP
-    vTAXA:= REC.vVALORPAGAMENTO - vVALORPARCELANOTA - REC.vCOMJUROS - REC.vCOMMULTA + REC.vDESCONTO;
+    vTAXA:= REC2.vVALORPAGAMENTO - vVALORPARCELANOTA - REC2.vCOMJUROS - REC2.vCOMMULTA + REC2.vDESCONTO;
  	vHISTORICOFINAL   := 'Pagto. NFe '|| vNUMERONOTA || '/' || vNPARCELA || ' de ' || vEMPRESANOTA;
     IF (vTAXA > 0) THEN
-    	 update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID, tipo_inteligent ='C'  where id = REC.INTELIGENT_ID;
+    	 update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID, tipo_inteligent ='C'  where id = REC2.INTELIGENT_ID;
     	 vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| vNUMERONOTA || '/' || vNPARCELA || ' de ' || vEMPRESANOTA;
 	   	IF (vCONTATARIFA IS NOT NULL) THEN 
 		INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal, conta_id) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
-	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,true,
-	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vCONTATARIFA);
+	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal, conta_id) 
+				VALUES ('Pagto. de Taxa bancária','TAXA', REC2.vDATAEXTRATO, REC2.vNUMERODOCUMENTO,REC2.vNUMEROCONTROLE, REC2.vPERIODO, vTAXA*-1,true,
+	     		REC2.vCNPJ,REC2.vBENEFICIARIO, 'C',REC2.vCOMPROVANTEID,vPARCEIROID,REC2.vAGENCIABANCARIAID, REC2.vCODIGEXTRATO, vNOTAFISCALID,vHISTORICOFINAL, vCONTATARIFA);
 		ELSE
 		INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
-	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,false,
-	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID);
-		SELECT ${schema}.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
+	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES ('Pagto. de Taxa bancária','TAXA',REC2.vDATAEXTRATO,REC2.vNUMERODOCUMENTO,
+	     		REC2.vNUMEROCONTROLE,REC2.vPERIODO, vTAXA*-1,false,
+	     		REC2.vCNPJ,REC2.vBENEFICIARIO, 'C',REC2.vCOMPROVANTEID,vPARCEIROID,REC2.vAGENCIABANCARIAID, REC2.vCODIGEXTRATO, vNOTAFISCALID, vHISTORICOFINAL);
+		SELECT ${schema}.PROCESSA_CONTA(CAST(REC2.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
 		END IF;		
    	else
- 	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID  where id = REC.INTELIGENT_ID;
-		SELECT ${schema}.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
+ 	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID  where id = REC2.INTELIGENT_ID;
+		SELECT ${schema}.PROCESSA_CONTA(CAST(REC2.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
    	END IF;
    	vRETORNO:= vRETORNO + 1;
  END LOOP; 
