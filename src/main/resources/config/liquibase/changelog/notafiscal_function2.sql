@@ -63,10 +63,7 @@ C.com_multa as vCOMMULTA, C.com_desconto AS vDESCONTO
 	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal, conta_id) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
 	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,true,
 	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vCONTATARIFA);
-		SELECT ${schema}.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
 		ELSE
-		 update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID, tipo_inteligent ='C'  where id = REC.INTELIGENT_ID;
-    	 vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| vNUMERONOTA || '/' || vNPARCELA || ' de ' || vEMPRESANOTA;
 		INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
 	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
 	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,false,
