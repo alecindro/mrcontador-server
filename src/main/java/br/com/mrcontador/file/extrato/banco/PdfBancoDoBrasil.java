@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.mrcontador.domain.BancoCodigoBancario;
-import br.com.mrcontador.file.FileException;
-import br.com.mrcontador.file.extrato.PdfParser;
+import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.file.extrato.dto.OfxData;
 import br.com.mrcontador.file.extrato.dto.PdfData;
+import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.util.MrContadorUtil;
 
-public class PdfBancoDoBrasil extends PdfParser {
+public class PdfBancoDoBrasil extends PdfParserExtrato {
 
 	// private static final String DT_BALANCETE = "Dt. balancete";
 	// private static final String DT_MOVIMENTO = "Dt. movimento";
@@ -40,24 +40,9 @@ public class PdfBancoDoBrasil extends PdfParser {
 		super();
 	}
 
-	public OfxDTO process(List<PDDocument> pages) throws IOException {
-		int lineHeader = 9;
-		
-		if (pages.isEmpty()) {
-			throw new FileException("error.pdf.empty");
-		}
-		StringBuilder builder = new StringBuilder();
-		for (PDDocument page : pages) {
-			String pdfFileInText = super.getText(page);
-			builder.append(pdfFileInText);
-		}
-		String lines[] = builder.toString().split("\\n");
-		OfxDTO dto = parseDataBanco(lines, lineHeader);
-		dto.setDataList(parseBody(lines, lineHeader));
-		return dto;
-	}
+	
 
-	private OfxDTO parseDataBanco(String[] lines, int lineHeader) {
+	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.BB.name());
 		for (int i = 0; i < lineHeader; i++) {
@@ -72,7 +57,7 @@ public class PdfBancoDoBrasil extends PdfParser {
 		return dto;
 	}
 
-	private List<OfxData> parseBody(String[] lines, int lineHeader) {
+	protected List<OfxData> parseBody(String[] lines, int lineHeader) {
 		List<OfxData> datas = new ArrayList<>();
 		for (int i = lineHeader; i < lines.length; i++) {
 			String line = lines[i];
@@ -96,7 +81,7 @@ public class PdfBancoDoBrasil extends PdfParser {
 		return datas;
 	}
 
-	private void readLine(String line, PdfData data, int numberRow) {
+	protected void readLine(String line, PdfData data, int numberRow) {
 		log.info("Linha {} ", numberRow);
 		String dtbalancete = StringUtils.left(StringUtils.trim(line), 10);
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dtbalancete), dateFormatter)));
@@ -118,12 +103,18 @@ public class PdfBancoDoBrasil extends PdfParser {
 		}
 	}
 
-	private static TipoEntrada getTipo(String value) {
+	protected TipoEntrada getTipo(String value) {
 		String tipo = StringUtils.right(StringUtils.normalizeSpace(value), 1);
 		TipoEntrada tipoEntrada = TipoEntrada.DEBIT;
 		if (StringUtils.equals(tipo, "C")) {
 			tipoEntrada = TipoEntrada.CREDIT;
 		}
 		return tipoEntrada;
+	}
+
+	@Override
+	protected void extrasFunctions(ExtratoService service, List<Extrato> extratos) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -151,6 +151,30 @@ public class S3Service {
 			});
 		});
 	}
+	
+	@Async("taskExecutor")
+	public void uploadComprovante(FileS3 fileS3, String tenant) {
+		ArquivoMapper mapper = new ArquivoMapper();
+		TenantContext.setTenantSchema(tenant);
+			String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
+					String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getComprovanteFolder());
+			String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
+					fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType(),
+					fileS3.getPage());
+			String eTag = uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
+			fileS3.getFileDTO().setName(filename);
+			fileS3.getFileDTO().setBucket(properties.getBucketName());
+			fileS3.getFileDTO().setS3Dir(dir);
+			fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+			fileS3.getFileDTO().seteTag(eTag);
+			fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+			Arquivo arquivo = mapper.toEntity(fileS3.getFileDTO());
+			arquivoService.save(arquivo);
+			fileS3.getComprovantes().forEach(comprovante -> {
+				comprovanteService.updateArquivo(comprovante.getId(), arquivo.getId());
+			});
+		
+	}
 
 	public Arquivo uploadPlanoConta(FileDTO dto) {
 		dto.setTipoDocumento(TipoDocumento.PLANO_DE_CONTA);

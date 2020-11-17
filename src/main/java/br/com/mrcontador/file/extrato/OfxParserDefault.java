@@ -67,8 +67,10 @@ public class OfxParserDefault{
 				throw new MrContadorException("ofx.empty");
 			}
 			process(responses.get(0),second,listOfxDto,agenciaBancaria);
+			listOfxDto.getOfxDTOs().forEach(ofxDto ->{
+				extratoService.save(fileDTO,ofxDto, agenciaBancaria);
+			});
 			
-			extratoService.save(listOfxDto, agenciaBancaria);
 		}catch(MrContadorException e) {
 			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(),e);

@@ -1,13 +1,12 @@
 package br.com.mrcontador.file;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.InputStream;
 
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
@@ -15,8 +14,7 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
-import br.com.mrcontador.file.extrato.OfxParserDefault;
-import br.com.mrcontador.file.extrato.PdfParserDefault;
+import br.com.mrcontador.file.extrato.ExtratoPdfFacade;
 import br.com.mrcontador.file.notafiscal.XmlParserDefault;
 import br.com.mrcontador.file.planoconta.PdfParserPlanoConta;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
@@ -32,10 +30,10 @@ public class FileService {
 	private PdfParserPlanoConta pdfParserPlanoConta;
 	@Autowired
 	private XmlParserDefault xmlParserDefault;
+	//@Autowired
+	//private OfxParserDefault ofxParserDefault;
 	@Autowired
-	private OfxParserDefault ofxParserDefault;
-	@Autowired
-	private PdfParserDefault pdfParserDefault;
+	private ExtratoPdfFacade pdfParserDefault;
 	@Autowired
 	private S3Service s3Service;
 	@Autowired
@@ -89,7 +87,7 @@ public class FileService {
 
 	}
 
-	public void processExtrato(FileDTO fileDTO, Agenciabancaria agenciabancaria, String contentType) {
+	public String processExtrato(FileDTO fileDTO, Agenciabancaria agenciabancaria, String contentType) {
 		validateConta(agenciabancaria);
 		fileDTO.setTipoDocumento(TipoDocumento.EXTRATO);
 		String media = com.google.common.net.MediaType.parse(contentType).subtype();
@@ -97,9 +95,10 @@ public class FileService {
 			throw new MrContadorException("ofx.notextrato");
 		}
 		if (media == "pdf") {
-			pdfParserDefault.process(fileDTO, agenciabancaria);
+			return pdfParserDefault.process(fileDTO, agenciabancaria);
 		} else {
-			ofxParserDefault.process(fileDTO, agenciabancaria);
+			throw new MrContadorException("ofx.notextrato");
+			//ofxParserDefault.process(fileDTO, agenciabancaria);
 		}
 	}
 

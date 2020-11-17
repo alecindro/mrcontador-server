@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,10 +79,12 @@ public class ComprovanteService {
     	return comprovanteRepository.saveAll(comprovantes);
     }
     
+    @Async("taskExecutor")
     public int callComprovante(Comprovante comprovante) {
     	return comprovanteRepository.callComprovante(comprovante.getId());
     }
     
+    @Async("taskExecutor")
     public void callComprovanteGeral(Long parceiroId) {
     	comprovanteRepository.callComprovanteGeral(parceiroId);
     }

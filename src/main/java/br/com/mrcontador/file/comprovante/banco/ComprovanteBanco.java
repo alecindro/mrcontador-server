@@ -36,6 +36,11 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	public Comprovante save(Comprovante comprovante, ComprovanteService service) {
 			return service.save(comprovante);
 	}
+	
+	public void callFunction(Comprovante comprovante, ComprovanteService service) {
+		service.callComprovante(comprovante);
+    }
+	
 
 	public List<Comprovante> parse(String comprovante, String pattern, Agenciabancaria agenciabancaria,
 			Parceiro parceiro, TipoComprovante tipoComprovante) throws DiffException, ComprovanteException {

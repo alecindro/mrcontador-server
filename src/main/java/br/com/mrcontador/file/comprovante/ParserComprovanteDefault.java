@@ -17,25 +17,14 @@ import org.springframework.stereotype.Service;
 
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
-import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Comprovante;
-import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.TipoDocumento;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteBB;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteCaixa;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteCredCrea;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteSicoob;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteSicredi;
-import br.com.mrcontador.file.comprovante.banco.ComprovanteUnicred;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
-import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
 public class ParserComprovanteDefault {
@@ -48,14 +37,9 @@ public class ParserComprovanteDefault {
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
 	public List<FileS3> process(FileDTO fileDTO, Agenciabancaria agencia) {
-		InputStream first = null;
-		try {
-			first = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
-			List<PPDocumentDTO> textComprovantes = parseComprovante(first);
-			ParserComprovante parser = getParser(agencia.getBanCodigobancario());
-			List<FileS3> files = new ArrayList<>();
+			List<PPDocumentDTO> textComprovantes = parseComprovante(fileDTO);
+			ParserComprovante parser = ParserComprovanteFactory.getParser(agencia.getBanCodigobancario());
 			List<FileS3> erros = new ArrayList<FileS3>();
-			List<Comprovante> salvar = new ArrayList<Comprovante>();
 			List<Comprovante> salvos = new ArrayList<Comprovante>();
 			int page = 0;
 			for (PPDocumentDTO pddComprovante : textComprovantes) {
@@ -63,15 +47,15 @@ public class ParserComprovanteDefault {
 				try {
 					List<Comprovante> _comprovantes = parser.parse(pddComprovante.getComprovante(), agencia, fileDTO.getParceiro());
 					if (_comprovantes != null && !_comprovantes.isEmpty()) {
-						salvar.addAll(_comprovantes);
-						FileS3 fileS3 = new FileS3();
-						fileS3.setComprovantes(_comprovantes);
-						fileS3.setFileDTO(fileDTO);
-						fileS3.setOutputStream(pddComprovante.getOutstream());
-						fileS3.getFileDTO().setTipoDocumento(TipoDocumento.COMPROVANTE);
-						fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
-						fileS3.setPage(page);
-						files.add(fileS3);
+						_comprovantes.forEach(_comprovante ->{
+							try {
+							_comprovante = parser.save(_comprovante, service);
+							salvos.add(_comprovante);
+							}catch(Exception e ) {
+								log.error(e.getMessage());
+							}
+						});
+						uploadComprovante(_comprovantes, fileDTO, pddComprovante, page);
 					}
 				} catch (Exception e) {
 					Comprovante comprovanteErro = new Comprovante();
@@ -85,79 +69,55 @@ public class ParserComprovanteDefault {
 					erros.add(fileS3);
 				}
 			}
-			for(Comprovante c : salvar) {
-				try {
-					c = parser.save(c, service);
-					salvos.add(c);
-				}catch(Exception e ) {
-					log.error(e.getMessage());
-				}
-			}
-			log.info("Comprovantes salvos");
-			s3Service.uploadComprovante(files, TenantContext.getTenantSchema());
+			
+			
 			if(salvos.isEmpty()) {
 				throw new org.springframework.dao.DataIntegrityViolationException("comprovante já importado");
 			}
+			log.info("Comprovantes salvos");
 			return erros;
+	}
+	
+	private void uploadComprovante(List<Comprovante> comprovantes, FileDTO fileDTO, PPDocumentDTO pddComprovante, int page) {
+		FileS3 fileS3 = new FileS3();
+		fileS3.setComprovantes(comprovantes);
+		fileS3.setFileDTO(fileDTO);
+		fileS3.setOutputStream(pddComprovante.getOutstream());
+		fileS3.getFileDTO().setTipoDocumento(TipoDocumento.COMPROVANTE);
+		fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
+		fileS3.setPage(page);
+		s3Service.uploadComprovante(fileS3, TenantContext.getTenantSchema());
+	}
+
+	private List<PPDocumentDTO> parseComprovante(FileDTO fileDTO) {
+		InputStream stream = null;
+		try {
+			stream = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
+			PDDocument document = PDDocument.load(stream);
+			List<PPDocumentDTO> list = new ArrayList<>();
+			Splitter splitter = new Splitter();
+			PDFTextStripper stripper = new PdfReaderPreserveSpace();
+			for (PDDocument pdDocument : splitter.split(document)) {
+				ByteArrayOutputStream output = new ByteArrayOutputStream();
+				String comprovante = stripper.getText(pdDocument);
+				pdDocument.save(output);
+				PPDocumentDTO pddocumentDTO = new PPDocumentDTO(comprovante, output);
+				list.add(pddocumentDTO);
+				pdDocument.close();
+			}
+			document.close();
+			return list;
 		} catch (IOException e1) {
-			throw new MrContadorException("parsecomprovante.error", e1);
-		}finally {
-			if(first!= null) {
+			throw new FileException("parsecomprovante.error", fileDTO.getOriginalFilename(), e1);
+		} finally {
+			if (stream != null) {
 				try {
-					first.close();
+					stream.close();
 				} catch (IOException e) {
 					log.error(e.getMessage());
 				}
 			}
 		}
-
 	}
-
-	private ParserComprovante getParser(String codigoBancario) {
-		codigoBancario = MrContadorUtil.removeZerosFromInital(codigoBancario);
-		BancoCodigoBancario bcb = BancoCodigoBancario.find(codigoBancario);
-		switch (bcb) {
-		case BB:
-			return new ComprovanteBB();
-		case BRADESCO:
-			return new ComprovanteBradesco();
-		case CAIXA:
-			return new ComprovanteCaixa();
-		case CREDCREA:
-			return new ComprovanteCredCrea();
-		case ITAU:
-			return new ComprovanteItau();
-		case SANTANDER:
-			return new ComprovanteSantander();
-		case SICOOB:
-			return new ComprovanteSicoob();
-		case UNICRED:
-			return new ComprovanteUnicred();
-		case SICRED:
-			return new ComprovanteSicredi();
-		default:
-			throw new MrContadorException("parsercomprovante.notfound", codigoBancario);
-
-		}
-	}
-
-	private List<PPDocumentDTO> parseComprovante(InputStream stream) throws IOException {
-		PDDocument document = PDDocument.load(stream);
-		List<PPDocumentDTO> list = new ArrayList<>();
-		Splitter splitter = new Splitter();
-		PDFTextStripper stripper = new PdfReaderPreserveSpace();
-		for(PDDocument pdDocument : splitter.split(document)) {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			String comprovante = stripper.getText(pdDocument);
-			pdDocument.save(output);
-			PPDocumentDTO pddocumentDTO = new PPDocumentDTO(comprovante,output);
-			list.add(pddocumentDTO);
-			pdDocument.close();
-		}
-		document.close();
-		return list;
-
-	}
-
 
 }

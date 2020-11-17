@@ -13,18 +13,10 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
-import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class ComprovanteBB extends ComprovanteBanco{
 	
-	@Override
-	public Comprovante save(Comprovante comprovante, ComprovanteService service) {
-		comprovante = service.save(comprovante);
-		service.callComprovante(comprovante);
-	    return comprovante;
-	}
-
 	@Override
 	public List<Comprovante> parse(String comprovante, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws DiffException, ComprovanteException {

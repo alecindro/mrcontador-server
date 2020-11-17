@@ -9,27 +9,57 @@ import java.util.Map;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.extrato.banco.PdfBancoDoBrasil;
+import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
+import br.com.mrcontador.file.extrato.dto.OfxData;
+import br.com.mrcontador.file.extrato.dto.PdfData;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
+import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.util.MrContadorUtil;
 
-public abstract class PdfParser extends PdfReaderPreserveSpace{
+public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 	
 	protected DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	protected Map<String, Header> mapHeader;
 
-	public PdfParser() throws IOException {
+	public PdfParserExtrato() throws IOException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public abstract OfxDTO process(List<PDDocument> pages) throws IOException;
+	public OfxDTO process(List<PDDocument> pages) throws IOException {
+		int lineHeader = 9;
+		
+		if (pages.isEmpty()) {
+			throw new FileException("error.pdf.empty");
+		}
+		StringBuilder builder = new StringBuilder();
+		for (PDDocument page : pages) {
+			String pdfFileInText = super.getText(page);
+			builder.append(pdfFileInText);
+		}
+		String lines[] = builder.toString().split("\\n");
+		OfxDTO dto = parseDataBanco(lines, lineHeader);
+		dto.setDataList(parseBody(lines, lineHeader));
+		return dto;
+	}
+	
+	protected abstract void extrasFunctions(ExtratoService service, List<Extrato> extratos);
+	
+	
+	protected abstract TipoEntrada getTipo(String value);
+	
+	protected abstract void readLine(String line, PdfData data, int numberRow);
+	
+	protected abstract OfxDTO parseDataBanco(String[] lines, int lineHeader);
+	
+	protected abstract List<OfxData> parseBody(String[] lines, int lineHeader);
 	
 	protected void parseHeader(String lineHeader) {
-		mapHeader = new HashMap<String, PdfBancoDoBrasil.Header>();
+		mapHeader = new HashMap<String, Header>();
 		int endOfLine = lineHeader.length() - 1;
 		char[] characters = lineHeader.toCharArray();
 		Header header = new Header(0);

@@ -115,7 +115,9 @@ BEGIN
    END IF;
     
    END LOOP; 
-   
+     IF (vRETORNO > 0) THEN
+  SELECT ${schema}.processa_notafiscalgeral(CAST(vPARCEIROID AS int8)) INTO vQUANTIDADENOTA;
+  END IF;
 
   RETURN COALESCE(vRETORNO ,0);
 
