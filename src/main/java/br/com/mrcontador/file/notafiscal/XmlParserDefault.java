@@ -19,6 +19,7 @@ import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileParser;
 import br.com.mrcontador.file.TipoDocumento;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.ParceiroService;
@@ -45,21 +46,23 @@ public class XmlParserDefault implements FileParser {
 	private ArquivoService arquivoService;
 
 	@Override
-	public void process(FileDTO dto) throws Exception {
+	public String process(FileDTO dto) throws Exception {
 		InputStream doc = null;
 		try {
 			doc = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 			NotaDefault notaDefault = new DFPersister().read(NotaDefault.class, doc, false);
+			String periodo = "";
 			switch (notaDefault.getProtocolo().getVersao()) {
 			case "4.00":
-				processNFE40(dto);
+				periodo = processNFE40(dto);
 				break;
 			case "3.10":
-				processNFE301(dto);
+				periodo = processNFE301(dto);
 				break;
 			default:
 				break;
 			}
+			return periodo;
 		} catch (IOException e) {
 			throw new MrContadorException("notafiscal.notparsed", e.getCause());
 		} finally {
@@ -74,7 +77,7 @@ public class XmlParserDefault implements FileParser {
 
 	}
 
-	private void processNFE40(FileDTO dto) throws Exception {
+	private String processNFE40(FileDTO dto) throws Exception {
 		InputStream nota = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 		com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada = new DFPersister()
 				.read(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada.class, nota, false);
@@ -100,13 +103,13 @@ public class XmlParserDefault implements FileParser {
 		Arquivo xml = processXml(fileS3);
 		Arquivo pdf = processPDF(fileS3);
 		NotafiscalNfe400Mapper mapper = new NotafiscalNfe400Mapper();
-		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente,pdf,xml);
+		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
 		list.forEach(_nota->{
     		_nota = notafiscalService.save(_nota);
     		notafiscalService.callProcessaNotafiscal(_nota);
     	});
-		
-		s3Service.uploadNota(pdf, xml, nfNotaProcessada, dto.getOutputStream());
+		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list, SecurityUtils.getCurrentTenantHeader());
+		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 
 	private Arquivo processXml(FileS3 fileS3) {
@@ -135,7 +138,7 @@ public class XmlParserDefault implements FileParser {
 		return arquivoService.save(mapper.toEntity(fileS3.getFileDTO()));
 	}
 
-	private void processNFE301(FileDTO dto) throws Exception {
+	private String processNFE301(FileDTO dto) throws Exception {
 		InputStream nota = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 		com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada = new DFPersister()
 				.read(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada.class, nota, false);
@@ -160,12 +163,13 @@ public class XmlParserDefault implements FileParser {
 		Arquivo xml = processXml(fileS3);
 		Arquivo pdf = processPDF(fileS3);
 		NotafiscalNfe310Mapper mapper = new NotafiscalNfe310Mapper();
-		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente,pdf,xml);
+		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
 		list.forEach(_nota->{
     		_nota = notafiscalService.save(_nota);
     		notafiscalService.callProcessaNotafiscal(_nota);
     	});
-		s3Service.uploadNota(pdf, xml, nfNotaProcessada, dto.getOutputStream());
+		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(), list, SecurityUtils.getCurrentTenantHeader());
+		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 
 	private Parceiro findParceiro(String cnpj) {

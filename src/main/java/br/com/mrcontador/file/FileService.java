@@ -2,7 +2,6 @@ package br.com.mrcontador.file;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import br.com.mrcontador.file.planoconta.PdfParserPlanoConta;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
-import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
 
 @Service
@@ -81,9 +79,9 @@ public class FileService {
 		}
 	}
 
-	public void processNFE(FileDTO fileDTO) throws Exception {
+	public String processNFE(FileDTO fileDTO) throws Exception {
 		fileDTO.setTipoDocumento(TipoDocumento.NOTA);
-		xmlParserDefault.process(fileDTO);
+		return xmlParserDefault.process(fileDTO);
 
 	}
 
@@ -102,7 +100,7 @@ public class FileService {
 		}
 	}
 
-	public List<FileS3> processComprovante(FileDTO fileDTO, Agenciabancaria agenciabancaria) {
+	public String processComprovante(FileDTO fileDTO, Agenciabancaria agenciabancaria) {
 		validateConta(agenciabancaria);
 		return parserComprovante.process(fileDTO, agenciabancaria);
 	}

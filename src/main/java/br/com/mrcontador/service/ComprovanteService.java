@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.repository.ComprovanteRepository;
 
@@ -80,12 +81,19 @@ public class ComprovanteService {
     }
     
     @Async("taskExecutor")
-    public int callComprovante(Comprovante comprovante) {
-    	return comprovanteRepository.callComprovante(comprovante.getId());
+    public void callComprovante(List<Comprovante> comprovantes, String tenant) {
+    	TenantContext.setTenantSchema(tenant);
+    	for(Comprovante comprovante : comprovantes) {
+    	int result = comprovanteRepository.callComprovante(comprovante.getId());
+    	if(result > 0) {
+    		processadoTrue(comprovante);
+    	}
+    	}
     }
     
     @Async("taskExecutor")
-    public void callComprovanteGeral(Long parceiroId) {
+    public void callComprovanteGeral(Long parceiroId, String tenant) {
+    	TenantContext.setTenantSchema(tenant);
     	comprovanteRepository.callComprovanteGeral(parceiroId);
     }
 	

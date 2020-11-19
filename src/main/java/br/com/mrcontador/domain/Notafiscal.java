@@ -76,7 +76,7 @@ public class Notafiscal implements Serializable {
     @JsonIgnoreProperties(value = "notas", allowSetters = true)
     private Arquivo arquivo;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="arquivopdf_id")
     @JsonIgnoreProperties(value = "notas", allowSetters = true)
     private Arquivo arquivoPDF;

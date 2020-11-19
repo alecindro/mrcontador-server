@@ -40,6 +40,10 @@ public interface NotafiscalRepository extends JpaRepository<Notafiscal, Long>, J
 	  @Query(value="update notafiscal set processado = true where id = :notaId",nativeQuery = true)
 	  void processadoTrue(@Param("notaId") Long id);
 	  
+	  @Modifying(flushAutomatically = true)
+	  @Query(value="update notafiscal set arquivo_id = :arquivoId, arquivopdf_id= :arquivoPdfId  where id = :notaId",nativeQuery = true)
+	  void updateArquivo(@Param("notaId") Long id, @Param("arquivoId") Long arquivoId, @Param("arquivoPdfId") Long arquivoPdfId );
+	  
 	  @Query(value="select * from notafiscal n where  substring(not_cnpj,1,8) = substring(:cnpj,1,8) and  NOT_VALORPARCELA between :valorInicial and :valorFinal "
 	  		+ " and (not_dataparcela between :datainicial and  :datafinal) and tno_codigo = 0 and processado = false order by not_dataparcela asc", nativeQuery = true)
 		List<Notafiscal> find(@Param("cnpj") String cnpj, @Param("valorInicial") BigDecimal valorInicial, @Param("valorFinal") BigDecimal valorFinal, 

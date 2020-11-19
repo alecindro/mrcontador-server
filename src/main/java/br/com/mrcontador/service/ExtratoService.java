@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Extrato;
@@ -127,18 +129,24 @@ public class ExtratoService {
 	}
 
 	@Async("taskExecutor")
-	public void callExtratoAplicacao(Long agenciaId) {
+	public void callExtratoAplicacao(Long agenciaId, String tenant) {
+		TenantContext.setTenantSchema(tenant);
 		extratoRepository.callExtratoAplicacao(agenciaId);
 	}
 
 	@Async("taskExecutor")
-	public void callExtrato(Long extratoId) {
-		extratoRepository.callExtrato(extratoId);
+	public void callExtrato(List<Extrato> extratos, String tenant) {
+		TenantContext.setTenantSchema(tenant);
+		for(Extrato extrato : extratos)
+		extratoRepository.callExtrato(extrato.getId());
 	}
 
 	@Async("taskExecutor")
-	public void callRegraInteligent(Long parceiroId, String periodo) {
+	public void callRegraInteligent(Long parceiroId, Set<String> periodos, String tenant) {
+		TenantContext.setTenantSchema(tenant);
+		for(String periodo : periodos) {
 		extratoRepository.regraInteligent(parceiroId, periodo);
+		}
 	}
 
 }

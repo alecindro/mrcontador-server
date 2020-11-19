@@ -17,7 +17,6 @@ import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
-import br.com.mrcontador.service.dto.FileS3;
 
 public class PDFToString {
 	
@@ -58,12 +57,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {
+		String periodo =  p.process(dto, agencia);
 			
-			System.out.println(erro.toString());
-		}
+			System.out.println(periodo);
 	}
 	
 	public void printDoc() throws Exception {
@@ -110,12 +106,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {
-			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		
+		System.out.println(periodo);
 		
 	}
 	
@@ -131,12 +124,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {
-			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		
+		System.out.println(periodo);
 	}
 	
 	private void sicoob() throws Exception {
@@ -151,12 +141,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {
-			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		
+		System.out.println(periodo);
 	}
 	private void unicred() throws Exception {
 		Agenciabancaria agencia = new Agenciabancaria();
@@ -170,12 +157,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {
-			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		
+		System.out.println(periodo);
 	}
 	
 	private void credcrea() throws Exception {
@@ -190,12 +174,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {
-			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		
+		System.out.println(periodo);
 	}
 	
 	
@@ -213,12 +194,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {
-			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		
+		System.out.println(periodo);
 		
 	}
 	
@@ -234,11 +212,9 @@ public class PDFToString {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		
+		System.out.println(periodo);
 		
 	}
 	

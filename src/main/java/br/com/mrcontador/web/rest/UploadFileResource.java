@@ -1,7 +1,6 @@
 package br.com.mrcontador.web.rest;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -25,7 +24,6 @@ import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
-import br.com.mrcontador.service.dto.FileS3;
 import io.github.jhipster.web.util.HeaderUtil;
 
 @RestController
@@ -83,7 +81,7 @@ public class UploadFileResource {
 	}
 
 	@PostMapping("/upload/extrato")
-	public ResponseEntity<Void> uploadExtrato(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<String> uploadExtrato(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro,
 			@RequestParam(required = true, name = "idAgenciabancaria") Long idAgencia) throws Exception {
 		log.info("Processando Extrato: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
@@ -97,17 +95,16 @@ public class UploadFileResource {
 
 			FileDTO fileDTO = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
 					SecurityUtils.getCurrentTenantHeader(), parceiro.get());
-			fileService.processExtrato(fileDTO, agencia.get(), contentType);
+			String periodo = fileService.processExtrato(fileDTO, agencia.get(), contentType);
 			return ResponseEntity.created(new URI("/api/upload/extrato/")).headers(
-					HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadExtrato", file.getName()))
-					.build();
+					HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadExtrato", file.getName())).body(periodo);
 		} catch (org.springframework.dao.DataIntegrityViolationException e) {
 			throw new MrContadorException("extrato.imported");
 		}
 	}
 
 	@PostMapping("/upload/comprovante")
-	public ResponseEntity<Void> uploadComprovante(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<String> uploadComprovante(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro,
 			@RequestParam(required = true, name = "idAgenciabancaria") Long idAgencia) throws Exception {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
@@ -123,21 +120,17 @@ public class UploadFileResource {
 			FileDTO fileDTO = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
 					SecurityUtils.getCurrentTenantHeader(), parceiro.get());
 
-			List<FileS3> errors = fileService.processComprovante(fileDTO, agencia.get());
-			if (!errors.isEmpty()) {
-				throw new MrContadorException("alguns arquivos não foram processados");
-			}
+			String periodo = fileService.processComprovante(fileDTO, agencia.get());
 			return ResponseEntity
 					.created(new URI("/api/upload/comprovante/")).headers(HeaderUtil
-							.createEntityCreationAlert(applicationName, true, "uploadComprovante", file.getName()))
-					.build();
+							.createEntityCreationAlert(applicationName, true, "uploadComprovante", file.getName())).body(periodo);					
 		} catch (org.springframework.dao.DataIntegrityViolationException e) {
 			throw new MrContadorException("comprovante.imported");
 		}
 	}
 
 	@PostMapping("/upload/nf")
-	public ResponseEntity<Void> uploadNF(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<String> uploadNF(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro) throws Exception {
 		log.info("Processando arquivo: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
@@ -148,10 +141,9 @@ public class UploadFileResource {
 			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
 					SecurityUtils.getCurrentTenantHeader(), null);
 			dto.setParceiro(parceiro.get());
-			fileService.processNFE(dto);
+			String periodo = fileService.processNFE(dto);
 			return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
-					.headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName()))
-					.build();
+					.headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName())).body(periodo);
 		} catch (MrContadorException e) {
 			throw e;
 		} catch (org.springframework.dao.DataIntegrityViolationException e) {

@@ -11,7 +11,7 @@ import br.com.mrcontador.domain.Parceiro;
 
 public class NotafiscalNfe310Mapper  {
 
-	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente, Arquivo pdf, Arquivo xml) {
+	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente) {
 		List<Notafiscal> list = new ArrayList<>();
 		com.fincatto.documentofiscal.nfe310.classes.NFTipo nfTipo = nfe.getNota().getInfo().getIdentificacao().getTipo();
 		if(nfe.getNota().getInfo().getCobranca() == null || nfe.getNota().getInfo().getCobranca().getDuplicatas()==null) {
@@ -20,8 +20,6 @@ public class NotafiscalNfe310Mapper  {
 		}
 		for (com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaInfoDuplicata nfNotaInfoParcela : nfe.getNota().getInfo().getCobranca().getDuplicatas()) {
 			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente,true);
-			nf.setArquivoPDF(pdf);
-			nf.setArquivo(xml);
 			nf.setNotParcela(nfNotaInfoParcela.getNumeroDuplicata());
 			nf.setNotValorparcela(new BigDecimal(nfNotaInfoParcela.getValorDuplicata()));
 			nf.setNotDataparcela(nfNotaInfoParcela.getDataVencimento());

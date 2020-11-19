@@ -73,12 +73,8 @@ public class TesteSatanderComprovante {
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
 		ParserComprovanteDefault p = new ParserComprovanteDefault();
-		List<FileS3> errors =  p.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		System.out.println("========== "+ file + " ==================");
-		for(FileS3 erro : errors) {			
-			System.out.println(erro.toString());
-		}
+		String periodo =  p.process(dto, agencia);
+		System.out.println(periodo);
 	}
 	
 	private ByteArrayOutputStream load(String folder) throws IOException {

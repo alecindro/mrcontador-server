@@ -110,10 +110,8 @@ public class TestComprovante {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/santander/GerarPDF_04082020105944.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		List<FileS3> errors =  defaultParser.process(dto, agencia);
-		for(FileS3 erro : errors) {
-			System.out.println(erro.toString());
-		}
+		String periodo =  defaultParser.process(dto, agencia);
+		System.out.println(periodo);
 		
 	}
 	
@@ -154,11 +152,8 @@ public class TestComprovante {
 		dto.setUsuario(usuario);
 		dto.setContentType("application/pdf");
 		dto.setParceiro(parceiro);
-		List<FileS3> errors =  defaultParser.process(dto, agencia);
-		System.out.println("========== ERROS ==================");
-		for(FileS3 erro : errors) {			
-			System.out.println(erro.toString());
-		}
+		String periodo =  defaultParser.process(dto, agencia);
+		System.out.println(periodo);
 	}
 
 }

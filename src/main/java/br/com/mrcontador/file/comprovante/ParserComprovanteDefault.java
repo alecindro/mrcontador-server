@@ -15,16 +15,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
 public class ParserComprovanteDefault {
@@ -32,18 +33,21 @@ public class ParserComprovanteDefault {
 	@Autowired
 	private ComprovanteService service;
 	@Autowired
-	S3Service s3Service;
+	private S3Service s3Service;
+	private int page;
 
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
 
-	public List<FileS3> process(FileDTO fileDTO, Agenciabancaria agencia) {
+	public String process(FileDTO fileDTO, Agenciabancaria agencia) {
+			log.info("parse comprovantes");
+			page = 0;
 			List<PPDocumentDTO> textComprovantes = parseComprovante(fileDTO);
 			ParserComprovante parser = ParserComprovanteFactory.getParser(agencia.getBanCodigobancario());
 			List<FileS3> erros = new ArrayList<FileS3>();
-			List<Comprovante> salvos = new ArrayList<Comprovante>();
-			int page = 0;
+			List<FileS3> files = new ArrayList<>();
+			List<Comprovante> salvos = new ArrayList<Comprovante>();			
 			for (PPDocumentDTO pddComprovante : textComprovantes) {
-				page = page + 1;
+				page = page +1;
 				try {
 					List<Comprovante> _comprovantes = parser.parse(pddComprovante.getComprovante(), agencia, fileDTO.getParceiro());
 					if (_comprovantes != null && !_comprovantes.isEmpty()) {
@@ -51,11 +55,11 @@ public class ParserComprovanteDefault {
 							try {
 							_comprovante = parser.save(_comprovante, service);
 							salvos.add(_comprovante);
+							files.add(create(_comprovantes, fileDTO, pddComprovante, page));
 							}catch(Exception e ) {
 								log.error(e.getMessage());
 							}
 						});
-						uploadComprovante(_comprovantes, fileDTO, pddComprovante, page);
 					}
 				} catch (Exception e) {
 					Comprovante comprovanteErro = new Comprovante();
@@ -67,18 +71,22 @@ public class ParserComprovanteDefault {
 					fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
 					fileS3.setPage(page);
 					erros.add(fileS3);
+					log.error(e.getMessage());
 				}
 			}
-			
-			
 			if(salvos.isEmpty()) {
-				throw new org.springframework.dao.DataIntegrityViolationException("comprovante já importado");
+				throw new org.springframework.dao.DataIntegrityViolationException("comprovantes já importado");
+			}
+			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
+			if(!erros.isEmpty()) {
+				s3Service.uploadErro(erros, SecurityUtils.DEFAULT_TENANT);
 			}
 			log.info("Comprovantes salvos");
-			return erros;
+			return MrContadorUtil.periodo(salvos.stream().findFirst().get().getComDatapagamento());
+			
 	}
 	
-	private void uploadComprovante(List<Comprovante> comprovantes, FileDTO fileDTO, PPDocumentDTO pddComprovante, int page) {
+	private FileS3 create(List<Comprovante> comprovantes,FileDTO fileDTO, PPDocumentDTO pddComprovante, int page  ) {
 		FileS3 fileS3 = new FileS3();
 		fileS3.setComprovantes(comprovantes);
 		fileS3.setFileDTO(fileDTO);
@@ -86,8 +94,10 @@ public class ParserComprovanteDefault {
 		fileS3.getFileDTO().setTipoDocumento(TipoDocumento.COMPROVANTE);
 		fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
 		fileS3.setPage(page);
-		s3Service.uploadComprovante(fileS3, TenantContext.getTenantSchema());
+		return fileS3;
 	}
+	
+
 
 	private List<PPDocumentDTO> parseComprovante(FileDTO fileDTO) {
 		InputStream stream = null;

@@ -7,22 +7,21 @@ import java.util.List;
 import com.fincatto.documentofiscal.nfe400.classes.NFTipo;
 import com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaInfoParcela;
 
-import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
 
 
 public class NotafiscalNfe400Mapper {
 
-	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente, Arquivo pdf, Arquivo xml) {
+	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente) {
 		List<Notafiscal> list = new ArrayList<>();
 		NFTipo nfTipo = nfe.getNota().getInfo().getIdentificacao().getTipo();
 		if(nfe.getNota().getInfo().getCobranca() == null || nfe.getNota().getInfo().getCobranca().getParcelas()==null) {
-			list.add(parse(nfe, parceiro, nfTipo,isEmitente,false,pdf,xml));
+			list.add(parse(nfe, parceiro, nfTipo,isEmitente,false));
 			return list;
 		}
 		for (NFNotaInfoParcela nfNotaInfoParcela : nfe.getNota().getInfo().getCobranca().getParcelas()) {
-			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente,true, pdf,xml);	
+			Notafiscal nf = parse(nfe, parceiro, nfTipo,isEmitente,true);	
 			nf.setNotParcela(nfNotaInfoParcela.getNumeroParcela());
 			nf.setNotValorparcela(new BigDecimal(nfNotaInfoParcela.getValorParcela()));
 			nf.setNotDataparcela(nfNotaInfoParcela.getDataVencimento());
@@ -31,11 +30,9 @@ public class NotafiscalNfe400Mapper {
 		return list;
 	}
 	
-	private Notafiscal parse(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, NFTipo nfTipo, boolean isEmitente, boolean contemParcela, Arquivo pdf, Arquivo xml) {
+	private Notafiscal parse(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, NFTipo nfTipo, boolean isEmitente, boolean contemParcela) {
 		Notafiscal nf = new Notafiscal();
 		nf.setProcessado(false);
-		nf.setArquivo(xml);
-		nf.setArquivoPDF(pdf);
 		nf.setParceiro(parceiro);
 		nf.setTnoCodigo(Integer.valueOf(nfTipo.getCodigo()));
 		nf.setNotNumero(nfe.getNota().getInfo().getIdentificacao().getNumeroNota());

@@ -103,5 +103,9 @@ public class NotafiscalService {
     	return notafiscalRepository.find(cnpj, valor, valorFinal, datainicial, datafinal);
     }
     
+    public void updateArquivo(Long id, Long arquivoId, Long arquivoPdfId) {
+    	notafiscalRepository.updateArquivo(id, arquivoId, arquivoPdfId);
+    }
+    
    
 }
