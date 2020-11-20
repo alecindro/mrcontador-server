@@ -13,7 +13,6 @@ import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.repository.AgenciabancariaRepository;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.AgenciabancariaAplicacao;
 
 /**
@@ -129,7 +128,7 @@ public class AgenciabancariaService {
     	agencia.setTipoAgencia(TipoAgencia.APLICACAO);
     	agencia.setConta(aplicacao.getConta());
     	agencia = save(agencia);
-    	extratoService.callExtratoAplicacao(agenciabancaria.getId(), SecurityUtils.getCurrentTenantHeader());
+    	extratoService.callExtratoAplicacao(agenciabancaria.getId());
     	return agencia;
     }
 }

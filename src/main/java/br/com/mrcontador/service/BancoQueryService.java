@@ -15,7 +15,6 @@ import br.com.mrcontador.domain.Banco;
 import br.com.mrcontador.domain.Banco_;
 import br.com.mrcontador.repository.BancoRepository;
 import br.com.mrcontador.service.dto.BancoCriteria;
-import br.com.mrcontador.service.dto.BancoDTO;
 import io.github.jhipster.service.QueryService;
 
 /**

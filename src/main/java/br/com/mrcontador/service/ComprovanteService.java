@@ -7,11 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.repository.ComprovanteRepository;
 
@@ -80,27 +78,14 @@ public class ComprovanteService {
     	return comprovanteRepository.saveAll(comprovantes);
     }
     
-    @Async("taskExecutor")
-    public void callComprovante(List<Comprovante> comprovantes, String tenant) {
-    	TenantContext.setTenantSchema(tenant);
-    	for(Comprovante comprovante : comprovantes) {
-    	int result = comprovanteRepository.callComprovante(comprovante.getId());
-    	if(result > 0) {
-    		processadoTrue(comprovante);
-    	}
-    	}
+    public void callComprovante(Long comprovanteId) {
+    	comprovanteRepository.callComprovante(comprovanteId);
     }
     
-    @Async("taskExecutor")
-    public void callComprovanteGeral(Long parceiroId, String tenant) {
-    	TenantContext.setTenantSchema(tenant);
+    public void callComprovanteGeral(Long parceiroId) {
     	comprovanteRepository.callComprovanteGeral(parceiroId);
     }
-	
-	
-	public void processadoTrue(Comprovante comprovante) {
-		comprovanteRepository.processadoTrue(comprovante.getId());
-	}
+
 	
 	public void updateArquivo(Long id, Long arquivoId) {
 		comprovanteRepository.updateArquivo(id, arquivoId);

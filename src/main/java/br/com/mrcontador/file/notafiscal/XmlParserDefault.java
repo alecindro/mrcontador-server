@@ -21,6 +21,7 @@ import br.com.mrcontador.file.FileParser;
 import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ArquivoService;
+import br.com.mrcontador.service.FunctionService;
 import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -36,6 +37,7 @@ public class XmlParserDefault implements FileParser {
 
 	@Autowired
 	private NotafiscalService notafiscalService;
+	@Autowired FunctionService functionService;
 	@Autowired
 	private S3Service s3Service;
 	@Autowired
@@ -106,8 +108,9 @@ public class XmlParserDefault implements FileParser {
 		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
 		list.forEach(_nota->{
     		_nota = notafiscalService.save(_nota);
-    		notafiscalService.callProcessaNotafiscal(_nota);
+    		
     	});
+		functionService.callProcessaNotafiscal(list, SecurityUtils.getCurrentTenantHeader());
 		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list, SecurityUtils.getCurrentTenantHeader());
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
@@ -166,8 +169,9 @@ public class XmlParserDefault implements FileParser {
 		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
 		list.forEach(_nota->{
     		_nota = notafiscalService.save(_nota);
-    		notafiscalService.callProcessaNotafiscal(_nota);
+    		
     	});
+		functionService.callProcessaNotafiscal(list, SecurityUtils.getCurrentTenantHeader());
 		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(), list, SecurityUtils.getCurrentTenantHeader());
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}

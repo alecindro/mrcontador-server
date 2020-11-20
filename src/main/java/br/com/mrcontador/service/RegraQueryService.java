@@ -19,7 +19,6 @@ import br.com.mrcontador.domain.Regra;
 import br.com.mrcontador.domain.Regra_;
 import br.com.mrcontador.repository.RegraRepository;
 import br.com.mrcontador.service.dto.RegraCriteria;
-import br.com.mrcontador.service.dto.RegraDTO;
 import io.github.jhipster.service.QueryService;
 
 /**

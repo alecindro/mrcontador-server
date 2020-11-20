@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.service.ContaQueryService;
 import br.com.mrcontador.service.ContaService;
 import br.com.mrcontador.service.dto.ContaCriteria;
-import br.com.mrcontador.service.dto.ContaDTO;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 
@@ -55,9 +55,9 @@ public class ContaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of contas in body.
      */
     @GetMapping("/contas")
-    public ResponseEntity<List<ContaDTO>> getAllContas(ContaCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Conta>> getAllContas(ContaCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Contas by criteria: {}", criteria);
-        Page<ContaDTO> page = contaQueryService.findByCriteria(criteria, pageable);
+        Page<Conta> page = contaQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

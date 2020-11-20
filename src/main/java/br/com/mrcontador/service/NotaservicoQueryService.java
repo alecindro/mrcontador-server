@@ -18,7 +18,6 @@ import br.com.mrcontador.domain.Notaservico_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.NotaservicoRepository;
 import br.com.mrcontador.service.dto.NotaservicoCriteria;
-import br.com.mrcontador.service.dto.NotaservicoDTO;
 import io.github.jhipster.service.QueryService;
 
 /**

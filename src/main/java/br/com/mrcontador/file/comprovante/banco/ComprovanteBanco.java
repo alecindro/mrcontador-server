@@ -18,7 +18,6 @@ import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.DeltaType;
 import com.github.difflib.patch.Patch;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Parceiro;
@@ -29,6 +28,7 @@ import br.com.mrcontador.file.comprovante.ParserComprovante;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.FunctionService;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public abstract class ComprovanteBanco implements ParserComprovante {
@@ -39,7 +39,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 			return service.save(comprovante);
 	}
 	
-	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service) {
+	public void callFunction(List<Comprovante> comprovantes, FunctionService service) {
 		service.callComprovante(comprovantes, SecurityUtils.getCurrentTenantHeader());
     }
 	

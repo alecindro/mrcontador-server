@@ -19,7 +19,6 @@ import br.com.mrcontador.domain.Comprovante_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.ComprovanteRepository;
 import br.com.mrcontador.service.dto.ComprovanteCriteria;
-import br.com.mrcontador.service.dto.ComprovanteDTO;
 import io.github.jhipster.service.QueryService;
 
 /**

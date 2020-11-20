@@ -20,7 +20,6 @@ import br.com.mrcontador.domain.Extrato_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.ExtratoRepository;
 import br.com.mrcontador.service.dto.ExtratoCriteria;
-import br.com.mrcontador.service.dto.ExtratoDTO;
 import io.github.jhipster.service.QueryService;
 
 /**

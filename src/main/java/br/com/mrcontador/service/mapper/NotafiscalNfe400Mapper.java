@@ -9,6 +9,7 @@ import com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaInfoParcela;
 
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.util.MrContadorUtil;
 
 
 public class NotafiscalNfe400Mapper {
@@ -25,6 +26,7 @@ public class NotafiscalNfe400Mapper {
 			nf.setNotParcela(nfNotaInfoParcela.getNumeroParcela());
 			nf.setNotValorparcela(new BigDecimal(nfNotaInfoParcela.getValorParcela()));
 			nf.setNotDataparcela(nfNotaInfoParcela.getDataVencimento());
+			nf.setPeriodo(MrContadorUtil.periodo(nf.getNotDataparcela()));
 			list.add(nf);
 		}
 		return list;
@@ -46,6 +48,7 @@ public class NotafiscalNfe400Mapper {
 			nf.setNotDataparcela(nf.getNotDatasaida());
 			nf.setNotParcela("001");
 			nf.setNotValorparcela(nf.getNotValornota());
+			nf.setPeriodo(MrContadorUtil.periodo(nf.getNotDataparcela()));
 		}
 		if(isEmitente) {
 			nf.setTnoCodigo(1);
@@ -62,6 +65,7 @@ public class NotafiscalNfe400Mapper {
 					: nfe.getNota().getInfo().getEmitente().getCpf());
 				
 		}
+		
 		return nf;
 	}
 }

@@ -22,7 +22,6 @@ import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.domain.Socio_;
 import br.com.mrcontador.repository.ParceiroRepository;
 import br.com.mrcontador.service.dto.ParceiroCriteria;
-import br.com.mrcontador.service.dto.ParceiroDTO;
 import io.github.jhipster.service.QueryService;
 
 /**

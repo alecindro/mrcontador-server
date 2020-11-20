@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    io.github.jhipster: DEBUG
-    br.com.mrcontador: DEBUG
+    ROOT: ERROR
+    io.github.jhipster: ERROR
+    br.com.mrcontador: INFO
 
 spring:
   profiles:

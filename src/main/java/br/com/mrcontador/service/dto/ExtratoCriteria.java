@@ -50,6 +50,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
     private LongFilter arquivoId;
     
     private BooleanFilter processado;
+    
+    private StringFilter periodo;
 
     public ExtratoCriteria() {
     }
@@ -67,6 +69,7 @@ public class ExtratoCriteria implements Serializable, Criteria {
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
         this.arquivoId = other.arquivoId == null ? null : other.arquivoId.copy();
         this.processado = other.processado == null ? null : other.processado.copy();
+        this.periodo = other.periodo == null ? null : other.periodo.copy();
     }
 
     @Override
@@ -170,6 +173,14 @@ public class ExtratoCriteria implements Serializable, Criteria {
 	public void setProcessado(BooleanFilter processado) {
 		this.processado = processado;
 	}
+	
+	public StringFilter getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(StringFilter periodo) {
+		this.periodo = periodo;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -192,7 +203,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
             Objects.equals(parceiroId, that.parceiroId) &&
             Objects.equals(agenciabancariaId, that.agenciabancariaId) &&
             Objects.equals(arquivoId, that.arquivoId) &&
-            Objects.equals(processado, that.processado);
+            Objects.equals(processado, that.processado) &&
+            Objects.equals(periodo, that.periodo);
     }
 
     @Override
@@ -209,7 +221,8 @@ public class ExtratoCriteria implements Serializable, Criteria {
         parceiroId,
         agenciabancariaId,
         arquivoId,
-        processado);
+        processado,
+        periodo);
     }
 
     // prettier-ignore
@@ -228,6 +241,7 @@ public class ExtratoCriteria implements Serializable, Criteria {
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
                 (arquivoId != null ? "arquivoId=" + arquivoId + ", " : "") +
                 (processado != null ? "processado=" + processado + ", " : "") +
+                (periodo != null ? "periodo=" + periodo + ", " : "") +
             "}";
     }
 

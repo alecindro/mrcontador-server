@@ -61,6 +61,9 @@ public class Extrato implements Serializable {
     @Column(name = "info_adicional", length = 254)
     private String infoAdicional;
     
+    @Column(name = "periodo", length = 6)
+    private String periodo;
+    
     @Column(name = "processado")
     private Boolean processado;
 
@@ -251,10 +254,16 @@ public class Extrato implements Serializable {
 		public void setArquivo(Arquivo arquivo) {
 			this.arquivo = arquivo;
 		}
+		
+		public String getPeriodo() {
+			return periodo;
+		}
+
+		public void setPeriodo(String periodo) {
+			this.periodo = periodo;
+		}
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-   
 
 	@Override
     public boolean equals(Object o) {

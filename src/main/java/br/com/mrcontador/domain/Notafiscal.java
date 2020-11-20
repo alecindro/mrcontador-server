@@ -66,6 +66,9 @@ public class Notafiscal implements Serializable {
     
     @Column(name = "processado")
     private Boolean processado;
+    
+    @Column(name = "periodo", length = 6)
+    private String periodo;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
@@ -259,6 +262,15 @@ public class Notafiscal implements Serializable {
 	public Notafiscal processado(Boolean processado) {
 		this.processado = processado;
 		return this;
+	}
+	
+	
+	public String getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
 	}
 	
 	  // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

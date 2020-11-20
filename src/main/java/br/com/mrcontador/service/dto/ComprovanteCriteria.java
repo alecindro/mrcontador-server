@@ -47,6 +47,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
     private LongFilter agenciabancariaId;
     
     private BooleanFilter processado;
+    
+    private StringFilter periodo;
 
     public ComprovanteCriteria() {
     }
@@ -64,6 +66,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         this.parceiroId = other.parceiroId == null ? null : other.parceiroId.copy();
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
         this.processado = other.processado == null ? null : other.processado.copy();
+        this.periodo = other.periodo == null ? null : other.periodo.copy();
     }
 
     @Override
@@ -167,6 +170,14 @@ public class ComprovanteCriteria implements Serializable, Criteria {
 		this.processado = processado;
 	}
 
+	public StringFilter getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(StringFilter periodo) {
+		this.periodo = periodo;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -188,7 +199,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
             Objects.equals(comObservacao, that.comObservacao) &&
             Objects.equals(parceiroId, that.parceiroId)&&
         Objects.equals(agenciabancariaId, that.agenciabancariaId)&&
-        Objects.equals(processado, that.processado);
+        Objects.equals(processado, that.processado)&&
+        Objects.equals(periodo, that.periodo);
     }
 
     @Override
@@ -205,7 +217,8 @@ public class ComprovanteCriteria implements Serializable, Criteria {
         comObservacao,
         parceiroId,
         agenciabancariaId,
-        processado
+        processado,
+        periodo
         );
     }
 
@@ -225,6 +238,7 @@ public class ComprovanteCriteria implements Serializable, Criteria {
                 (parceiroId != null ? "parceiroId=" + parceiroId + ", " : "") +
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
                 (processado != null ? "processado=" + processado + ", " : "") +
+                (periodo != null ? "periodo=" + periodo + ", " : "") +
             "}";
     }
 

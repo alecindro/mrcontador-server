@@ -19,8 +19,8 @@ import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.security.SecurityUtils;
-import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.ExtratoService;
+import br.com.mrcontador.service.FunctionService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -30,7 +30,7 @@ public class ExtratoPdfFacade {
 	@Autowired
 	private ExtratoService extratoService;
 	@Autowired
-	private ComprovanteService comprovanteService;
+	private FunctionService functionService;
 
 	private static Logger log = LoggerFactory.getLogger(ExtratoPdfFacade.class);
 
@@ -41,15 +41,12 @@ public class ExtratoPdfFacade {
 				agenciaBancaria);
 		List<Extrato> extratos = extratoService.save(fileDTO, ofxDTO, agenciaBancaria);
 		Set<String> periodos = new HashSet<>();
-		String tenant = SecurityUtils.getCurrentTenantHeader();
-		extratoService.callExtratoAplicacao(agenciaBancaria.getId(), tenant);
-		extratoService.callExtrato(extratos, tenant);
 		extratos.forEach(extrato -> {
 			periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
 		});
-		extratoService.callRegraInteligent(fileDTO.getParceiro().getId(), periodos, tenant);
-		comprovanteService.callComprovanteGeral(fileDTO.getParceiro().getId(), SecurityUtils.getCurrentTenantHeader());
-		pdfParser.extrasFunctions(extratoService,extratos);
+		String tenant = SecurityUtils.getCurrentTenantHeader();
+		functionService.callExtrato(pdfParser, extratos,periodos,fileDTO.getParceiro().getId(), agenciaBancaria.getId(), tenant);
+		
 		return periodos.stream().findFirst().get();
 	}
 

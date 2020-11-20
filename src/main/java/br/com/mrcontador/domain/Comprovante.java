@@ -80,6 +80,9 @@ public class Comprovante implements Serializable {
     @Column(name = "processado")
     private Boolean processado;
     
+    @Column(name = "periodo", length = 6)
+    private String periodo;
+    
     @Column(name = "tipo_comprovante")
     @Enumerated(EnumType.STRING)
     private TipoComprovante tipoComprovante;
@@ -320,6 +323,14 @@ public class Comprovante implements Serializable {
 	public Comprovante multa(BigDecimal multa) {
 		this.multa = multa;
 		return this;
+	}
+	
+	public String getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
 	}
 
 	

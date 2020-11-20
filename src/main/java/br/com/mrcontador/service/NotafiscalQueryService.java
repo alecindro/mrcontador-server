@@ -18,7 +18,6 @@ import br.com.mrcontador.domain.Notafiscal_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.NotafiscalRepository;
 import br.com.mrcontador.service.dto.NotafiscalCriteria;
-import br.com.mrcontador.service.dto.NotafiscalDTO;
 import io.github.jhipster.service.QueryService;
 
 /**

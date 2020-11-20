@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mrcontador.domain.Banco;
 import br.com.mrcontador.repository.BancoRepository;
-import br.com.mrcontador.service.mapper.BancoMapper;
+
 
 /**
  * Service Implementation for managing {@link Banco}.
@@ -25,7 +25,7 @@ public class BancoService {
 
     private final BancoRepository bancoRepository;
 
-      public BancoService(BancoRepository bancoRepository, BancoMapper bancoMapper) {
+      public BancoService(BancoRepository bancoRepository) {
         this.bancoRepository = bancoRepository;
     }
 

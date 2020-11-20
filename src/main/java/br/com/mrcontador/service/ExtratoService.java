@@ -10,14 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.file.extrato.dto.OfxData;
@@ -25,6 +24,7 @@ import br.com.mrcontador.file.extrato.dto.PdfData;
 import br.com.mrcontador.repository.ExtratoRepository;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.util.MrContadorUtil;
 
 /**
  * Service Implementation for managing {@link Extrato}.
@@ -38,10 +38,14 @@ public class ExtratoService {
 	private final ExtratoRepository extratoRepository;
 
 	private final S3Service s3Service;
+	
+	private final ComprovanteService comprovanteService;
 
-	public ExtratoService(ExtratoRepository extratoRepository, S3Service s3Service) {
+
+	public ExtratoService(ExtratoRepository extratoRepository, S3Service s3Service, ComprovanteService comprovanteService) {
 		this.extratoRepository = extratoRepository;
 		this.s3Service = s3Service;
+		this.comprovanteService = comprovanteService;
 	}
 
 	/**
@@ -105,6 +109,7 @@ public class ExtratoService {
 			extrato.setExtNumerocontrole(ofxData.getControle());
 			extrato.setExtNumerodocumento(ofxData.getDocumento());
 			extrato.setAgenciaOrigem(ofxData.getAgenciaOrigem());
+			extrato.setPeriodo(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
 			if (ofxData instanceof PdfData) {
 				extrato.setInfoAdicional(((PdfData) ofxData).getInfAdicional());
 			}
@@ -128,24 +133,44 @@ public class ExtratoService {
 		return extratos;
 	}
 
-	@Async("taskExecutor")
-	public void callExtratoAplicacao(Long agenciaId, String tenant) {
-		TenantContext.setTenantSchema(tenant);
-		extratoRepository.callExtratoAplicacao(agenciaId);
+	public void callExtratoAplicacao(Long agenciaId) {
+		try {
+			extratoRepository.callExtratoAplicacao(agenciaId);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
-	@Async("taskExecutor")
-	public void callExtrato(List<Extrato> extratos, String tenant) {
-		TenantContext.setTenantSchema(tenant);
-		for(Extrato extrato : extratos)
-		extratoRepository.callExtrato(extrato.getId());
+	public void callExtrato(PdfParserExtrato pdfParser, List<Extrato> extratos, Set<String> periodos, Long parceiroId,  Long agenciaId) {
+		for (Extrato extrato : extratos) {
+			try {
+				extratoRepository.callExtrato(extrato.getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+		callExtratoAplicacao(agenciaId);
+		callRegraInteligent(parceiroId, periodos);
+		callComprovanteGeral(parceiroId);
+		pdfParser.extrasFunctions(this,extratos);
 	}
 
-	@Async("taskExecutor")
-	public void callRegraInteligent(Long parceiroId, Set<String> periodos, String tenant) {
-		TenantContext.setTenantSchema(tenant);
-		for(String periodo : periodos) {
-		extratoRepository.regraInteligent(parceiroId, periodo);
+	
+	private void callRegraInteligent(Long parceiroId, Set<String> periodos) {
+		for (String periodo : periodos) {
+			try {
+				extratoRepository.regraInteligent(parceiroId, periodo);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+	}
+	
+	private void callComprovanteGeral(Long parceiroId) {
+		try {
+			comprovanteService.callComprovanteGeral(parceiroId);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 

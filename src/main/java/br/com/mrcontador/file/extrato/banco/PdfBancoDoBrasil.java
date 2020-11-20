@@ -113,7 +113,7 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	}
 
 	@Override
-	protected void extrasFunctions(ExtratoService service, List<Extrato> extratos) {
+	public void extrasFunctions(ExtratoService service, List<Extrato> extratos) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -47,7 +47,7 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 		return dto;
 	}
 	
-	protected abstract void extrasFunctions(ExtratoService service, List<Extrato> extratos);
+	public abstract void extrasFunctions(ExtratoService service, List<Extrato> extratos);
 	
 	
 	protected abstract TipoEntrada getTipo(String value);

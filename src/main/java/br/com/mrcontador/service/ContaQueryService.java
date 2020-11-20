@@ -18,8 +18,6 @@ import br.com.mrcontador.domain.Conta_;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.repository.ContaRepository;
 import br.com.mrcontador.service.dto.ContaCriteria;
-import br.com.mrcontador.service.dto.ContaDTO;
-import br.com.mrcontador.service.mapper.ContaMapper;
 import io.github.jhipster.service.QueryService;
 
 /**
@@ -36,11 +34,8 @@ public class ContaQueryService extends QueryService<Conta> {
 
     private final ContaRepository contaRepository;
 
-    private final ContaMapper contaMapper;
-
-    public ContaQueryService(ContaRepository contaRepository, ContaMapper contaMapper) {
+        public ContaQueryService(ContaRepository contaRepository) {
         this.contaRepository = contaRepository;
-        this.contaMapper = contaMapper;
     }
 
     /**
@@ -49,10 +44,10 @@ public class ContaQueryService extends QueryService<Conta> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<ContaDTO> findByCriteria(ContaCriteria criteria) {
+    public List<Conta> findByCriteria(ContaCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Conta> specification = createSpecification(criteria);
-        return contaMapper.toDto(contaRepository.findAll(specification));
+        return contaRepository.findAll(specification);
     }
 
     /**
@@ -62,11 +57,10 @@ public class ContaQueryService extends QueryService<Conta> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<ContaDTO> findByCriteria(ContaCriteria criteria, Pageable page) {
+    public Page<Conta> findByCriteria(ContaCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Conta> specification = createSpecification(criteria);
-        return contaRepository.findAll(specification, page)
-            .map(contaMapper::toDto);
+        return contaRepository.findAll(specification, page);
     }
 
     /**
