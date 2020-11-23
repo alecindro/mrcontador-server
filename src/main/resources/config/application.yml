@@ -90,7 +90,7 @@ spring:
     execution:
       thread-name-prefix: mrcontador-server-task-
       pool:
-        core-size: 2
+        core-size: 50
         max-size: 50
         queue-capacity: 10000
     scheduling:

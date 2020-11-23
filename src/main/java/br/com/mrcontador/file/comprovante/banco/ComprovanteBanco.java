@@ -40,7 +40,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 	}
 	
 	public void callFunction(List<Comprovante> comprovantes, FunctionService service) {
-		service.callComprovante(comprovantes, SecurityUtils.getCurrentTenantHeader());
+		service.callComprovante(comprovantes);
     }
 	
 

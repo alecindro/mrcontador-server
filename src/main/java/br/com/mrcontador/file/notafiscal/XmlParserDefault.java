@@ -107,11 +107,13 @@ public class XmlParserDefault implements FileParser {
 		NotafiscalNfe400Mapper mapper = new NotafiscalNfe400Mapper();
 		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
 		list.forEach(_nota->{
+			_nota.setArquivo(xml);
+			_nota.setArquivoPDF(pdf);
     		_nota = notafiscalService.save(_nota);
     		
     	});
 		functionService.callProcessaNotafiscal(list, SecurityUtils.getCurrentTenantHeader());
-		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list, SecurityUtils.getCurrentTenantHeader());
+		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list);
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 
@@ -168,11 +170,13 @@ public class XmlParserDefault implements FileParser {
 		NotafiscalNfe310Mapper mapper = new NotafiscalNfe310Mapper();
 		List<Notafiscal> list = mapper.toEntity(nfNotaProcessada, parceiro, isEmitente);
 		list.forEach(_nota->{
+			_nota.setArquivo(xml);
+			_nota.setArquivoPDF(pdf);
     		_nota = notafiscalService.save(_nota);
     		
     	});
 		functionService.callProcessaNotafiscal(list, SecurityUtils.getCurrentTenantHeader());
-		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(), list, SecurityUtils.getCurrentTenantHeader());
+		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(), list);
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 

@@ -110,7 +110,7 @@ public class S3Service {
 	}
 
 	@Async("taskExecutor")
-	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml, com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada,ByteArrayOutputStream xmlByte, List<Notafiscal> notas, String tenant) {
+	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml, com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada,ByteArrayOutputStream xmlByte, List<Notafiscal> notas) {
 		NFDanfeReport nfDanfeReport = new NFDanfeReport(nfNotaProcessada);
 		try {
 			byte[] bytesArray = nfDanfeReport.gerarDanfeNFe(null);
@@ -120,12 +120,12 @@ public class S3Service {
 			log.error(e.getMessage(),e);
 		}
 		
-		TenantContext.setTenantSchema(tenant);
-		notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(), xml.getId(), pdf.getId()));
+		//TenantContext.setTenantSchema(tenant);
+		//notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(), xml.getId(), pdf.getId()));
 	}
 	
 	@Async("taskExecutor")
-	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml, com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada,ByteArrayOutputStream xmlByte, List<Notafiscal> notas, String tenant) {
+	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml, com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada,ByteArrayOutputStream xmlByte, List<Notafiscal> notas) {
 		NFDanfeReport310 nfDanfeReport = new NFDanfeReport310(nfNotaProcessada);
 		try {
 			byte[] bytesArray = nfDanfeReport.gerarDanfeNFe(null);
@@ -134,8 +134,8 @@ public class S3Service {
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 		}
-		TenantContext.setTenantSchema(tenant);
-		notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(), xml.getId(), pdf.getId()));
+		//TenantContext.setTenantSchema(tenant);
+		//notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(), xml.getId(), pdf.getId()));
 	}
 
 	public Arquivo uploadExtrato(FileDTO dto) {

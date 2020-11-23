@@ -10,13 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Extrato;
-import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.file.extrato.dto.OfxData;
@@ -30,7 +31,6 @@ import br.com.mrcontador.util.MrContadorUtil;
  * Service Implementation for managing {@link Extrato}.
  */
 @Service
-@Transactional
 public class ExtratoService {
 
 	private final Logger log = LoggerFactory.getLogger(ExtratoService.class);
@@ -54,6 +54,7 @@ public class ExtratoService {
 	 * @param extratoDTO the entity to save.
 	 * @return the persisted entity.
 	 */
+	@Transactional
 	public Extrato save(Extrato extrato) {
 		log.debug("Request to save Extrato : {}", extrato);
 		return extratoRepository.save(extrato);
@@ -88,11 +89,12 @@ public class ExtratoService {
 	 *
 	 * @param id the id of the entity.
 	 */
+	@Transactional
 	public void delete(Long id) {
 		log.debug("Request to delete Extrato : {}", id);
 		extratoRepository.deleteById(id);
 	}
-
+	@Transactional
 	public List<Extrato> save(FileDTO fileDTO, OfxDTO ofxDTO, Agenciabancaria agenciaBancaria) {
 		List<Extrato> extratos = new ArrayList<Extrato>();
 		if (ofxDTO.getDataList().isEmpty()) {
@@ -133,6 +135,7 @@ public class ExtratoService {
 		return extratos;
 	}
 
+	@Transactional
 	public void callExtratoAplicacao(Long agenciaId) {
 		try {
 			extratoRepository.callExtratoAplicacao(agenciaId);
@@ -141,34 +144,35 @@ public class ExtratoService {
 		}
 	}
 
-	public void callExtrato(PdfParserExtrato pdfParser, List<Extrato> extratos, Set<String> periodos, Long parceiroId,  Long agenciaId) {
-		for (Extrato extrato : extratos) {
+	@Transactional
+	public void callExtrato(List<Extrato> extratos) {
+		extratos.forEach(extrato ->{
 			try {
 				extratoRepository.callExtrato(extrato.getId());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
-		}
-		callExtratoAplicacao(agenciaId);
-		callRegraInteligent(parceiroId, periodos);
-		callComprovanteGeral(parceiroId);
-		pdfParser.extrasFunctions(this,extratos);
+		});
+		
 	}
 
-	
-	private void callRegraInteligent(Long parceiroId, Set<String> periodos) {
-		for (String periodo : periodos) {
+	@Transactional
+	public void callRegraInteligent(Long parceiroId, Set<String> periodos) {
+		periodos.forEach(periodo ->{
 			try {
 				extratoRepository.regraInteligent(parceiroId, periodo);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
-		}
+		});
+		
 	}
 	
-	private void callComprovanteGeral(Long parceiroId) {
+	@Async("taskExecutor")
+	public void callComprovante(Long notaId, String tenant) {
+		TenantContext.setTenantSchema(tenant);
 		try {
-			comprovanteService.callComprovanteGeral(parceiroId);
+			comprovanteService.callComprovante(notaId);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

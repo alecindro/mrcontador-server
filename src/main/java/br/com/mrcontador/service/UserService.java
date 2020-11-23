@@ -279,7 +279,7 @@ public class UserService {
      * <p>
      * This is scheduled to get fired everyday, at 01:00 (am).
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+  //  @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         userRepository
             .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBeforeAndDatasource(Instant.now().minus(3, ChronoUnit.DAYS), SecurityUtils.getCurrentTenantHeader())
