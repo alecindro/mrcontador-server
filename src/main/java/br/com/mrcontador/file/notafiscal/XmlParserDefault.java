@@ -112,16 +112,14 @@ public class XmlParserDefault implements FileParser {
 			_nota.setArquivo(xml);
 			_nota.setArquivoPDF(pdf);
     		_nota = notafiscalService.save(_nota);
-    		
-    	});
-		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list);
-		list.forEach(notaFiscal -> {
-			try {
-				notafiscalService.callProcessaNotafiscal(notaFiscal.getId());
+    		try {
+				notafiscalService.callProcessaNotafiscal(_nota.getId());
 			}catch(Exception e) {
 				log.error(e.getMessage(),e);
-			}
-		});
+			}	
+    	});
+		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list);
+		
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 

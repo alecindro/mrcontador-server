@@ -1,5 +1,6 @@
 package br.com.mrcontador.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +24,11 @@ public class ComprovanteService {
     private final Logger log = LoggerFactory.getLogger(ComprovanteService.class);
 
     private final ComprovanteRepository comprovanteRepository;
+    private final NotafiscalService notafiscalService;
 
-    public ComprovanteService(ComprovanteRepository comprovanteRepository) {
+    public ComprovanteService(ComprovanteRepository comprovanteRepository, NotafiscalService notafiscalService) {
         this.comprovanteRepository = comprovanteRepository;
+        this.notafiscalService = notafiscalService;
     }
 
     /**
@@ -81,12 +84,10 @@ public class ComprovanteService {
     public void callComprovante(Long comprovanteId) {
     	comprovanteRepository.callComprovante(comprovanteId);
     }
-    
-    public void callComprovanteGeral(Long parceiroId) {
-    	comprovanteRepository.callComprovanteGeral(parceiroId);
+    public void callNotaFiscal(Long parceiroId, LocalDate date) {
+    	notafiscalService.callProcessaNotafiscalGeral(parceiroId, date);
     }
-
-	
+    
 	public void updateArquivo(Long id, Long arquivoId) {
 		comprovanteRepository.updateArquivo(id, arquivoId);
 	}

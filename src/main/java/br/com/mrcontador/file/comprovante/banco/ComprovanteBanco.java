@@ -41,7 +41,9 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		comprovantes.forEach(comprovante ->{
 			service.callComprovante(comprovante.getId());	
 		});
-		
+		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
+		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
+		service.callNotaFiscal(comprovante.getParceiro().getId(), date);
     }
 	
 
