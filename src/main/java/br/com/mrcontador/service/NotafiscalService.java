@@ -101,5 +101,9 @@ public class NotafiscalService {
 	public void updateArquivo(Long id, Long arquivoId, Long arquivoPdfId) {
 		notafiscalRepository.updateArquivo(id, arquivoId, arquivoPdfId);
 	}
+	
+	public void callProcessaNotafiscalGeral(Long parceiroId, LocalDate date) {
+		notafiscalRepository.callProcessaNotafiscalGeral(parceiroId, date);
+	}
 
 }

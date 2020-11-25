@@ -31,7 +31,9 @@ public interface NotafiscalRepository extends JpaRepository<Notafiscal, Long>, J
 	Optional<Notafiscal> findById(Long id);
 	
 	@Query(nativeQuery = true, value = "select * from processa_notafiscal(?)")
-	int callProcessaNotafiscal(Long notaId);	
+	int callProcessaNotafiscal(Long notaId);
+	@Query(nativeQuery = true, value = "select * from processa_notafiscalgeral(?,?)")
+	int callProcessaNotafiscalGeral(Long parceiroId, LocalDate date);
 	
 	  @Modifying(flushAutomatically = true)
 	  @Query(value="update notafiscal set processado = true where id = :notaId",nativeQuery = true)

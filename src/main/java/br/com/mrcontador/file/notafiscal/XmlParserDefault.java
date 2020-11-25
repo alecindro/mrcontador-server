@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,6 @@ import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileParser;
 import br.com.mrcontador.file.TipoDocumento;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.FunctionService;
 import br.com.mrcontador.service.NotafiscalService;
@@ -46,6 +47,7 @@ public class XmlParserDefault implements FileParser {
 	private S3Properties properties;
 	@Autowired
 	private ArquivoService arquivoService;
+	private static Logger log = LoggerFactory.getLogger(XmlParserDefault.class);
 
 	@Override
 	public String process(FileDTO dto) throws Exception {
@@ -112,8 +114,14 @@ public class XmlParserDefault implements FileParser {
     		_nota = notafiscalService.save(_nota);
     		
     	});
-		functionService.callProcessaNotafiscal(list, SecurityUtils.getCurrentTenantHeader());
 		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list);
+		list.forEach(notaFiscal -> {
+			try {
+				notafiscalService.callProcessaNotafiscal(notaFiscal.getId());
+			}catch(Exception e) {
+				log.error(e.getMessage(),e);
+			}
+		});
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 
@@ -175,8 +183,14 @@ public class XmlParserDefault implements FileParser {
     		_nota = notafiscalService.save(_nota);
     		
     	});
-		functionService.callProcessaNotafiscal(list, SecurityUtils.getCurrentTenantHeader());
 		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(), list);
+		list.forEach(notaFiscal -> {
+			try {
+				notafiscalService.callProcessaNotafiscal(notaFiscal.getId());
+			}catch(Exception e) {
+				log.error(e.getMessage(),e);
+			}
+		});
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 

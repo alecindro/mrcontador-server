@@ -1,12 +1,17 @@
 package br.com.mrcontador.file.extrato;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Extrato;
@@ -22,12 +27,26 @@ import br.com.mrcontador.util.MrContadorUtil;
 
 public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 	
+	private final Logger log = LoggerFactory.getLogger(PdfParserExtrato.class);
 	protected DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	protected Map<String, Header> mapHeader;
 
 	public PdfParserExtrato() throws IOException {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void callExtrato(ExtratoService extratoService, List<Extrato> extratos, Set<String> periodos, Long parceiroId) {
+		LocalDateTime inicio = LocalDateTime.now();
+		log.info("Processando callExtrato");
+		extratoService.callExtrato(extratos,parceiroId, periodos);
+		extrasFunctions(extratoService,extratos);			
+		LocalDateTime fim = LocalDateTime.now();
+		long minutes = ChronoUnit.MINUTES.between(inicio, fim);
+		long hours = ChronoUnit.HOURS.between(inicio, fim);
+		long seconds = ChronoUnit.SECONDS.between(inicio, fim);
+		log.info("Finalizou Processando callExtrato {}:{}:{}", hours, minutes, seconds);
+		
 	}
 	
 	public OfxDTO process(List<PDDocument> pages) throws IOException {

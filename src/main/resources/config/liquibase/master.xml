@@ -43,22 +43,13 @@
    <changeSet author="alecindro" id="20">
     <sqlFile path="config/liquibase/changelog/notafiscal_function2.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-   <changeSet author="alecindro" id="21">
-    <sqlFile path="config/liquibase/changelog/notafiscal_function3.sql" splitStatements="false" relativeToChangelogFile="false"/>
-</changeSet>
    <changeSet author="alecindro" id="22">
     <sqlFile path="config/liquibase/changelog/notafiscal_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="23">
     <sqlFile path="config/liquibase/changelog/notafiscal_function_geral.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-   <changeSet author="alecindro" id="24">
-    <sqlFile path="config/liquibase/changelog/comprovante_geral_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
-</changeSet>
 <include file="config/liquibase/changelog/alter_agenciabancaria.sql" relativeToChangelogFile="false"/>
-   <changeSet author="alecindro" id="26">
-    <sqlFile path="config/liquibase/changelog/extrato_aplicacao_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
-</changeSet>
 <include file="config/liquibase/changelog/alter_extrato.sql" relativeToChangelogFile="false"/>
 <include file="config/liquibase/changelog/alter_parceiro.sql" relativeToChangelogFile="false"/>
 <include file="config/liquibase/changelog/alter_periodo.sql" relativeToChangelogFile="false"/>

@@ -26,9 +26,7 @@ import br.com.mrcontador.file.comprovante.DiffText;
 import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.ParserComprovante;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
-import br.com.mrcontador.service.FunctionService;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public abstract class ComprovanteBanco implements ParserComprovante {
@@ -39,8 +37,11 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 			return service.save(comprovante);
 	}
 	
-	public void callFunction(List<Comprovante> comprovantes, FunctionService service) {
-		service.callComprovante(comprovantes);
+	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service) {
+		comprovantes.forEach(comprovante ->{
+			service.callComprovante(comprovante.getId());	
+		});
+		
     }
 	
 

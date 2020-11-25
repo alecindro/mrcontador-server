@@ -22,7 +22,6 @@ import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
-import br.com.mrcontador.service.FunctionService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
@@ -33,8 +32,6 @@ public class ParserComprovanteDefault {
 
 	@Autowired
 	private ComprovanteService service;
-	@Autowired
-	private FunctionService functionService;
 	@Autowired
 	private S3Service s3Service;
 	private int page;
@@ -81,7 +78,7 @@ public class ParserComprovanteDefault {
 			if(salvos.isEmpty()) {
 				throw new org.springframework.dao.DataIntegrityViolationException("comprovantes já importado");
 			}
-			parser.callFunction(salvos, functionService);
+			parser.callFunction(salvos, service);
 			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
 			if(!erros.isEmpty()) {
 				s3Service.uploadErro(erros, SecurityUtils.DEFAULT_TENANT);
