@@ -23,13 +23,6 @@ import br.com.mrcontador.util.MrContadorUtil;
 
 public class PdfBancoDoBrasil extends PdfParserExtrato {
 
-	// private static final String DT_BALANCETE = "Dt. balancete";
-	// private static final String DT_MOVIMENTO = "Dt. movimento";
-	// private static final String AG_ORIGEM = "Ag. origem";
-	// private static final String LOTE = "Lote";
-	// private static final String HISTORICO = "Histórico";
-	// private static final String DOCUMENTO = "Documento";
-	// private static final String VALOR = "Valor R$";
 	private static final String AGENCIA= "Agência";
 	private static final String CONTA = "Conta corrente";
 	private static final String SALDO_ANTERIOR = "Saldo Anterior";
@@ -116,5 +109,12 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	public void extrasFunctions(ExtratoService service, List<Extrato> extratos) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+
+	@Override
+	protected int getLineHeader() {
+		return 9;
 	}
 }

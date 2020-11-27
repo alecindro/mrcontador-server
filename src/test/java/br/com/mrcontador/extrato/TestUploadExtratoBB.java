@@ -24,7 +24,7 @@ import br.com.mrcontador.service.dto.FileDTO;
 @SpringBootTest(classes = MrcontadorServerApp.class)
 @ActiveProfiles("dev")
 @RunWith(SpringRunner.class)
-public class TestUploadExtrato {
+public class TestUploadExtratoBB {
 	
 	@Autowired
 	private FileService fileService;

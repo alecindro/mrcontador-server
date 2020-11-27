@@ -117,6 +117,7 @@ public class S3Service {
 			uploadS3Bytes(pdf.getNome(), pdf.gets3Dir(), bytesArray);
 			uploadS3Bytes(xml.getNome(), xml.gets3Dir(), xmlByte.toByteArray());
 		} catch (Exception e) {
+			log.error("Arquivo não conseguiu processar: "+ pdf.getNomeOriginal());
 			log.error(e.getMessage(),e);
 		}
 		

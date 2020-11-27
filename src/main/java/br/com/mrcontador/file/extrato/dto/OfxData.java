@@ -57,5 +57,12 @@ public class OfxData {
 	public void setAgenciaOrigem(String agenciaOrigem) {
 		this.agenciaOrigem = agenciaOrigem;
 	}
+	@Override
+	public String toString() {
+		return "OfxData [historico=" + historico + ", valor=" + valor + ", lancamento=" + lancamento + ", controle="
+				+ controle + ", documento=" + documento + ", tipoEntrada=" + tipoEntrada + ", agenciaOrigem="
+				+ agenciaOrigem + "]";
+	}
+	
 	
 }

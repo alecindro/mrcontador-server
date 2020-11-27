@@ -178,8 +178,8 @@ try {
 		validateAgencia(agencia, conta, agenciabancaria);
 		comprovante.setProcessado(false);
 		count = count + 1;
-}catch (Exception e) {
-	e.printStackTrace();
+}catch (ComprovanteException e) {
+	throw e;
 }
 		return comprovante;
 	}

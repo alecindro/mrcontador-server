@@ -234,7 +234,16 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			}
 			if (line.contains("Descrição:")) {
 				String lineA = StringUtils.substringAfter(line, "Descrição:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(OBS);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Documento:")) {
+				String lineA = StringUtils.substringAfter(line, "Documento:").trim();
 				lineA = MrContadorUtil.removeDots(lineA);
+				lineA = MrContadorUtil.removeZerosFromInital(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);

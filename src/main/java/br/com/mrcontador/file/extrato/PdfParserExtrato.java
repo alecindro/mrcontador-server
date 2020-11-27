@@ -50,7 +50,7 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 	}
 	
 	public OfxDTO process(List<PDDocument> pages) throws IOException {
-		int lineHeader = 9;
+		int lineHeader = getLineHeader();
 		
 		if (pages.isEmpty()) {
 			throw new FileException("error.pdf.empty");
@@ -65,6 +65,8 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 		dto.setDataList(parseBody(lines, lineHeader));
 		return dto;
 	}
+	
+	protected abstract int getLineHeader();
 	
 	public abstract void extrasFunctions(ExtratoService service, List<Extrato> extratos);
 	

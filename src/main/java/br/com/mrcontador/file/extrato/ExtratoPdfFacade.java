@@ -47,11 +47,12 @@ public class ExtratoPdfFacade {
 	private OfxDTO process(PdfParserExtrato pdfParser, FileDTO fileDTO) {
 		InputStream first = null;
 		PDDocument document = null;
+		List<PDDocument> pages = null;
 		try {
 			first = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			Splitter splitter = new Splitter();
-			List<PDDocument> pages = splitter.split(document);
+			pages = splitter.split(document);
 			return pdfParser.process(pages);
 		} catch (IOException e) {
 			throw new FileException("extrato.parser.error", fileDTO.getOriginalFilename(), e);
@@ -63,9 +64,19 @@ public class ExtratoPdfFacade {
 				if (first != null) {
 					first.close();
 				}
+				
 
 			} catch (IOException e) {
 				log.error(e.getMessage());
+			}
+			if(pages != null) {
+				pages.forEach(page -> {
+					try {
+						page.close();
+					} catch (IOException e) {
+						log.error(e.getMessage());
+					}
+				});
 			}
 		}
 	}

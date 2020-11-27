@@ -23,9 +23,6 @@
     <field name="EmitenteNFe" class="java.lang.String">
         <fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/xNome]]></fieldDescription>
     </field>
-    <field name="EmitenteFantNFe" class="java.lang.String">
-        <fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/xFant]]></fieldDescription>
-    </field>
     <field name="Destinatario" class="java.lang.String">
         <fieldDescription><![CDATA[/nfeProc/NFe/infNFe/dest/xNome]]></fieldDescription>
     </field>
@@ -605,9 +602,8 @@
                     <textElement>
                         <font fontName="SansSerif" size="8"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[(
-$F{DestFone} 
-)]]></textFieldExpression>
+                    <textFieldExpression>
+                        <![CDATA[$F{DestFone}]]></textFieldExpression>
                 </textField>
                 <textField isBlankWhenNull="true">
                     <reportElement x="264" y="59" width="26" height="12" uuid="2d3efb40-b749-4ca8-8718-b782c411b59a"/>
@@ -1149,8 +1145,6 @@ $P{REPORT_DATA_SOURCE}).dataSource("/nfeProc/NFe/infNFe/cobr/dup")]]></dataSourc
                     <textFieldExpression><![CDATA[($F{TranspModFrete}.equals("0")) ? "0 - Emitente" :
 ($F{TranspModFrete}.equals("1")) ? "1 - Destinatário" :
 ($F{TranspModFrete}.equals("2")) ? "2 - Terceiros" :
-($F{TranspModFrete}.equals("3")) ? "3 - Prop. Rem." :
-($F{TranspModFrete}.equals("4")) ? "4 - Prop. Dest." :
 ($F{TranspModFrete}.equals("9")) ? "9 - Sem frete" : ""]]></textFieldExpression>
                 </textField>
                 <textField isBlankWhenNull="true">
@@ -1480,15 +1474,9 @@ $P{REPORT_DATA_SOURCE}).dataSource("/nfeProc/NFe/infNFe/cobr/dup")]]></dataSourc
                 <textElement textAlignment="Left" verticalAlignment="Top">
                     <font fontName="SansSerif" size="8" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{EmitLogradouro}+", "+
-$F{EmitNum}+ " - "+
-$F{EmitBairro}+", "+
-$F{EmitMunicipio}+", "+
-$F{EmitUF}+
-" - CEP: "+$F{EmitCEP}+
-" - Fone: "+
+                <textFieldExpression><![CDATA[$F{EmitLogradouro}+", "+$F{EmitNum}+ " - "+$F{EmitBairro}+", "+$F{EmitMunicipio}+", "+$F{EmitUF}+" - CEP: "+$F{EmitCEP}+" Fone: "+
 (
-$F{EmitFone} 
+	$F{EmitFone} == null ?  "" : "(" + $F{EmitFone}.substring(0, 2) + ") " + $F{EmitFone}.substring(2, 6) + "-" + $F{EmitFone}.substring(6, 10)
 )]]></textFieldExpression>
             </textField>
             <image hAlign="Center" onErrorType="Blank">
@@ -1496,9 +1484,9 @@ $F{EmitFone}
                 <imageExpression><![CDATA[$P{LOGO_EMPRESA}]]></imageExpression>
             </image>
             <textField>
-                <reportElement x="54" y="82" width="137" height="24" uuid="d8a357f1-c744-44d7-8e9f-1d44f0b18b33"/>
-                <textElement textAlignment="Center">
-                    <font fontName="SansSerif" size="8" isBold="false"/>
+                <reportElement x="57" y="60" width="131" height="46" uuid="d8a357f1-c744-44d7-8e9f-1d44f0b18b33"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="10" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{EmitenteNFe}]]></textFieldExpression>
             </textField>
@@ -1771,13 +1759,6 @@ $F{ChaveNFe}.substring(3, $F{ChaveNFe}.length()).substring(40, 44)]]></textField
                     <font fontName="SansSerif" size="10"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="54" y="57" width="137" height="24" uuid="9352ae7d-d27e-455a-9a9e-c5415fe0ab3d"/>
-                <textElement textAlignment="Center">
-                    <font fontName="SansSerif" size="10" isBold="true"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{EmitenteFantNFe}]]></textFieldExpression>
             </textField>
         </band>
     </pageHeader>
