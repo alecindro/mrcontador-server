@@ -20,6 +20,13 @@ public class MrContadorUtil {
 		}
 		return value;
 	}
+	
+	public static boolean isNegative(String value) {
+		if(Integer.signum(Integer.valueOf(onlyMoney(value)))==-1) {
+			return true;
+		}
+		return false;
+	}
 
 	public static boolean only9(String value) {
 		if (value != null) {

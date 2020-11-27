@@ -27,7 +27,6 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	private static final String CONTA = "Conta corrente";
 	private static final String SALDO_ANTERIOR = "Saldo Anterior";
 	private static final String SALDO_FINAL = "SALDO";
-	private static final String CREDITO = "SALDO";
 	private static Logger log = LoggerFactory.getLogger(PdfBancoDoBrasil.class);
 
 	public PdfBancoDoBrasil() throws IOException {

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -40,8 +41,8 @@ public class PDFToString {
 		document.close();*/
 		PDFToString PDFToString = new PDFToString();
 	//	
-  //PDFToString.printDoc();
-  PDFToString.caixa();
+  PDFToString.printDoc();
+  //PDFToString.caixa();
   
  }
 	
@@ -63,17 +64,20 @@ public class PDFToString {
 	}
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa/Aciplas - ND-33470-1 - 06.05.2020.pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\wtf sushi\\02.2020.pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		System.out.println(pages.size());
-		String comprovante = stripper.getText(pages.get(0));
+		for(PDDocument page : pages) {
+		String comprovante = stripper.getText(page);
 		String[] _lines = comprovante.split("\\r?\\n");
-		System.out.println(comprovante);
+		for(String line : _lines) {
+			System.out.println(line);
+		}
 		System.out.println("===== "+_lines.length+" =======");
-		
+		}
 		document.close();
 	}
 	

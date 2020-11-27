@@ -72,9 +72,6 @@ public class PdfBradesco extends PdfParserExtrato {
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.BRADESCO.name());
-		for (String line : lines) {
-			System.out.println(line);
-		}
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			String nextLine = StringUtils.normalizeSpace(lines[i + 1]);
@@ -125,7 +122,6 @@ public class PdfBradesco extends PdfParserExtrato {
 				data.setInfAdicional(infoAdd.substring(0, infoAdd.length() - 1));
 				}	
 			}
-			System.out.println(data.toString());
 			datas.add(data);
 		}
 		return datas;

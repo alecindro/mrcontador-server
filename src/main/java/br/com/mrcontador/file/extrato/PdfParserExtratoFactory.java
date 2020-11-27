@@ -8,6 +8,7 @@ import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.extrato.banco.PdfBancoDoBrasil;
 import br.com.mrcontador.file.extrato.banco.PdfBradesco;
+import br.com.mrcontador.file.extrato.banco.PdfSantander;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class PdfParserExtratoFactory {
@@ -21,6 +22,8 @@ public class PdfParserExtratoFactory {
 				return new PdfBancoDoBrasil();
 			case BRADESCO:
 				return new PdfBradesco();
+			case SANTANDER:
+				return new PdfSantander();
 			default:
 				throw new MrContadorException("extrato.pdf.banknotimplemented", agenciaBancaria.getBanCodigobancario());
 			}

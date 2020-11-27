@@ -50,7 +50,7 @@ spring:
       poolName: Hikari
       auto-commit: false
       connectionTimeout: 20000
-      maximumPoolSize: 100
+      maximumPoolSize: 10
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     #database-platform: io.github.jhipster.domain.util.FixedPostgreSQL95Dialect
