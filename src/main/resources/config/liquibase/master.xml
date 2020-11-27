@@ -43,6 +43,9 @@
    <changeSet author="alecindro" id="20">
     <sqlFile path="config/liquibase/changelog/notafiscal_function2.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
+   <changeSet author="alecindro" id="21">
+    <sqlFile path="config/liquibase/changelog/extrato_aplicacao_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
    <changeSet author="alecindro" id="22">
     <sqlFile path="config/liquibase/changelog/notafiscal_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>

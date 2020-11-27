@@ -27,6 +27,7 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	private static final String CONTA = "Conta corrente";
 	private static final String SALDO_ANTERIOR = "Saldo Anterior";
 	private static final String SALDO_FINAL = "SALDO";
+	private static final String CREDITO = "SALDO";
 	private static Logger log = LoggerFactory.getLogger(PdfBancoDoBrasil.class);
 
 	public PdfBancoDoBrasil() throws IOException {
@@ -85,12 +86,14 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 		String historico = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote), 40);
 		data.setHistorico(StringUtils.normalizeSpace(historico));
 		String documento = StringUtils.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico),
-				30);
-		data.setDocumento(MrContadorUtil.removeDots(StringUtils.normalizeSpace(documento)));
-		String valor = StringUtils.trim(StringUtils
-				.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico + documento), 16));
-		data.setTipoEntrada(getTipo(valor));
-		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
+				line.length());
+		String[] _valor =  StringUtils.split(documento);
+		data.setDocumento(MrContadorUtil.removeDots(StringUtils.normalizeSpace(_valor[0])));
+		
+		//String valor = StringUtils.trim(StringUtils
+		//		.left(StringUtils.substringAfter(line, dtbalancete + agencia + lote + historico + documento), line.length()));
+		data.setTipoEntrada(getTipo(_valor[2]));
+		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(_valor[1])));
 		if(data.getTipoEntrada().equals(TipoEntrada.DEBIT)) {
 			data.setValor(data.getValor().negate());
 		}
