@@ -3,6 +3,8 @@ package br.com.mrcontador.util;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Random;
 
@@ -20,6 +22,15 @@ public class MrContadorUtil {
 		}
 		return value;
 	}
+	
+    public static boolean isDate(String dateStr, DateTimeFormatter formatter) {        
+    	try {
+    		formatter.parse(dateStr);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+        return true;
+    }
 	
 	public static boolean isNegative(String value) {
 		if(Integer.signum(Integer.valueOf(onlyMoney(value)))==-1) {

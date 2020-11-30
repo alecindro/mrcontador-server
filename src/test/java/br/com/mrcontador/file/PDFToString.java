@@ -64,20 +64,26 @@ public class PDFToString {
 	}
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\wtf sushi\\02.2020.pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\avb kretzer\\extrato.pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		System.out.println(pages.size());
-		for(PDDocument page : pages) {
+		/*for(PDDocument page : pages) {
 		String comprovante = stripper.getText(page);
 		String[] _lines = comprovante.split("\\r?\\n");
 		for(String line : _lines) {
 			System.out.println(line);
 		}
 		System.out.println("===== "+_lines.length+" =======");
+		}*/
+		String comprovante = stripper.getText(pages.get(0));
+		String[] _lines = comprovante.split("\\r?\\n");
+		for(String line : _lines) {
+			System.out.println(line);
 		}
+		
 		document.close();
 	}
 	

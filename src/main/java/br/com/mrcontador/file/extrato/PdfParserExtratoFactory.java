@@ -9,10 +9,11 @@ import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.extrato.banco.PdfBancoDoBrasil;
 import br.com.mrcontador.file.extrato.banco.PdfBradesco;
 import br.com.mrcontador.file.extrato.banco.PdfSantander;
+import br.com.mrcontador.file.extrato.banco.PdfUnicred;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class PdfParserExtratoFactory {
-	
+
 	public static PdfParserExtrato getParser(Agenciabancaria agenciaBancaria) {
 		String codigoBancario = MrContadorUtil.removeZerosFromInital(agenciaBancaria.getBanCodigobancario());
 		BancoCodigoBancario bancoCodigoBancario = BancoCodigoBancario.find(codigoBancario);
@@ -24,6 +25,8 @@ public class PdfParserExtratoFactory {
 				return new PdfBradesco();
 			case SANTANDER:
 				return new PdfSantander();
+			case UNICRED:
+				return new PdfUnicred();
 			default:
 				throw new MrContadorException("extrato.pdf.banknotimplemented", agenciaBancaria.getBanCodigobancario());
 			}
