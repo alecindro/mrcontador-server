@@ -32,6 +32,7 @@ public class PdfBradesco extends PdfParserExtrato {
 	private static final int CRED_COLUMN = 112;
 	private static final int DEB_COLUMN = 143;
 	private static final int SALDO_COLUMN = 173;
+	private static final String BREAK = "Saldos Invest";
 	private static Logger log = LoggerFactory.getLogger(PdfBradesco.class);
 
 	public PdfBradesco() throws IOException {
@@ -92,6 +93,9 @@ public class PdfBradesco extends PdfParserExtrato {
 		for (int i = lineHeader; i < lines.length; i++) {
 			String line = lines[i];
 			PdfData data = new PdfData();
+			if(StringUtils.normalizeSpace(line).contains(BREAK)) {
+				break;
+			}
 			if (StringUtils.normalizeSpace(line).contains(SALDO_ANTERIOR)) {
 				continue;
 			}
@@ -109,8 +113,15 @@ public class PdfBradesco extends PdfParserExtrato {
 			data.setLancamento(lastDate);
 			readLine(line, data, i);
 			if (i < lines.length - 1) {
+				
 				StringBuilder infoAdd = new StringBuilder();
-				while (StringUtils.substring(lines[i + 1], DCTO_COLUMN, CRED_COLUMN).isBlank()) {
+				while (StringUtils.substring(lines[i + 1], DCTO_COLUMN, CRED_COLUMN).isBlank() && 
+						!StringUtils.normalizeSpace(lines[i+1]).contains(BREAK) &&
+						!StringUtils.normalizeSpace(lines[i+1]).contains(SALDO_ANTERIOR) &&
+						!StringUtils.deleteWhitespace(lines[i+1]).isEmpty() &&
+						!StringUtils.isNumeric(StringUtils.normalizeSpace(StringUtils.remove(StringUtils.substring(lines[i+1], DATA_COLUMN, DESCRICAO_COLUMN), "/"))) &&
+						!StringUtils.substring(lines[i+1], DATA_COLUMN, DESCRICAO_COLUMN).contains("Total"))
+						 {
 					infoAdd.append(StringUtils.normalizeSpace(lines[i + 1]));
 					infoAdd.append(StringUtils.SPACE);
 					i = i + 1;
@@ -118,9 +129,6 @@ public class PdfBradesco extends PdfParserExtrato {
 						break;
 					}
 				}
-				if(infoAdd.length()>0) {
-				data.setInfAdicional(infoAdd.substring(0, infoAdd.length() - 1));
-				}	
 			}
 			datas.add(data);
 		}
