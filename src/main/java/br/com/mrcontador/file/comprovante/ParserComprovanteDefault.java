@@ -1,15 +1,8 @@
 package br.com.mrcontador.file.comprovante;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.pdfbox.multipdf.Splitter;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
-import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.TipoDocumento;
-import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -41,8 +32,8 @@ public class ParserComprovanteDefault {
 	public String process(FileDTO fileDTO, Agenciabancaria agencia) {
 			log.info("parse comprovantes");
 			page = 0;
-			List<PPDocumentDTO> textComprovantes = parseComprovante(fileDTO);
 			ParserComprovante parser = ParserComprovanteFactory.getParser(agencia.getBanCodigobancario());
+			List<PPDocumentDTO> textComprovantes = parser.parseComprovante(fileDTO);			
 			List<FileS3> erros = new ArrayList<FileS3>();
 			List<FileS3> files = new ArrayList<>();
 			List<Comprovante> salvos = new ArrayList<Comprovante>();			
@@ -79,10 +70,10 @@ public class ParserComprovanteDefault {
 				throw new org.springframework.dao.DataIntegrityViolationException("comprovantes já importado");
 			}
 			parser.callFunction(salvos, service);
-			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
+	/*		s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
 			if(!erros.isEmpty()) {
 				s3Service.uploadErro(erros, SecurityUtils.DEFAULT_TENANT);
-			}
+			}*/
 			log.info("Comprovantes salvos");
 			return MrContadorUtil.periodo(salvos.stream().findFirst().get().getComDatapagamento());
 			
@@ -101,35 +92,5 @@ public class ParserComprovanteDefault {
 	
 
 
-	private List<PPDocumentDTO> parseComprovante(FileDTO fileDTO) {
-		InputStream stream = null;
-		try {
-			stream = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
-			PDDocument document = PDDocument.load(stream);
-			List<PPDocumentDTO> list = new ArrayList<>();
-			Splitter splitter = new Splitter();
-			PDFTextStripper stripper = new PdfReaderPreserveSpace();
-			for (PDDocument pdDocument : splitter.split(document)) {
-				ByteArrayOutputStream output = new ByteArrayOutputStream();
-				String comprovante = stripper.getText(pdDocument);
-				pdDocument.save(output);
-				PPDocumentDTO pddocumentDTO = new PPDocumentDTO(comprovante, output);
-				list.add(pddocumentDTO);
-				pdDocument.close();
-			}
-			document.close();
-			return list;
-		} catch (IOException e1) {
-			throw new FileException("parsecomprovante.error", fileDTO.getOriginalFilename(), e1);
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					log.error(e.getMessage());
-				}
-			}
-		}
-	}
-
+	
 }
