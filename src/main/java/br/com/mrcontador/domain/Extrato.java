@@ -78,7 +78,7 @@ public class Extrato implements Serializable {
     @JsonIgnoreProperties(value = "extratos", allowSetters = true)
     private Agenciabancaria agenciabancaria;
     
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = "extratos", allowSetters = true)
     private Arquivo arquivo;

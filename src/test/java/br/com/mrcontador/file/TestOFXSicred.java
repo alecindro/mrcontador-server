@@ -16,7 +16,7 @@ import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.file.extrato.OfxParserDefault;
+import br.com.mrcontador.file.extrato.OfxParserfacade;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
 
@@ -27,7 +27,7 @@ import br.com.mrcontador.service.dto.FileDTO;
 public class TestOFXSicred {
 
 	@Autowired
-	private OfxParserDefault ofxParserDefault;
+	private OfxParserfacade ofxParserDefault;
 
 	@Test
 	public void test() {

@@ -11,22 +11,17 @@ import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
-import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
-public class ExtratoPdfFacade {
-
-	@Autowired
-	private ExtratoService extratoService;
+public class ExtratoPdfFacade extends ExtratoFacade{
 
 	private static Logger log = LoggerFactory.getLogger(ExtratoPdfFacade.class);
 
@@ -35,7 +30,7 @@ public class ExtratoPdfFacade {
 		OfxDTO ofxDTO = process(pdfParser, fileDTO);
 		pdfParser.validate(ofxDTO.getBanco(), ofxDTO.getAgencia(), ofxDTO.getConta(), fileDTO.getParceiro(),
 				agenciaBancaria);
-		List<Extrato> extratos = extratoService.save(fileDTO, ofxDTO, agenciaBancaria);
+		List<Extrato> extratos = save(fileDTO, ofxDTO, agenciaBancaria);
 		Set<String> periodos = new HashSet<>();
 		extratos.forEach(extrato -> {
 			periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
@@ -80,6 +75,8 @@ public class ExtratoPdfFacade {
 			}
 		}
 	}
+	
+	
 
 
 }

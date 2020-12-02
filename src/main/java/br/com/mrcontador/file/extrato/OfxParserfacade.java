@@ -35,24 +35,18 @@ import br.com.mrcontador.file.extrato.banco.OfxSicred;
 import br.com.mrcontador.file.extrato.banco.OfxUniCred;
 import br.com.mrcontador.file.extrato.dto.ListOfxDto;
 import br.com.mrcontador.security.SecurityUtils;
-import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.dto.FileDTO;
-import br.com.mrcontador.service.file.S3Service;
 import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
-public class OfxParserDefault{
+public class OfxParserfacade extends ExtratoFacade{
 	
 	@Autowired
 	AggregateUnmarshaller<ResponseEnvelope> unmarshaller;
-	@Autowired
-	S3Service s3Service;
-	@Autowired
-	ExtratoService extratoService;
 	
-	private static Logger log = LoggerFactory.getLogger(OfxParserDefault.class);
+	private static Logger log = LoggerFactory.getLogger(OfxParserfacade.class);
 
-	public void process(FileDTO fileDTO,  Agenciabancaria agenciaBancaria) {
+	public String process(FileDTO fileDTO,  Agenciabancaria agenciaBancaria) {
 		List<BankStatementResponseTransaction> responses;
 		InputStream first = null;
 		InputStream second = null;
@@ -68,7 +62,7 @@ public class OfxParserDefault{
 			}
 			process(responses.get(0),second,listOfxDto,agenciaBancaria);
 			listOfxDto.getOfxDTOs().forEach(ofxDto ->{
-				extratoService.save(fileDTO,ofxDto, agenciaBancaria);
+				save(fileDTO,ofxDto, agenciaBancaria);
 			});
 			
 		}catch(MrContadorException e) {
@@ -92,6 +86,7 @@ public class OfxParserDefault{
 			} catch (IOException e) {
 			}
 		}
+		return "";
 	}
 	
 	private void process(BankStatementResponseTransaction transaction,InputStream stream, ListOfxDto listOfxDto, Agenciabancaria agenciaBancaria) throws IOException, OFXParseException {

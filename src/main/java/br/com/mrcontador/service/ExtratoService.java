@@ -38,13 +38,12 @@ public class ExtratoService {
 	private final ExtratoRepository extratoRepository;
 	private final NotafiscalService notafiscalService;
 
-	private final S3Service s3Service;
+	
 
 
 
-	public ExtratoService(ExtratoRepository extratoRepository, S3Service s3Service, NotafiscalService notafiscalService) {
+	public ExtratoService(ExtratoRepository extratoRepository, NotafiscalService notafiscalService) {
 		this.extratoRepository = extratoRepository;
-		this.s3Service = s3Service;
 		this.notafiscalService = notafiscalService;
 	}
 
@@ -94,48 +93,7 @@ public class ExtratoService {
 		log.debug("Request to delete Extrato : {}", id);
 		extratoRepository.deleteById(id);
 	}
-	@Transactional
-	public List<Extrato> save(FileDTO fileDTO, OfxDTO ofxDTO, Agenciabancaria agenciaBancaria) {
-		log.info("saving extratos");
-		List<Extrato> extratos = new ArrayList<Extrato>();
-		if (ofxDTO.getDataList().isEmpty()) {
-			return extratos;
-		}
-		Arquivo arquivo = s3Service.uploadExtrato(fileDTO);
-		for (OfxData ofxData : ofxDTO.getDataList()) {
-			Extrato extrato = new Extrato();
-			extrato.setAgenciabancaria(agenciaBancaria);
-			extrato.setArquivo(arquivo);
-			extrato.setExtDatalancamento(new java.sql.Date(ofxData.getLancamento().getTime()).toLocalDate());
-			extrato.setExtHistorico(ofxData.getHistorico());
-			extrato.setExtDescricao(ofxData.getTipoEntrada().toString());
-			extrato.setExtNumerocontrole(ofxData.getControle());
-			extrato.setExtNumerodocumento(ofxData.getDocumento());
-			extrato.setAgenciaOrigem(ofxData.getAgenciaOrigem());
-			extrato.setPeriodo(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
-			if (ofxData instanceof PdfData) {
-				extrato.setInfoAdicional(((PdfData) ofxData).getInfAdicional());
-			}
-			extrato.setParceiro(fileDTO.getParceiro());
-			if (ofxData.getTipoEntrada().equals(TipoEntrada.CREDIT)
-					|| ofxData.getValor().compareTo(BigDecimal.ZERO) > 0) {
-				extrato.setExtCredito(ofxData.getValor());
-			} else {
-				extrato.setExtDebito(ofxData.getValor());
-			}
-			try {
-				extrato = extratoRepository.save(extrato);
-				extratos.add(extrato);
-			} catch (Exception e) {
-				log.error(e.getMessage());
-			}
-		}
-		if (extratos.isEmpty()) {
-			throw new org.springframework.dao.DataIntegrityViolationException("extrato já importado");
-		}
-		return extratos;
-	}
-
+	
 
 	@Transactional
 	public void callExtrato(List<Extrato> extratos, Long parceiroId, Set<String> periodos) {
