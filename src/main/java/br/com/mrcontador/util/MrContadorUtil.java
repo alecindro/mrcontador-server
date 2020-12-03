@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,17 @@ import br.com.mrcontador.file.TipoDocumento;
 public class MrContadorUtil {
 
 	private static Random random = new Random();
+	
+	private static Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+	public static boolean isMoney(String value) {
+	    if (value == null) {
+	        return false; 
+	    }
+	    value = value.replace(".", "");
+		value = value.replace(",", ".");
+	    return pattern.matcher(value).matches();
+	}
 
 	public static String onlyNumbers(String value) {
 		if (value != null) {

@@ -5,7 +5,7 @@ import br.com.mrcontador.erros.MrContadorException;
 public enum BancoCodigoBancario {
 
 	BB("1"), BRADESCO("237"), CAIXA("104"), CREDCREA("85"), ITAU("341"), SANTANDER("33"), SICOOB("756"),ITAU2("999999999"),
-	UNICRED("136"), SICRED("748");
+	UNICRED("136"), SICRED("748"), SAFRA("422");
 	
 	private String codigoBancario;
 	

@@ -18,6 +18,7 @@ import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public class PDFToString {
 	
@@ -41,8 +42,9 @@ public class PDFToString {
 		document.close();*/
 		PDFToString PDFToString = new PDFToString();
 	//	
-  PDFToString.printDoc();
+ PDFToString.printDoc();
   //PDFToString.caixa();
+
   
  }
 	
@@ -64,7 +66,7 @@ public class PDFToString {
 	}
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\CEF Restaurante da Familia\\02.2020.pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\fuzz\\banco_safra\\05.2020 .pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
