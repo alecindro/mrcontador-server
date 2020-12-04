@@ -165,10 +165,13 @@ public class MrContadorUtil {
 		}
 		pattern = org.apache.commons.lang3.StringUtils.deleteWhitespace(pattern);
 		value = org.apache.commons.lang3.StringUtils.deleteWhitespace(value);
+		value = removeDigit(value);
 		value = removeZerosFromInital(value.trim());
+		value = onlyNumbers(value);
+		pattern = removeDigit(value);
 		pattern = removeZerosFromInital(pattern.trim());
 		pattern = onlyNumbers(pattern);
-		value = onlyNumbers(value);
+		
 		if (value.equalsIgnoreCase(pattern)) {
 			return true;
 		}
@@ -200,6 +203,10 @@ public class MrContadorUtil {
 
 	public static String periodo(LocalDate localDate) {
 		return localDate.getMonthValue() + "" + localDate.getYear();
+	}
+	
+	public static String removeDigit(String value) {
+		return StringUtils.splitByCharacterType(value)[0];
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ComprovanteService;
@@ -53,6 +54,8 @@ public class ParserComprovanteDefault {
 							}
 						});
 					}
+				} catch (ComprovanteException e) {
+					throw e;
 				} catch (Exception e) {
 					Comprovante comprovanteErro = new Comprovante();
 					comprovanteErro.setAgenciabancaria(agencia);
@@ -70,10 +73,10 @@ public class ParserComprovanteDefault {
 				throw new org.springframework.dao.DataIntegrityViolationException("comprovantes já importado");
 			}
 			parser.callFunction(salvos, service);
-	/*		s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
+			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
 			if(!erros.isEmpty()) {
 				s3Service.uploadErro(erros, SecurityUtils.DEFAULT_TENANT);
-			}*/
+			}
 			log.info("Comprovantes salvos");
 			return MrContadorUtil.periodo(salvos.stream().findFirst().get().getComDatapagamento());
 			

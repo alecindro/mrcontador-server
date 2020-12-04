@@ -11,6 +11,7 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.domain.TipoAgencia;
+import br.com.mrcontador.erros.AgenciaException;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.extrato.ExtratoPdfFacade;
@@ -106,7 +107,7 @@ public class FileService {
 	
 	private void validateConta(Agenciabancaria agencia) {
 		if(!agencia.getTipoAgencia().equals(TipoAgencia.CONTA)) {
-			throw new MrContadorException("agencia.not.valida");
+			throw new AgenciaException("agencia.not.valida");
 		}
 	}
 
