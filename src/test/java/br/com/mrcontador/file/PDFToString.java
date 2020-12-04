@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -18,7 +19,6 @@ import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
-import br.com.mrcontador.util.MrContadorUtil;
 
 public class PDFToString {
 	
@@ -43,6 +43,7 @@ public class PDFToString {
 		PDFToString PDFToString = new PDFToString();
 	//	
  PDFToString.printDoc();
+//System.out.println(new DateFormatSymbols(new Locale("pt", "BR")).getShortMonths()[1]);
   //PDFToString.caixa();
 
   
@@ -66,7 +67,7 @@ public class PDFToString {
 	}
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\fuzz\\banco_safra\\05.2020 .pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\MOTO BOMBAS\\Extrato_1575-129067-03-12-2020.pdf"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();

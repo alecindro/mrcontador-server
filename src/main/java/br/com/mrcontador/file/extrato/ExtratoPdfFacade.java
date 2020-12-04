@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Extrato;
-import br.com.mrcontador.file.FileException;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
@@ -50,7 +50,7 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 			pages = splitter.split(document);
 			return pdfParser.process(pages);
 		} catch (IOException e) {
-			throw new FileException("extrato.parser.error", fileDTO.getOriginalFilename(), e);
+			throw new ExtratoException("extrato.parser.error", fileDTO.getOriginalFilename(), e);
 		} finally {
 			try {
 				if(document != null) {

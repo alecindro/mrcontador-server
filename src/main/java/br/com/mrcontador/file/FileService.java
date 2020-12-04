@@ -89,14 +89,13 @@ public class FileService {
 		validateConta(agenciabancaria);
 		fileDTO.setTipoDocumento(TipoDocumento.EXTRATO);
 		String media = com.google.common.net.MediaType.parse(contentType).subtype();
-		if (media != "pdf" && media != "octet-stream") {
+		if (media != "pdf") {
 			throw new MrContadorException("ofx.notextrato");
 		}
 		if (media == "pdf") {
 			return pdfParserDefault.process(fileDTO, agenciabancaria);
 		} else {
 			throw new MrContadorException("ofx.notextrato");
-			//ofxParserDefault.process(fileDTO, agenciabancaria);
 		}
 	}
 

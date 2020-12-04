@@ -16,7 +16,8 @@ import org.slf4j.LoggerFactory;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.erros.AgenciaException;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.file.extrato.dto.OfxData;
@@ -179,27 +180,28 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 		}
 
 	}
-	public void validate(String banco, String agencia, String conta, Parceiro parceiro, Agenciabancaria agenciaBancaria) {		
+	public void validate(String banco, String agencia, String conta, Parceiro parceiro, Agenciabancaria agenciaBancaria) {	
+		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {
+			throw new ExtratoException("parceiro.notequals", parceiro.getParRazaosocial());
+		}
 		if (agencia != null) {
 			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia(), agencia) && !MrContadorUtil.only9(agencia)) {
-				throw new MrContadorException("agencia.notequals");
+				throw new AgenciaException("agencia.notequals");
 			}
 		}
 		if(banco != null) {
 			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getBanCodigobancario(),banco) && !MrContadorUtil.only9(banco)) {				
-				throw new MrContadorException("banco.notequals");
+				throw new AgenciaException("banco.notequals");
 			}
 		}
 		if(conta != null) {
 			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeNumero(), conta)) {
 				if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia()+agenciaBancaria.getAgeNumero(),conta)&& !MrContadorUtil.only9(conta)){
-				throw new MrContadorException("conta.notequals");
+				throw new AgenciaException("conta.notequals");
 				}
 			}
 		}
-		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {
-			throw new MrContadorException("parceiro.notequals");
-		}
+	
 
 	}
 

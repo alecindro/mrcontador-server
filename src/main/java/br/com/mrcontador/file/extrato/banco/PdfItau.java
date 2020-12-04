@@ -23,21 +23,21 @@ import br.com.mrcontador.util.MrContadorUtil;
 
 public class PdfItau extends PdfParserExtrato {
 
-	private static final String AGENCIA = "AGÊNCIA";
-	private static final String CONTA = "CONTA CORRENTE";
-	private static final String SALDO_ANTERIOR = "SALDO ANTERIOR";
-	private static final int DATA_COLUMN = 13;
-	private static final int DESCRICAO_COLUMN = 33;
-	private static final int DCTO_COLUMN = 89;
-	private static final int CRED_COLUMN = 112;
-	private static final int DEB_COLUMN = 143;
-	private static final int SALDO_COLUMN = 173;
-	private static final String BREAK = "Saldos Invest";
+	private static final String AGENCIA = "Agência/Conta:";
+	private static final String SALDO = "SALDO";
+	private static final int DATA_COLUMN = 10;
+	private static final int D_COLUMN = 25;
+	private static final int DESCRICAO_COLUMN = 38;
+	private static final int DCTO_COLUMN = 96;
+	private static final int VALUE_COLUMN = 141;
+	private static final int SALDO_COLUMN = 234;
+	private static final String PERIODO = "Extrato de";
 	private static Logger log = LoggerFactory.getLogger(PdfItau.class);
+	private DataItau dataItau;
 
 	public PdfItau() throws IOException {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override
@@ -55,18 +55,19 @@ public class PdfItau extends PdfParserExtrato {
 	@Override
 	protected void readLine(String line, PdfData data, int numberRow) {
 		log.info("Linha {} ", numberRow);
+		String actualDate = StringUtils.normalizeSpace(StringUtils.substring(line, DATA_COLUMN, D_COLUMN));
+		data.setLancamento(Date.valueOf(dataItau.getDataLancamento(actualDate)));
 		String historico = StringUtils.substring(line, DESCRICAO_COLUMN, DCTO_COLUMN);
 		data.setHistorico(StringUtils.normalizeSpace(historico));
-		String documento = StringUtils.substring(line, DCTO_COLUMN, CRED_COLUMN);
+		String documento = StringUtils.substring(line, DCTO_COLUMN, VALUE_COLUMN);
 		data.setDocumento(MrContadorUtil.removeDots(StringUtils.normalizeSpace(documento)));
-		String valor = StringUtils.substring(line, CRED_COLUMN, DEB_COLUMN);
-		if (!valor.isBlank()) {
-			data.setTipoEntrada(TipoEntrada.CREDIT);
-		} else {
-			valor = StringUtils.substring(line, DEB_COLUMN, SALDO_COLUMN).trim();
+		String valor = StringUtils.substring(line, VALUE_COLUMN, SALDO_COLUMN).trim();
+		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
+		int signum = data.getValor().signum();
+		data.setTipoEntrada(TipoEntrada.CREDIT);
+		if (signum == -1) {
 			data.setTipoEntrada(TipoEntrada.DEBIT);
 		}
-		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 	}
 
 	@Override
@@ -75,10 +76,14 @@ public class PdfItau extends PdfParserExtrato {
 		dto.setBanco(BancoCodigoBancario.ITAU.name());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
+			if(line.contains(PERIODO)) {
+				String periodoInicial = StringUtils.substringBefore(StringUtils.substringAfter(line, PERIODO).trim(),StringUtils.SPACE);
+				dataItau = new DataItau(periodoInicial);
+			}
 			if (line.contains(AGENCIA)) {
-				String agenciaConta = StringUtils.substringAfter(line, AGENCIA);
-				dto.setAgencia(StringUtils.substringBefore(agenciaConta, StringUtils.SPACE).trim());
-				dto.setConta(StringUtils.substringAfter(line, CONTA).trim());
+				String[] agenciaConta = StringUtils.split(StringUtils.substringAfter(line, AGENCIA),"/");
+				dto.setAgencia(agenciaConta[0].trim());
+				dto.setConta(agenciaConta[1].trim());
 			}
 		}
 		return dto;
@@ -87,47 +92,21 @@ public class PdfItau extends PdfParserExtrato {
 	@Override
 	protected List<OfxData> parseBody(String[] lines, int lineHeader) {
 		List<OfxData> datas = new ArrayList<>();
-		Date lastDate = null;
 		for (int i = lineHeader; i < lines.length; i++) {
 			String line = lines[i];
 			PdfData data = new PdfData();
-			if(StringUtils.normalizeSpace(line).contains(BREAK)) {
-				break;
-			}
-			if (StringUtils.normalizeSpace(line).contains(SALDO_ANTERIOR)) {
+		
+			if (StringUtils.deleteWhitespace(StringUtils.substring(line, DESCRICAO_COLUMN, DCTO_COLUMN)).contains(SALDO)) {
 				continue;
 			}
 			if (StringUtils.deleteWhitespace(line).isEmpty()) {
 				continue;
 			}
-			if (!StringUtils.isNumeric(StringUtils.normalizeSpace(StringUtils.remove(StringUtils.substring(line, DATA_COLUMN, DESCRICAO_COLUMN), "/")))
-					&& !StringUtils.substring(line, DATA_COLUMN, DESCRICAO_COLUMN).isBlank()) {
+			if (!StringUtils.isNumeric(StringUtils.normalizeSpace(StringUtils.remove(StringUtils.substring(line, DATA_COLUMN, D_COLUMN), "/")))
+					|| StringUtils.substring(line, VALUE_COLUMN, SALDO_COLUMN).isBlank()) {
 				continue;
 			}
-			String actualDate = StringUtils.normalizeSpace(StringUtils.substring(line, DATA_COLUMN, DESCRICAO_COLUMN));
-			if (StringUtils.isNumeric(StringUtils.remove(actualDate, "/"))) {
-				lastDate = Date.valueOf(LocalDate.parse(StringUtils.trim(actualDate), dateFormatter));
-			}
-			data.setLancamento(lastDate);
 			readLine(line, data, i);
-			if (i < lines.length - 1) {
-				
-				StringBuilder infoAdd = new StringBuilder();
-				while (StringUtils.substring(lines[i + 1], DCTO_COLUMN, CRED_COLUMN).isBlank() && 
-						!StringUtils.normalizeSpace(lines[i+1]).contains(BREAK) &&
-						!StringUtils.normalizeSpace(lines[i+1]).contains(SALDO_ANTERIOR) &&
-						!StringUtils.deleteWhitespace(lines[i+1]).isEmpty() &&
-						!StringUtils.isNumeric(StringUtils.normalizeSpace(StringUtils.remove(StringUtils.substring(lines[i+1], DATA_COLUMN, DESCRICAO_COLUMN), "/"))) &&
-						!StringUtils.substring(lines[i+1], DATA_COLUMN, DESCRICAO_COLUMN).contains("Total"))
-						 {
-					infoAdd.append(StringUtils.normalizeSpace(lines[i + 1]));
-					infoAdd.append(StringUtils.SPACE);
-					i = i + 1;
-					if (i == lines.length) {
-						break;
-					}
-				}
-			}
 			datas.add(data);
 		}
 		return datas;
@@ -135,8 +114,29 @@ public class PdfItau extends PdfParserExtrato {
 
 	@Override
 	protected int getLineHeader() {
-		// TODO Auto-generated method stub
-		return 5;
+		return 6;
+	}
+	
+	public class DataItau {
+
+		private LocalDate periodoFinal;
+
+		public DataItau(String first) {
+			periodoFinal = LocalDate.parse(first, dateFormatter);
+		}
+
+		public LocalDate getDataLancamento(String dataLancamento) {
+			String[] diaMes = StringUtils.split(dataLancamento, "/");
+			Integer dia = Integer.valueOf(diaMes[0]);
+			Integer mes = Integer.valueOf(diaMes[1]);
+
+			if (dia - periodoFinal.getDayOfMonth() < 0 && mes - periodoFinal.getDayOfMonth() < 0) {
+				periodoFinal = periodoFinal.withDayOfMonth(dia).withMonth(mes).withYear(periodoFinal.getYear() + 1);
+				return periodoFinal;
+			}
+			periodoFinal = periodoFinal.withDayOfMonth(dia).withMonth(mes).withYear(periodoFinal.getYear());
+			return periodoFinal;
+		}
 	}
 
 }
