@@ -1,9 +1,6 @@
 package br.com.mrcontador.service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,17 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mrcontador.domain.Agenciabancaria;
-import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Extrato;
-import br.com.mrcontador.file.extrato.TipoEntrada;
-import br.com.mrcontador.file.extrato.dto.OfxDTO;
-import br.com.mrcontador.file.extrato.dto.OfxData;
-import br.com.mrcontador.file.extrato.dto.PdfData;
 import br.com.mrcontador.repository.ExtratoRepository;
-import br.com.mrcontador.service.dto.FileDTO;
-import br.com.mrcontador.service.file.S3Service;
-import br.com.mrcontador.util.MrContadorUtil;
 
 /**
  * Service Implementation for managing {@link Extrato}.
@@ -105,24 +93,10 @@ public class ExtratoService {
 				log.error(e.getMessage(), e);
 			}
 		});
-		try {
-			log.info("callRegraInteligent");
-		callRegraInteligent(parceiroId, periodos);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-		try {
-			log.info("callProcessaNotafiscalGeral");
-		LocalDate min = extratos.stream().min(Comparator.comparing(Extrato::getExtDatalancamento)).get().getExtDatalancamento();
-		min = min.minusMonths(4);
-		callProcessaNotafiscalGeral(parceiroId, min);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
 	}
 
 	@Transactional
-	private void callRegraInteligent(Long parceiroId, Set<String> periodos) {
+	public void callRegraInteligent(Long parceiroId, Set<String> periodos) {
 		periodos.forEach(periodo ->{
 			try {
 				extratoRepository.regraInteligent(parceiroId, periodo);
@@ -133,14 +107,49 @@ public class ExtratoService {
 		
 	}
 	
-	private void callProcessaNotafiscalGeral(Long parceiroId, LocalDate date) {
+	@Transactional
+	public void callProcessaNotafiscalGeral(Long parceiroId, LocalDate date) {
 		notafiscalService.callProcessaNotafiscalGeral(parceiroId, date);
 	}
 	
 	@Transactional
-	public void callExtratoAplicacao(Long agenciaId) {
+	public void callExtratoAplicacaoBB(Long agenciaId) {
 		try {
-			extratoRepository.callExtratoAplicacao(agenciaId);
+			extratoRepository.callExtratoAplicacaoBB(agenciaId);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+	
+	@Transactional
+	public void callExtratoAplicacaoBradesco(Long agenciaId) {
+		try {
+			extratoRepository.callExtratoAplicacaoBradesco(agenciaId);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+	
+	@Transactional
+	public void callExtraFunctionsSantander(Long extratoId) {
+		try {
+			extratoRepository.callExtraFunctionsSantander(extratoId);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+	@Transactional
+	public void callExtraFunctionsBradesco(Long extratoId) {
+		try {
+			extratoRepository.callExtraFunctionsBradesco(extratoId);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+	@Transactional
+	public void callExtraFunctionsBB(Long extratoId) {
+		try {
+			extratoRepository.callExtraFunctionsBB(extratoId);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

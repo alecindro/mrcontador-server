@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
@@ -41,8 +42,9 @@ public class PdfBradesco extends PdfParserExtrato {
 	}
 
 	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos) {
-		// TODO Auto-generated method stub
+	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
+		service.callExtratoAplicacaoBradesco(agencia.getId());
+		extratos.forEach(ext->service.callExtraFunctionsBradesco(ext.getId()));
 
 	}
 

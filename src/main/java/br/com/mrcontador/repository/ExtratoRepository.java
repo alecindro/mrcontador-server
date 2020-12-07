@@ -34,8 +34,20 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@Query(nativeQuery = true, value = "select processa_extrato(?,?)")
 	int callExtrato(Long extratoId, Long agenciaId);
 	
-	@Query(nativeQuery = true, value = "select extrato_aplicacao_function(?)")
-	int callExtratoAplicacao(Long agenciaId);
+	@Query(nativeQuery = true, value = "select aplicacaoBB_function(?)")
+	int callExtratoAplicacaoBB(Long agenciaId);
+	
+	@Query(nativeQuery = true, value = "select extraBB_function(?)")
+	int callExtraFunctionsBB(Long extratoId);
+	
+	@Query(nativeQuery = true, value = "select extraBradesco_function(?)")
+	int callExtraFunctionsBradesco(Long extratoId);
+	
+	@Query(nativeQuery = true, value = "select extraSantander_function(?)")
+	int callExtraFunctionsSantander(Long extratoId);
+	
+	@Query(nativeQuery = true, value = "select aplicacaoBradesco_function(?)")
+	int callExtratoAplicacaoBradesco(Long agenciaId);
 
 	@Modifying(flushAutomatically = true)
 	@Query(value = "update extrato set processado = true where id = :extratoId", nativeQuery = true)

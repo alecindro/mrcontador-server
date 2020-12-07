@@ -44,7 +44,7 @@
     <sqlFile path="config/liquibase/changelog/notafiscal_function2.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="21">
-    <sqlFile path="config/liquibase/changelog/extrato_aplicacao_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+    <sqlFile path="config/liquibase/changelog/extra_functions/aplicacaoBB_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="22">
     <sqlFile path="config/liquibase/changelog/notafiscal_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
@@ -57,6 +57,18 @@
 <include file="config/liquibase/changelog/alter_parceiro.sql" relativeToChangelogFile="false"/>
 <include file="config/liquibase/changelog/alter_periodo.sql" relativeToChangelogFile="false"/>
 <include file="config/liquibase/changelog/data2.sql" relativeToChangelogFile="false"/>
+<changeSet author="alecindro" id="31">
+    <sqlFile path="config/liquibase/changelog/extra_functions/aplicacaoBradesco_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+   <changeSet author="alecindro" id="31">
+    <sqlFile path="config/liquibase/changelog/extra_functions/extra_functionsBB.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="31">
+    <sqlFile path="config/liquibase/changelog/extra_functions/extra_functionsBRADESCO.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+   <changeSet author="alecindro" id="31">
+    <sqlFile path="config/liquibase/changelog/extra_functions/extra_functionsSantander.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

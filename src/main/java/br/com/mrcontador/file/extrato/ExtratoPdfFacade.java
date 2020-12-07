@@ -36,6 +36,7 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 			periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
 		});
 		pdfParser.callExtrato(extratoService,extratos,periodos,fileDTO.getParceiro().getId());
+		pdfParser.extrasFunctions(extratoService, extratos);
 		return periodos.stream().findFirst().get();
 	}
 

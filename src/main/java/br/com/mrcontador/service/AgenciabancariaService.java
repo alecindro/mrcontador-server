@@ -128,7 +128,7 @@ public class AgenciabancariaService {
     	agencia.setTipoAgencia(TipoAgencia.APLICACAO);
     	agencia.setConta(aplicacao.getConta());
     	agencia = save(agencia);
-    	extratoService.callExtratoAplicacao(agenciabancaria.getId());
+    	//extratoService.callExtratoAplicacao(agenciabancaria.getId());
     	return agencia;
     }
 }

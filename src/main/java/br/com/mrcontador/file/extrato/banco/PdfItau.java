@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
@@ -41,7 +42,7 @@ public class PdfItau extends PdfParserExtrato {
 	}
 
 	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos) {
+	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
 		// TODO Auto-generated method stub
 
 	}

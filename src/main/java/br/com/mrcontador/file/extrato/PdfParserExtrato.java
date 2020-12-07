@@ -1,9 +1,11 @@
 package br.com.mrcontador.file.extrato;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +36,12 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 
 	public PdfParserExtrato() throws IOException {
 		super();
-		// TODO Auto-generated constructor stub
-	}
+}
 	
 	public void callExtrato(ExtratoService extratoService, List<Extrato> extratos, Set<String> periodos, Long parceiroId) {
 		LocalDateTime inicio = LocalDateTime.now();
 		log.info("Processando callExtrato");
 		extratoService.callExtrato(extratos,parceiroId, periodos);
-		extrasFunctions(extratoService,extratos);			
 		LocalDateTime fim = LocalDateTime.now();
 		long minutes = ChronoUnit.MINUTES.between(inicio, fim);
 		long hours = ChronoUnit.HOURS.between(inicio, fim);
@@ -69,7 +69,7 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 	
 	protected abstract int getLineHeader();
 	
-	public abstract void extrasFunctions(ExtratoService service, List<Extrato> extratos);
+	public abstract void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia);
 	
 	
 	protected abstract TipoEntrada getTipo(String value);
@@ -79,6 +79,29 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 	protected abstract OfxDTO parseDataBanco(String[] lines, int lineHeader);
 	
 	protected abstract List<OfxData> parseBody(String[] lines, int lineHeader);
+	
+	protected void callRegraInteligent(ExtratoService service, Long parceiroId, Set<String> periodos) {
+		try {
+			log.info("callRegraInteligent");
+			service.callRegraInteligent(parceiroId, periodos);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		
+	}
+
+	
+	protected void callProcessaNotafiscalGeral(ExtratoService service, Long parceiroId, List<Extrato> extratos) {
+		try {
+		//	log.info("callProcessaNotafiscalGeral");
+		LocalDate min = extratos.stream().min(Comparator.comparing(Extrato::getExtDatalancamento)).get().getExtDatalancamento();
+			min = min.minusMonths(4);
+		service.callProcessaNotafiscalGeral(parceiroId, min);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		
+	}
 	
 	protected void parseHeader(String lineHeader) {
 		mapHeader = new HashMap<String, Header>();

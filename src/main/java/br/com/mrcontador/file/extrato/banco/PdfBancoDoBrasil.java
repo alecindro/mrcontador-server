@@ -5,12 +5,15 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
@@ -108,8 +111,9 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	}
 
 	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos) {
-		// TODO Auto-generated method stub
+	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
+		service.callExtratoAplicacaoBB(agencia.getId());
+		extratos.forEach(ext -> service.callExtraFunctionsBB(ext.getId()));
 		
 	}
 
@@ -119,4 +123,9 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	protected int getLineHeader() {
 		return 9;
 	}
+
+	
+
+
+
 }
