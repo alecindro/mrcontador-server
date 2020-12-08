@@ -115,7 +115,7 @@ public class PdfSantander extends PdfParserExtrato {
 			return parseDataBancoEmpresarial(lines, lineHeader);
 		}
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.SANTANDER.name());
+		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA)) {
@@ -128,7 +128,7 @@ public class PdfSantander extends PdfParserExtrato {
 	
 	private OfxDTO parseDataBancoEmpresarial(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.SANTANDER.name());
+		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA)) {
@@ -184,6 +184,12 @@ public class PdfSantander extends PdfParserExtrato {
 		return datas;
 	}
 	
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoSantander(extratos, parceiroId);
+   }
 	
 
 }

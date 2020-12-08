@@ -76,7 +76,7 @@ public class PdfCredicrea extends PdfParserExtrato {
 	@Override
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.CREDCREA.name());
+		dto.setBanco(BancoCodigoBancario.CREDCREA.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);			
 			if (line.contains(AGENCIA) && line.contains(CONTA)) {
@@ -113,5 +113,12 @@ public class PdfCredicrea extends PdfParserExtrato {
 	protected int getLineHeader() {
 		return 7;
 	}
+	
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoCredicrea(extratos, parceiroId);
+   }
 
 }

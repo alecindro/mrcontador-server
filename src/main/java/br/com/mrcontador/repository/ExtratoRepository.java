@@ -31,11 +31,29 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@Query("FROM Extrato AS ex LEFT JOIN FETCH ex.arquivo WHERE ex.id = ?1")
 	Optional<Extrato> findById(Long id);
 
-	@Query(nativeQuery = true, value = "select processa_extrato(?,?)")
-	int callExtrato(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionBB(?,?)")
+	int callExtratoBB(Long extratoId, Long agenciaId);
 	
-	@Query(nativeQuery = true, value = "select aplicacaoBB_function(?)")
-	int callExtratoAplicacaoBB(Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionBRADESCO(?,?)")
+	int callExtratoBradesco(Long extratoId, Long agenciaId);
+	
+	@Query(nativeQuery = true, value = "select extrato_functionSANTANDER(?,?)")
+	int callExtratoSantander(Long extratoId, Long agenciaId);
+	
+	@Query(nativeQuery = true, value = "select extrato_functionCEF(?,?)")
+	int callExtratoCef(Long extratoId, Long agenciaId);
+
+	@Query(nativeQuery = true, value = "select extrato_functionCREDICREA(?,?)")
+	int callExtratoCredicrea(Long extratoId, Long agenciaId);
+
+	@Query(nativeQuery = true, value = "select extrato_functionITAU(?,?)")
+	int callExtratoItau(Long extratoId, Long agenciaId);
+
+	@Query(nativeQuery = true, value = "select extrato_functionSAFRA(?,?)")
+	int callExtratoSafra(Long extratoId, Long agenciaId);
+
+	@Query(nativeQuery = true, value = "select extrato_functionUNICRED(?,?)")
+	int callExtratoUnicred(Long extratoId, Long agenciaId);
 	
 	@Query(nativeQuery = true, value = "select extraBB_function(?)")
 	int callExtraFunctionsBB(Long extratoId);
@@ -46,9 +64,6 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@Query(nativeQuery = true, value = "select extraSantander_function(?)")
 	int callExtraFunctionsSantander(Long extratoId);
 	
-	@Query(nativeQuery = true, value = "select aplicacaoBradesco_function(?)")
-	int callExtratoAplicacaoBradesco(Long agenciaId);
-
 	@Modifying(flushAutomatically = true)
 	@Query(value = "update extrato set processado = true where id = :extratoId", nativeQuery = true)
 	void processadoTrue(@Param("extratoId") Long id);

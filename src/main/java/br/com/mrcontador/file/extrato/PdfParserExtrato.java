@@ -2,9 +2,7 @@ package br.com.mrcontador.file.extrato;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -38,17 +36,7 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 		super();
 }
 	
-	public void callExtrato(ExtratoService extratoService, List<Extrato> extratos, Set<String> periodos, Long parceiroId) {
-		LocalDateTime inicio = LocalDateTime.now();
-		log.info("Processando callExtrato");
-		extratoService.callExtrato(extratos,parceiroId, periodos);
-		LocalDateTime fim = LocalDateTime.now();
-		long minutes = ChronoUnit.MINUTES.between(inicio, fim);
-		long hours = ChronoUnit.HOURS.between(inicio, fim);
-		long seconds = ChronoUnit.SECONDS.between(inicio, fim);
-		log.info("Finalizou Processando callExtrato {}:{}:{}", hours, minutes, seconds);
-		
-	}
+	protected abstract void callExtrato(ExtratoService extratoService, List<Extrato> extratos, Long parceiroId);
 	
 	public OfxDTO process(List<PDDocument> pages) throws IOException {
 		int lineHeader = getLineHeader();

@@ -69,7 +69,7 @@ public class PdfCef extends PdfParserExtrato {
 	@Override
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.CAIXA.name());
+		dto.setBanco(BancoCodigoBancario.CAIXA.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);			
 			if (line.contains(CONTA)) {
@@ -107,5 +107,12 @@ public class PdfCef extends PdfParserExtrato {
 	protected int getLineHeader() {
 		return 10;
 	}
+	
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoCEF(extratos, parceiroId);
+   }
 
 }

@@ -73,7 +73,7 @@ public class PdfSafra extends PdfParserExtrato {
 	@Override
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.SAFRA.name());
+		dto.setBanco(BancoCodigoBancario.SAFRA.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA) && line.contains(CONTA)) {
@@ -135,5 +135,12 @@ public class PdfSafra extends PdfParserExtrato {
 			return periodoFinal;
 		}
 	}
+	
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoSafra(extratos, parceiroId);
+   }
 
 }

@@ -74,7 +74,7 @@ public class PdfItau extends PdfParserExtrato {
 	@Override
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.ITAU.name());
+		dto.setBanco(BancoCodigoBancario.ITAU.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if(line.contains(PERIODO)) {
@@ -139,5 +139,12 @@ public class PdfItau extends PdfParserExtrato {
 			return periodoFinal;
 		}
 	}
+	
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoItau(extratos, parceiroId);
+   }
 
 }

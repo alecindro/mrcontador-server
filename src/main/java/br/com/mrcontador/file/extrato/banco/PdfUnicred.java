@@ -78,7 +78,7 @@ public class PdfUnicred extends PdfParserExtrato{
 	@Override
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.UNICRED.name());
+		dto.setBanco(BancoCodigoBancario.UNICRED.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if(line.contains(AGENCIA) && line.contains(CONTA)) {
@@ -115,5 +115,12 @@ public class PdfUnicred extends PdfParserExtrato{
 		}
 		return datas;
 	}
+	
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoUnicred(extratos, parceiroId);
+   }
 
 }

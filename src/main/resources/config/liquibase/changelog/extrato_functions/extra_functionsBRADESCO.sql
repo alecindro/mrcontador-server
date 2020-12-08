@@ -14,7 +14,7 @@ BEGIN
   -- despesas bancarias
   select i.parceiro_id, p.despesas_bancarias INTO vPARCEIROID, vCONTAID  from ${schema}.inteligent i inner join ${schema}.parceiro p 
   on i.parceiro_id = p.id inner join ${schema}.extrato e on i.extrato_id = e.id
-  where e.id = pEXTRATOID and e.extDebito is not null and  p.despesas_bancarias is not null and (e.ext_numerodocumento = '11119'  or e.ext_numerodocumento = '21219' or e.ext_numerodocumento = '20120' 
+  where e.id = pEXTRATOID and e.ext_debito is not null and  p.despesas_bancarias is not null and (e.ext_numerodocumento = '11119'  or e.ext_numerodocumento = '21219' or e.ext_numerodocumento = '20120' 
   or e.ext_numerodocumento = '30220' or e.ext_numerodocumento = '20320' or e.ext_numerodocumento = '10420');
 IF (vPARCEIROID IS NOT NULL) THEN
 	vHISTORICOFINAL = 'Débito ref. Tarifas  Bancárias - Bradesco';

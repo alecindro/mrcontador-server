@@ -31,9 +31,6 @@
    <changeSet author="alecindro" id="16">
     <sqlFile path="config/liquibase/changelog/comprovante_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-   <changeSet author="alecindro" id="17">
-    <sqlFile path="config/liquibase/changelog/extrato_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
-</changeSet>
    <changeSet author="alecindro" id="18">
     <sqlFile path="config/liquibase/changelog/conta_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
@@ -42,9 +39,6 @@
 </changeSet>
    <changeSet author="alecindro" id="20">
     <sqlFile path="config/liquibase/changelog/notafiscal_function2.sql" splitStatements="false" relativeToChangelogFile="false"/>
-</changeSet>
-   <changeSet author="alecindro" id="21">
-    <sqlFile path="config/liquibase/changelog/extra_functions/aplicacaoBB_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="22">
     <sqlFile path="config/liquibase/changelog/notafiscal_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
@@ -57,17 +51,39 @@
 <include file="config/liquibase/changelog/alter_parceiro.sql" relativeToChangelogFile="false"/>
 <include file="config/liquibase/changelog/alter_periodo.sql" relativeToChangelogFile="false"/>
 <include file="config/liquibase/changelog/data2.sql" relativeToChangelogFile="false"/>
-<changeSet author="alecindro" id="31">
-    <sqlFile path="config/liquibase/changelog/extra_functions/aplicacaoBradesco_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
+   <changeSet author="alecindro" id="32">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extra_functionsBB.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-   <changeSet author="alecindro" id="31">
-    <sqlFile path="config/liquibase/changelog/extra_functions/extra_functionsBB.sql" splitStatements="false" relativeToChangelogFile="false"/>
+<changeSet author="alecindro" id="33">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extra_functionsBRADESCO.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-<changeSet author="alecindro" id="31">
-    <sqlFile path="config/liquibase/changelog/extra_functions/extra_functionsBRADESCO.sql" splitStatements="false" relativeToChangelogFile="false"/>
+   <changeSet author="alecindro" id="34">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extra_functionsSantander.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-   <changeSet author="alecindro" id="31">
-    <sqlFile path="config/liquibase/changelog/extra_functions/extra_functionsSantander.sql" splitStatements="false" relativeToChangelogFile="false"/>
+   <changeSet author="alecindro" id="35">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionBB.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="36">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionBRADESCO.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+
+<changeSet author="alecindro" id="37">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionSANTANDER.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="38">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionCEF.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="39">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionCREDICREA.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="40">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionITAU.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="41">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionSAFRA.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="42">
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionUNICRED.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

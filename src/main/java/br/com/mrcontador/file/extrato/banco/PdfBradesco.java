@@ -43,9 +43,7 @@ public class PdfBradesco extends PdfParserExtrato {
 
 	@Override
 	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		service.callExtratoAplicacaoBradesco(agencia.getId());
 		extratos.forEach(ext->service.callExtraFunctionsBradesco(ext.getId()));
-
 	}
 
 	@Override
@@ -74,15 +72,19 @@ public class PdfBradesco extends PdfParserExtrato {
 	@Override
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.BRADESCO.name());
+		dto.setBanco(BancoCodigoBancario.BRADESCO.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			String nextLine = StringUtils.normalizeSpace(lines[i + 1]);
 			if (line.contains(AGENCIA)) {
+				if(MrContadorUtil.containsNumber(nextLine.substring(0, 5).trim())) {
 				dto.setAgencia(nextLine.substring(0, 5).trim());
-			}
-			if (line.contains(CONTA)) {
 				dto.setConta(StringUtils.substringBefore(nextLine.substring(7, nextLine.length()).trim(), StringUtils.SPACE));
+				}else{
+					nextLine = StringUtils.normalizeSpace(lines[i + 2]);
+					dto.setAgencia(nextLine.substring(0, 5).trim());
+					dto.setConta(StringUtils.substringBefore(nextLine.substring(7, nextLine.length()).trim(), StringUtils.SPACE));
+				}
 			}
 		}
 		return dto;
@@ -142,5 +144,10 @@ public class PdfBradesco extends PdfParserExtrato {
 		// TODO Auto-generated method stub
 		return 8;
 	}
-
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoBradesco(extratos, parceiroId);
+   }
 }

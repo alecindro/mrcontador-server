@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,7 +38,7 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.BB.name());
+		dto.setBanco(BancoCodigoBancario.BB.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if(line.contains(AGENCIA)) {
@@ -112,9 +110,7 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 
 	@Override
 	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		service.callExtratoAplicacaoBB(agencia.getId());
 		extratos.forEach(ext -> service.callExtraFunctionsBB(ext.getId()));
-		
 	}
 
 
@@ -123,6 +119,14 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	protected int getLineHeader() {
 		return 9;
 	}
+
+	@Override
+	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			log.info("Processando callExtrato");
+			extratoService.callExtratoBB(extratos,parceiroId);
+   }
+		
 
 	
 

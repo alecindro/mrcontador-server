@@ -84,16 +84,101 @@ public class ExtratoService {
 	
 
 	@Transactional
-	public void callExtrato(List<Extrato> extratos, Long parceiroId, Set<String> periodos) {
+	public void callExtratoBB(List<Extrato> extratos, Long parceiroId) {
 		log.info("call extrato");
 		extratos.forEach(extrato ->{
 			try {
-				extratoRepository.callExtrato(extrato.getId(), extrato.getAgenciabancaria().getId());
+				extratoRepository.callExtratoBB(extrato.getId(), extrato.getAgenciabancaria().getId());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		});
 	}
+	
+	@Transactional
+	public void callExtratoCEF(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		extratos.forEach(extrato ->{
+			try {
+				extratoRepository.callExtratoCef(extrato.getId(), extrato.getAgenciabancaria().getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+	}
+	
+	@Transactional
+	public void callExtratoSantander(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		extratos.forEach(extrato ->{
+			try {
+				extratoRepository.callExtratoSantander(extrato.getId(), extrato.getAgenciabancaria().getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+	}
+	
+	@Transactional
+	public void callExtratoSafra(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		extratos.forEach(extrato ->{
+			try {
+				extratoRepository.callExtratoSafra(extrato.getId(), extrato.getAgenciabancaria().getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+	}
+	
+	@Transactional
+	public void callExtratoBradesco(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		extratos.forEach(extrato ->{
+			try {
+				extratoRepository.callExtratoBradesco(extrato.getId(), extrato.getAgenciabancaria().getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+	}
+	
+	@Transactional
+	public void callExtratoCredicrea(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		extratos.forEach(extrato ->{
+			try {
+				extratoRepository.callExtratoCredicrea(extrato.getId(), extrato.getAgenciabancaria().getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+	}
+
+	@Transactional
+	public void callExtratoItau(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		extratos.forEach(extrato ->{
+			try {
+				extratoRepository.callExtratoItau(extrato.getId(), extrato.getAgenciabancaria().getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+	}
+
+	@Transactional
+	public void callExtratoUnicred(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		extratos.forEach(extrato ->{
+			try {
+				extratoRepository.callExtratoUnicred(extrato.getId(), extrato.getAgenciabancaria().getId());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		});
+	}
+
 
 	@Transactional
 	public void callRegraInteligent(Long parceiroId, Set<String> periodos) {
@@ -110,24 +195,6 @@ public class ExtratoService {
 	@Transactional
 	public void callProcessaNotafiscalGeral(Long parceiroId, LocalDate date) {
 		notafiscalService.callProcessaNotafiscalGeral(parceiroId, date);
-	}
-	
-	@Transactional
-	public void callExtratoAplicacaoBB(Long agenciaId) {
-		try {
-			extratoRepository.callExtratoAplicacaoBB(agenciaId);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-	
-	@Transactional
-	public void callExtratoAplicacaoBradesco(Long agenciaId) {
-		try {
-			extratoRepository.callExtratoAplicacaoBradesco(agenciaId);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
 	}
 	
 	@Transactional
