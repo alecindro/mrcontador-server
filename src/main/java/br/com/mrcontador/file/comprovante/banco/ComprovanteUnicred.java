@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import br.com.mrcontador.file.FileException;
 import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.PPDocumentDTO;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
+import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -42,20 +44,28 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		if (line.equals("Comprovante de Pagamento de Titulo")) {
 			return parseTitulo(_lines, agenciabancaria, parceiro);
 		}
-		if (line.contains("Comprovante de Pagamento de Tributos")) { 
-			return
-		  parsePagtoTributos(_lines, agenciabancaria, parceiro); 
-			}
-		/*
-		 * if (line.equals("Comprovante de Pagamento de Convênio")) { return
-		 * parsePagtoConvenio(_lines, agenciabancaria, parceiro); } if
-		 * (StringUtils.normalizeSpace(_lines[4]).contains("ARRECADACAO DE DARF")) {
-		 * return parseDarf(_lines, agenciabancaria, parceiro); } if
-		 * (line.contains("Comprovante de Pagamento de Tributos")) { return
-		 * parsePagtoTributos(_lines, agenciabancaria, parceiro); } if
-		 * (StringUtils.normalizeSpace(_lines[4]).contains("ARRECADACAO DE GPS")) {
-		 * return parseGPS(_lines, agenciabancaria, parceiro); }
-		 */
+		if (line.contains("Comprovante de Pagamento de Tributos")) {
+			return parsePagtoTributos(_lines, agenciabancaria, parceiro);
+		}
+
+		if (line.equals("Comprovante de Pagamento de Convênio")) {
+			return parsePagtoConvenio(_lines, agenciabancaria, parceiro);
+		}
+		if (line.contains("Comprovante de Pagamento de Tributos")) {
+			return parsePagtoTributos(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[4]).contains("ARRECADACAO DE DARF")) {
+			return parseDarf(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[5]).contains("ARRECADACAO DE DARF")) {
+			return parseDarf(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[4]).contains("ARRECADACAO DE GPS")) {
+			return parseGPS(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[5]).contains("ARRECADACAO DE GPS")) {
+			return parseGPS(_lines, agenciabancaria, parceiro);
+		}
 
 		throw new ComprovanteException("Comprovante não identificado");
 	}
@@ -66,7 +76,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		int i = 0;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
-			
+
 			if (line.contains("Conta:")) {
 				String value = StringUtils.split(StringUtils.substringAfter(line, "Conta:"))[0];
 				DiffValue diffValue = new DiffValue();
@@ -75,7 +85,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			
+
 			if (line.contains("ID do Documento:")) {
 				String value = StringUtils.substringAfter(line, "ID do Documento:").trim();
 				value = MrContadorUtil.removeDots(value);
@@ -85,7 +95,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			
+
 			if (line.contains("Beneficiário")) {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
@@ -101,10 +111,10 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 							.substringAfter(StringUtils.normalizeSpace(lines[i + 11]).trim(), "CNPJ/CPF:").trim();
 					diffValue2.setNewValue(value2);
 					diffValue2.setLine(i + 11);
-					
+
 				} else {
 					String value = StringUtils
-							.substringAfter(StringUtils.normalizeSpace(lines[i + 4]).trim(),"Razão Social:").trim();
+							.substringAfter(StringUtils.normalizeSpace(lines[i + 4]).trim(), "Razão Social:").trim();
 					diffValue.setNewValue(value);
 					diffValue.setLine(i + 4);
 					String value2 = StringUtils
@@ -117,15 +127,16 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				list.add(diffValue2);
 			}
 			if (line.contains("Pagador") && !line.contains("Pagador Final")) {
-					String value = StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i + 4]).trim(), "CNPJ/CPF:").trim();
-					value = MrContadorUtil.onlyNumbers(value);
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(CNPJ_PAG);
-					diffValue.setNewValue(value);
-					diffValue.setLine(i+4);
-					list.add(diffValue);
+				String value = StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i + 4]).trim(), "CNPJ/CPF:")
+						.trim();
+				value = MrContadorUtil.onlyNumbers(value);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CNPJ_PAG);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i + 4);
+				list.add(diffValue);
 			}
-			
+
 			if (line.contains("Data de Vencimento:")) {
 				String value = StringUtils.substringAfter(line, "Data de Vencimento:").trim();
 				DiffValue diffValue = new DiffValue();
@@ -146,7 +157,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				String value = StringUtils.substringAfter(line, "Valor Nominal:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_DOC);
-				diffValue.setNewValue(MrContadorUtil.onlyMoney(value));
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
@@ -154,7 +165,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				String value = StringUtils.substringAfter(line, "Valor Pago:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
-				diffValue.setNewValue(MrContadorUtil.onlyMoney(value));
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
@@ -162,7 +173,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				String value = StringUtils.substringAfter(line, "Encargos:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(JUROS);
-				diffValue.setNewValue(MrContadorUtil.onlyMoney(value));
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
@@ -170,12 +181,12 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				String value = StringUtils.substringAfter(line, "Descontos:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DESCONTO);
-				diffValue.setNewValue(MrContadorUtil.onlyMoney(value));
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-		
-			i = i+1;
+
+			i = i + 1;
 		}
 		DiffValue diffValue = new DiffValue();
 		diffValue.setOldValue(OBS);
@@ -239,17 +250,13 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("N. DA AUTENTICACAO:")) {
-				String value = StringUtils
-						.substringAfterLast(StringUtils.substringAfter(line, "N. DA AUTENTICACAO:"), ".").trim();
-				value = MrContadorUtil.removeDots(value);
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(DOCUMENTO);
-				diffValue.setNewValue(value);
-				diffValue.setLine(i);
-				list.add(diffValue);
-			}
+			
 		}
+		DiffValue diffValue2 = new DiffValue();
+		diffValue2.setOldValue(DOCUMENTO);
+		diffValue2.setNewValue("DARF");
+		diffValue2.setLine(i);
+		list.add(diffValue2);
 		DiffValue diffValue = new DiffValue();
 		diffValue.setOldValue(OBS);
 		diffValue.setNewValue("ARRECADACAO DE DARF");
@@ -349,7 +356,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				String value = StringUtils.substringAfter(line, "Valor Nominal:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_DOC);
-				diffValue.setNewValue(MrContadorUtil.onlyMoney(value));
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 
@@ -358,7 +365,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				String value = StringUtils.substringAfter(line, "Valor Total:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
-				diffValue.setNewValue(MrContadorUtil.onlyMoney(value));
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
@@ -375,7 +382,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				String value = StringUtils.substringAfter(line, "Descontos:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DESCONTO);
-				diffValue.setNewValue(MrContadorUtil.onlyMoney(value));
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
@@ -415,16 +422,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Identificador:")) {
-				String value = StringUtils.substringAfterLast(StringUtils.substringAfter(line, "Identificador:"), ".")
-						.trim();
-				value = MrContadorUtil.removeDots(value);
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(DOCUMENTO);
-				diffValue.setNewValue(value);
-				diffValue.setLine(i);
-				list.add(diffValue);
-			}
+			
 			if (line.contains("Valor INSS:")) {
 				String value = StringUtils.substringAfterLast(StringUtils.substringAfter(line, "Valor INSS:"), ".")
 						.trim();
@@ -444,6 +442,11 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 		}
+		DiffValue diffValue2 = new DiffValue();
+		diffValue2.setOldValue(DOCUMENTO);
+		diffValue2.setNewValue("GPS");
+		diffValue2.setLine(i);
+		list.add(diffValue2);
 		DiffValue diffValue = new DiffValue();
 		diffValue.setOldValue(OBS);
 		diffValue.setNewValue("ARRECADACAO DE GPS");
@@ -484,5 +487,14 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			}
 		}
 	}
+	
+	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service) {
+		comprovantes.forEach(comprovante ->{
+			service.callComprovanteUnicred(comprovante.getId());	
+		});
+		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
+		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
+		service.callNotaFiscal(comprovante.getParceiro().getId(), date);
+    }
 
 }

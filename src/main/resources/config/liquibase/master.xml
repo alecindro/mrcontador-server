@@ -85,6 +85,12 @@
 <changeSet author="alecindro" id="42">
     <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionUNICRED.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
+<changeSet author="alecindro" id="43">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_unicred.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="44">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_bradesco.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

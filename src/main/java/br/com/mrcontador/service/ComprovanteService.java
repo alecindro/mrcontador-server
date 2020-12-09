@@ -84,6 +84,15 @@ public class ComprovanteService {
     public void callComprovante(Long comprovanteId) {
     	comprovanteRepository.callComprovante(comprovanteId);
     }
+    
+    public void callComprovanteUnicred(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteUnicred(comprovanteId);
+    }
+    
+    public void callComprovanteBradesco(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteBradesco(comprovanteId);
+    }
+    
     public void callNotaFiscal(Long parceiroId, LocalDate date) {
     	notafiscalService.callProcessaNotafiscalGeral(parceiroId, date);
     }

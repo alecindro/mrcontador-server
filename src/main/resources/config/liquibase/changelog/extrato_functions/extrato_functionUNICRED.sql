@@ -70,6 +70,8 @@ SELECT  a.ID, A.CONTA_ID INTO vAGENCIAAPLICACAOID, vCONTAAPLICACAOID from ${sche
                                   );
    UPDATE ${schema}.EXTRATO SET processado = true where id = pEXT_CODIGO;
 
+     -- Aplicacao automatica
+  vAPLICACAO_AUT := 0;
  -- comprovante
 if (vAPLICACAO_AUT = 0) then
    for RECEXTRATO in select C.ID, C.COM_DOCUMENTO, C.COM_CNPJ, C.COM_BENEFICIARIO, C.COM_DATAVENCIMENTO, C.COM_VALORDOCUMENTO, C.agenciabancaria_id,
@@ -79,7 +81,7 @@ if (vAPLICACAO_AUT = 0) then
 	WHERE C.PARCEIRO_ID= vPARCEIROID
       AND C.AGENCIABANCARIA_ID= vAGENCIABANCARIAID
       AND C.processado= FALSE
-      and C.COM_DOCUMENTO = vNUMERODOCUMENTO
+      and vHISTORICO like '%'|| C.COM_DOCUMENTO || '%'
       and C.COM_DATAPAGAMENTO = vDATAEXTRATO
       and C.COM_VALORPAGAMENTO = vDEBITO*-1
     ORDER BY C.ID 
