@@ -58,7 +58,7 @@
     <sqlFile path="config/liquibase/changelog/extrato_functions/extra_functionsBRADESCO.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="34">
-    <sqlFile path="config/liquibase/changelog/extrato_functions/extra_functionsSantander.sql" splitStatements="false" relativeToChangelogFile="false"/>
+    <sqlFile path="config/liquibase/changelog/extrato_functions/extra_functionsSANTANDER.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <changeSet author="alecindro" id="35">
     <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionBB.sql" splitStatements="false" relativeToChangelogFile="false"/>
