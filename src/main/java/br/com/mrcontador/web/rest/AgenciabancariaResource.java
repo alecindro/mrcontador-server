@@ -26,6 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Conta;
+import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.service.AgenciabancariaQueryService;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.dto.AgenciabancariaAplicacao;
@@ -72,6 +73,7 @@ public class AgenciabancariaResource {
             throw new BadRequestAlertException("A new agenciabancaria cannot already have an ID", ENTITY_NAME, "idexists");
         }
         agenciabancaria.setAgeSituacao(true);
+        agenciabancaria.setTipoAgencia(TipoAgencia.CONTA);
         Agenciabancaria result = agenciabancariaService.save(agenciabancaria);
         return ResponseEntity.created(new URI("/api/agenciabancarias/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
