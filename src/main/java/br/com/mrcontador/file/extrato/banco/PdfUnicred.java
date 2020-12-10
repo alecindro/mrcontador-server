@@ -28,7 +28,7 @@ public class PdfUnicred extends PdfParserExtrato{
 	private static final String CONTA = "Conta";
 	private static final int DATA_COLUMN = 14;
 	private static final int HISTORY_COLUMN = 59;
-	private static final int DCTO_COLUMN = 35;
+	private static final int DCTO_COLUMN = 34;
 	private static final int VALUE_COLUMN = 131;
 	private static final int SALDO_COLUMN = 162;
 	private static final String BREAK = "*Lançamentos Bloqueados";
