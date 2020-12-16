@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.PPDocumentDTO;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
+import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -785,4 +787,12 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 		}
 	}
 
+	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service) {
+		comprovantes.forEach(comprovante ->{
+			service.callComprovanteCEF(comprovante.getId());	
+		});
+		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
+		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
+		service.callNotaFiscal(comprovante.getParceiro().getId(), date);
+    }
 }

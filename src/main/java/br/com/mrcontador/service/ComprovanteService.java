@@ -85,6 +85,31 @@ public class ComprovanteService {
     	comprovanteRepository.callComprovante(comprovanteId);
     }
     
+    public void callComprovanteBB(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteBB(comprovanteId);
+    }
+    
+    public void callComprovanteCEF(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteCEF(comprovanteId);
+    }
+    
+    public void callComprovanteCredicrea(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteCredicrea(comprovanteId);
+    }
+    
+    public void callComprovanteItau(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteItau(comprovanteId);
+    }
+    
+    public void callComprovanteSafra(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteSafra(comprovanteId);
+    }
+    
+    public void callComprovanteSantander(Long comprovanteId) {
+    	comprovanteRepository.callComprovanteSantander(comprovanteId);
+    }
+    
+    
     public void callComprovanteUnicred(Long comprovanteId) {
     	comprovanteRepository.callComprovanteUnicred(comprovanteId);
     }

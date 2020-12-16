@@ -66,7 +66,6 @@
 <changeSet author="alecindro" id="36">
     <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionBRADESCO.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
-
 <changeSet author="alecindro" id="37">
     <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionSANTANDER.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
@@ -90,6 +89,24 @@
 </changeSet>
 <changeSet author="alecindro" id="44">
     <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_bradesco.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="45">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_bb.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="46">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_cef.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="47">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_credicrea.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="48">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_itau.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="49">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_safra.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
+<changeSet author="alecindro" id="50">
+    <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_santander.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
