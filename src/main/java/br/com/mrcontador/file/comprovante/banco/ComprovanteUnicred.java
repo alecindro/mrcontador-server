@@ -41,13 +41,26 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			throw new ComprovanteException("Comprovante está sem informação");
 		}
 		String line = StringUtils.normalizeSpace(_lines[9]).trim();
+		String line2 = StringUtils.normalizeSpace(_lines[8]).trim();
 		if (line.equals("Comprovante de Pagamento de Titulo")) {
 			return parseTitulo(_lines, agenciabancaria, parceiro);
 		}
+		if (line2.equals("Comprovante de Pagamento de Titulo")) {
+			return parseTitulo(_lines, agenciabancaria, parceiro);
+		}
+		
+		
 		if (line.contains("Comprovante de Pagamento de Tributos")) {
 			return parsePagtoTributos(_lines, agenciabancaria, parceiro);
 		}
+		
+		if (line2.contains("Comprovante de Pagamento de Tributos")) {
+			return parsePagtoTributos(_lines, agenciabancaria, parceiro);
+		}
 
+		if (line2.equals("Comprovante de Pagamento de Convênio")) {
+			return parsePagtoConvenio(_lines, agenciabancaria, parceiro);
+		}
 		if (line.equals("Comprovante de Pagamento de Convênio")) {
 			return parsePagtoConvenio(_lines, agenciabancaria, parceiro);
 		}

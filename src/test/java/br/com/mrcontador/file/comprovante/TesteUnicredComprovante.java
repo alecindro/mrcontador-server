@@ -26,7 +26,7 @@ public class TesteUnicredComprovante {
 	
 	public static void main(String[] args) throws Exception {
 		TesteUnicredComprovante teste = new TesteUnicredComprovante();
-		teste.caixa("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\CHAG\\comprovantes-1-mesclado.pdf");
+		teste.caixa("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\unicred\\11 - comprovantes.pdf");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {
@@ -63,10 +63,10 @@ public class TesteUnicredComprovante {
 	
 	private void caixa(String file) throws Exception {
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("1104");
-		agencia.setAgeNumero("2130963");
+		agencia.setAgeAgencia("1109");
+		agencia.setAgeNumero("1022695");
 		Parceiro parceiro = new Parceiro();
-		parceiro.setParCnpjcpf("19870816000102");		
+		parceiro.setParCnpjcpf("15584243000191");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.UNICRED.getCodigoBancario());
 		FileDTO dto = new FileDTO();
 		dto.setOutputStream(load(file));
