@@ -80,7 +80,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			line = StringUtils.normalizeSpace(line.trim());
 			if (line.contains("Agência:")) {
 				String lineA = StringUtils.substringBefore(
-						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência:")), "|Conta:").trim();
+						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência:")), "|").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(AGENCIA);
 				diffValue.setNewValue(lineA);
@@ -149,6 +149,38 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				String lineA = StringUtils.substringAfter(line, "Valor do pagamento: R$").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.toUpperCase().contains("IDENTIFICADOR:")) {
+				String lineA =  StringUtils.substringBefore(StringUtils.substringAfter(line, "IDENTIFICADOR:").trim(),StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Órgão:")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, ":").trim(),StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(FORNECEDOR);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Multa:")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Multa:").trim(),StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(MULTA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Juros:")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Juros:").trim(),StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(JUROS);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
@@ -363,7 +395,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		int i = 0;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
-			if (line.contains("Agência:")) {
+			if (line.contains("Conta de débito:")) {
 				String lineA = StringUtils.substringBefore(
 						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência:")), "|Conta:").trim();
 				DiffValue diffValue = new DiffValue();
@@ -371,15 +403,13 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
-			}
-			if (line.contains("Conta:")) {
-				String lineA = StringUtils.substringBefore(
+				String lineB = StringUtils.substringBefore(
 						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Conta:")), "|Tipo:").trim();
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(CONTA);
-				diffValue.setNewValue(lineA);
-				diffValue.setLine(i);
-				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(CONTA);
+				diffValue2.setNewValue(lineB);
+				diffValue2.setLine(i);
+				list.add(diffValue2);
 			}
 			if (line.contains("Empresa:")) {
 				String lineA = StringUtils.substringAfter(line, "CNPJ:").trim();
@@ -406,16 +436,19 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Valor:")) {
-				String lineA = StringUtils.substringAfter(line, "Valor:").trim();
+			if (line.contains("Valor:") || line.contains("Valor")) {
+				String lineA = StringUtils.substringAfter(line, "Valor").trim();
+				if(line.contains("Valor:")) {
+					lineA = StringUtils.substringAfter(line, "Valor:").trim();
+				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Descrição:")) {
-				String lineA = StringUtils.substringAfter(line, "Descrição:").trim();
+			if (line.contains("Documento:")) {
+				String lineA = StringUtils.substringAfter(line, "Documento:").trim();
 				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
@@ -441,7 +474,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		int i = 0;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
-			if (line.contains("Agência:")) {
+			if (line.contains("Conta de débito:")) {
 				String lineA = StringUtils.substringBefore(
 						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência:")), "|Conta:").trim();
 				DiffValue diffValue = new DiffValue();
@@ -449,15 +482,13 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
-			}
-			if (line.contains("Conta:")) {
-				String lineA = StringUtils.substringBefore(
+				String lineB = StringUtils.substringBefore(
 						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Conta:")), "|Tipo:").trim();
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(CONTA);
-				diffValue.setNewValue(lineA);
-				diffValue.setLine(i);
-				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(CONTA);
+				diffValue2.setNewValue(lineB);
+				diffValue2.setLine(i);
+				list.add(diffValue2);
 			}
 			if (line.contains("Empresa:")) {
 				String lineA = StringUtils.substringAfter(line, "CNPJ:").trim();
@@ -484,16 +515,27 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Valor:")) {
-				String lineA = StringUtils.substringAfter(line, "Valor:").trim();
+			if (!line.contains("Valor total:") && (line.contains("Valor:") || line.contains("Valor"))) {
+				String lineA = StringUtils.substringAfter(line, "Valor").trim();
+				if(line.contains("Valor:")) {
+					lineA = StringUtils.substringAfter(line, "Valor:").trim();
+				}				
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_DOC);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Valor total:")) {
+				String lineA = StringUtils.substringAfter(line, "Valor total:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Finalidade:")) {
-				String lineA = StringUtils.substringAfter(line, "Finalidade:").trim();
+			if (line.contains("Documento:")) {
+				String lineA = StringUtils.substringAfter(line, "Documento:").trim();
 				lineA = MrContadorUtil.removeDots(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
@@ -627,15 +669,18 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			line = StringUtils.normalizeSpace(line.trim());
 			if (line.contains("Agência de Débito:")) {
 				String lineA = StringUtils.substringBefore(
-						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência de Débito")), "Conta de Débito:").trim();
+						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência de Débito:")), "Conta").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(AGENCIA);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Conta de Débito:")) {
+			if (line.contains("Conta de Débito:") || line.contains("ContadeDébito:")) {
 				String lineA = StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Conta de Débito:")).trim();
+				if(line.contains("ContadeDébito:")) {
+					lineA = StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "ContadeDébito:")).trim();
+				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CONTA);
 				diffValue.setNewValue(lineA);
@@ -876,7 +921,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			service.callComprovanteBradesco(comprovante.getId());	
 		});
 		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
-		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
+		LocalDate date = comprovante.getComDatavencimento() != null ? comprovante.getComDatavencimento().minusMonths(4) : comprovante.getComDatapagamento().minusMonths(4) ;
 		service.callNotaFiscal(comprovante.getParceiro().getId(), date);
     }
 }
