@@ -2,6 +2,7 @@ package br.com.mrcontador.service.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -18,6 +19,7 @@ import br.com.mrcontador.config.S3Properties;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.ArquivoErro;
+import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.TipoDocumento;
@@ -25,7 +27,6 @@ import br.com.mrcontador.file.notafiscal.pdf.NFDanfeReport;
 import br.com.mrcontador.file.notafiscal.pdf.NFDanfeReport310;
 import br.com.mrcontador.service.ArquivoErroService;
 import br.com.mrcontador.service.ArquivoService;
-import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
@@ -46,8 +47,6 @@ public class S3Service {
 	@Autowired
 	private S3Client s3Client;
 	@Autowired
-	private ComprovanteService comprovanteService;
-	@Autowired
 	private S3Properties properties;
 	@Autowired
 	private ArquivoService arquivoService;
@@ -56,14 +55,14 @@ public class S3Service {
 
 	private final Logger log = LoggerFactory.getLogger(S3Service.class);
 
-	
 	public void uploadErro(FileDTO dto) {
 		String dir = properties.getErrorFolder();
 		String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());
 		log.info("Carregando arquivo: {}", filename);
 		String eTag = "";
 		if (dto.getSize() != null) {
-			eTag = uploadS3Stream(filename, dir, dto.getSize(), new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
+			eTag = uploadS3Stream(filename, dir, dto.getSize(),
+					new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
 		} else {
 			eTag = uploadS3Bytes(filename, dir, dto.getBytes());
 		}
@@ -75,14 +74,15 @@ public class S3Service {
 		dto.setName(filename);
 		saveArquivoErro(dto);
 	}
-	
+
 	@Async("taskExecutor")
 	public void uploadErro(List<FileS3> files, String tenant) {
 		String dir = properties.getErrorFolder();
-		files.forEach(fileS3 ->{
+		files.forEach(fileS3 -> {
 			FileDTO dto = fileS3.getFileDTO();
 			String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());
-			String eTag = uploadS3Stream(filename, dir, dto.getSize(), new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
+			String eTag = uploadS3Stream(filename, dir, dto.getSize(),
+					new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
 			dto.setBucket(properties.getBucketName());
 			dto.setS3Dir(dir);
 			dto.setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
@@ -109,34 +109,40 @@ public class S3Service {
 		return arquivoErro;
 	}
 
-	@Async("taskExecutor")
-	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml, com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada,ByteArrayOutputStream xmlByte, List<Notafiscal> notas) {
+	//@Async("taskExecutor")
+	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml,
+			com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfNotaProcessada,
+			ByteArrayOutputStream xmlByte, List<Notafiscal> notas) {
 		NFDanfeReport nfDanfeReport = new NFDanfeReport(nfNotaProcessada);
 		try {
 			byte[] bytesArray = nfDanfeReport.gerarDanfeNFe(null);
 			uploadS3Bytes(pdf.getNome(), pdf.gets3Dir(), bytesArray);
 			uploadS3Bytes(xml.getNome(), xml.gets3Dir(), xmlByte.toByteArray());
 		} catch (Exception e) {
-			log.error("Arquivo não conseguiu processar: "+ pdf.getNomeOriginal());
-			log.error(e.getMessage(),e);
+			log.error("Arquivo não conseguiu processar: " + pdf.getNomeOriginal());
+			log.error(e.getMessage(), e);
 		}
-		
-		//TenantContext.setTenantSchema(tenant);
-		//notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(), xml.getId(), pdf.getId()));
+
+		// TenantContext.setTenantSchema(tenant);
+		// notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(),
+		// xml.getId(), pdf.getId()));
 	}
-	
-	@Async("taskExecutor")
-	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml, com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada,ByteArrayOutputStream xmlByte, List<Notafiscal> notas) {
+
+	//@Async("taskExecutor")
+	public void uploadNota(NotafiscalService notafiscalService, Arquivo pdf, Arquivo xml,
+			com.fincatto.documentofiscal.nfe310.classes.nota.NFNotaProcessada nfNotaProcessada,
+			ByteArrayOutputStream xmlByte, List<Notafiscal> notas) {
 		NFDanfeReport310 nfDanfeReport = new NFDanfeReport310(nfNotaProcessada);
 		try {
 			byte[] bytesArray = nfDanfeReport.gerarDanfeNFe(null);
 			uploadS3Bytes(pdf.getNome(), pdf.gets3Dir(), bytesArray);
 			uploadS3Bytes(xml.getNome(), xml.gets3Dir(), xmlByte.toByteArray());
 		} catch (Exception e) {
-			log.error(e.getMessage(),e);
+			log.error(e.getMessage(), e);
 		}
-		//TenantContext.setTenantSchema(tenant);
-		//notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(), xml.getId(), pdf.getId()));
+		// TenantContext.setTenantSchema(tenant);
+		// notas.forEach(nota -> notafiscalService.updateArquivo(nota.getId(),
+		// xml.getId(), pdf.getId()));
 	}
 
 	public Arquivo uploadExtrato(FileDTO dto) {
@@ -152,16 +158,15 @@ public class S3Service {
 		return saveArquivo(dto);
 	}
 
-	@Async("taskExecutor")
+/*	@Async("taskExecutor")
 	public void uploadComprovante(List<FileS3> files, String tenant) {
 		ArquivoMapper mapper = new ArquivoMapper();
 		TenantContext.setTenantSchema(tenant);
-		files.forEach(fileS3 ->{
+		for (FileS3 fileS3 : files) {
 			String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
 					String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getComprovanteFolder());
 			String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
-					fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType(),
-					fileS3.getPage());
+					fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType(), fileS3.getPage());
 			String eTag = uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
 			fileS3.getFileDTO().setName(filename);
 			fileS3.getFileDTO().setBucket(properties.getBucketName());
@@ -171,35 +176,70 @@ public class S3Service {
 			fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
 			Arquivo arquivo = mapper.toEntity(fileS3.getFileDTO());
 			arquivoService.save(arquivo);
-			fileS3.getComprovantes().forEach(comprovante -> {
+			for (Comprovante comprovante : fileS3.getComprovantes()) {
 				comprovanteService.updateArquivo(comprovante.getId(), arquivo.getId());
-			});
-		});
+			}
+		}
 	}
 	
-	/*@Async("taskExecutor")
-	public void uploadComprovante(FileS3 fileS3, String tenant) {
-		ArquivoMapper mapper = new ArquivoMapper();
+	@Async("taskExecutor")
+	public void uploadComprovante(List<Comprovante> comprovantes, ByteArrayOutputStream stream, String tenant) {
 		TenantContext.setTenantSchema(tenant);
-			String dir = MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
-					String.valueOf(fileS3.getFileDTO().getParceiro().getId()), properties.getComprovanteFolder());
-			String filename = MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
-					fileS3.getFileDTO().getParceiro().getId(), fileS3.getFileDTO().getContentType(),
-					fileS3.getPage());
-			String eTag = uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
-			fileS3.getFileDTO().setName(filename);
-			fileS3.getFileDTO().setBucket(properties.getBucketName());
-			fileS3.getFileDTO().setS3Dir(dir);
-			fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-			fileS3.getFileDTO().seteTag(eTag);
-			fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-			Arquivo arquivo = mapper.toEntity(fileS3.getFileDTO());
+		for (Comprovante comprovante : comprovantes) {
+			Arquivo arquivo = comprovante.getArquivo();
+			String eTag = uploadS3Bytes(arquivo.getNome(), comprovante.getArquivo().gets3Dir(), stream.toByteArray());
+			arquivo.setEtag(eTag);
 			arquivoService.save(arquivo);
-			fileS3.getComprovantes().forEach(comprovante -> {
-				comprovanteService.updateArquivo(comprovante.getId(), arquivo.getId());
-			});
+		}
+		try {
+			stream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-	}*/
+	}
+	*/
+	//@Async("taskExecutor")
+	public void uploadComprovante(Comprovante comprovante, ByteArrayOutputStream stream, String tenant) {
+		TenantContext.setTenantSchema(tenant);
+		Arquivo arquivo = comprovante.getArquivo();
+			String eTag = uploadS3Bytes(arquivo.getNome(), comprovante.getArquivo().gets3Dir(), stream.toByteArray());
+			arquivo.setEtag(eTag);
+			arquivoService.save(arquivo);
+		try {
+			stream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	/*
+	 * @Async("taskExecutor") public void uploadComprovante(FileS3 fileS3, String
+	 * tenant) { ArquivoMapper mapper = new ArquivoMapper();
+	 * TenantContext.setTenantSchema(tenant); String dir =
+	 * MrContadorUtil.getFolder(fileS3.getFileDTO().getContador(),
+	 * String.valueOf(fileS3.getFileDTO().getParceiro().getId()),
+	 * properties.getComprovanteFolder()); String filename =
+	 * MrContadorUtil.genFileName(fileS3.getTipoDocumento(),
+	 * fileS3.getFileDTO().getParceiro().getId(),
+	 * fileS3.getFileDTO().getContentType(), fileS3.getPage()); String eTag =
+	 * uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
+	 * fileS3.getFileDTO().setName(filename);
+	 * fileS3.getFileDTO().setBucket(properties.getBucketName());
+	 * fileS3.getFileDTO().setS3Dir(dir);
+	 * fileS3.getFileDTO().setS3Url(MrContadorUtil.getS3Url(dir,
+	 * properties.getUrlS3(), filename)); fileS3.getFileDTO().seteTag(eTag);
+	 * fileS3.getFileDTO().setUrl(MrContadorUtil.getS3Url(dir,
+	 * properties.getUrlS3(), filename)); Arquivo arquivo =
+	 * mapper.toEntity(fileS3.getFileDTO()); arquivoService.save(arquivo);
+	 * fileS3.getComprovantes().forEach(comprovante -> {
+	 * comprovanteService.updateArquivo(comprovante.getId(), arquivo.getId()); });
+	 * 
+	 * }
+	 */
 
 	public Arquivo uploadPlanoConta(FileDTO dto) {
 		dto.setTipoDocumento(TipoDocumento.PLANO_DE_CONTA);
@@ -212,8 +252,9 @@ public class S3Service {
 		String eTag = "";
 		String filename = MrContadorUtil.genFileName(dto.getTipoDocumento(), dto.getContentType());
 		log.info("Carregando arquivo: {}", filename);
-		if (dto.getSize() != null ) {
-			eTag = uploadS3Stream(filename, dir, dto.getSize(), new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
+		if (dto.getSize() != null) {
+			eTag = uploadS3Stream(filename, dir, dto.getSize(),
+					new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
 		} else {
 			eTag = uploadS3Bytes(filename, dir, dto.getBytes());
 		}

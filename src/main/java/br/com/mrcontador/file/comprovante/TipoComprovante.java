@@ -4,6 +4,7 @@ public enum TipoComprovante {
 	
 	TITULO,
 	TRIBUTOS,
+	TAXAS,
 	OUTROS;
 
 }

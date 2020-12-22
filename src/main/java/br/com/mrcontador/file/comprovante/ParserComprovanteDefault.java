@@ -8,15 +8,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.mrcontador.config.S3Properties;
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Comprovante;
 import br.com.mrcontador.erros.ComprovanteException;
 import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
 import br.com.mrcontador.service.file.S3Service;
+import br.com.mrcontador.service.mapper.ArquivoMapper;
 import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
@@ -26,6 +30,10 @@ public class ParserComprovanteDefault {
 	private ComprovanteService service;
 	@Autowired
 	private S3Service s3Service;
+	@Autowired
+	private ArquivoService arquivoService;
+	@Autowired
+	private S3Properties properties;
 	private int page;
 
 	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
@@ -36,23 +44,27 @@ public class ParserComprovanteDefault {
 			ParserComprovante parser = ParserComprovanteFactory.getParser(agencia.getBanCodigobancario());
 			List<PPDocumentDTO> textComprovantes = parser.parseComprovante(fileDTO);			
 			List<FileS3> erros = new ArrayList<FileS3>();
-			List<FileS3> files = new ArrayList<>();
+			ArquivoMapper arquivoMapper = new ArquivoMapper();
 			List<Comprovante> salvos = new ArrayList<Comprovante>();			
 			for (PPDocumentDTO pddComprovante : textComprovantes) {
 				page = page +1;
+				genFile(fileDTO, page);
+				Arquivo arquivo = arquivoMapper.toEntity(fileDTO);
+				arquivoService.save(arquivo);
 				try {
 					List<Comprovante> _comprovantes = parser.parse(pddComprovante.getComprovante(), agencia, fileDTO.getParceiro());
 					_comprovantes.forEach(c-> c.setPeriodo(MrContadorUtil.periodo(c.getComDatapagamento())));
 					if (_comprovantes != null && !_comprovantes.isEmpty()) {
-						_comprovantes.forEach(_comprovante ->{
+						for(Comprovante _comprovante : _comprovantes){
 							try {
+							_comprovante.setArquivo(arquivo);	
 							_comprovante = parser.save(_comprovante, service);
+							s3Service.uploadComprovante(_comprovante, pddComprovante.getOutstream(), SecurityUtils.getCurrentTenantHeader());
 							salvos.add(_comprovante);
-							files.add(create(_comprovantes, fileDTO, pddComprovante, page));
 							}catch(Exception e ) {
 								log.error(e.getMessage());
 							}
-						});
+						}
 					}
 				} catch (ComprovanteException e) {
 					throw e;
@@ -73,7 +85,6 @@ public class ParserComprovanteDefault {
 				throw new org.springframework.dao.DataIntegrityViolationException("comprovantes já importado");
 			}
 			parser.callFunction(salvos, service);
-			s3Service.uploadComprovante(files, SecurityUtils.getCurrentTenantHeader());
 			if(!erros.isEmpty()) {
 				s3Service.uploadErro(erros, SecurityUtils.DEFAULT_TENANT);
 			}
@@ -82,15 +93,17 @@ public class ParserComprovanteDefault {
 			
 	}
 	
-	private FileS3 create(List<Comprovante> comprovantes,FileDTO fileDTO, PPDocumentDTO pddComprovante, int page  ) {
-		FileS3 fileS3 = new FileS3();
-		fileS3.setComprovantes(comprovantes);
-		fileS3.setFileDTO(fileDTO);
-		fileS3.setOutputStream(pddComprovante.getOutstream());
-		fileS3.getFileDTO().setTipoDocumento(TipoDocumento.COMPROVANTE);
-		fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
-		fileS3.setPage(page);
-		return fileS3;
+	private void genFile(FileDTO fileDTO, int page) {
+		String dir = MrContadorUtil.getFolder(fileDTO.getContador(),
+				String.valueOf(fileDTO.getParceiro().getId()), properties.getComprovanteFolder());
+		String filename = MrContadorUtil.genFileName(TipoDocumento.COMPROVANTE,
+				fileDTO.getParceiro().getId(), fileDTO.getContentType(), page);
+		fileDTO.setName(filename);
+		fileDTO.setTipoDocumento(TipoDocumento.COMPROVANTE);
+		fileDTO.setBucket(properties.getBucketName());
+		fileDTO.setS3Dir(dir);
+		fileDTO.setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
+		fileDTO.setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
 	}
 	
 

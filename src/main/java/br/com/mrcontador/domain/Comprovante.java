@@ -97,7 +97,7 @@ public class Comprovante implements Serializable {
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Agenciabancaria agenciabancaria;
     
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = "comprovantes", allowSetters = true)
     private Arquivo arquivo;
 

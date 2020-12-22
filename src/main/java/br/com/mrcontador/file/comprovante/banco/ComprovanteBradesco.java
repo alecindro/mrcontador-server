@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -472,6 +473,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
 		int i = 0;
+		String taxaValue = null;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
 			if (line.contains("Conta de débito:")) {
@@ -525,14 +527,18 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(VALOR_PGTO);
+				diffValue2.setNewValue(lineA);
+				diffValue2.setLine(i);
+				list.add(diffValue2);
 			}
-			if (line.contains("Valor total:")) {
-				String lineA = StringUtils.substringAfter(line, "Valor total:").trim();
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(VALOR_PGTO);
-				diffValue.setNewValue(lineA);
-				diffValue.setLine(i);
-				list.add(diffValue);
+			if (line.contains("Tarifa:")) {
+				String lineA = StringUtils.substringAfter(line, "Tarifa:").trim();
+				BigDecimal value = new BigDecimal(MrContadorUtil.onlyMoney(lineA));
+				if(value.compareTo(BigDecimal.ZERO) == 1) {
+					taxaValue = lineA;
+				}
 			}
 			if (line.contains("Documento:")) {
 				String lineA = StringUtils.substringAfter(line, "Documento:").trim();
@@ -551,8 +557,29 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
+		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS);
+		comprovantes.add(comprovante);
+		if(taxaValue!= null) {
+			comprovantes.add(fromTaxa(taxaValue, comprovante));
+		}
 		return comprovantes;
+	}
+	
+	private Comprovante fromTaxa(String taxa, Comprovante comprovante) {
+		Comprovante _taxa = new Comprovante();
+		_taxa.setComCnpj(comprovante.getComCnpj());
+		_taxa.setComDocumento(comprovante.getComDocumento());
+		_taxa.setComObservacao(comprovante.getComObservacao());
+		_taxa.setComValordocumento(new BigDecimal(MrContadorUtil.onlyMoney(taxa)));
+		_taxa.setComValorpagamento(_taxa.getComValordocumento());
+		_taxa.setComBeneficiario(comprovante.getComBeneficiario());
+		_taxa.setComDatapagamento(comprovante.getComDatapagamento());
+		_taxa.setComDatavencimento(comprovante.getComDatavencimento());
+		_taxa.setAgenciabancaria(comprovante.getAgenciabancaria());
+		_taxa.setParceiro(comprovante.getParceiro());
+		_taxa.setTipoComprovante(TipoComprovante.TAXAS);		
+		_taxa.setProcessado(false);
+		return _taxa;
 	}
 
 	private List<Comprovante> parseDOC(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)

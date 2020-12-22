@@ -25,7 +25,6 @@ import br.com.mrcontador.util.MrContadorUtil;
 public class PdfBradesco extends PdfParserExtrato {
 
 	private static final String AGENCIA = "Agência";
-	private static final String CONTA = "Conta";
 	private static final String SALDO_ANTERIOR = "SALDO ANTERIOR";
 	private static final int DATA_COLUMN = 13;
 	private static final int DESCRICAO_COLUMN = 33;
