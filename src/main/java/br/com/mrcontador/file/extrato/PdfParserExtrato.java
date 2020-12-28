@@ -38,7 +38,7 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 	
 	protected abstract void callExtrato(ExtratoService extratoService, List<Extrato> extratos, Long parceiroId);
 	
-	public OfxDTO process(List<PDDocument> pages) throws IOException {
+	public OfxDTO process(List<PDDocument> pages, Parceiro parceiro, Agenciabancaria agenciaBancaria) throws IOException {
 		int lineHeader = getLineHeader();
 		
 		if (pages.isEmpty()) {
@@ -50,9 +50,9 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 			builder.append(pdfFileInText);
 		}
 		String lines[] = builder.toString().split("\\n");
-		OfxDTO dto = parseDataBanco(lines, lineHeader);
-		dto.setDataList(parseBody(lines, lineHeader));
-		return dto;
+		OfxDTO ofxDTO = parseDataBanco(lines, lineHeader);
+		ofxDTO.setDataList(parseBody(lines, lineHeader));
+		return ofxDTO;
 	}
 	
 	protected abstract int getLineHeader();

@@ -24,7 +24,7 @@ import br.com.mrcontador.service.mapper.ArquivoMapper;
 import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
-public class ParserComprovanteDefault {
+public class ParserComprovanteFacade {
 
 	@Autowired
 	private ComprovanteService service;
@@ -36,7 +36,7 @@ public class ParserComprovanteDefault {
 	private S3Properties properties;
 	private int page;
 
-	private static Logger log = LoggerFactory.getLogger(ParserComprovanteDefault.class);
+	private static Logger log = LoggerFactory.getLogger(ParserComprovanteFacade.class);
 
 	public String process(FileDTO fileDTO, Agenciabancaria agencia) {
 			log.info("parse comprovantes");

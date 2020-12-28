@@ -155,19 +155,19 @@ try {
 		comprovante.setComDocumento(documento.isPresent() ? StringUtils.normalizeSpace(documento.get().getNewValue()) : "");
 		comprovante.setComObservacao(obs.isPresent() ? StringUtils.normalizeSpace(obs.get().getNewValue()) : "");
 		comprovante.setComValordocumento(valor_documento.isPresent()
-				? new BigDecimal(MrContadorUtil.onlyMoney(valor_documento.get().getNewValue()))
+				?  MrContadorUtil.toMoney(valor_documento.get().getNewValue())
 				: BigDecimal.ZERO);
 		comprovante.setComValorpagamento(valor_pagamento.isPresent()
-				? new BigDecimal(MrContadorUtil.onlyMoney(valor_pagamento.get().getNewValue()))
+				? MrContadorUtil.toMoney(valor_pagamento.get().getNewValue())
 				: BigDecimal.ZERO);
 		comprovante.setJuros(juros.isPresent()  && MrContadorUtil.containsNumber(juros.get().getNewValue())
-				? new BigDecimal(MrContadorUtil.onlyMoney(juros.get().getNewValue()))
+				? MrContadorUtil.toMoney(juros.get().getNewValue())
 				: BigDecimal.ZERO);
 		comprovante.setMulta(multa.isPresent() && MrContadorUtil.containsNumber(multa.get().getNewValue())
-				? new BigDecimal(MrContadorUtil.onlyMoney(multa.get().getNewValue()))
+				?  MrContadorUtil.toMoney(multa.get().getNewValue())
 				: BigDecimal.ZERO);
 		comprovante.setDesconto(desconto.isPresent() && MrContadorUtil.containsNumber(desconto.get().getNewValue())
-				? (new BigDecimal(MrContadorUtil.onlyMoney(desconto.get().getNewValue())).negate())
+				? MrContadorUtil.toMoney(desconto.get().getNewValue()).negate()
 				: BigDecimal.ZERO);		
 		comprovante.setComBeneficiario(fornecedor.isPresent() ? StringUtils.normalizeSpace(fornecedor.get().getNewValue()) : "");
 		comprovante.setComDatapagamento(data_pagto.isPresent() ? toDate(data_pagto.get().getNewValue()) : null);

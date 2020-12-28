@@ -72,7 +72,7 @@ public class TesteBradescoComprovante {
 		dto.setOutputStream(load(file));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		System.out.println(periodo);
 	}

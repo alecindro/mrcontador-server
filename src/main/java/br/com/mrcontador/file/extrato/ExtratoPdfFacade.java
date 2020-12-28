@@ -27,9 +27,7 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 
 	public String process(FileDTO fileDTO, Agenciabancaria agenciaBancaria) {
 		PdfParserExtrato pdfParser = PdfParserExtratoFactory.getParser(agenciaBancaria);
-		OfxDTO ofxDTO = process(pdfParser, fileDTO);
-		pdfParser.validate(ofxDTO.getBanco(), ofxDTO.getAgencia(), ofxDTO.getConta(), fileDTO.getParceiro(),
-				agenciaBancaria);
+		OfxDTO ofxDTO = process(pdfParser, fileDTO, agenciaBancaria);
 		List<Extrato> extratos = save(fileDTO, ofxDTO, agenciaBancaria);
 		Set<String> periodos = new HashSet<>();
 		extratos.forEach(extrato -> {
@@ -42,19 +40,23 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 		return periodos.stream().findFirst().get();
 	}
 
-	private OfxDTO process(PdfParserExtrato pdfParser, FileDTO fileDTO) {
+	private OfxDTO process(PdfParserExtrato pdfParser, FileDTO fileDTO, Agenciabancaria agenciaBancaria) {
 		InputStream first = null;
 		PDDocument document = null;
 		List<PDDocument> pages = null;
+		OfxDTO ofxDTO = null;
 		try {
 			first = new ByteArrayInputStream(fileDTO.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			Splitter splitter = new Splitter();
 			pages = splitter.split(document);
-			return pdfParser.process(pages);
+			ofxDTO =  pdfParser.process(pages, fileDTO.getParceiro(), agenciaBancaria);
 		} catch (IOException e) {
 			throw new ExtratoException("extrato.parser.error", fileDTO.getOriginalFilename(), e);
-		} finally {
+		} catch(Exception e1){
+			throw new ExtratoException("extrato.parser.error", fileDTO.getOriginalFilename());
+		}
+		finally {
 			try {
 				if(document != null) {
 					document.close();
@@ -77,9 +79,10 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 				});
 			}
 		}
+		if(ofxDTO != null) {
+			pdfParser.validate(ofxDTO.getBanco(), ofxDTO.getAgencia(), ofxDTO.getConta(), fileDTO.getParceiro(),
+					agenciaBancaria);
+		}
+		return ofxDTO;
 	}
-	
-	
-
-
 }

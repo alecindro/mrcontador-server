@@ -32,7 +32,7 @@ import br.com.mrcontador.service.dto.FileS3;
 public class TestComprovante {
 	
 	@Autowired
-	private ParserComprovanteDefault defaultParser;
+	private ParserComprovanteFacade defaultParser;
 	@Autowired
 	private AgenciabancariaService agenciaService;
 	@Autowired

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
@@ -33,6 +34,8 @@ public class PdfBradesco extends PdfParserExtrato {
 	private static final int DEB_COLUMN = 143;
 	private static final int SALDO_COLUMN = 173;
 	private static final String BREAK = "Saldos Invest";
+	private static final String EXTRATO = "EXTRATO MENSAL";
+
 	private static Logger log = LoggerFactory.getLogger(PdfBradesco.class);
 
 	public PdfBradesco() throws IOException {
@@ -72,6 +75,9 @@ public class PdfBradesco extends PdfParserExtrato {
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.BRADESCO.getCodigoBancario());
+		if(!StringUtils.normalizeSpace(lines[0]).toUpperCase().contains(EXTRATO)) {
+			throw new ExtratoException("extrato.not.bradesco");
+		}
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			String nextLine = StringUtils.normalizeSpace(lines[i + 1]);
@@ -88,13 +94,17 @@ public class PdfBradesco extends PdfParserExtrato {
 		}
 		return dto;
 	}
-
+	
 	@Override
 	protected List<OfxData> parseBody(String[] lines, int lineHeader) {
 		List<OfxData> datas = new ArrayList<>();
 		Date lastDate = null;
 		for (int i = lineHeader; i < lines.length; i++) {
 			String line = lines[i];
+			if(StringUtils.normalizeSpace(line).toUpperCase().contains(EXTRATO)) {
+				i = i +5;
+				line = lines[i];
+			}
 			PdfData data = new PdfData();
 			if(StringUtils.normalizeSpace(line).contains(BREAK)) {
 				break;
@@ -115,8 +125,7 @@ public class PdfBradesco extends PdfParserExtrato {
 			}
 			data.setLancamento(lastDate);
 			readLine(line, data, i);
-			if (i < lines.length - 1) {
-				
+			if (i < lines.length - 1) {				
 				StringBuilder infoAdd = new StringBuilder();
 				while (StringUtils.substring(lines[i + 1], DCTO_COLUMN, CRED_COLUMN).isBlank() && 
 						!StringUtils.normalizeSpace(lines[i+1]).contains(BREAK) &&

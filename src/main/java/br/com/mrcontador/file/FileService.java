@@ -13,7 +13,7 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.domain.TipoAgencia;
 import br.com.mrcontador.erros.AgenciaException;
 import br.com.mrcontador.erros.MrContadorException;
-import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
+import br.com.mrcontador.file.comprovante.ParserComprovanteFacade;
 import br.com.mrcontador.file.extrato.ExtratoPdfFacade;
 import br.com.mrcontador.file.notafiscal.XmlParserDefault;
 import br.com.mrcontador.file.planoconta.PdfParserPlanoConta;
@@ -36,7 +36,7 @@ public class FileService {
 	@Autowired
 	private S3Service s3Service;
 	@Autowired
-	private ParserComprovanteDefault parserComprovante;
+	private ParserComprovanteFacade parserComprovante;
 
 	public Parceiro processPlanoConta(FileDTO dto, Long parceiroId, SistemaPlanoConta sistemaPlanoConta) {
 		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, parceiroId);

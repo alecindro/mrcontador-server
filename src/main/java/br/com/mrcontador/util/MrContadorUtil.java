@@ -1,5 +1,6 @@
 package br.com.mrcontador.util;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -76,6 +77,17 @@ public class MrContadorUtil {
 			return value.replace(",", ".");
 		}
 		return value;
+	}
+	
+	public static BigDecimal toMoney(String value) {
+		try {
+			value = value.replace("C", "").trim();
+			value = value.replace("D", "").trim();
+			value = value.replace("R$", "").trim();
+		return new BigDecimal(value);
+		}catch (NumberFormatException e) {
+			return new BigDecimal(onlyMoney(value));
+		}
 	}
 
 	public static String removeDots(String value) {
@@ -168,7 +180,7 @@ public class MrContadorUtil {
 		value = removeDigit(value);
 		value = removeZerosFromInital(value.trim());
 		value = onlyNumbers(value);
-		pattern = removeDigit(value);
+		pattern = removeDigit(pattern);
 		pattern = removeZerosFromInital(pattern.trim());
 		pattern = onlyNumbers(pattern);
 		
@@ -208,5 +220,6 @@ public class MrContadorUtil {
 	public static String removeDigit(String value) {
 		return StringUtils.splitByCharacterType(value)[0];
 	}
+	
 
 }

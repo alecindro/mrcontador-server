@@ -15,7 +15,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Parceiro;
-import br.com.mrcontador.file.comprovante.ParserComprovanteDefault;
+import br.com.mrcontador.file.comprovante.ParserComprovanteFacade;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -60,7 +60,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/caixa/Aciplas - ND-33470-1 - 06.05.2020.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 			
 			System.out.println(periodo);
@@ -118,7 +118,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/itau/Comprovantes_Itaú_Moto_Bombas_04.2020_.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		
 		System.out.println(periodo);
@@ -136,7 +136,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/comprovantes.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		
 		System.out.println(periodo);
@@ -153,7 +153,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/sicoob.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		
 		System.out.println(periodo);
@@ -169,7 +169,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/unicred.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		
 		System.out.println(periodo);
@@ -186,7 +186,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/credcrea.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		
 		System.out.println(periodo);
@@ -206,7 +206,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		
 		System.out.println(periodo);
@@ -224,7 +224,7 @@ public class PDFToString {
 		dto.setOutputStream(load("/home/alecindro/Documents/drcontabil/docs/comprovantes/bb/06.2020.pdf"));
 		dto.setUsuario(usuario);
 		dto.setParceiro(parceiro);
-		ParserComprovanteDefault p = new ParserComprovanteDefault();
+		ParserComprovanteFacade p = new ParserComprovanteFacade();
 		String periodo =  p.process(dto, agencia);
 		
 		System.out.println(periodo);
