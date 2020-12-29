@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.AgenciaException;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
@@ -40,6 +43,7 @@ public class PdfSantander extends PdfParserExtrato {
 	private static final int DCTO_EMPRESARIAL_COLUMN = 133;
 	private static final int VALUE_EMPRESARIAL_COLUMN = 152;
 	private static final int SALDO_EMPRESARIAL_COLUMN = 169;
+	private static final String EXTRATO = "EXTRATO";
 	
 	private static Logger log = LoggerFactory.getLogger(PdfSantander.class);
 	private boolean isempresarial = false;
@@ -114,6 +118,7 @@ public class PdfSantander extends PdfParserExtrato {
 			lineHeader = getLineHeader();
 			return parseDataBancoEmpresarial(lines, lineHeader);
 		}
+		boolean isExtrato = false;
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
@@ -122,6 +127,12 @@ public class PdfSantander extends PdfParserExtrato {
 				dto.setAgencia(StringUtils.substringBefore(StringUtils.substringAfter(line, AGENCIA), CONTA).trim());
 				dto.setConta(StringUtils.substringAfter(line, CONTA).trim());
 			}
+			if(line.toUpperCase().contains(EXTRATO)) {
+				isExtrato = true;
+			}
+		}
+		if(!isExtrato) {
+			throw new ExtratoException("doc.not.extrato");
 		}
 		return dto;
 	}
@@ -129,12 +140,19 @@ public class PdfSantander extends PdfParserExtrato {
 	private OfxDTO parseDataBancoEmpresarial(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
+		boolean isExtrato = false;
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA)) {
 				dto.setAgencia(StringUtils.substringBefore(StringUtils.substringAfter(line, AGENCIA), CONTAEMPRESARIAL).trim());
 				dto.setConta(StringUtils.substringAfter(line, CONTAEMPRESARIAL).trim());
 			}
+			if(line.toUpperCase().contains(EXTRATO)) {
+				isExtrato = true;
+			}
+		}
+		if(!isExtrato) {
+			throw new ExtratoException("doc.not.extrato");
 		}
 		return dto;
 	}
@@ -190,6 +208,30 @@ public class PdfSantander extends PdfParserExtrato {
 			log.info("Processando callExtrato");
 			extratoService.callExtratoSantander(extratos, parceiroId);
    }
+	
+	public void validate(String banco, String agencia, String conta, Parceiro parceiro, Agenciabancaria agenciaBancaria) {	
+		if(!parceiro.getId().equals(agenciaBancaria.getParceiro().getId())) {
+			throw new ExtratoException("parceiro.notequals", parceiro.getParRazaosocial());
+		}
+		if (agencia != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia(), agencia) && !MrContadorUtil.only9(agencia)) {
+				throw new AgenciaException("agencia.notequals");
+			}
+		}
+		if(banco != null) {
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getBanCodigobancario(),banco) && !MrContadorUtil.only9(banco)) {				
+				throw new AgenciaException("banco.notequals");
+			}
+		}
+		if(conta != null) {
+			String _conta = StringUtils.join(StringUtils.splitByWholeSeparator(conta,"-"));
+			if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeNumero(), _conta)) {
+				if(!MrContadorUtil.compareWithoutDigit(agenciaBancaria.getAgeAgencia()+agenciaBancaria.getAgeNumero(),conta)&& !MrContadorUtil.only9(conta)){
+				throw new AgenciaException("conta.notequals");
+				}
+			}
+		}
+	}
 	
 
 }

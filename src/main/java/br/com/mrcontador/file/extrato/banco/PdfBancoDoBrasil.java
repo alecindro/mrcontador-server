@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
@@ -28,6 +29,7 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	private static final String CONTA = "Conta corrente";
 	private static final String SALDO_ANTERIOR = "Saldo Anterior";
 	private static final String SALDO_FINAL = "SALDO";
+	private static final String EXTRATO = "EXTRATO";
 	private static Logger log = LoggerFactory.getLogger(PdfBancoDoBrasil.class);
 
 	public PdfBancoDoBrasil() throws IOException {
@@ -39,6 +41,7 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.BB.getCodigoBancario());
+		boolean isExtrato = false;
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if(line.contains(AGENCIA)) {
@@ -47,6 +50,12 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 			if(line.contains(CONTA)) {
 				dto.setConta(StringUtils.substringBefore(StringUtils.substringAfter(line, CONTA).trim(),StringUtils.SPACE));
 			}
+			if(line.toUpperCase().contains(EXTRATO)) {
+				isExtrato = true;
+			}
+		}
+		if(!isExtrato) {
+			throw new ExtratoException("doc.not.extrato");
 		}
 		return dto;
 	}

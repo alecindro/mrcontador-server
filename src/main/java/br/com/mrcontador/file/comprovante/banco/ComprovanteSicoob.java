@@ -47,7 +47,7 @@ public class ComprovanteSicoob extends ComprovanteBanco {
 			if (StringUtils.normalizeSpace(_lines[3].trim()).contains("Comprovante de - Pagamento de Título")) {
 				comprovantes.addAll(parsePagtoTitulo(_lines, agenciabancaria, parceiro));
 			} else {
-				throw new ComprovanteException("Comprovante não identificado");
+				throw new ComprovanteException("doc.not.comprovante");
 			}
 		}
 		return comprovantes;

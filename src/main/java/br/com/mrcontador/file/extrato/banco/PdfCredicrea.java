@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
@@ -31,6 +32,7 @@ public class PdfCredicrea extends PdfParserExtrato {
 	private static final int DCTO_COLUMN = 94;
 	private static final int DEB_COLUMN = 150;
 	private static final int CRED_COLUMN = 123;
+	private static final String EXTRATO = "EXTRATO";
 	
 	private static final int SALDO_COLUMN = 175;
 	private static Logger log = LoggerFactory.getLogger(PdfCredicrea.class);
@@ -77,6 +79,7 @@ public class PdfCredicrea extends PdfParserExtrato {
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.CREDCREA.getCodigoBancario());
+		boolean isExtrato = false;
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);			
 			if (line.contains(AGENCIA) && line.contains(CONTA)) {
@@ -85,6 +88,12 @@ public class PdfCredicrea extends PdfParserExtrato {
 				String conta = StringUtils.substringAfter(line, CONTA);
 				dto.setConta(MrContadorUtil.removeZerosFromInital(conta.trim()));
 			}
+			if(line.toUpperCase().contains(EXTRATO)) {
+				isExtrato = true;
+			}
+		}
+		if(!isExtrato) {
+			throw new ExtratoException("doc.not.extrato");
 		}
 		return dto;
 	}

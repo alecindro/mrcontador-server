@@ -82,7 +82,7 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de pagamento de tributos federais")) {
 			return parseTributosFederais(_lines, agenciabancaria, parceiro);
 		}
-		throw new ComprovanteException("Comprovante não identificado");
+		throw new ComprovanteException("doc.not.comprovante");
 	}
 
 	private List<Comprovante> parsePagtoBoleto(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)

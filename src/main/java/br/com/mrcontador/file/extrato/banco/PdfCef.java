@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
@@ -32,6 +33,8 @@ public class PdfCef extends PdfParserExtrato {
 	private static final int SALDO_COLUMN = 244;
 	private static final String BREAK = "Lançamentos do Dia";
 	private static Logger log = LoggerFactory.getLogger(PdfCef.class);
+	private static final String EXTRATO = "EXTRATO";
+	private static final String DOC = "CAIXA";
 
 	public PdfCef() throws IOException {
 		super();
@@ -70,6 +73,8 @@ public class PdfCef extends PdfParserExtrato {
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.CAIXA.getCodigoBancario());
+		boolean isExtrato = false;
+		boolean isDoc = false;
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);			
 			if (line.contains(CONTA)) {
@@ -77,6 +82,18 @@ public class PdfCef extends PdfParserExtrato {
 				dto.setAgencia(MrContadorUtil.removeZerosFromInital(values[0].trim()));
 				dto.setConta(MrContadorUtil.removeZerosFromInital(values[2].trim()));
 			}
+			if(line.toUpperCase().contains(EXTRATO)) {
+				isExtrato = true;
+			}
+			if(StringUtils.deleteWhitespace(line).toUpperCase().contains(DOC)) {
+				isDoc = true;
+			}
+		}
+		if(!isExtrato) {
+			throw new ExtratoException("doc.not.extrato");
+		}
+		if(!isDoc) {
+			throw new ExtratoException("doc.not.extrato.caixa");
 		}
 		return dto;
 	}

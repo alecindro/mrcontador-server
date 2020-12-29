@@ -80,7 +80,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			return parseGPS(_lines, agenciabancaria, parceiro);
 		}
 
-		throw new ComprovanteException("Comprovante não identificado");
+		throw new ComprovanteException("doc.not.comprovante");
 	}
 
 	private List<Comprovante> parseTitulo(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)

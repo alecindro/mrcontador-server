@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.PdfParserExtrato;
 import br.com.mrcontador.file.extrato.TipoEntrada;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
@@ -33,6 +34,7 @@ public class PdfItau extends PdfParserExtrato {
 	private static final int VALUE_COLUMN = 141;
 	private static final int SALDO_COLUMN = 234;
 	private static final String PERIODO = "Extrato de";
+	private static final String EXTRATO= "EXTRATO";
 	private static Logger log = LoggerFactory.getLogger(PdfItau.class);
 	private DataItau dataItau;
 
@@ -75,6 +77,7 @@ public class PdfItau extends PdfParserExtrato {
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.ITAU.getCodigoBancario());
+		boolean isExtrato  = false;
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if(line.contains(PERIODO)) {
@@ -86,6 +89,15 @@ public class PdfItau extends PdfParserExtrato {
 				dto.setAgencia(agenciaConta[0].trim());
 				dto.setConta(agenciaConta[1].trim());
 			}
+			if(line.toUpperCase().contains(EXTRATO)) {
+				isExtrato = true;
+			}
+		}
+		if(dataItau == null) {
+			throw new ExtratoException("extrato.itau.notdate");
+		}
+		if(!isExtrato) {
+			throw new ExtratoException("doc.not.extrato");
 		}
 		return dto;
 	}

@@ -80,7 +80,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		if (StringUtils.normalizeSpace(_lines[3]).trim().equals("COMPROVANTE DE TED")) {
 			return parseComprovTED2Via(_lines, agenciabancaria, parceiro);
 		}
-		throw new ComprovanteException("Comprovante não identificado");
+		throw new ComprovanteException("doc.not.comprovante");
 	}
 	
 	private List<Comprovante> parseTitulo(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException{

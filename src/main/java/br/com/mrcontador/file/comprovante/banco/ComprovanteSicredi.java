@@ -63,7 +63,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			return null;
 		}
 
-		throw new ComprovanteException("Comprovante não identificado");
+		throw new ComprovanteException("doc.not.comprovante");
 	}
 	
 	private boolean isNotParse(String[] lines) {

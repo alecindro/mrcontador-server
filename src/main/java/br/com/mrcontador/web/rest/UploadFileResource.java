@@ -96,8 +96,7 @@ public class UploadFileResource {
 			FileDTO fileDTO = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
 					SecurityUtils.getCurrentTenantHeader(), parceiro.get());
 			String periodo = fileService.processExtrato(fileDTO, agencia.get(), contentType);
-			return ResponseEntity.created(new URI("/api/upload/extrato/")).headers(
-					HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadExtrato", file.getName())).body(periodo);
+			return ResponseEntity.created(new URI("/api/upload/extrato/")).body(periodo);
 		} catch (org.springframework.dao.DataIntegrityViolationException e) {
 			throw new MrContadorException("extrato.imported");
 		}

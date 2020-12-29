@@ -70,7 +70,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		if (StringUtils.normalizeSpace(_lines[5].trim()).equals("COMPROVANTE DE PAGAMENTO DARF")) {
 			return parseDarf(_lines, agenciabancaria, parceiro);
 		}
-		throw new ComprovanteException("Comprovante não identificado");
+		throw new ComprovanteException("doc.not.comprovante");
 	}
 
 	private List<Comprovante> parseImpostosTaxas(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)

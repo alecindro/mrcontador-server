@@ -51,7 +51,7 @@ public class ComprovanteCredCrea extends ComprovanteBanco {
 		if (line.equals("COMPROVANTE DE PAGAMENTO")) {
 			return parseComprovPagto(_lines, agenciabancaria, parceiro);
 		}
-		throw new ComprovanteException("Comprovante não identificado");
+		throw new ComprovanteException("doc.not.comprovante");
 	}
 
 	private boolean isConvenio(String[] lines) {

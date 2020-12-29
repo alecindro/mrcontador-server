@@ -218,7 +218,7 @@ public class MrContadorUtil {
 	}
 	
 	public static String removeDigit(String value) {
-		return StringUtils.splitByCharacterType(value)[0];
+		return StringUtils.splitByWholeSeparator(value, "-")[0];
 	}
 	
 

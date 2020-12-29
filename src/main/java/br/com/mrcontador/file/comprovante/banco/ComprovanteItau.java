@@ -87,7 +87,7 @@ public class ComprovanteItau extends ComprovanteBanco {
 		if (StringUtils.normalizeSpace(_lines[0].trim()).equals("Comprovante de pagamento de boleto")) {
 			return parseBoleto(_lines, agenciabancaria, parceiro);
 		}
-		throw new ComprovanteException("Comprovante não identificado");
+		throw new ComprovanteException("doc.not.comprovante");
 
 	}
 

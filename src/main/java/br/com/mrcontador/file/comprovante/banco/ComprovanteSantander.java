@@ -58,7 +58,7 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		if (StringUtils.normalizeSpace(_lines[1].trim()).equals("Títulos > 2ª via de Comprovante")) {
 			return parseTitulo(_lines, agenciabancaria, parceiro);
 		}
-		throw new ComprovanteException("parsercomprovante.notfound");
+		throw new ComprovanteException("doc.not.comprovante");
 	}
 
 	private List<Comprovante> parseComprovante(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
