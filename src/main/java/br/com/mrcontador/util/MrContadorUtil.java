@@ -81,10 +81,10 @@ public class MrContadorUtil {
 	
 	public static BigDecimal toMoney(String value) {
 		try {
-			value = value.replace("C", "").trim();
-			value = value.replace("D", "").trim();
-			value = value.replace("R$", "").trim();
-		return new BigDecimal(value);
+			String _value = value.replace("C", "").trim();
+			_value = _value.replace("D", "").trim();
+			_value = _value.replace("R$", "").trim();
+		return new BigDecimal(_value);
 		}catch (NumberFormatException e) {
 			return new BigDecimal(onlyMoney(value));
 		}
