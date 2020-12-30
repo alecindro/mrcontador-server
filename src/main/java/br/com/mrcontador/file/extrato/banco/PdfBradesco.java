@@ -29,12 +29,14 @@ public class PdfBradesco extends PdfParserExtrato {
 	private static final String SALDO_ANTERIOR = "SALDO ANTERIOR";
 	private static final int DATA_COLUMN = 13;
 	private static final int DESCRICAO_COLUMN = 33;
-	private static final int DCTO_COLUMN = 89;
+	private static final int DCTO_COLUMN = 88;
 	private static final int CRED_COLUMN = 112;
 	private static final int DEB_COLUMN = 143;
 	private static final int SALDO_COLUMN = 173;
 	private static final String BREAK = "Saldos Invest";
-	private static final String EXTRATO = "EXTRATO MENSAL";
+	private static final String EXTRATO_MENSAL = "EXTRATO MENSAL";
+	private static final String EXTRATO_DE = "EXTRATO DE";
+	private int lineHeader = 8;
 
 	private static Logger log = LoggerFactory.getLogger(PdfBradesco.class);
 
@@ -89,8 +91,12 @@ public class PdfBradesco extends PdfParserExtrato {
 					dto.setConta(StringUtils.substringBefore(nextLine.substring(7, nextLine.length()).trim(), StringUtils.SPACE));
 				}
 			}
-			if(line.toUpperCase().contains(EXTRATO)) {
+			if(line.toUpperCase().contains(EXTRATO_MENSAL)) {
 				isExtrato = true;
+			}
+			if(line.toUpperCase().contains(EXTRATO_DE) & !isExtrato) {
+				isExtrato = true;
+				this.lineHeader = 6;
 			}
 		}
 		if(!isExtrato) {
@@ -105,7 +111,7 @@ public class PdfBradesco extends PdfParserExtrato {
 		Date lastDate = null;
 		for (int i = lineHeader; i < lines.length; i++) {
 			String line = lines[i];
-			if(StringUtils.normalizeSpace(line).toUpperCase().contains(EXTRATO)) {
+			if(StringUtils.normalizeSpace(line).toUpperCase().contains(EXTRATO_MENSAL)) {
 				i = i +5;
 				line = lines[i];
 			}
@@ -154,7 +160,7 @@ public class PdfBradesco extends PdfParserExtrato {
 	@Override
 	protected int getLineHeader() {
 		// TODO Auto-generated method stub
-		return 8;
+		return lineHeader;
 	}
 	@Override
 	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos,

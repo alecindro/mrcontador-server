@@ -755,6 +755,11 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setNewValue("COMPROVANTE DE PAGAMENTO DO SIMPLES NACIONAL");
 		diffValue.setLine(i);
 		list.add(diffValue);
+		DiffValue diffValue2 = new DiffValue();
+		diffValue2.setOldValue(FORNECEDOR);
+		diffValue2.setNewValue("SIMPLES NACIONAL");
+		diffValue2.setLine(i);
+		list.add(diffValue2);
 		List<Comprovante> comprovantes = new ArrayList<>();
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;

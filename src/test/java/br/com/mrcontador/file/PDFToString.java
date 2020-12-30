@@ -67,7 +67,7 @@ public class PDFToString {
 	}
 	
 	public void printDoc() throws Exception {
-		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\recomenda\\extrato (6).pdf"));
+		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\pedu\\Extrato 05 2020.PDF"));
 	    PDDocument document = PDDocument.load(inputstream);
 		Splitter splitter = new Splitter();
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
