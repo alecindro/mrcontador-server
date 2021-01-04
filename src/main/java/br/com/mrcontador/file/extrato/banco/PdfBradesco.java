@@ -33,7 +33,7 @@ public class PdfBradesco extends PdfParserExtrato {
 	private static final int CRED_COLUMN = 112;
 	private static final int DEB_COLUMN = 143;
 	private static final int SALDO_COLUMN = 173;
-	private static final String BREAK = "Saldos Invest";
+	private static final String BREAK = "ÚLTIMOS LANÇAMENTOS";
 	private static final String EXTRATO_MENSAL = "EXTRATO MENSAL";
 	private static final String EXTRATO_DE = "EXTRATO DE";
 	private int lineHeader = 8;
@@ -116,7 +116,7 @@ public class PdfBradesco extends PdfParserExtrato {
 				line = lines[i];
 			}
 			PdfData data = new PdfData();
-			if(StringUtils.normalizeSpace(line).contains(BREAK)) {
+			if(StringUtils.normalizeSpace(line).toUpperCase().contains(BREAK)) {
 				break;
 			}
 			if (StringUtils.normalizeSpace(line).contains(SALDO_ANTERIOR)) {

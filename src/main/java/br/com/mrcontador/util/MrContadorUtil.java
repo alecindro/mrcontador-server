@@ -140,9 +140,10 @@ public class MrContadorUtil {
 	}
 
 	private static String getDateFileName() {
-		LocalDateTime z = LocalDateTime.now();
+		/*LocalDateTime z = LocalDateTime.now();
 		return z.getYear() + "" + z.getMonthValue() + "" + z.getDayOfMonth() + "_" + z.getHour() + "" + z.getMinute()
-				+ "" + z.getSecond();
+				+ "" + z.getSecond();*/
+		return String.valueOf(Math.random());
 	}
 
 	public static String removeZerosFromInital(String value) {
