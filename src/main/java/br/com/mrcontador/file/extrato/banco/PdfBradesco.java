@@ -133,6 +133,9 @@ public class PdfBradesco extends PdfParserExtrato {
 			if (StringUtils.isNumeric(StringUtils.remove(actualDate, "/"))) {
 				lastDate = Date.valueOf(LocalDate.parse(StringUtils.trim(actualDate), dateFormatter));
 			}
+			if(lastDate == null) {
+				continue;
+			}
 			data.setLancamento(lastDate);
 			readLine(line, data, i);
 			if (i < lines.length - 1) {				

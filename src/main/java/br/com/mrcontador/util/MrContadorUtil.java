@@ -2,6 +2,7 @@ package br.com.mrcontador.util;
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -221,6 +222,20 @@ public class MrContadorUtil {
 	public static String removeDigit(String value) {
 		return StringUtils.splitByWholeSeparator(value, "-")[0];
 	}
+	
+
+    public static int fimDeSemana(LocalDate ld) {
+        DayOfWeek d = ld.getDayOfWeek();
+        int result = 0;
+        if (d == DayOfWeek.SATURDAY) {
+        	result = 2;
+        }
+        if ( d == DayOfWeek.SUNDAY) {
+        	result = 1;
+        }
+        return result;
+    }
+
 	
 
 }
