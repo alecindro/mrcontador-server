@@ -882,7 +882,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 				
 				String lineB = StringUtils.substringBefore(
-						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Conta:")), "|Tipo:").trim();
+						StringUtils.deleteWhitespace(StringUtils.substringAfter(StringUtils.deleteWhitespace(line), "Conta:")), "|Tipo:").trim();
 				DiffValue diffValue2 = new DiffValue();
 				diffValue2.setOldValue(CONTA);
 				diffValue2.setNewValue(lineB);
@@ -891,6 +891,10 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			}
 			if (line.contains("IDENTIF. EMPRESA:")) {
 				String lineA = StringUtils.substringAfter(StringUtils.substringBefore(line, "IDENTIF. EMPRESA:"),"CNPJ/CEI:").trim();
+				if(StringUtils.isBlank(lineA)) {
+					lineA = StringUtils.substringAfter(StringUtils.substringBefore(line, "IDENTIF. EMPRESA:"),"Órgão:").trim();
+						
+				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
 				diffValue.setNewValue(lineA);
@@ -926,7 +930,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		}
 		DiffValue diffValue = new DiffValue();
 		diffValue.setOldValue(OBS);
-		diffValue.setNewValue("COMPROVANTE DE PAGAMENTO DO SIMPLES NACIONAL");
+		diffValue.setNewValue("COMPROVANTE DE PAGAMENTO DO FGTS");
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
