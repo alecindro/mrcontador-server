@@ -465,7 +465,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TED));
 		return comprovantes;
 	}
 
@@ -557,7 +557,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS);
+		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.TED);
 		comprovantes.add(comprovante);
 		if(taxaValue!= null) {
 			comprovantes.add(fromTaxa(taxaValue, comprovante));
@@ -586,6 +586,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
 		int i = 0;
+		String taxaValue = null;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
 			if (line.contains("Agência:")) {
@@ -651,10 +652,13 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Valor:")) {
-				String lineA = StringUtils.substringAfter(line, "Valor:").trim();
+			if (!line.contains("Valor total:") && (line.contains("Valor:") || line.contains("Valor"))) {
+				String lineA = StringUtils.substringAfter(line, "Valor").trim();
+				if(line.contains("Valor:")) {
+					lineA = StringUtils.substringAfter(line, "Valor:").trim();
+				}
 				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(VALOR_DOC);
+				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
@@ -662,7 +666,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			if (line.contains("Valor total:")) {
 				String lineA = StringUtils.substringAfter(line, "Valor total:").trim();
 				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setOldValue(VALOR_DOC);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
@@ -676,6 +680,15 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
+			
+			if (line.contains("Tarifa:")) {
+				String lineA = StringUtils.substringAfter(line, "Tarifa:").trim();
+				BigDecimal value = new BigDecimal(MrContadorUtil.onlyMoney(lineA));
+				if(value.compareTo(BigDecimal.ZERO) == 1) {
+					taxaValue = lineA;
+				}
+			}
+			
 			i = i + 1;
 		}
 		DiffValue diffValue = new DiffValue();
@@ -684,7 +697,11 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
+		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO);
+		comprovantes.add(comprovante);
+		if(taxaValue!= null) {
+			comprovantes.add(fromTaxa(taxaValue, comprovante));
+		}
 		return comprovantes;
 	}
 	

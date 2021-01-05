@@ -37,7 +37,7 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 		pdfParser.callExtrato(extratoService,extratos,fileDTO.getParceiro().getId());
 		pdfParser.callRegraInteligent(extratoService, fileDTO.getParceiro().getId(), periodos);		
 		pdfParser.extrasFunctions(extratoService, extratos,agenciaBancaria);
-		
+		pdfParser.callProcessaNotafiscalGeral(extratoService, fileDTO.getParceiro().getId(), extratos);
 		return periodos.stream().findFirst().get();
 	}
 
