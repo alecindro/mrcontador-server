@@ -128,8 +128,8 @@ public class DownloadFileResource {
 				.body(resource);
 	}
 
-	@GetMapping("/downloadFile/lancamento/{periodo}/{agenciabancariaId}/{parceiroId}/{cod_ext}/{sistema}")
-	public ResponseEntity<Resource> downloadLancamento(@PathVariable String periodo,@PathVariable Long agenciabancariaId, @PathVariable Long parceiroId, @PathVariable String cod_ext, @PathVariable String sistema) {
+	@GetMapping("/downloadFile/lancamento/{periodo}/{agenciabancariaId}/{parceiroId}/{cod_ext}")
+	public ResponseEntity<Resource> downloadLancamento(@PathVariable String periodo,@PathVariable Long agenciabancariaId, @PathVariable Long parceiroId, @PathVariable String cod_ext) {
 		InteligentCriteria criteria = new InteligentCriteria();
 		LongFilter _parceiro = new LongFilter();
 		_parceiro.setEquals(parceiroId);
@@ -146,7 +146,7 @@ public class DownloadFileResource {
 		List<Inteligent> inteligents = inteligentQueryService.findByCriteria(criteria);
 		Agenciabancaria agencia = agenciabancariaService.findOne(agenciabancariaId).get();
 		Parceiro parceiro = parceiroService.findOne(parceiroId).get();
-		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.valueOf(sistema));
+		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.DOMINIO_SISTEMAS);
 		String result = lancamento.process(inteligents, agencia, cod_ext, parceiro.getParCnpjcpf());
 		Resource resource = new ByteArrayResource(result.getBytes());
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/plain"))
