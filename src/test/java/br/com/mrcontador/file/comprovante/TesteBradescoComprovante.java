@@ -26,7 +26,7 @@ public class TesteBradescoComprovante {
 	
 	public static void main(String[] args) throws Exception {
 		TesteBradescoComprovante teste = new TesteBradescoComprovante();
-		teste.teste1("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\pedu\\Bradesco_18122020_104309-1.pdf");
+		teste.teste1("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\fuzz\\Agua telefone 01 01 2020 a 31 12 2020.PDF");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {
@@ -49,10 +49,10 @@ public class TesteBradescoComprovante {
 		PDFTextStripper stripper = new PdfReaderPreserveSpace();
 		List<PDDocument> pages = splitter.split(document);
 		Agenciabancaria agencia = new Agenciabancaria();
-		agencia.setAgeAgencia("7238");
-		agencia.setAgeNumero("0022188-0");
+		agencia.setAgeAgencia("348");
+		agencia.setAgeNumero("128527-0");
 		Parceiro parceiro = new Parceiro();
-		parceiro.setParCnpjcpf("018.158.321/0001-84");		
+		parceiro.setParCnpjcpf("003.551.834/0001-83");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.BRADESCO.getCodigoBancario());
 		ComprovanteBradesco cb = new ComprovanteBradesco();
 		for(PDDocument ppd : pages) {
