@@ -77,6 +77,9 @@ public class ComprovanteBB extends ComprovanteBanco{
 		if (StringUtils.normalizeSpace(_lines[4]).trim().equals("DE CONTA CORRENTE P/ CONTA CORRENTE")) {
 			return parseTransfConta(_lines, agenciabancaria, parceiro);
 		}
+		if (StringUtils.normalizeSpace(_lines[6]).trim().equals("DE CONTA CORRENTE P/ CONTA CORRENTE")) {
+			return parseTransfConta(_lines, agenciabancaria, parceiro);
+		}
 		if (StringUtils.normalizeSpace(_lines[3]).trim().equals("COMPROVANTE DE TED")) {
 			return parseComprovTED2Via(_lines, agenciabancaria, parceiro);
 		}
@@ -107,7 +110,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			if (line.contains("BENEFICIARIO:")) {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
-				if(StringUtils.normalizeSpace(lines[i+5]).trim().equals("SACADOR AVALISTA:")){
+				if(StringUtils.normalizeSpace(lines[i+5]).trim().equals("SACADOR AVALISTA:") || StringUtils.normalizeSpace(lines[i+5]).trim().equals("BENEFICIARIO FINAL:")){
 					String value = StringUtils.normalizeSpace(lines[i+6]).trim();
 					diffValue.setNewValue(value);
 					diffValue.setLine(i+6);
@@ -121,7 +124,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 			if (line.contains("CNPJ:") && !StringUtils.normalizeSpace(lines[i-2]).trim().equals("PAGADOR:")) {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_BEN);
-				if(StringUtils.normalizeSpace(lines[i+1]).trim().equals("SACADOR AVALISTA:")){
+				if(StringUtils.normalizeSpace(lines[i+1]).trim().equals("SACADOR AVALISTA:") || StringUtils.normalizeSpace(lines[i+1]).trim().equals("BENEFICIARIO FINAL:")){
 					String value =  StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i+3]).trim(), "CNPJ:").trim();
 					value = MrContadorUtil.onlyNumbers(value);
 					diffValue.setNewValue(value);
@@ -557,8 +560,8 @@ public class ComprovanteBB extends ComprovanteBanco{
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("CLIENTE:")) {
-				String value = StringUtils.substringAfter(line, "CLIENTE:").trim();
+			if (line.contains("TRANSFERIDO PARA")) {
+				String value = StringUtils.substringAfter( StringUtils.normalizeSpace(lines[i+1]), "CLIENTE:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
 				diffValue.setNewValue(value);
