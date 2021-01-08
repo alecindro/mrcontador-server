@@ -37,6 +37,14 @@ public class MrContadorUtil {
 		return value;
 	}
 	
+	public static String onlyLetters(String value) {
+		if (value != null) {
+			return value.replaceAll("[^a-zA-Z]", "");
+		}
+		return value;
+	}
+	
+	
     public static boolean isDate(String dateStr, DateTimeFormatter formatter) {        
     	try {
     		formatter.parse(dateStr);

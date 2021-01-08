@@ -65,7 +65,8 @@ public class PdfUnicred extends PdfParserExtrato{
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(date), dateFormatter)));
 		String historico = StringUtils.normalizeSpace(StringUtils.substring(line, HISTORY_COLUMN, VALUE_COLUMN));
 		data.setHistorico(historico.trim());
-		String numDoc = StringUtils.normalizeSpace(StringUtils.substring(line, DCTO_COLUMN, HISTORY_COLUMN));
+		String numDoc = StringUtils.normalizeSpace(StringUtils.substring(line, SALDO_COLUMN));
+		numDoc = MrContadorUtil.onlyNumbers(numDoc);
 		data.setDocumento(numDoc);
 		String valor = StringUtils.normalizeSpace(StringUtils.substring(line, VALUE_COLUMN, SALDO_COLUMN));
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));

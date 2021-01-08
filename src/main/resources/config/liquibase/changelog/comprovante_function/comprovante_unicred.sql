@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.comprovante_unicred("pCOM_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ds_demo.comprovante_unicred("pCOM_CODIGO" bigint)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -47,22 +47,21 @@ BEGIN
   SELECT COMPROVANTE.ID, COM_DOCUMENTO, COM_CNPJ, COM_BENEFICIARIO, COM_DATAVENCIMENTO, COM_VALORDOCUMENTO, COM_VALORPAGAMENTO, COM_DATAPAGAMENTO, PARCEIRO_ID, AGENCIABANCARIA_ID, COM_MULTA,
   COM_JUROS, COM_DESCONTO 
   INTO vCOMPROVANTE, vDETALHECOMP, vCNPJ, vBENEFICIARIO, vDATAVENCIMENTO, vVALORDOCUMENTO, vVALORPAGAMENTO, vDATAPAGAMENTO, vPARCEIROID, vAGENCIABANCARIAID, vCOMMULTA, vCOMJUROS, VCOMDESCONTO
-  FROM  ${schema}.COMPROVANTE
+  FROM  ds_demo.COMPROVANTE
   WHERE ID= pCOM_CODIGO; 
   
-  SELECT DESPESA_JUROS INTO vCONTAJUROS FROM  ${schema}.PARCEIRO WHERE ID = vPARCEIROID;
+  SELECT DESPESA_JUROS INTO vCONTAJUROS FROM  ds_demo.PARCEIRO WHERE ID = vPARCEIROID;
   
         
    FOR REC IN
     SELECT  DISTINCT e.ID as extrato_id, e.EXT_DATALANCAMENTO, e.EXT_HISTORICO, e.EXT_NUMERODOCUMENTO, e.EXT_NUMEROCONTROLE, e.EXT_DESCRICAO, e.EXT_DEBITO, e.EXT_CREDITO, e.INFO_ADICIONAL, i.ID as inteligent_id,
     i.periodo
-    FROM  ${schema}.EXTRATO e
-     INNER JOIN  ${schema}.INTELIGENT i ON i.EXTRATO_ID=e.ID
+    FROM  ds_demo.EXTRATO e
+     INNER JOIN  ds_demo.INTELIGENT i ON i.EXTRATO_ID=e.ID
     WHERE e.PARCEIRO_ID= vPARCEIROID
       AND e.AGENCIABANCARIA_ID= vAGENCIABANCARIAID
       AND i.ASSOCIADO= FALSE
       AND i.COMPROVANTE_ID is null
-      and EXT_HISTORICO like '%'|| vDETALHECOMP || '%'
       and EXT_DATALANCAMENTO = vDATAPAGAMENTO
       and EXT_DEBITO = vVALORPAGAMENTO*-1
     ORDER BY e.ID 
@@ -92,29 +91,29 @@ BEGIN
    END IF;
 
  	 vHISTORICOFINAL   := 'Pagto. de '|| vBENEFICIARIO;
-     UPDATE  ${schema}.INTELIGENT SET COMPROVANTE_ID= vCOMPROVANTE,CNPJ= vCNPJ,  BENEFICIARIO= vBENEFICIARIO, TIPO_INTELIGENT = vTIPOINTELIGENTE, TIPO_VALOR = 'PRINCIPAL', HISTORICOFINAL = vHISTORICOFINAL WHERE ID = vCODIGOINTELIGENTE;
+     UPDATE  ds_demo.INTELIGENT SET COMPROVANTE_ID= vCOMPROVANTE,CNPJ= vCNPJ,  BENEFICIARIO= vBENEFICIARIO, TIPO_INTELIGENT = vTIPOINTELIGENTE, TIPO_VALOR = 'PRINCIPAL', HISTORICOFINAL = vHISTORICOFINAL WHERE ID = vCODIGOINTELIGENTE;
      IF ((vCOMMULTA > 0) OR (vCOMJUROS >0)) THEN
      	vHISTORICOFINAL   := 'Pagto. de Juros de '|| vBENEFICIARIO;
-        UPDATE  ${schema}.INTELIGENT SET debito = vVALORDOCUMENTO*-1 WHERE ID = vCODIGOINTELIGENTE;
+        UPDATE  ds_demo.INTELIGENT SET debito = vVALORDOCUMENTO*-1 WHERE ID = vCODIGOINTELIGENTE;
 		IF( vCONTAJUROS > -1) THEN
-     	INSERT INTO  ${schema}.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
+     	INSERT INTO  ds_demo.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal, conta_id) VALUES ('Pagto. de Juros','JUROS',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO,  CASE WHEN vCOMJUROS > 0 THEN vCOMJUROS*-1 ELSE vCOMMULTA*-1 END,true,
      		vCNPJ,vBENEFICIARIO, vTIPOINTELIGENTE,vCOMPROVANTE,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO, vHISTORICOFINAL, vCONTAJUROS);
 		ELSE
-		INSERT INTO  ${schema}.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
+		INSERT INTO  ds_demo.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Pagto. de Juros','JUROS',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO,  CASE WHEN vCOMJUROS > 0 THEN vCOMJUROS*-1 ELSE vCOMMULTA*-1 END,false,
      		vCNPJ,vBENEFICIARIO, vTIPOINTELIGENTE,vCOMPROVANTE,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO, vHISTORICOFINAL);
 		END IF;
      END IF;
      IF (VCOMDESCONTO > 0) THEN
      vHISTORICOFINAL   := 'Receb. de Desconto de '|| vBENEFICIARIO;
-      UPDATE  ${schema}.INTELIGENT SET debito = vVALORDOCUMENTO*-1 WHERE ID = vCODIGOINTELIGENTE;
-     	INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
+      UPDATE  ds_demo.INTELIGENT SET debito = vVALORDOCUMENTO*-1 WHERE ID = vCODIGOINTELIGENTE;
+     	INSERT INTO  ds_demo.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Receb. de desconto','DESCONTO',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO, VCOMDESCONTO,false,
      		vCNPJ,vBENEFICIARIO, vTIPOINTELIGENTE,vCOMPROVANTE,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO, vHISTORICOFINAL);
      END IF;
      
-     	UPDATE ${schema}.COMPROVANTE SET PROCESSADO = TRUE WHERE ID = vCOMPROVANTE; 
+     	UPDATE ds_demo.COMPROVANTE SET PROCESSADO = TRUE WHERE ID = vCOMPROVANTE; 
        vRETORNO:= vRETORNO + 1;
 
     
