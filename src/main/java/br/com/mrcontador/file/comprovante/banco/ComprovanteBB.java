@@ -86,6 +86,9 @@ public class ComprovanteBB extends ComprovanteBanco{
 		if (StringUtils.normalizeSpace(_lines[4]).trim().equals("DE CONTA CORRENTE PARA POUPANCA")) {
 			return parseTransfPoupanca(_lines, agenciabancaria, parceiro);
 		}
+		if (StringUtils.normalizeSpace(_lines[6]).trim().equals("DE CONTA CORRENTE PARA POUPANCA")) {
+			return parseTransfPoupanca(_lines, agenciabancaria, parceiro);
+		}
 		throw new ComprovanteException("doc.not.comprovante");
 	}
 	
