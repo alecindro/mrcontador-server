@@ -83,6 +83,9 @@ public class ComprovanteBB extends ComprovanteBanco{
 		if (StringUtils.normalizeSpace(_lines[3]).trim().equals("COMPROVANTE DE TED")) {
 			return parseComprovTED2Via(_lines, agenciabancaria, parceiro);
 		}
+		if (StringUtils.normalizeSpace(_lines[4]).trim().equals("DE CONTA CORRENTE PARA POUPANCA")) {
+			return parseTransfPoupanca(_lines, agenciabancaria, parceiro);
+		}
 		throw new ComprovanteException("doc.not.comprovante");
 	}
 	
@@ -609,7 +612,78 @@ public class ComprovanteBB extends ComprovanteBanco{
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
 		return comprovantes;
 	}
+
+	private List<Comprovante> parseTransfPoupanca(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException{
+		List<DiffValue> list = new ArrayList<DiffValue>();
+		int i = 0;
+		for (String line : lines) {
+			line = StringUtils.normalizeSpace(line.trim());
+			if (line.contains("AGENCIA:")) {
+				String value = StringUtils.substringBefore(StringUtils.substringAfter(line, "AGENCIA:").trim(),"CONTA:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(AGENCIA);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("CONTA:")) {
+				String value = StringUtils.substringAfter(line, "CONTA:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CONTA);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("TRANSFERIDO PARA")) {
+				String value = StringUtils.substringAfter( StringUtils.normalizeSpace(lines[i+1]), "CLIENTE:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(FORNECEDOR);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i+1);
+				list.add(diffValue);
+			}
+			if (line.contains("NR. DOCUMENTO")) {
+				String value = StringUtils.substringAfter(line, "NR. DOCUMENTO").trim();
+				value = MrContadorUtil.removeDots(value);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i+1);
+				list.add(diffValue);
+			}
+			if (line.contains("DATA DA TRANSFERENCIA")) {
+				String value = StringUtils.substringAfter(line, "DATA DA TRANSFERENCIA").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i+1);
+				list.add(diffValue);
+			}
+		
+			if (line.contains("VALOR TOTAL")) {
+				String value = StringUtils.substringAfter(line, "VALOR TOTAL").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i+1);
+				list.add(diffValue);
+			}
+			
+			
+			i = i+1;
+		}
+		
+		DiffValue diffValue = new DiffValue();
+		diffValue.setOldValue(OBS);
+		diffValue.setNewValue("COMPROVANTE DE TRANSFERENCIA DE CONTA CORRENTE PARA POUPANCA");
+		diffValue.setLine(2);
+		list.add(diffValue);
 	
+		List<Comprovante> comprovantes = new ArrayList<>();
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
+		return comprovantes;
+	}
+
 	private List<Comprovante> parseComprovDarf(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro) throws ComprovanteException{
 		List<DiffValue> list = new ArrayList<DiffValue>();
 		int i = 0;
