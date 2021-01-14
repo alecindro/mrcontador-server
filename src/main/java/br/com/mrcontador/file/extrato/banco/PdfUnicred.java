@@ -33,7 +33,7 @@ public class PdfUnicred extends PdfParserExtrato{
 	private static final int DCTO_COLUMN = 34;
 	private static final int VALUE_COLUMN = 131;
 	private static final int SALDO_COLUMN = 162;
-	private static final String BREAK = "*Lançamentos Bloqueados";
+	private static final String BREAK = "Lançamentos Bloqueados";
 	private static Logger log = LoggerFactory.getLogger(PdfUnicred.class);
 	public PdfUnicred() throws IOException {
 		super();
@@ -111,6 +111,7 @@ public class PdfUnicred extends PdfParserExtrato{
 				break;
 			}
 			readLine(line, data, i);
+			datas.add(data);
 			if (i < lines.length - 1) {
 				if(StringUtils.normalizeSpace(lines[i + 1]).contains(BREAK)) {
 					break;
@@ -121,7 +122,7 @@ public class PdfUnicred extends PdfParserExtrato{
 				}
 			}
 
-			datas.add(data);
+			
 		}
 		return datas;
 	}

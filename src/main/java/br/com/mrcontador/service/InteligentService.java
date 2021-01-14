@@ -94,6 +94,9 @@ public class InteligentService {
     	if(regra.getTipoRegra().equals(TipoRegra.INFORMACAO_ADICIONAL)) {
     		inteligentRepository.updateFromInformacaoRegra(regra.getRegHistorico(), regra.getRegDescricao(), regra.getConta().getId(), regra.getParceiro().getId(),regra.getId());
     	}
+    	if(regra.getTipoRegra().equals(TipoRegra.BENEFICIARIO)) {
+    		inteligentRepository.updateFromBeneficiarioRegra(regra.getRegHistorico(), regra.getRegDescricao(), regra.getConta().getId(), regra.getParceiro().getId(), regra.getId());
+    	}
     }
     public void updateFromRegra(Regra regra) {
     	inteligentRepository.updateRegra(regra.getRegHistorico(), regra.getParceiro().getId(), regra.getId(), regra.getConta().getId());
