@@ -786,13 +786,4 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 			}
 		}
 	}
-
-	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service) {
-		comprovantes.forEach(comprovante ->{
-			service.callComprovanteCEF(comprovante.getId());	
-		});
-		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
-		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
-		service.callNotaFiscal(comprovante.getParceiro().getId(), date);
-    }
 }

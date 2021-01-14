@@ -1058,12 +1058,4 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		}
 	}
 
-	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service) {
-		comprovantes.forEach(comprovante ->{
-			service.callComprovanteBradesco(comprovante.getId());	
-		});
-		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
-		LocalDate date = comprovante.getComDatavencimento() != null ? comprovante.getComDatavencimento().minusMonths(4) : comprovante.getComDatapagamento().minusMonths(4) ;
-		service.callNotaFiscal(comprovante.getParceiro().getId(), date);
-    }
 }
