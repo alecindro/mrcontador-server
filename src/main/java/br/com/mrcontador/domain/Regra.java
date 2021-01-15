@@ -36,10 +36,10 @@ public class Regra implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "reg_descricao", length = 60)
+    @Column(name = "reg_descricao", length = 254)
     private String regDescricao;
 
-    @Column(name = "reg_historico", length = 60)
+    @Column(name = "reg_historico", length = 254)
     private String regHistorico;
 
     @Column(name = "reg_todos", length = 1)

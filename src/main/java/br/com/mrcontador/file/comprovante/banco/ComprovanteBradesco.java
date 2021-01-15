@@ -507,8 +507,8 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Conta de crédito:")) {
-				String lineA = StringUtils.substringAfter(line, "Conta de crédito:").trim();
+			if (line.contains("favorecido:")) {
+				String lineA = StringUtils.substringAfter(line, "favorecido:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
 				diffValue.setNewValue(lineA);

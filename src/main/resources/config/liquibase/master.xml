@@ -108,6 +108,7 @@
 <changeSet author="alecindro" id="50">
     <sqlFile path="config/liquibase/changelog/comprovante_function/comprovante_santander.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
+<include file="config/liquibase/changelog/alter_regra.sql" relativeToChangelogFile="false"/>
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
