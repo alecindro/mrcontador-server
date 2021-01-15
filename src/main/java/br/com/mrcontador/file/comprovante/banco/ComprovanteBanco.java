@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,7 @@ import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.ParserComprovante;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public abstract class ComprovanteBanco implements ParserComprovante {
@@ -37,13 +39,16 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 			return service.save(comprovante);
 	}
 	
-	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service) {
+	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service, ExtratoService extratoService) {
 		comprovantes.forEach(comprovante ->{
 			service.callComprovante(comprovante.getId());	
 		});
+		Set<String> periodos = comprovantes.stream().map(Comprovante::getPeriodo).collect(Collectors.toSet());
 		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
+		Long parceiroId = comprovante.getParceiro().getId();
+		extratoService.callRegraInteligent(parceiroId, periodos);
 		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
-		service.callNotaFiscal(comprovante.getParceiro().getId(), date);
+		service.callNotaFiscal(parceiroId, date);
     }
 	
 

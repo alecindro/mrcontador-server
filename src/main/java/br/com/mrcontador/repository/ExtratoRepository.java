@@ -75,10 +75,10 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 			"associado = true " + 
 			"from " + 
 			"(select intel.id as intel_id, r.reg_historico as hf ,r.id as regra_id,r.conta_id as conta_id  from " + 
-			"(select i.id,e.ext_historico,e.info_adicional from inteligent i inner join extrato e " + 
+			"(select i.id,e.ext_historico,e.info_adicional, i.beneficiario from inteligent i inner join extrato e " + 
 			"on i.extrato_id = e.id where i.parceiro_id = :parceiroId and i.associado = false and i.periodo = :periodo) as intel, regra r " + 
 			"where ((r.reg_descricao = intel.ext_historico and r.tipo_regra = 'HISTORICO') " + 
-			"or(r.reg_descricao = intel.info_adicional and r.tipo_regra = 'INFORMACAO_ADICIONAL'))" + 
+			"or(r.reg_descricao = intel.info_adicional and r.tipo_regra = 'INFORMACAO_ADICIONAL') or(r.reg_descricao = intel.beneficiario and r.tipo_regra = 'BENEFICIARIO'))" + 
 			"and r.parceiro_id = :parceiroId) as subquery " + 
 			"where id = subquery.intel_id;", nativeQuery = true)
 	void regraInteligent(@Param("parceiroId") Long parceiroId,@Param("periodo") String periodo);
