@@ -166,7 +166,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("Órgão:")) {
-				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, ":").trim(),StringUtils.SPACE);
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Órgão:").trim(),StringUtils.SPACE);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
 				diffValue.setNewValue(lineA);
@@ -252,6 +252,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				sacador.setNewValue(lineA);
 				sacador.setLine(_razao);
 				list.add(sacador);
+				
 			}
 			if (line.contains("Data de débito:")) {
 				String lineA = StringUtils.substringAfter(line, "Data de débito:").trim();
@@ -292,6 +293,11 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
+				DiffValue fornecedor = list.stream().filter(diff -> diff.getOldValue().contentEquals(FORNECEDOR)).findAny().get();
+				if(fornecedor.getNewValue().contentEquals("Não informado")) {
+					fornecedor.setNewValue(lineA);
+				}
+				
 			}
 			if (line.contains("Documento:")) {
 				String lineA = StringUtils.substringAfter(line, "Documento:").trim();
@@ -305,6 +311,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			}
 			i = i + 1;
 		}
+		
 		DiffValue diffValue = new DiffValue();
 		diffValue.setOldValue(OBS);
 		diffValue.setNewValue("Boleto de Cobrança");

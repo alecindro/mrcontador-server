@@ -176,7 +176,7 @@ try {
 				: BigDecimal.ZERO);		
 		comprovante.setComBeneficiario(fornecedor.isPresent() ? StringUtils.normalizeSpace(fornecedor.get().getNewValue()) : "");
 		comprovante.setComDatapagamento(data_pagto.isPresent() ? toDate(data_pagto.get().getNewValue()) : null);
-		comprovante.setComDatavencimento(data_vcto.isPresent() ? toDate(data_vcto.get().getNewValue()) : comprovante.getComDatapagamento());
+		comprovante.setComDatavencimento(data_vcto.isPresent() && !data_vcto.get().getNewValue().contentEquals("00/00/0000") ? toDate(data_vcto.get().getNewValue()) : comprovante.getComDatapagamento());
 		comprovante.setAgenciabancaria(agenciabancaria);
 		comprovante.setParceiro(parceiro);
 		comprovante.setTipoComprovante(tipoComprovante);
