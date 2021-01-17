@@ -582,10 +582,10 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		Comprovante _taxa = new Comprovante();
 		_taxa.setComCnpj(comprovante.getComCnpj());
 		_taxa.setComDocumento(comprovante.getComDocumento());
-		_taxa.setComObservacao(comprovante.getComObservacao());
+		_taxa.setComObservacao(comprovante.getComObservacao() +" - Tarifa");
 		_taxa.setComValordocumento(new BigDecimal(MrContadorUtil.onlyMoney(taxa)));
 		_taxa.setComValorpagamento(_taxa.getComValordocumento());
-		_taxa.setComBeneficiario(comprovante.getComBeneficiario());
+		_taxa.setComBeneficiario(comprovante.getComBeneficiario()+" - Tarifa");
 		_taxa.setComDatapagamento(comprovante.getComDatapagamento());
 		_taxa.setComDatavencimento(comprovante.getComDatavencimento());
 		_taxa.setAgenciabancaria(comprovante.getAgenciabancaria());

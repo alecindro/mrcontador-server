@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscalgeral("pPAR_CODIGO" bigint, "pDATA_INICIAL" date)
+CREATE OR REPLACE FUNCTION ds_demo.processa_notafiscalgeral("pPAR_CODIGO" bigint, "pDATA_INICIAL" date)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -8,7 +8,7 @@ declare
   vRETORNO NUMERIC;
   vQUANTIDADE NUMERIC;
   vNOTAFISCAL_ID numeric;
-  cNOTAGERAL CURSOR for SELECT id  FROM ${schema}.NOTAFISCAL  WHERE  TNO_CODIGO=0
+  cNOTAGERAL CURSOR for SELECT id  FROM ds_demo.NOTAFISCAL  WHERE  TNO_CODIGO=0
     AND PARCEIRO_ID = CAST(pPAR_CODIGO AS int8) AND PROCESSADO = false and NOT_DATAPARCELA > cast(pDATA_INICIAL as DATE);
 BEGIN 
   vRETORNO:= 0;  
@@ -16,8 +16,7 @@ BEGIN
  loop
   FETCH cNOTAGERAL INTO vNOTAFISCAL_ID;
   EXIT WHEN NOT FOUND;
- raise notice 'nota fiscal (%)', vNOTAFISCAL_ID;
-   SELECT * from ${schema}.processa_notafiscal(cast(vNOTAFISCAL_ID as INT8)) INTO vQUANTIDADE;
+   SELECT * from ds_demo.processa_notafiscal(cast(vNOTAFISCAL_ID as INT8)) INTO vQUANTIDADE;
    vRETORNO:= vRETORNO + vQUANTIDADE; 
   END LOOP;
  close cNOTAGERAL;
