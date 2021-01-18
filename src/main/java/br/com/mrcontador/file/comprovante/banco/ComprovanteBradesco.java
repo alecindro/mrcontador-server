@@ -478,7 +478,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TED));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TRANSFERENCIA));
 		return comprovantes;
 	}
 
@@ -570,7 +570,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.TED);
+		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.TRANSFERENCIA);
 		comprovantes.add(comprovante);
 		if(taxaValue!= null) {
 			comprovantes.add(fromTaxa(taxaValue, comprovante));
@@ -710,7 +710,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		diffValue.setLine(i);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO);
+		Comprovante comprovante = toEntity(list, agenciabancaria, parceiro, TipoComprovante.TRANSFERENCIA);
 		comprovantes.add(comprovante);
 		if(taxaValue!= null) {
 			comprovantes.add(fromTaxa(taxaValue, comprovante));

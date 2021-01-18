@@ -270,7 +270,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 		diffValue.setLine(2);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TITULO));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TRANSFERENCIA));
 		return comprovantes;
 	}
 	private List<Comprovante> parseTributos(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)

@@ -456,7 +456,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		list.add(diffValue);
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TRANSFERENCIA));
 		return comprovantes;
 	}
 	
@@ -544,7 +544,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		list.add(diffValue);
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TRANSFERENCIA));
 		return comprovantes;
 	}
 	
@@ -615,7 +615,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		list.add(diffValue);
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TRANSFERENCIA));
 		return comprovantes;
 	}
 
@@ -686,7 +686,7 @@ public class ComprovanteBB extends ComprovanteBanco{
 		list.add(diffValue);
 	
 		List<Comprovante> comprovantes = new ArrayList<>();
-		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TRANSFERENCIA));
 		return comprovantes;
 	}
 
