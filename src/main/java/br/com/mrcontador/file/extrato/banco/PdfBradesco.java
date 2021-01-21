@@ -154,6 +154,7 @@ public class PdfBradesco extends PdfParserExtrato {
 						break;
 					}
 				}
+				data.setInfAdicional(infoAdd.toString());
 			}
 			datas.add(data);
 		}
