@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,6 @@ import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.PPDocumentDTO;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
-import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -57,6 +55,9 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		}
 		if (StringUtils.normalizeSpace(_lines[1].trim()).equals("Títulos > 2ª via de Comprovante")) {
 			return parseTitulo(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[1].trim()).contains("GPS")) {
+			return parseGPS(_lines, agenciabancaria, parceiro);
 		}
 		throw new ComprovanteException("doc.not.comprovante");
 	}
@@ -490,6 +491,83 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
 		return comprovantes;
 	}
+	
+	private List<Comprovante> parseGPS(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
+			throws ComprovanteException {
+		List<DiffValue> list = new ArrayList<DiffValue>();
+		int i = 0;
+		for (String line : lines) {
+			line = StringUtils.normalizeSpace(line.trim());
+		
+			if (line.contains("Data/Hora da Transação:")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Data/Hora da Transação:").trim(),StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if(line.contains("Valor do INSS:")) {
+				String lineA = StringUtils.substringAfter(line, "Valor do INSS:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_DOC);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if(line.contains("Total:")) {
+				String lineA = StringUtils.substringAfter(line, "Total:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if(line.contains("ATM/Multa e Juros:")) {
+				String lineA = StringUtils.substringAfter(line, "ATM/Multa e Juros:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(MULTA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if(line.contains("Identificador:")) {
+				String lineA = StringUtils.substringAfter(line, "Identificador:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			
+			if(line.contains("Outras Entidades:")) {
+				String value = StringUtils.substringAfter(line, "Outras Entidades:").trim();
+				value = MrContadorUtil.onlyNumbers(value);
+				if(value != "") {
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(JUROS);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i+1);
+				list.add(diffValue);
+				}
+			}
+			i = i + 1;
+		}
+		DiffValue diffValue = new DiffValue();
+		diffValue.setOldValue(OBS);
+		diffValue.setNewValue("GUIA DA PREVIDENCIA SOCIAL");
+		diffValue.setLine(i);
+		list.add(diffValue);
+		DiffValue diffValue2 = new DiffValue();
+		diffValue2.setOldValue(FORNECEDOR);
+		diffValue2.setNewValue("PREVIDENCIA SOCIAL");
+		diffValue2.setLine(i);
+		list.add(diffValue2);
+		List<Comprovante> comprovantes = new ArrayList<>();
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
+		return comprovantes;
+	}
+
 	
 	public List<PPDocumentDTO> parseComprovante(FileDTO fileDTO) {
 		InputStream stream = null;

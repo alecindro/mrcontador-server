@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -228,7 +228,12 @@ public class MrContadorUtil {
 	}
 	
 	public static String removeDigit(String value) {
-		return StringUtils.splitByWholeSeparator(value, "-")[0];
+		String[] values = StringUtils.splitByWholeSeparator(value, "-");
+		if(values.length>1) {
+		values = Arrays.copyOf(values, values.length-1);
+		return StringUtils.join(values);
+		}
+		return values[0];
 	}
 	
 
