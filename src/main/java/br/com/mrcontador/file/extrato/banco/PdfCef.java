@@ -67,6 +67,10 @@ public class PdfCef extends PdfParserExtrato {
 		String valor = StringUtils.substring(line, VALUE_COLUMN, SALDO_COLUMN);
 		data.setTipoEntrada(getTipo(valor));
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
+		if(data.getTipoEntrada().equals(TipoEntrada.DEBIT)){
+			data.setValor(data.getValor().negate());
+		}
+		
 	}
 
 	@Override
@@ -85,16 +89,16 @@ public class PdfCef extends PdfParserExtrato {
 			if(line.toUpperCase().contains(EXTRATO)) {
 				isExtrato = true;
 			}
-			if(StringUtils.deleteWhitespace(line).toUpperCase().contains(DOC)) {
+			/*if(StringUtils.deleteWhitespace(line).toUpperCase().contains(DOC)) {
 				isDoc = true;
-			}
+			}*/
 		}
 		if(!isExtrato) {
 			throw new ExtratoException("doc.not.extrato");
 		}
-		if(!isDoc) {
+		/*if(!isDoc) {
 			throw new ExtratoException("doc.not.extrato.caixa");
-		}
+		}*/
 		return dto;
 	}
 

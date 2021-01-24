@@ -19,7 +19,8 @@ vNOTCNPJ TEXT;
 vCONTATARIFA numeric;
 vPARCEIROID numeric;
 
-BEGIN
+begin
+	raise INFO 'NOTA FISCAL: %', pNOT_CODIGO;
   vRETORNO:= 0;  
 SELECT NF.ID, NF.NOT_NUMERO, 
 NF.NOT_VALORPARCELA,NF.NOT_EMPRESA, NF.not_parcela, NF.NOT_DATAPARCELA, NF.NOT_CNPJ, NF.PARCEIRO_ID 
@@ -49,23 +50,28 @@ C.com_multa as vCOMMULTA, C.com_desconto AS vDESCONTO
 	AND I.PARCEIRO_ID = vPARCEIROID
 	ORDER BY C.COM_VALORDOCUMENTO ASC
 	LIMIT 1
-    
- LOOP
+   
+ loop
+  raise INFO 'INTELIGENT_ID: %', REC.INTELIGENT_ID;
     vTAXA:= REC.vVALORPAGAMENTO - vVALORPARCELANOTA - REC.vCOMJUROS - REC.vCOMMULTA + REC.vDESCONTO;
  	vHISTORICOFINAL   := 'Pagto. NFe '|| vNUMERONOTA || '/' || vNPARCELA || ' de ' || vEMPRESANOTA;
-    IF (vTAXA > 0) THEN
+    IF (vTAXA > 0) then
+      raise INFO 'vTAXA: %, vHISTORICOFINAL: %, vNOTAFISCALID: %, INTELIGENT_ID: %', vTAXA, vHISTORICOFINAL, vNOTAFISCALID, REC.INTELIGENT_ID;
     	 update ds_demo.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID, tipo_inteligent ='C'  where id = REC.INTELIGENT_ID;
     	 vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| vNUMERONOTA || '/' || vNPARCELA || ' de ' || vEMPRESANOTA;
-	   	IF (vCONTATARIFA IS NOT NULL) THEN 
+	   	raise INFO 'vCONTATARIFA: %', vCONTATARIFA;
+    	IF (vCONTATARIFA IS NOT NULL) THEN 
+    		raise INFO 'vCONTATARIFA: % % % % % % % % % % % % %', REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
+	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA, REC.vCNPJ,REC.vBENEFICIARIO,REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vCONTATARIFA;
 		INSERT INTO  ds_demo.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
 	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal, conta_id) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
 	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,true,
-	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vCONTATARIFA);
+	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vHISTORICOFINAL, vCONTATARIFA);
 		ELSE
 		INSERT INTO  ds_demo.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
 	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
 	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,false,
-	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID);
+	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vHISTORICOFINAL);
 		SELECT ds_demo.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
 		END IF;		
    	else
