@@ -1,12 +1,23 @@
 package br.com.mrcontador.domain;
 
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-
-import java.io.Serializable;
-import java.time.ZonedDateTime;
+import br.com.mrcontador.file.TipoDocumento;
 
 /**
  * A ArquivoErro.
@@ -43,11 +54,38 @@ public class ArquivoErro implements Serializable {
     @Column(name = "usuario")
     private String usuario;
 
-    @Column(name = "contador")
-    private String contador;
+    @Column(name = "schema")
+    private String schema;
 
     @Column(name = "tamanho")
     private Long tamanho;
+    
+    @Column(name = "tipo_documento")
+    @Enumerated(EnumType.STRING)
+    private TipoDocumento tipoDocumento;
+    
+    @Column(name= "parceiro_id")
+    private Long parceiroId;
+    
+    @Column(name = "parceiro")
+    private String parceiroName;
+    
+    @Column(name = "processado")
+    private Boolean processado;
+    
+    @Column(name = "valido")
+    private Boolean valido;
+    
+    @Column(name = "id_agencia")
+    private Long idAgencia;
+    
+    @Column(name = "content_type")
+    private String contentType;
+    
+    
+    @ManyToOne
+    @JoinColumn(name="contador_id")
+    private Contador contador;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -97,7 +135,7 @@ public class ArquivoErro implements Serializable {
         this.tipoArquivo = tipoArquivo;
     }
 
-    public String gets3Url() {
+    public String getS3Url() {
         return s3Url;
     }
 
@@ -106,11 +144,11 @@ public class ArquivoErro implements Serializable {
         return this;
     }
 
-    public void sets3Url(String s3Url) {
+    public void setS3Url(String s3Url) {
         this.s3Url = s3Url;
     }
 
-    public String gets3Dir() {
+    public String getS3Dir() {
         return s3Dir;
     }
 
@@ -119,7 +157,7 @@ public class ArquivoErro implements Serializable {
         return this;
     }
 
-    public void sets3Dir(String s3Dir) {
+    public void setS3Dir(String s3Dir) {
         this.s3Dir = s3Dir;
     }
 
@@ -149,24 +187,32 @@ public class ArquivoErro implements Serializable {
         this.usuario = usuario;
     }
 
-    public String getContador() {
+    public Contador getContador() {
         return contador;
     }
 
-    public ArquivoErro contador(String contador) {
+    public ArquivoErro contador(Contador contador) {
         this.contador = contador;
         return this;
     }
 
-    public void setContador(String contador) {
+    public void setContador(Contador contador) {
         this.contador = contador;
     }
 
     public Long getTamanho() {
         return tamanho;
     }
+    
+    public String getSchema() {
+		return schema;
+	}
 
-    public ArquivoErro tamanho(Long tamanho) {
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+
+	public ArquivoErro tamanho(Long tamanho) {
         this.tamanho = tamanho;
         return this;
     }
@@ -174,9 +220,95 @@ public class ArquivoErro implements Serializable {
     public void setTamanho(Long tamanho) {
         this.tamanho = tamanho;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    
+    public TipoDocumento getTipoDocumento() {
+		return tipoDocumento;
+	}
 
-    @Override
+	public void setTipoDocumento(TipoDocumento tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+	
+	public ArquivoErro tipoDocumento(TipoDocumento tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+		return this;
+	}
+
+	public Long getParceiroId() {
+		return parceiroId;
+	}
+
+	public void setParceiroId(Long parceiroId) {
+		this.parceiroId = parceiroId;
+	}
+	
+	public ArquivoErro parceiroId(Long parceiroId) {
+		this.parceiroId = parceiroId;
+		return this;
+	}
+
+	public String getParceiroName() {
+		return parceiroName;
+	}
+
+	public void setParceiroName(String parceiroName) {
+		this.parceiroName = parceiroName;
+	}
+	
+	public ArquivoErro parceiroName(String parceiroName) {
+		this.parceiroName = parceiroName;
+		return this;
+	}
+	
+	public Boolean getProcessado() {
+		return processado;
+	}
+
+	public void setProcessado(Boolean processado) {
+		this.processado = processado;
+	}
+	
+	public ArquivoErro processado(Boolean processado) {
+		this.processado = processado;
+		return this;
+	}
+	
+	public Boolean getValido() {
+		return valido;
+	}
+
+	public void setValido(Boolean valido) {
+		this.valido = valido;
+	}
+	
+	public ArquivoErro valido(Boolean valido) {
+		this.valido = valido;
+		return this;
+	}
+
+	public Long getIdAgencia() {
+		return idAgencia;
+	}
+
+	public void setIdAgencia(Long idAgencia) {
+		this.idAgencia = idAgencia;
+	}
+	public ArquivoErro idAgencia(Long idAgencia) {
+		this.idAgencia = idAgencia;
+		return this;
+	}
+	
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	
+	// jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -200,11 +332,11 @@ public class ArquivoErro implements Serializable {
             ", nome='" + getNome() + "'" +
             ", nomeOriginal='" + getNomeOriginal() + "'" +
             ", tipoArquivo='" + getTipoArquivo() + "'" +
-            ", s3Url='" + gets3Url() + "'" +
-            ", s3Dir='" + gets3Dir() + "'" +
+            ", s3Url='" + getS3Url() + "'" +
+            ", s3Dir='" + getS3Dir() + "'" +
             ", dataCadastro='" + getDataCadastro() + "'" +
             ", usuario='" + getUsuario() + "'" +
-            ", contador='" + getContador() + "'" +
+            ", schema='" + getSchema() + "'" +
             ", tamanho=" + getTamanho() +
             "}";
     }

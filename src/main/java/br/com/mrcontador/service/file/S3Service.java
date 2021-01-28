@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +21,16 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.ArquivoErro;
 import br.com.mrcontador.domain.Comprovante;
+import br.com.mrcontador.domain.Contador;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.file.notafiscal.pdf.NFDanfeReport;
 import br.com.mrcontador.file.notafiscal.pdf.NFDanfeReport310;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ArquivoErroService;
 import br.com.mrcontador.service.ArquivoService;
+import br.com.mrcontador.service.ContadorService;
 import br.com.mrcontador.service.NotafiscalService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.dto.FileS3;
@@ -52,47 +56,52 @@ public class S3Service {
 	private ArquivoService arquivoService;
 	@Autowired
 	private ArquivoErroService arquivoErroService;
+	@Autowired
+	private ContadorService contadorServive;
 
 	private final Logger log = LoggerFactory.getLogger(S3Service.class);
 
+	@Async("taskExecutor")
 	public void uploadErro(FileDTO dto) {
+		TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+		Optional<Contador> contador = contadorServive.findByDatasource(dto.getContador());
 		String dir = properties.getErrorFolder();
 		String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());
 		log.info("Carregando arquivo: {}", filename);
-		String eTag = "";
+		
 		if (dto.getSize() != null) {
-			eTag = uploadS3Stream(filename, dir, dto.getSize(),
+			 uploadS3Stream(filename, dir, dto.getSize(),
 					new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
 		} else {
-			eTag = uploadS3Bytes(filename, dir, dto.getBytes());
+			 uploadS3Bytes(filename, dir, dto.getBytes());
 		}
 		dto.setBucket(properties.getBucketName());
 		dto.setS3Dir(dir);
-		dto.setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-		dto.seteTag(eTag);
+		dto.setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));		
 		dto.setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
 		dto.setName(filename);
-		saveArquivoErro(dto);
+		saveArquivoErro(dto,contador);
 	}
 
 	@Async("taskExecutor")
-	public void uploadErro(List<FileS3> files, String tenant) {
+	public void uploadErro(List<FileS3> files) {
 		String dir = properties.getErrorFolder();
+		TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+		String tenant = files.stream().findFirst().get().getFileDTO().getContador();
+		Optional<Contador> contador = contadorServive.findByDatasource(tenant);
 		files.forEach(fileS3 -> {
 			FileDTO dto = fileS3.getFileDTO();
 			String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());
-			String eTag = uploadS3Stream(filename, dir, dto.getSize(),
-					new ByteArrayInputStream(dto.getOutputStream().toByteArray()));
+			uploadS3Bytes(filename, dir, fileS3.getOutputStream().toByteArray());
 			dto.setBucket(properties.getBucketName());
 			dto.setS3Dir(dir);
-			dto.setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
-			dto.seteTag(eTag);
+			dto.setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));			
 			dto.setUrl(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));
 			dto.setName(filename);
-			saveArquivoErro(dto);
+			dto.setTipoDocumento(fileS3.getTipoDocumento());
+			saveArquivoErro(dto,contador);
 		});
 	}
-
 	private Arquivo saveArquivo(FileDTO dto) {
 		log.info("Salvando arquivo: {}", dto.getName());
 		ArquivoMapper mapper = new ArquivoMapper();
@@ -101,10 +110,10 @@ public class S3Service {
 		return arquivo;
 	}
 
-	private ArquivoErro saveArquivoErro(FileDTO dto) {
+	private ArquivoErro saveArquivoErro(FileDTO dto, Optional<Contador> contador) {
 		log.info("Salvando arquivo: {}", dto.getName());
 		ArquivoErroMapper mapper = new ArquivoErroMapper();
-		ArquivoErro arquivoErro = mapper.toEntity(dto);
+		ArquivoErro arquivoErro = mapper.toEntity(dto,contador);
 		arquivoErro = arquivoErroService.save(arquivoErro);
 		return arquivoErro;
 	}
@@ -201,12 +210,8 @@ public class S3Service {
 	}
 	*/
 	//@Async("taskExecutor")
-	public void uploadComprovante(Comprovante comprovante, ByteArrayOutputStream stream, String tenant) {
-		TenantContext.setTenantSchema(tenant);
-		Arquivo arquivo = comprovante.getArquivo();
-			String eTag = uploadS3Bytes(arquivo.getNome(), comprovante.getArquivo().gets3Dir(), stream.toByteArray());
-			arquivo.setEtag(eTag);
-			arquivoService.save(arquivo);
+	public void uploadComprovante(Comprovante comprovante, ByteArrayOutputStream stream) {
+		uploadS3Bytes(comprovante.getArquivo().getNome(), comprovante.getArquivo().gets3Dir(), stream.toByteArray());
 		try {
 			stream.close();
 		} catch (IOException e) {

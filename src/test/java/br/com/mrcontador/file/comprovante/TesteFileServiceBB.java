@@ -16,6 +16,7 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.FileService;
+import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ParceiroService;
@@ -48,7 +49,7 @@ public class TesteFileServiceBB {
 		Optional<Parceiro> parceiro = parceiroService.findOne(2L);
 		Optional<Agenciabancaria> agencia = agenciaService.findOne(1L);
 		FileDTO fileDTO = fileService.getFileDTO("application/pdf", initialFile.getName(), initialFile.length(), stream, Optional.of("demo@localhost.com"),
-				"ds_demo", parceiro.get());
+				"ds_demo", parceiro.get(),TipoDocumento.COMPROVANTE);
 		fileService.processComprovante(fileDTO, agencia.get());
 	    }catch(Exception e) {
 	    	e.printStackTrace();

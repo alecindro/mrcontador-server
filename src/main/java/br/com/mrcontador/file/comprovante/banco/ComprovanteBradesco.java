@@ -43,9 +43,9 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 		if (_lines == null || _lines.length < 6) {
 			return null;
 		}
-		if (StringUtils.normalizeSpace(_lines[1].trim()).equals("Boleto de Cobrança")) {
+		/*if (StringUtils.normalizeSpace(_lines[1].trim()).equals("Boleto de Cobrança")) {
 			return parseBoletoCobranca(_lines, agenciabancaria, parceiro);
-		}
+		}*/
 		if (StringUtils.normalizeSpace(_lines[1].trim()).equals("Água, Luz, Telefone e Gás")) {
 			return parseConcessionaria(_lines, agenciabancaria, parceiro);
 		}

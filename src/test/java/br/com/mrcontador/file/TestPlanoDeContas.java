@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -46,7 +47,10 @@ public class TestPlanoDeContas {
 			dto.setOriginalFilename(initialFile.getName());
 			dto.setSize(initialFile.length());
 			dto.setUsuario("SYSTEM");
-     		fileService.processPlanoConta(dto,1L,SistemaPlanoConta.DOMINIO_SISTEMAS);
+			Parceiro parceiro = new Parceiro();
+			parceiro.setId(1L);
+			dto.setParceiro(parceiro);
+     		fileService.processPlanoConta(dto,SistemaPlanoConta.DOMINIO_SISTEMAS);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

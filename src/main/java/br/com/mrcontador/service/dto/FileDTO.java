@@ -22,6 +22,7 @@ public class FileDTO {
 	private String usuario;
 	private Parceiro parceiro;
 	private TipoDocumento tipoDocumento;
+	private Long idAgencia;
 	
 	
 	public byte[] getBytes() {
@@ -118,6 +119,13 @@ public class FileDTO {
 	}
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
+	}	
+	
+	public Long getIdAgencia() {
+		return idAgencia;
+	}
+	public void setIdAgencia(Long idAgencia) {
+		this.idAgencia = idAgencia;
 	}
 	@Override
 	public int hashCode() {

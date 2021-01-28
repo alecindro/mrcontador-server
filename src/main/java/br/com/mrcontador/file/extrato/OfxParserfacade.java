@@ -19,7 +19,6 @@ import com.webcohesion.ofx4j.domain.data.banking.BankingResponseMessageSet;
 import com.webcohesion.ofx4j.io.AggregateUnmarshaller;
 import com.webcohesion.ofx4j.io.OFXParseException;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.erros.MrContadorException;
@@ -34,7 +33,6 @@ import br.com.mrcontador.file.extrato.banco.OfxSicob;
 import br.com.mrcontador.file.extrato.banco.OfxSicred;
 import br.com.mrcontador.file.extrato.banco.OfxUniCred;
 import br.com.mrcontador.file.extrato.dto.ListOfxDto;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -43,6 +41,7 @@ public class OfxParserfacade extends ExtratoFacade{
 	
 	@Autowired
 	AggregateUnmarshaller<ResponseEnvelope> unmarshaller;
+
 	
 	private static Logger log = LoggerFactory.getLogger(OfxParserfacade.class);
 
@@ -66,12 +65,10 @@ public class OfxParserfacade extends ExtratoFacade{
 			});
 			
 		}catch(MrContadorException e) {
-			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(),e);
 			s3Service.uploadErro(fileDTO);
 			throw e;
 		} catch (Exception e) {
-			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			log.error(e.getMessage(),e);
 			s3Service.uploadErro(fileDTO);
 			throw new MrContadorException("ofx.process", e.getMessage());

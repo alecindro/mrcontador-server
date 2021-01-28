@@ -16,6 +16,7 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.FileService;
+import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ParceiroService;
@@ -63,7 +64,7 @@ public class TestUploadExtratoBB {
 		File file = new File(folder);
 		FileInputStream stream = new FileInputStream(file);
 		FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream, Optional.of("demo@localhost.com"),
-				SecurityUtils.DEMO_TENANT, parceiro.get());
+				SecurityUtils.DEMO_TENANT, parceiro.get(), TipoDocumento.EXTRATO);
 		fileService.processExtrato(dto, agencia, "application/pdf");
 	   
 	}

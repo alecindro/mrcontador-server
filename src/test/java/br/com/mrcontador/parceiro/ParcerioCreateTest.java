@@ -15,6 +15,7 @@ import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.FileService;
+import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -33,11 +34,12 @@ public class ParcerioCreateTest {
 		String folder = "/home/alecindro/Documents/drcontabil/docs/Plano de Contas - mercado dassoler.pdf";
 		File file = new File(folder);
 		FileInputStream stream = new FileInputStream(file);
+		Parceiro parceiro = new Parceiro();
+		parceiro.setId(1L);
 		FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream, Optional.of("demo@localhost.com"),
-				SecurityUtils.DEMO_TENANT, null);
-		Parceiro parceiro = fileService.processPlanoConta(dto, null, SistemaPlanoConta.DOMINIO_SISTEMAS);
-		System.out.println(parceiro.toString());
-	   
+				SecurityUtils.DEMO_TENANT, parceiro,TipoDocumento.PLANO_DE_CONTA);
+		fileService.processPlanoConta(dto, SistemaPlanoConta.DOMINIO_SISTEMAS);
+		
 	}
 
 }

@@ -1,5 +1,7 @@
 package br.com.mrcontador.web.rest;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -16,16 +18,27 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.ArquivoErro;
+import br.com.mrcontador.domain.Contador;
+import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.file.FileService;
+import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
+import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ArquivoErroQueryService;
 import br.com.mrcontador.service.ArquivoErroService;
+import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.ArquivoErroCriteria;
+import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.file.S3Service;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -46,12 +59,28 @@ public class ArquivoErroResource {
     private String applicationName;
 
     private final ArquivoErroService arquivoErroService;
+    
+    private final S3Service s3Service;
 
     private final ArquivoErroQueryService arquivoErroQueryService;
+    
+    private final ParceiroService parceiroService;
+    
+	private final FileService fileService;
+	private final AgenciabancariaService agenciabancariaService;
 
-    public ArquivoErroResource(ArquivoErroService arquivoErroService, ArquivoErroQueryService arquivoErroQueryService) {
+    public ArquivoErroResource(ArquivoErroService arquivoErroService, 
+    		ArquivoErroQueryService arquivoErroQueryService,
+    		S3Service s3Service,
+    		ParceiroService parceiroService,
+    		FileService fileService,
+    		AgenciabancariaService agenciabancariaService) {
         this.arquivoErroService = arquivoErroService;
         this.arquivoErroQueryService = arquivoErroQueryService;
+        this.s3Service = s3Service;
+        this.parceiroService = parceiroService;
+    	this.fileService = fileService;
+		this.agenciabancariaService = agenciabancariaService;
     }
 
     /**
@@ -62,37 +91,26 @@ public class ArquivoErroResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/arquivo-erros")
-    public ResponseEntity<ArquivoErro> createArquivoErro(@RequestBody ArquivoErro arquivoErro) throws URISyntaxException {
+    public ResponseEntity<Void> processArquivoErro(@RequestBody ArquivoErro arquivoErro) throws URISyntaxException {
         log.debug("REST request to save ArquivoErro : {}", arquivoErro);
-        if (arquivoErro.getId() != null) {
+        if (arquivoErro.getId() == null) {
             throw new BadRequestAlertException("A new arquivoErro cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ArquivoErro result = arquivoErroService.save(arquivoErro);
-        return ResponseEntity.created(new URI("/api/arquivo-erros/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        try {
+			process(arquivoErro);
+        }catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new MrContadorException("comprovante.imported");
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+			throw new MrContadorException(e.getMessage());
+		}
+        
+        return ResponseEntity.created(new URI("/api/arquivo-erros/" + arquivoErro.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, arquivoErro.getNome()))
+            .build();
     }
 
-    /**
-     * {@code PUT  /arquivo-erros} : Updates an existing arquivoErro.
-     *
-     * @param arquivoErro the arquivoErro to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated arquivoErro,
-     * or with status {@code 400 (Bad Request)} if the arquivoErro is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the arquivoErro couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PutMapping("/arquivo-erros")
-    public ResponseEntity<ArquivoErro> updateArquivoErro(@RequestBody ArquivoErro arquivoErro) throws URISyntaxException {
-        log.debug("REST request to update ArquivoErro : {}", arquivoErro);
-        if (arquivoErro.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        ArquivoErro result = arquivoErroService.save(arquivoErro);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, arquivoErro.getId().toString()))
-            .body(result);
-    }
+
 
     /**
      * {@code GET  /arquivo-erros} : get all the arquivoErros.
@@ -141,9 +159,73 @@ public class ArquivoErroResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/arquivo-erros/{id}")
-    public ResponseEntity<Void> deleteArquivoErro(@PathVariable Long id) {
+    public ResponseEntity<Void> invalidArquivoErro(@PathVariable Long id) {
         log.debug("REST request to delete ArquivoErro : {}", id);
-        arquivoErroService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        Optional<ArquivoErro> oArquivo = arquivoErroService.findOne(id);
+        if(oArquivo.isEmpty()) {
+        	throw new MrContadorException("arquivo.notfound");
+        }
+        ArquivoErro arquivo = oArquivo.get().valido(false);
+        arquivoErroService.save(arquivo);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+    
+    private void process(ArquivoErro arquivoErro) throws Exception {
+    	String tenantAtual = TenantContext.getTenantSchema();
+		TenantContext.setTenantSchema(arquivoErro.getSchema());
+		String key = arquivoErro.getS3Dir() + "/" + arquivoErro.getNome();
+		InputStream stream = s3Service.downloadStream(key);
+		Parceiro parceiro = parceiroService.findOne(arquivoErro.getParceiroId()).get();
+		FileDTO fileDTO = new FileDTO();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		stream.transferTo(baos);
+		fileDTO.setTipoDocumento(arquivoErro.getTipoDocumento());
+		fileDTO.setParceiro(parceiro);
+		fileDTO.setName(arquivoErro.getNome());
+		fileDTO.setOriginalFilename(arquivoErro.getNomeOriginal());
+		fileDTO.setUsuario(SecurityUtils.getCurrentUserLogin().get());
+		fileDTO.setContador(arquivoErro.getSchema());
+		fileDTO.setOutputStream(baos);
+		fileDTO.setIdAgencia(arquivoErro.getIdAgencia());
+		fileDTO.setContentType(arquivoErro.getContentType());
+		switch (arquivoErro.getTipoDocumento()) {
+		case COMPROVANTE:
+			processComprovante(fileDTO);
+			break;
+		case EXTRATO:
+			processExtrato(fileDTO, arquivoErro.getTipoArquivo());
+			break;
+		case NOTA:
+			processNotaFiscal(fileDTO);
+			break;
+		case PLANO_DE_CONTA:
+			processPlanoConta(fileDTO, arquivoErro.getContador());
+			break;
+		default:
+			break;
+		}
+		TenantContext.setTenantSchema(tenantAtual);
+		arquivoErro.setProcessado(true);
+		arquivoErroService.save(arquivoErro);
+	}
+
+	private void processComprovante(FileDTO fileDTO) {
+		Agenciabancaria agenciabancaria = agenciabancariaService.findOne(fileDTO.getIdAgencia()).get();
+		fileService.processComprovante(fileDTO, agenciabancaria);
+	}
+
+	private void processExtrato(FileDTO fileDTO, String tipoArquivo) {
+		Agenciabancaria agenciabancaria = agenciabancariaService.findOne(fileDTO.getIdAgencia()).get();
+		fileService.processExtrato(fileDTO, agenciabancaria, tipoArquivo);
+	}
+
+	private void processNotaFiscal(FileDTO fileDTO) throws Exception {
+		fileService.processNFE(fileDTO);
+	}
+
+	private void processPlanoConta(FileDTO fileDTO, Contador contador) {
+		SistemaPlanoConta sistemaPlanoConta = SistemaPlanoConta.valueOf(contador.getSistema());
+		fileService.processPlanoConta(fileDTO, sistemaPlanoConta);
+	}
+
 }

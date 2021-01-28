@@ -44,7 +44,7 @@ public class TestNFBB {
 			for(File file : fileEntry.listFiles()) {
 			FileInputStream stream = new FileInputStream(file);
 			FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream,
-					Optional.of("demo@localhost.com"), SecurityUtils.DEMO_TENANT, parceiro.get());
+					Optional.of("demo@localhost.com"), SecurityUtils.DEMO_TENANT, parceiro.get(), TipoDocumento.NOTA);
 			fileService.processNFE(dto);
 			}
 		

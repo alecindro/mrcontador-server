@@ -11,6 +11,7 @@ import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.mrcontador.domain.Agenciabancaria;
@@ -19,11 +20,14 @@ import br.com.mrcontador.erros.AgenciaException;
 import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.service.file.S3Service;
 import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
 public class ExtratoPdfFacade extends ExtratoFacade{
 
+	@Autowired
+	private S3Service s3Service;
 	private static Logger log = LoggerFactory.getLogger(ExtratoPdfFacade.class);
 
 	public String process(FileDTO fileDTO, Agenciabancaria agenciaBancaria) {
@@ -56,9 +60,8 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 			throw e;
 		} catch (AgenciaException e) {
 			throw e;
-		} catch (IOException e) {
-			throw new ExtratoException("extrato.parser.error", fileDTO.getOriginalFilename(), e);
 		} catch(Exception e1){
+			s3Service.uploadErro(fileDTO);
 			throw new ExtratoException("extrato.parser.error", fileDTO.getOriginalFilename());
 		}
 		finally {

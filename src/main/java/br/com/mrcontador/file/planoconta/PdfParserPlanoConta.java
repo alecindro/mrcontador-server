@@ -11,19 +11,16 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.dto.PlanoConta;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ContaService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
 import br.com.mrcontador.service.mapper.PlanoContaMapper;
-import br.com.mrcontador.util.MrContadorUtil;
 import br.com.mrcontador.web.rest.errors.CnpjAlreadyExistException;
 
 @Service
@@ -36,7 +33,8 @@ public class PdfParserPlanoConta {
 	@Autowired
 	private ParceiroService parceiroService;
 
-	public Parceiro process(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, Long parceiroId) {
+
+	public void process(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
 		PDDocument document;
 		InputStream first = null;
 		try {
@@ -44,21 +42,17 @@ public class PdfParserPlanoConta {
 			first = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
-			Parceiro parceiro = validatePlano(parceiroId, planoConta.getCnpjCliente());
-			dto.setParceiro(parceiro);
+			validatePlano(dto.getParceiro(), planoConta.getCnpjCliente());
 			PlanoContaMapper mapper = new PlanoContaMapper();
-			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro, planoConta.getArquivo());
+			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), planoConta.getArquivo());
 			contaService.save(contas);
-			parceiroService.save(parceiro);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
 			contas.forEach(conta -> contaService.updateArquivo(conta.getId(),arquivo.getId()));
-			return parceiro;
 		} catch (CnpjAlreadyExistException e) {
 			throw e;
 		} catch (MrContadorException e) {
 			throw e;
 		} catch (Exception e) {
-			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			s3Service.uploadErro(dto);
 			throw new MrContadorException("planodeconta.parse.error", e.getMessage(), e);
 		} finally {
@@ -71,45 +65,31 @@ public class PdfParserPlanoConta {
 		}
 	}
 	
-	private Parceiro validatePlano(Long parceiroId, String cnpj) {
-		Optional<Parceiro> parceiro = parceiroService.findByParCnpjcpf(cnpj);
-		Optional<Parceiro> parceiroParam = parceiroService.findOne(parceiroId);
-		if(parceiro.isEmpty()) {
+	private void validatePlano(Parceiro parceiro, String cnpj) {
+		Optional<Parceiro> oParceiro = parceiroService.findByParCnpjcpf(cnpj);
+		if(oParceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notexists",cnpj);
 		}
-		if(parceiroParam.isEmpty()) {
-			throw new MrContadorException("parceiro.notexists",String.valueOf(parceiroId));
-		}
-		if (!parceiro.get().getId().equals(parceiroParam.get().getId())) {
+		
+		if (!oParceiro.get().getId().equals(parceiro.getId())) {
 			throw new MrContadorException("plano.notparceiro", cnpj);
 		}
-		return parceiroParam.get();
 	}
 
-	public void update(FileDTO dto, SistemaPlanoConta sistemaPlanoConta, Long parceiroId) {
+	public void update(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
 		PDDocument document;
 		InputStream first = null;
 		try {
 			first = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
-			Optional<Parceiro> _parceiro = parceiroService.findOne(parceiroId);
-			if (_parceiro.isEmpty()) {
-				throw new MrContadorException("file.parceirorequired");
-			}
-			Parceiro parceiro = _parceiro.get();
-			if (parceiro.getId() != parceiroId) {
-				throw new MrContadorException("file.notparceiro");
-			}
-			dto.setParceiro(parceiro);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
 			PlanoContaMapper mapper = new PlanoContaMapper();
-			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), parceiro, planoConta.getArquivo());
-			contaService.update(contas, dto.getUsuario(), arquivo, parceiro);
+			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), planoConta.getArquivo());
+			contaService.update(contas, dto.getUsuario(), arquivo, dto.getParceiro());
 		} catch (MrContadorException e) {
 			throw e;
 		} catch (Exception e) {
-			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			s3Service.uploadErro(dto);
 			throw new MrContadorException("planodeconta.parse.error", e.getMessage(), e);
 		} finally {

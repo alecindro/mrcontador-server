@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.mrcontador.config.S3Properties;
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Comprovante;
-import br.com.mrcontador.erros.ComprovanteException;
+import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.TipoDocumento;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.ExtratoService;
@@ -48,12 +48,15 @@ public class ParserComprovanteFacade {
 			List<PPDocumentDTO> textComprovantes = parser.parseComprovante(fileDTO);			
 			List<FileS3> erros = new ArrayList<FileS3>();
 			ArquivoMapper arquivoMapper = new ArquivoMapper();
-			List<Comprovante> salvos = new ArrayList<Comprovante>();			
+			List<Comprovante> salvos = new ArrayList<Comprovante>();
+			boolean conflict = false;
 			for (PPDocumentDTO pddComprovante : textComprovantes) {
 				page = page +1;
 				genFile(fileDTO, page);
+				log.info("tenant " + TenantContext.getTenantSchema());
 				Arquivo arquivo = arquivoMapper.toEntity(fileDTO);
 				arquivoService.save(arquivo);
+				
 				try {
 					List<Comprovante> _comprovantes = parser.parse(pddComprovante.getComprovante(), agencia, fileDTO.getParceiro());
 					_comprovantes.forEach(c-> c.setPeriodo(MrContadorUtil.periodo(c.getComDatapagamento())));
@@ -62,20 +65,23 @@ public class ParserComprovanteFacade {
 							try {
 							_comprovante.setArquivo(arquivo);	
 							_comprovante = parser.save(_comprovante, service);
-							s3Service.uploadComprovante(_comprovante, pddComprovante.getOutstream(), SecurityUtils.getCurrentTenantHeader());
+							s3Service.uploadComprovante(_comprovante, pddComprovante.getOutstream());
 							salvos.add(_comprovante);
+							}catch(org.springframework.dao.DataIntegrityViolationException e) {
+								conflict = true;
 							}catch(Exception e ) {
+								FileS3 fileS3 = new FileS3();
+								fileS3.setFileDTO(fileDTO);
+								fileS3.setOutputStream(pddComprovante.getOutstream());
+								fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
+								fileS3.setPage(page);
+								erros.add(fileS3);
 								log.error(e.getMessage());
 							}
 						}
 					}
-				} catch (ComprovanteException e) {
-					throw e;
-				} catch (Exception e) {
-					Comprovante comprovanteErro = new Comprovante();
-					comprovanteErro.setAgenciabancaria(agencia);
+				} catch (Exception e) {					
 					FileS3 fileS3 = new FileS3();
-					fileS3.getComprovantes().add(comprovanteErro);
 					fileS3.setFileDTO(fileDTO);
 					fileS3.setOutputStream(pddComprovante.getOutstream());
 					fileS3.setTipoDocumento(TipoDocumento.COMPROVANTE);
@@ -84,13 +90,16 @@ public class ParserComprovanteFacade {
 					log.error(e.getMessage());
 				}
 			}
+			if(salvos.isEmpty() && conflict) {
+				throw new MrContadorException("comprovante.imported");
+			}
+			if(!erros.isEmpty()) {
+				s3Service.uploadErro(erros);
+			}
 			if(salvos.isEmpty()) {
-				throw new org.springframework.dao.DataIntegrityViolationException("comprovantes já importado");
+				throw new MrContadorException("comprovante.notimported.all");
 			}
 			parser.callFunction(salvos, service, extratoService);
-			if(!erros.isEmpty()) {
-				s3Service.uploadErro(erros, SecurityUtils.DEFAULT_TENANT);
-			}
 			log.info("Comprovantes salvos");
 			return MrContadorUtil.periodo(salvos.stream().findFirst().get().getComDatapagamento());
 			
@@ -102,7 +111,6 @@ public class ParserComprovanteFacade {
 		String filename = MrContadorUtil.genFileName(TipoDocumento.COMPROVANTE,
 				fileDTO.getParceiro().getId(), fileDTO.getContentType(), page);
 		fileDTO.setName(filename);
-		fileDTO.setTipoDocumento(TipoDocumento.COMPROVANTE);
 		fileDTO.setBucket(properties.getBucketName());
 		fileDTO.setS3Dir(dir);
 		fileDTO.setS3Url(MrContadorUtil.getS3Url(dir, properties.getUrlS3(), filename));

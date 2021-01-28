@@ -2,12 +2,11 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import br.com.mrcontador.file.TipoDocumento;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 import io.github.jhipster.service.filter.ZonedDateTimeFilter;
@@ -24,6 +23,24 @@ import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 public class ArquivoErroCriteria implements Serializable, Criteria {
 
     private static final long serialVersionUID = 1L;
+    
+    public static class TipoDocumentoFilter extends Filter<TipoDocumento> {
+
+        private static final long serialVersionUID = 1L;
+
+  		public TipoDocumentoFilter() {
+          }
+
+          public TipoDocumentoFilter(TipoDocumentoFilter filter) {
+              super(filter);
+          }
+
+          @Override
+          public TipoDocumentoFilter copy() {
+              return new TipoDocumentoFilter(this);
+          }
+
+      }
 
     private LongFilter id;
 
@@ -41,9 +58,17 @@ public class ArquivoErroCriteria implements Serializable, Criteria {
 
     private StringFilter usuario;
 
-    private StringFilter contador;
+    private StringFilter schema;
 
     private LongFilter tamanho;
+    
+    private BooleanFilter processado;
+    
+    private BooleanFilter valido;
+    
+    private LongFilter contadorId;
+    
+    private TipoDocumentoFilter tipoDocumento;
 
     public ArquivoErroCriteria() {
     }
@@ -57,8 +82,12 @@ public class ArquivoErroCriteria implements Serializable, Criteria {
         this.s3Dir = other.s3Dir == null ? null : other.s3Dir.copy();
         this.dataCadastro = other.dataCadastro == null ? null : other.dataCadastro.copy();
         this.usuario = other.usuario == null ? null : other.usuario.copy();
-        this.contador = other.contador == null ? null : other.contador.copy();
+        this.schema = other.schema == null ? null : other.schema.copy();
         this.tamanho = other.tamanho == null ? null : other.tamanho.copy();
+        this.processado = other.processado == null ? null : other.processado.copy();
+        this.valido = other.valido == null ? null : other.valido.copy();
+        this.contadorId = other.contadorId == null ? null : other.contadorId.copy();
+        this.tipoDocumento = other.tipoDocumento == null ? null : other.tipoDocumento.copy();
     }
 
     @Override
@@ -130,12 +159,12 @@ public class ArquivoErroCriteria implements Serializable, Criteria {
         this.usuario = usuario;
     }
 
-    public StringFilter getContador() {
-        return contador;
+    public StringFilter getSchema() {
+        return schema;
     }
 
-    public void setContador(StringFilter contador) {
-        this.contador = contador;
+    public void setSchema(StringFilter schema) {
+        this.schema = schema;
     }
 
     public LongFilter getTamanho() {
@@ -145,9 +174,40 @@ public class ArquivoErroCriteria implements Serializable, Criteria {
     public void setTamanho(LongFilter tamanho) {
         this.tamanho = tamanho;
     }
+    
+    public BooleanFilter getProcessado() {
+		return processado;
+	}
 
+	public void setProcessado(BooleanFilter processado) {
+		this.processado = processado;
+	}
 
-    @Override
+	public LongFilter getContadorId() {
+		return contadorId;
+	}
+
+	public void setContadorId(LongFilter contadorId) {
+		this.contadorId = contadorId;
+	}
+
+	public TipoDocumentoFilter getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(TipoDocumentoFilter tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public BooleanFilter getValido() {
+		return valido;
+	}
+
+	public void setValido(BooleanFilter valido) {
+		this.valido = valido;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -165,8 +225,12 @@ public class ArquivoErroCriteria implements Serializable, Criteria {
             Objects.equals(s3Dir, that.s3Dir) &&
             Objects.equals(dataCadastro, that.dataCadastro) &&
             Objects.equals(usuario, that.usuario) &&
-            Objects.equals(contador, that.contador) &&
-            Objects.equals(tamanho, that.tamanho);
+            Objects.equals(schema, that.schema) &&
+            Objects.equals(tamanho, that.tamanho) &&
+            Objects.equals(processado, that.processado) &&
+            Objects.equals(valido, that.valido) &&
+            Objects.equals(contadorId, that.contadorId) &&
+            Objects.equals(tipoDocumento, that.tipoDocumento);
     }
 
     @Override
@@ -180,8 +244,12 @@ public class ArquivoErroCriteria implements Serializable, Criteria {
         s3Dir,
         dataCadastro,
         usuario,
-        contador,
-        tamanho
+        schema,
+        tamanho,
+        processado,
+        contadorId,
+        tipoDocumento,
+        valido
         );
     }
 
@@ -197,7 +265,7 @@ public class ArquivoErroCriteria implements Serializable, Criteria {
                 (s3Dir != null ? "s3Dir=" + s3Dir + ", " : "") +
                 (dataCadastro != null ? "dataCadastro=" + dataCadastro + ", " : "") +
                 (usuario != null ? "usuario=" + usuario + ", " : "") +
-                (contador != null ? "contador=" + contador + ", " : "") +
+                (schema != null ? "schema=" + schema + ", " : "") +
                 (tamanho != null ? "tamanho=" + tamanho + ", " : "") +
             "}";
     }

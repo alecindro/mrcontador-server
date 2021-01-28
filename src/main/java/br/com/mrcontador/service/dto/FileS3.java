@@ -12,7 +12,6 @@ public class FileS3 {
 	
 	private Integer page;
 	private ByteArrayOutputStream outputStream;
-	private List<Comprovante> comprovantes;
 	private List<Notafiscal> notas;
 	private FileDTO fileDTO;
 	private TipoDocumento tipoDocumento;
@@ -30,15 +29,6 @@ public class FileS3 {
 	}
 	public void setOutputStream(ByteArrayOutputStream outputStream) {
 		this.outputStream = outputStream;
-	}
-	public List<Comprovante> getComprovantes() {
-		if(comprovantes == null) {
-			comprovantes = new ArrayList<>();
-		}
-		return comprovantes;
-	}
-	public void setComprovantes(List<Comprovante> comprovantes) {
-		this.comprovantes = comprovantes;
 	}
 	public FileDTO getFileDTO() {
 		return fileDTO;

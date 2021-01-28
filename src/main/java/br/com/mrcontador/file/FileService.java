@@ -38,15 +38,15 @@ public class FileService {
 	@Autowired
 	private ParserComprovanteFacade parserComprovante;
 
-	public Parceiro processPlanoConta(FileDTO dto, Long parceiroId, SistemaPlanoConta sistemaPlanoConta) {
-		return pdfParserPlanoConta.process(dto, sistemaPlanoConta, parceiroId);
+	public void processPlanoConta(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
+		pdfParserPlanoConta.process(dto, sistemaPlanoConta);
 	}
 
-	public void updatePlanoConta(FileDTO dto, Long idParceiro, SistemaPlanoConta sistemaPlanoConta) {
-		pdfParserPlanoConta.update(dto, sistemaPlanoConta, idParceiro);
+	public void updatePlanoConta(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
+		pdfParserPlanoConta.update(dto, sistemaPlanoConta);
 	}
 
-	public FileDTO getFileDTO(String contentType, String originalFilename, Long size, InputStream stream, Optional<String> usuario, String contador, Parceiro parceiro) {
+	public FileDTO getFileDTO(String contentType, String originalFilename, Long size, InputStream stream, Optional<String> usuario, String contador, Parceiro parceiro, TipoDocumento tipoDocumento) {
 		FileDTO fileDTO = new FileDTO();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
@@ -62,6 +62,7 @@ public class FileService {
 			default:
 				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
 			}
+			fileDTO.setTipoDocumento(tipoDocumento);
 			fileDTO.setParceiro(parceiro);
 			fileDTO.setContentType(contentType);
 			fileDTO.setOriginalFilename(originalFilename);
@@ -73,7 +74,6 @@ public class FileService {
 		} catch (MrContadorException e) {
 			throw e;
 		} catch (Exception e) {
-			TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			fileDTO.setOutputStream(baos);
 			s3Service.uploadErro(fileDTO);
 			throw new MrContadorException("file.process.error", originalFilename);
@@ -88,7 +88,6 @@ public class FileService {
 
 	public String processExtrato(FileDTO fileDTO, Agenciabancaria agenciabancaria, String contentType) {
 		validateConta(agenciabancaria);
-		fileDTO.setTipoDocumento(TipoDocumento.EXTRATO);
 		String media = com.google.common.net.MediaType.parse(contentType).subtype();
 		if (media != "pdf") {
 			throw new MrContadorException("ofx.notextrato");

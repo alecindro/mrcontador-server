@@ -135,6 +135,12 @@ public class ContadorService {
         return contadorRepository.findOneByDatasource(datasource)
             .map(contadorMapper::toDto);
     }
+    
+    @Transactional(readOnly = true)
+    public Optional<Contador> findByDatasource(String datasource) {
+    	log.debug("Request to get Contador : {}", datasource);
+        return contadorRepository.findOneByDatasource(datasource);
+    }
 
     /**
      * Delete the contador by id.

@@ -104,7 +104,7 @@ public class ParceiroResource {
 		}
 		Parceiro result = parceiroService.save(parceiro);
 		return ResponseEntity.ok().headers(
-				HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, parceiro.getId().toString()))
+				HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, parceiro.getParRazaosocial()))
 				.body(result);
 	}
 

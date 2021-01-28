@@ -19,61 +19,58 @@ import br.com.mrcontador.repository.ArquivoErroRepository;
 @Transactional
 public class ArquivoErroService {
 
-    private final Logger log = LoggerFactory.getLogger(ArquivoErroService.class);
+	private final Logger log = LoggerFactory.getLogger(ArquivoErroService.class);
 
-    private final ArquivoErroRepository arquivoErroRepository;
-    
-
-
-    public ArquivoErroService(ArquivoErroRepository arquivoErroRepository) {
-        this.arquivoErroRepository = arquivoErroRepository;
-    }
-    
-    
-
-    /**
-     * Save a arquivoErro.
-     *
-     * @param arquivoErro the entity to save.
-     * @return the persisted entity.
-     */
-    public ArquivoErro save(ArquivoErro arquivoErro) {
-        log.debug("Request to save ArquivoErro : {}", arquivoErro);
-        return arquivoErroRepository.save(arquivoErro);
-    }
-
-    /**
-     * Get all the arquivoErros.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public Page<ArquivoErro> findAll(Pageable pageable) {
-        log.debug("Request to get all ArquivoErros");
-        return arquivoErroRepository.findAll(pageable);
-    }
+	private final ArquivoErroRepository arquivoErroRepository;
 
 
-    /**
-     * Get one arquivoErro by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    @Transactional(readOnly = true)
-    public Optional<ArquivoErro> findOne(Long id) {
-        log.debug("Request to get ArquivoErro : {}", id);
-        return arquivoErroRepository.findById(id);
-    }
+	public ArquivoErroService(ArquivoErroRepository arquivoErroRepository) {
+		this.arquivoErroRepository = arquivoErroRepository;	
+	}
 
-    /**
-     * Delete the arquivoErro by id.
-     *
-     * @param id the id of the entity.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete ArquivoErro : {}", id);
-        arquivoErroRepository.deleteById(id);
-    }
+	/**
+	 * Save a arquivoErro.
+	 *
+	 * @param arquivoErro the entity to save.
+	 * @return the persisted entity.
+	 */
+	public ArquivoErro save(ArquivoErro arquivoErro) {
+		log.debug("Request to save ArquivoErro : {}", arquivoErro);
+		return arquivoErroRepository.save(arquivoErro);
+	}
+
+	
+	/**
+	 * Get all the arquivoErros.
+	 *
+	 * @param pageable the pagination information.
+	 * @return the list of entities.
+	 */
+	@Transactional(readOnly = true)
+	public Page<ArquivoErro> findAll(Pageable pageable) {
+		log.debug("Request to get all ArquivoErros");
+		return arquivoErroRepository.findAll(pageable);
+	}
+
+	/**
+	 * Get one arquivoErro by id.
+	 *
+	 * @param id the id of the entity.
+	 * @return the entity.
+	 */
+	@Transactional(readOnly = true)
+	public Optional<ArquivoErro> findOne(Long id) {
+		log.debug("Request to get ArquivoErro : {}", id);
+		return arquivoErroRepository.findById(id);
+	}
+
+	/**
+	 * Delete the arquivoErro by id.
+	 *
+	 * @param id the id of the entity.
+	 */
+	public void delete(Long id) {
+		log.debug("Request to delete ArquivoErro : {}", id);
+		arquivoErroRepository.deleteById(id);
+	}
 }

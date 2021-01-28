@@ -144,17 +144,17 @@ public class Parceiro implements Serializable {
     private String codExt;
     
 
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Atividade> atividades;
 
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Socio> socios;
     
-    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Agenciabancaria> agenciabancarias;

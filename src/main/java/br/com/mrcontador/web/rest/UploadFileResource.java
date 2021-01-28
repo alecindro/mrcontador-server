@@ -19,6 +19,7 @@ import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
+import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
@@ -47,17 +48,21 @@ public class UploadFileResource {
 	}
 
 	@PostMapping("/upload/planoconta")
-	public ResponseEntity<Parceiro> uploadPlanoConta(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<Void> uploadPlanoConta(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		Optional<Parceiro> oParceiro = parceiroService.findOne(parceiroId);
+		if(oParceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
+		}
 		try {
 			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), null);
-			Parceiro parceiro = fileService.processPlanoConta(dto, parceiroId, SistemaPlanoConta.DOMINIO_SISTEMAS);
+					SecurityUtils.getCurrentTenantHeader(), oParceiro.get(),TipoDocumento.PLANO_DE_CONTA);
+			fileService.processPlanoConta(dto, SistemaPlanoConta.DOMINIO_SISTEMAS);
 			return ResponseEntity
 					.created(new URI("/api/upload/planoconta/")).headers(HeaderUtil
 							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName()))
-					.body(parceiro);
+					.build();
 		} catch (MrContadorException e) {
 			throw e;
 		}
@@ -67,10 +72,14 @@ public class UploadFileResource {
 	public ResponseEntity<Void> updatePlanoConta(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
 		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		Optional<Parceiro> oParceiro = parceiroService.findOne(parceiroId);
+		if(oParceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
+		}
 		try {
 			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), null);
-			fileService.updatePlanoConta(dto, parceiroId, SistemaPlanoConta.DOMINIO_SISTEMAS);
+					SecurityUtils.getCurrentTenantHeader(), oParceiro.get(),TipoDocumento.PLANO_DE_CONTA );
+			fileService.updatePlanoConta(dto, SistemaPlanoConta.DOMINIO_SISTEMAS);
 			return ResponseEntity
 					.created(new URI("/api/upload/planoconta/")).headers(HeaderUtil
 							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName()))
@@ -85,7 +94,10 @@ public class UploadFileResource {
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro,
 			@RequestParam(required = true, name = "idAgenciabancaria") Long idAgencia) throws Exception {
 		log.info("Processando Extrato: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
-		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
+		Optional<Parceiro> oParceiro = parceiroService.findOne(idParceiro);
+		if(oParceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
+		}
 		Optional<Agenciabancaria> agencia = agenciabancariaService.findOne(idAgencia);
 		if(agencia.isEmpty()) {
 			throw new MrContadorException("agencia.notfound");
@@ -94,7 +106,8 @@ public class UploadFileResource {
 			String contentType = file.getContentType();
 
 			FileDTO fileDTO = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), parceiro.get());
+					SecurityUtils.getCurrentTenantHeader(), oParceiro.get(),TipoDocumento.EXTRATO);
+			fileDTO.setIdAgencia(idAgencia);	
 			String periodo = fileService.processExtrato(fileDTO, agencia.get(), contentType);
 			return ResponseEntity.created(new URI("/api/upload/extrato/")).body(periodo);
 		} catch (org.springframework.dao.DataIntegrityViolationException e) {
@@ -115,17 +128,15 @@ public class UploadFileResource {
 		if (agencia.isEmpty()) {
 			throw new MrContadorException("agencia.notfound");
 		}
-		try {
+		
 			FileDTO fileDTO = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), parceiro.get());
-
+					SecurityUtils.getCurrentTenantHeader(), parceiro.get(),TipoDocumento.COMPROVANTE);
+			fileDTO.setIdAgencia(idAgencia);			
 			String periodo = fileService.processComprovante(fileDTO, agencia.get());
 			return ResponseEntity
 					.created(new URI("/api/upload/comprovante/")).headers(HeaderUtil
 							.createEntityCreationAlert(applicationName, true, "uploadComprovante", file.getName())).body(periodo);					
-		} catch (org.springframework.dao.DataIntegrityViolationException e) {
-			throw new MrContadorException("comprovante.imported");
-		}
+		
 	}
 
 	@PostMapping("/upload/nf")
@@ -138,8 +149,7 @@ public class UploadFileResource {
 		}
 		try {
 			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), null);
-			dto.setParceiro(parceiro.get());
+					SecurityUtils.getCurrentTenantHeader(), parceiro.get(),TipoDocumento.NOTA);
 			String periodo = fileService.processNFE(dto);
 			return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
 					.headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName())).body(periodo);
