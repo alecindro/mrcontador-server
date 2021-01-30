@@ -53,7 +53,7 @@ public class NotafiscalNfe400Mapper {
 		if(isEmitente) {
 			nf.setTnoCodigo(1);
 			nf.setNotCnpj(nfe.getNota().getInfo().getDestinatario().getCnpj() != null
-					? nfe.getNota().getInfo().getDestinatario().getCnpj()
+					? MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(nfe.getNota().getInfo().getDestinatario().getCnpj()))
 					: nfe.getNota().getInfo().getDestinatario().getCpf());
 			nf.setNotEmpresa(nfe.getNota().getInfo().getDestinatario().getRazaoSocial());
 			
@@ -61,7 +61,7 @@ public class NotafiscalNfe400Mapper {
 			nf.setTnoCodigo(0);
 			nf.setNotEmpresa(nfe.getNota().getInfo().getEmitente().getRazaoSocial());
 			nf.setNotCnpj(nfe.getNota().getInfo().getEmitente().getCnpj() != null
-					? nfe.getNota().getInfo().getEmitente().getCnpj()
+					? MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(nfe.getNota().getInfo().getEmitente().getCnpj()))
 					: nfe.getNota().getInfo().getEmitente().getCpf());
 				
 		}

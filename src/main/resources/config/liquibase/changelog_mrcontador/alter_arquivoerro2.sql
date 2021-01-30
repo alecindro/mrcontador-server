@@ -4,3 +4,4 @@
 ALTER TABLE ds_mrcontador.arquivo_erro ADD COLUMN id_agencia bigint NULL;
 ALTER TABLE ds_mrcontador.arquivo_erro ADD COLUMN valido boolean;
 ALTER TABLE ds_mrcontador.arquivo_erro ADD COLUMN content_type varchar(20);
+ALTER TABLE ds_mrcontador.arquivo_erro ADD COLUMN "schema" varchar(254) NULL;
