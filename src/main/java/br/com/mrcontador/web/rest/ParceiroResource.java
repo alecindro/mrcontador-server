@@ -102,7 +102,7 @@ public class ParceiroResource {
 		if (parceiro.getId() == null) {
 			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
-		Parceiro result = parceiroService.save(parceiro);
+		Parceiro result = parceiroService.update(parceiro);
 		return ResponseEntity.ok().headers(
 				HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, parceiro.getParRazaosocial()))
 				.body(result);

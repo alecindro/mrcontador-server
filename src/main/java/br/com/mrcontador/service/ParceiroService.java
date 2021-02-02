@@ -28,12 +28,10 @@ public class ParceiroService {
 	private final Logger log = LoggerFactory.getLogger(ParceiroService.class);
 
 	private final ParceiroRepository parceiroRepository;
-	
 
 	private final CnpjClient cnpjClient;
 
-	public ParceiroService(ParceiroRepository parceiroRepository, 
-			CnpjClient cnpjClient) {
+	public ParceiroService(ParceiroRepository parceiroRepository, CnpjClient cnpjClient) {
 		this.parceiroRepository = parceiroRepository;
 		this.cnpjClient = cnpjClient;
 	}
@@ -46,10 +44,38 @@ public class ParceiroService {
 	 */
 
 	public Parceiro save(Parceiro parceiro) {
-		if(parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
-			parceiro.setCadastroStatus( parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() +1);
+		if (parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
+			parceiro.setCadastroStatus(parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() + 1);
 		}
 		return parceiroRepository.save(parceiro);
+	}
+
+	public Parceiro update(Parceiro parceiro) {
+		//Parceiro parceiroOld = parceiroRepository.findById(parceiro.getId()).get();
+		save(parceiro);
+		
+		/*if (!parceiro.getDescontosAtivos().equals(parceiroOld.getDescontosAtivos())) {
+
+		}
+		if (!parceiro.getCaixaConta().equals(parceiroOld.getCaixaConta())) {
+
+		}
+		if (!parceiro.getDespesaIof().equals(parceiroOld.getDespesaIof())) {
+
+		}
+		if (!parceiro.getDespesaJuros().equals(parceiroOld.getDespesaJuros())) {
+
+		}
+		if (!parceiro.getDespesasBancarias().equals(parceiroOld.getDespesasBancarias())) {
+
+		}
+		if (!parceiro.getDespesaTarifa().equals(parceiroOld.getDespesaTarifa())) {
+
+		}
+		if (!parceiro.getJurosAtivos().equals(parceiroOld.getJurosAtivos())) {
+
+		}		*/
+		return parceiro;
 	}
 
 	/**
@@ -63,7 +89,7 @@ public class ParceiroService {
 		log.debug("Request to get all Parceiros");
 		return parceiroRepository.findAll(pageable);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<Parceiro> findAll() {
 		log.debug("Request to get all Parceiros");
@@ -101,8 +127,8 @@ public class ParceiroService {
 		ParceiroPJMapper mapper = new ParceiroPJMapper();
 		Parceiro parceiro = mapper.toEntity(pessoaJuridica);
 		parceiro.setEnabled(true);
-		if(parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
-			parceiro.setCadastroStatus( parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() +1);
+		if (parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
+			parceiro.setCadastroStatus(parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() + 1);
 		}
 		return parceiroRepository.save(parceiro);
 	}
@@ -132,7 +158,7 @@ public class ParceiroService {
 			PessoaJuridica pessoaJuridica = getPessoa(cnpj);
 			parceiro = saveParceiro(pessoaJuridica);
 		}
-		
+
 		return parceiro;
 	}
 }
