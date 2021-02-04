@@ -443,8 +443,8 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Data débito:")) {
-				String data = StringUtils.substringAfter(line, "Data débito:").trim();
+			if (line.toUpperCase().contains("DATA DÉBITO:")) {
+				String data = StringUtils.substringAfter(line.toUpperCase(), "DATA DÉBITO:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DATA_PGTO);
 				diffValue.setNewValue(data);
