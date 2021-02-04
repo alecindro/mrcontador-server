@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
@@ -23,6 +24,7 @@ import br.com.mrcontador.file.TipoDocumento;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
+import br.com.mrcontador.service.ContaService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -36,15 +38,17 @@ public class UploadFileResource {
 	private final FileService fileService;
 	private final ParceiroService parceiroService;
 	private final AgenciabancariaService agenciabancariaService;
+	private final ContaService contaService;
 
 	@Value("${jhipster.clientApp.name}")
 	private String applicationName;
 
 	public UploadFileResource(FileService fileService, ParceiroService parceiroService,
-			AgenciabancariaService agenciabancariaService) {
+			AgenciabancariaService agenciabancariaService, ContaService contaService) {
 		this.parceiroService = parceiroService;
 		this.fileService = fileService;
 		this.agenciabancariaService = agenciabancariaService;
+		this.contaService = contaService;
 	}
 
 	@PostMapping("/upload/planoconta")
@@ -58,7 +62,12 @@ public class UploadFileResource {
 		try {
 			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
 					SecurityUtils.getCurrentTenantHeader(), oParceiro.get(),TipoDocumento.PLANO_DE_CONTA);
+			Optional<Conta> oConta = contaService.findFirstByParceiro(oParceiro.get());
+			if(oConta.isEmpty()) {
 			fileService.processPlanoConta(dto, SistemaPlanoConta.DOMINIO_SISTEMAS);
+			} else {
+				fileService.updatePlanoConta(dto, SistemaPlanoConta.DOMINIO_SISTEMAS);
+			}
 			return ResponseEntity
 					.created(new URI("/api/upload/planoconta/")).headers(HeaderUtil
 							.createEntityCreationAlert(applicationName, true, "uploadPlanoConta", file.getName()))

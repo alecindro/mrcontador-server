@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ds_demo.processa_notafiscalgeral("pPAR_CODIGO" bigint, "pDATA_INICIAL" date)
+CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscalgeral("pPAR_CODIGO" bigint, "pDATA_INICIAL" date)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -12,12 +12,12 @@ declare
  begin
 	  vRETORNO:= 0; 
 for REC in 
- SELECT  distinct id AS vNOTAFISCAL_ID  FROM ds_demo.NOTAFISCAL  WHERE  TNO_CODIGO=0
+ SELECT  distinct id AS vNOTAFISCAL_ID  FROM ${schema}.NOTAFISCAL  WHERE  TNO_CODIGO=0
     AND PARCEIRO_ID = CAST(pPAR_CODIGO AS int8) 
     AND PROCESSADO = false 
     and NOT_DATAPARCELA >= cast((pDATA_INICIAL -120)as DATE)
  LOOP
- SELECT * from ds_demo.processa_notafiscal(cast(REC.vNOTAFISCAL_ID as INT8)) INTO vQUANTIDADE;
+ SELECT * from ${schema}.processa_notafiscal(cast(REC.vNOTAFISCAL_ID as INT8)) INTO vQUANTIDADE;
    vRETORNO:= vRETORNO + vQUANTIDADE; 
 END LOOP; 
   

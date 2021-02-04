@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ds_demo.processa_notafiscal3("pNOT_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscal3("pNOT_CODIGO" bigint)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -54,18 +54,18 @@ FROM ${schema}.INTELIGENT I INNER JOIN COMPROVANTE C ON I.COMPROVANTE_ID = C.ID
 
     vTAXA:= REC.vVALORPAGAMENTO - vNOTVALORPARCELA - REC.vCOMJUROS - REC.vCOMMULTA + REC.vDESCONTO;
  	    vHISTORICOFINAL   := 'Pagto. NFe '|| REC.vNUMERONOTA || '/' || REC.vNPARCELA || ' de ' || REC.vEMPRESANOTA;
-    update ds_demo.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = pNOT_CODIGO  where id = vINTELIGENTID;
+    update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = pNOT_CODIGO  where id = vINTELIGENTID;
        IF (vTAXA > 0) THEN
-       	update ds_demo.INTELIGENT set tipo_inteligent ='C'  where id = REC.INTELIGENT_ID;
+       	update ${schema}.INTELIGENT set tipo_inteligent ='C'  where id = REC.INTELIGENT_ID;
 	   	vHISTORICOFINAL   := 'Pagto. de juros NFe '|| REC.vNUMERONOTA || '/' || REC.vNPARCELA || ' de ' || REC.vEMPRESANOTA;
-	   	INSERT INTO  ds_demo.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
+	   	INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
 	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id) VALUES ('Pagto. de Taxa bancária','TAXA',vDATALANCAMENTO,vNUMERODOCUMENTO,
 	     		vNUMEROCONTROLE,vPERIODO, vTAXA*-1,false,
 	     		vICNPJ,vBENEFICIARIO, 'C',vCOMPROVANTEID,vPARCEIROID,vAGENCIABANCARIAID, vEXTRATOID, pNOT_CODIGO);
 	     		vRETORNO:= vRETORNO + 1;
    	END IF;
    	
-   	SELECT ds_demo.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNO;
+   	SELECT ${schema}.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNO;
 	vRETORNO:= vRETORNO + 1;
 
 RETURN COALESCE(vRETORNO ,0);

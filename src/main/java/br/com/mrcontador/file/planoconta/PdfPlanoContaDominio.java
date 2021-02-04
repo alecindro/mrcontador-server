@@ -77,6 +77,7 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 					planoContaDetail.setCodigo(value);
 					break;
 				case CPNJ:
+					value = line.substring(header.getBegin()-2, header.getEnd());
 					value = StringUtils.normalizeSpace(value);
 					if(value == "") {
 						value = null;
@@ -84,6 +85,7 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 					planoContaDetail.setCnpj(value);
 					break;
 				case DESCRICAO:
+					value = line.substring(header.getBegin(), header.getEnd()-1);
 					planoContaDetail.setDescricao(value);
 					break;
 				case GRAU:

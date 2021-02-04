@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mrcontador.domain.Arquivo;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.repository.ContaRepository;
@@ -49,13 +48,16 @@ public class ContaService {
     	return contaRepository.saveAll(contas);
     }
     
-    public List<Conta> update(List<Conta> contas, String user, Arquivo arquivo, Parceiro parceiro ){
+    public List<Conta> update(List<Conta> contas, String user, Parceiro parceiro ){
     	Date dataCadastro = new Date();
     	Instant created = Instant.now();
     	contas.forEach(conta -> {
-    		contaRepository.createConta(dataCadastro, conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getConConta(), Instant.now(), user, arquivo.getId(), parceiro.getId());
-    		contaRepository.updateConta(conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), arquivo.getId(), created, user, conta.getConConta(), parceiro.getId());
+    		contaRepository.createConta(dataCadastro, conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getConConta(), created, user, conta.getArquivo().getId(), parceiro.getId());
+    		contaRepository.updateConta(conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getArquivo().getId(), created, user, conta.getConConta(), parceiro.getId());
     	});
+    	contaRepository.callContaUpdateFunction(parceiro.getId());
+    	contas = contaRepository.findByParceiro(parceiro);
+    	
     	return contas;
     	
     }

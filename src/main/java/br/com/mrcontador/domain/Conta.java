@@ -59,7 +59,7 @@ public class Conta extends AbstractAuditingEntity implements Serializable {
     @JsonIgnoreProperties(value = "contas", allowSetters = true)
     private Parceiro parceiro;
     
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Arquivo arquivo;
 

@@ -17,7 +17,7 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 	public Conta toEntity(PlanoContaDetail dto) {
 		Conta conta = new Conta();
 		conta.setConClassificacao(StringUtils.normalizeSpace(dto.getClassificacao()));
-		conta.setConCnpj(MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getCnpj())));
+		conta.setConCnpj(MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getCnpj()))));
 		if (StringUtils.isNumeric(dto.getCodigo().trim())) {
 			conta.setConConta(Integer.valueOf(dto.getCodigo().trim()));
 		}

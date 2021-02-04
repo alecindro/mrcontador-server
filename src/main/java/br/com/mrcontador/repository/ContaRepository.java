@@ -2,6 +2,7 @@ package br.com.mrcontador.repository;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,6 +24,7 @@ public interface ContaRepository extends JpaRepository<Conta, Long>, JpaSpecific
 	
 	Optional<Conta> findFirstByParceiro(Parceiro parceiro);
 	Optional<Conta> findByConConta(Integer conConta);
+	List<Conta> findByParceiro(Parceiro parceiro);
 	
 	  @Modifying(flushAutomatically = true)
 	  @Query(value ="update conta set con_classificacao = :conClassificacao, con_tipo = :conTipo, con_descricao = :conDescricao, "
@@ -33,7 +35,7 @@ public interface ContaRepository extends JpaRepository<Conta, Long>, JpaSpecific
 	  
 	  @Modifying(flushAutomatically = true)
 	  @Query(value ="insert into conta (data_cadastro,con_classificacao, con_tipo, con_descricao, con_cnpj, con_grau, con_conta, created_by, created_date, parceiro_id, arquivo_id) values ("
-	  		+ ":dataCadastro,:conClassificacao, :conTipo, :conDescricao, :conCnpj, :conGrau, :conConta,:createdBy, :createdDate, :parceiroId, :arquivoId) ON CLONFLICT ON CONSTRAINT conta_conconta__unique_idx DO NOTHING",nativeQuery = true )
+	  		+ ":dataCadastro,:conClassificacao, :conTipo, :conDescricao, :conCnpj, :conGrau, :conConta,:createdBy, :createdDate, :parceiroId, :arquivoId) ON CONFLICT on constraint conta_unique DO nothing",nativeQuery = true )
 	  void createConta(@Param("dataCadastro") Date dataCadastro, @Param("conClassificacao") String conClassificacao, @Param("conTipo") String conTipo,
 			  @Param("conDescricao") String conDescricao, @Param("conCnpj") String conCnpj, @Param("conGrau") Integer conGrau, @Param("conConta") Integer conConta, 
 			  @Param("createdDate") Instant createdDate, @Param("createdBy") String user, @Param("arquivoId") Long arquivoId, 
@@ -43,5 +45,6 @@ public interface ContaRepository extends JpaRepository<Conta, Long>, JpaSpecific
 	  @Query(value ="update conta set arquivo_id = :arquivoId where id = :id ",nativeQuery = true )
 	  void updateArquivo(@Param("id") Long id, @Param("arquivoId") Long arquivoId);
 	  
-	  
+		@Query(nativeQuery = true, value = "select processa_conta_update(?)")
+		int callContaUpdateFunction(Long parceiroId);
 }

@@ -2,7 +2,7 @@
 
 --changeset clientes:11
 
-CREATE TABLE ${schema}.extrato (
+CREATE TABLE IF NOT EXISTS ${schema}.extrato (
 	id bigserial,
 	ext_datalancamento date NULL,
 	ext_historico varchar(90) NULL,
@@ -20,10 +20,13 @@ CREATE TABLE ${schema}.extrato (
 );
 
 ALTER TABLE ${schema}.extrato ALTER COLUMN processado SET DEFAULT FALSE;
+ALTER TABLE ${schema}.extrato DROP CONSTRAINT IF EXISTS fk_extrato_agenciabancaria_id;
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_agenciabancaria_id FOREIGN KEY (agenciabancaria_id) REFERENCES ${schema}.agenciabancaria(id);
+ALTER TABLE ${schema}.extrato DROP CONSTRAINT IF EXISTS fk_extrato_parceiro_id;
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_parceiro_id FOREIGN KEY (parceiro_id) REFERENCES ${schema}.parceiro(id);
+ALTER TABLE ${schema}.extrato DROP CONSTRAINT IF EXISTS fk_extrato_arquivo_id;
 ALTER TABLE ${schema}.extrato ADD CONSTRAINT fk_extrato_arquivo_id FOREIGN KEY (arquivo_id) REFERENCES ${schema}.arquivo(id);
-CREATE UNIQUE INDEX extrato_ext_debito_idx ON ds_demo.extrato (ext_datalancamento,ext_historico,ext_numerodocumento,ext_debito,parceiro_id,agenciabancaria_id);
-CREATE UNIQUE INDEX extrato_ext_credito_idx ON ds_demo.extrato (ext_datalancamento,ext_historico,ext_numerodocumento,ext_credito,parceiro_id,agenciabancaria_id);
+CREATE UNIQUE INDEX if not exists extrato_ext_debito_idx ON ${schema}.extrato (ext_datalancamento,ext_historico,ext_numerodocumento,ext_debito,parceiro_id,agenciabancaria_id);
+CREATE UNIQUE INDEX if not exists extrato_ext_credito_idx ON ${schema}.extrato (ext_datalancamento,ext_historico,ext_numerodocumento,ext_credito,parceiro_id,agenciabancaria_id);
 
 

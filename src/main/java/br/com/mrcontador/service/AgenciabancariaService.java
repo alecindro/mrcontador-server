@@ -26,12 +26,11 @@ public class AgenciabancariaService {
 
     private final AgenciabancariaRepository agenciabancariaRepository;
     
-    private final ExtratoService extratoService;
 
 
-    public AgenciabancariaService(AgenciabancariaRepository agenciabancariaRepository, ExtratoService extratoService) {
+
+    public AgenciabancariaService(AgenciabancariaRepository agenciabancariaRepository) {
         this.agenciabancariaRepository = agenciabancariaRepository;
-        this.extratoService = extratoService;
     }
 
     /**

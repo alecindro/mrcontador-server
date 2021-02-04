@@ -3,6 +3,7 @@ package br.com.mrcontador.file.planoconta;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,10 +45,10 @@ public class PdfParserPlanoConta {
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
 			validatePlano(dto.getParceiro(), planoConta.getCnpjCliente());
 			PlanoContaMapper mapper = new PlanoContaMapper();
-			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), planoConta.getArquivo());
-			contaService.save(contas);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
-			contas.forEach(conta -> contaService.updateArquivo(conta.getId(),arquivo.getId()));
+			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), arquivo);
+			contaService.save(contas);			
+		
 		} catch (CnpjAlreadyExistException e) {
 			throw e;
 		} catch (MrContadorException e) {
@@ -77,7 +78,7 @@ public class PdfParserPlanoConta {
 	}
 
 	public void update(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
-		PDDocument document;
+		PDDocument document = null;
 		InputStream first = null;
 		try {
 			first = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
@@ -85,14 +86,22 @@ public class PdfParserPlanoConta {
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
 			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
 			PlanoContaMapper mapper = new PlanoContaMapper();
-			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), planoConta.getArquivo());
-			contaService.update(contas, dto.getUsuario(), arquivo, dto.getParceiro());
+			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), arquivo);
+			contaService.update(contas, dto.getUsuario(), dto.getParceiro());
 		} catch (MrContadorException e) {
 			throw e;
 		} catch (Exception e) {
 			s3Service.uploadErro(dto);
 			throw new MrContadorException("planodeconta.parse.error", e.getMessage(), e);
 		} finally {
+			try {
+				if (document != null) {
+				document.close();
+				}
+			} catch (IOException e1) {
+			
+				e1.printStackTrace();
+			}
 			try {
 				if (first != null) {
 					first.close();
