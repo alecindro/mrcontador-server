@@ -157,8 +157,29 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.toUpperCase().contains("IDENTIFICADOR:")) {
-				String lineA =  StringUtils.substringBefore(StringUtils.substringAfter(line, "IDENTIFICADOR:").trim(),StringUtils.SPACE);
+			if (line.toUpperCase().contains("IDENTIFICADOR")) {
+				String lineA =  StringUtils.substringBefore(StringUtils.substringAfter(line.toUpperCase(), "IDENTIFICADOR").trim(),StringUtils.SPACE);
+				lineA = StringUtils.remove(lineA, ":");
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.toUpperCase().contains("COD.CONTROLE")) {
+				String lineA =  StringUtils.substringAfter(line.toUpperCase(), "COD.CONTROLE");
+				lineA = StringUtils.remove(lineA, ":").trim();
+				lineA = StringUtils.substringBefore(lineA,StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.toUpperCase().contains("REFERENCIA")) {
+				String lineA =  StringUtils.substringAfter(line.toUpperCase(), "REFERENCIA").trim();
+				lineA = StringUtils.remove(lineA, ":").trim();
+				lineA = StringUtils.substringBefore(lineA, StringUtils.SPACE);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
