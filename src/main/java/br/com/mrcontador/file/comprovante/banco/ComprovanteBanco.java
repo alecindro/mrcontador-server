@@ -156,7 +156,7 @@ try {
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(JUROS)).findFirst();
 		Optional<DiffValue> desconto = diffValues.stream()
 				.filter(diffvalue -> diffvalue.getOldValue().trim().equals(DESCONTO)).findFirst();
-		comprovante.setComCnpj(cnpj_beneficiario.isPresent() ? MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(cnpj_beneficiario.get().getNewValue().trim())) : "");
+		comprovante.setComCnpj(cnpj_beneficiario.isPresent() ? MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(cnpj_beneficiario.get().getNewValue().trim())) : null);
 		comprovante.setComDocumento(documento.isPresent() ? StringUtils.normalizeSpace(documento.get().getNewValue()) : "");
 		comprovante.setComObservacao(obs.isPresent() ? StringUtils.normalizeSpace(obs.get().getNewValue()) : "");
 		comprovante.setComValordocumento(valor_documento.isPresent()

@@ -100,6 +100,9 @@ public class ParserComprovanteFacade {
 				throw new MrContadorException("comprovante.notimported.all");
 			}
 			parser.callFunction(salvos, service, extratoService);
+			if(conflict) {
+				throw new MrContadorException("comprovante.notallimported");
+			}
 			log.info("Comprovantes salvos");
 			return MrContadorUtil.periodo(salvos.stream().findFirst().get().getComDatapagamento());
 			

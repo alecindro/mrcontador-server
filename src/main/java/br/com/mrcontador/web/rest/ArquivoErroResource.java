@@ -53,7 +53,7 @@ public class ArquivoErroResource {
 
     private final Logger log = LoggerFactory.getLogger(ArquivoErroResource.class);
 
-    private static final String ENTITY_NAME = "arquivoErro";
+    private static final String ENTITY_NAME = "arquivoerro";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
