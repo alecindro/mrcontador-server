@@ -8,6 +8,7 @@ public enum TipoEntrada {
 	CHECK,
 	DEP,
 	XFER,
-	CASH
+	CASH,
+	INVALID
 
 }

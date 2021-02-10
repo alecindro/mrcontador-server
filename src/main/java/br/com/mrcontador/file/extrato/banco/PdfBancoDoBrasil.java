@@ -114,6 +114,9 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 		if (StringUtils.equals(tipo, "C")) {
 			tipoEntrada = TipoEntrada.CREDIT;
 		}
+		if (StringUtils.equals(tipo, "*")) {
+			tipoEntrada = TipoEntrada.INVALID;
+		}
 		return tipoEntrada;
 	}
 

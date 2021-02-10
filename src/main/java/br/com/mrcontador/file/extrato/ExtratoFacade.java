@@ -42,6 +42,9 @@ public abstract class ExtratoFacade {
 		Arquivo arquivo = s3Service.uploadExtrato(fileDTO);
 		arquivo = arquivoService.save(arquivo);
 		for (OfxData ofxData : ofxDTO.getDataList()) {
+			if (ofxData.getTipoEntrada().equals(TipoEntrada.INVALID)){
+				continue;
+			}
 			Extrato extrato = new Extrato();
 			extrato.setAgenciabancaria(agenciaBancaria);
 			extrato.setArquivo(arquivo);
@@ -56,6 +59,7 @@ public abstract class ExtratoFacade {
 				extrato.setInfoAdicional(((PdfData) ofxData).getInfAdicional());
 			}
 			extrato.setParceiro(fileDTO.getParceiro());
+			
 			if (ofxData.getTipoEntrada().equals(TipoEntrada.CREDIT)
 					|| ofxData.getValor().compareTo(BigDecimal.ZERO) > 0) {
 				extrato.setExtCredito(ofxData.getValor());
