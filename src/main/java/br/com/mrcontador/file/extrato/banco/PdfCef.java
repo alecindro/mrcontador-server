@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -58,14 +59,17 @@ public class PdfCef extends PdfParserExtrato {
 	@Override
 	protected void readLine(String line, PdfData data, int numberRow) {
 		log.info("Linha {} ", numberRow);
-		String dtbalancete = StringUtils.substring(line, DATA_COLUMN, DCTO_COLUMN);
+		String[] values = StringUtils.split(line, StringUtils.SPACE);
+		String dtbalancete = StringUtils.normalizeSpace(values[0]);
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dtbalancete), dateFormatter)));
-		String historico = StringUtils.substring(line, DESCRICAO_COLUMN, VALUE_COLUMN);
+		String[] historicos = Arrays.copyOfRange(values, 2, values.length);
+		historicos = Arrays.copyOfRange(historicos, 0, historicos.length-4);
+		String historico = StringUtils.join(historicos, StringUtils.SPACE);
 		data.setHistorico(StringUtils.normalizeSpace(historico));
-		String documento = StringUtils.substring(line, DCTO_COLUMN, DESCRICAO_COLUMN);
+		String documento = values[1];
 		data.setDocumento(MrContadorUtil.removeDots(StringUtils.normalizeSpace(documento)));
-		String valor = StringUtils.substring(line, VALUE_COLUMN, SALDO_COLUMN);
-		data.setTipoEntrada(getTipo(valor));
+		String valor = values[values.length-4];
+		data.setTipoEntrada(getTipo(values[values.length-3]));
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 		if(data.getTipoEntrada().equals(TipoEntrada.DEBIT)){
 			data.setValor(data.getValor().negate());
@@ -114,8 +118,15 @@ public class PdfCef extends PdfParserExtrato {
 			if (StringUtils.deleteWhitespace(line).isEmpty()) {
 				continue;
 			}
-			if (!StringUtils.isNumeric(StringUtils.normalizeSpace(StringUtils.remove(StringUtils.substring(line, DATA_COLUMN, DCTO_COLUMN), "/")))
-					|| StringUtils.substring(line, VALUE_COLUMN, SALDO_COLUMN).isBlank()) {
+			String[] columns = StringUtils.split(line, StringUtils.SPACE);
+			String date = columns[0];
+			String value = null;
+			if(columns.length>4) {
+				value = columns[columns.length-4];
+			}
+			
+			if (!StringUtils.isNumeric(StringUtils.normalizeSpace(StringUtils.remove(date, "/")))
+					|| value == null || value.isBlank()) {
 				continue;
 			}
 			readLine(line, data, i);
