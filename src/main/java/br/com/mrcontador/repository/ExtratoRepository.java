@@ -31,11 +31,11 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@Query("FROM Extrato AS ex LEFT JOIN FETCH ex.arquivo WHERE ex.id = ?1")
 	Optional<Extrato> findById(Long id);
 
-	@Query(nativeQuery = true, value = "select extrato_functionBB(?,?)")
-	int callExtratoBB(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionBB(?,?,?)")
+	int callExtratoBB(Long parceiroId, Long agenciaId,String periodo);
 	
-	@Query(nativeQuery = true, value = "select extrato_functionBRADESCO(?,?)")
-	int callExtratoBradesco(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionBRADESCO(?,?,?)")
+	int callExtratoBradesco(Long parceiroId, Long agenciaId,String periodo);
 	
 	@Query(nativeQuery = true, value = "select extrato_functionSANTANDER(?,?)")
 	int callExtratoSantander(Long extratoId, Long agenciaId);

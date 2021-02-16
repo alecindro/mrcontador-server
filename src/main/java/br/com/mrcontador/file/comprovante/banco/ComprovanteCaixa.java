@@ -722,7 +722,7 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 			if (line.contains("VALOR TOTAL")) {
 				String data = StringUtils.substringAfter(line, "VALOR TOTAL").trim();
 				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(VALOR_DOC);
+				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(data);
 				diffValue.setLine(i);
 				list.add(diffValue);

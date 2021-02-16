@@ -159,12 +159,13 @@ try {
 		comprovante.setComCnpj(cnpj_beneficiario.isPresent() ? MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(cnpj_beneficiario.get().getNewValue().trim())) : null);
 		comprovante.setComDocumento(documento.isPresent() ? StringUtils.normalizeSpace(documento.get().getNewValue()) : "");
 		comprovante.setComObservacao(obs.isPresent() ? StringUtils.normalizeSpace(obs.get().getNewValue()) : "");
-		comprovante.setComValordocumento(valor_documento.isPresent()
-				?  MrContadorUtil.toMoney(valor_documento.get().getNewValue())
-				: BigDecimal.ZERO);
+		
 		comprovante.setComValorpagamento(valor_pagamento.isPresent()
 				? MrContadorUtil.toMoney(valor_pagamento.get().getNewValue())
 				: BigDecimal.ZERO);
+		comprovante.setComValordocumento(valor_documento.isPresent()
+				?  MrContadorUtil.toMoney(valor_documento.get().getNewValue())
+				: comprovante.getComValorpagamento());
 		comprovante.setJuros(juros.isPresent()  && MrContadorUtil.containsNumber(juros.get().getNewValue())
 				? MrContadorUtil.toMoney(juros.get().getNewValue())
 				: BigDecimal.ZERO);

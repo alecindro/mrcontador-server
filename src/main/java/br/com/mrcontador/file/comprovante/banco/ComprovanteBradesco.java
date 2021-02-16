@@ -5,9 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.Splitter;
@@ -28,6 +29,7 @@ import br.com.mrcontador.file.comprovante.PPDocumentDTO;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
 import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -299,6 +301,16 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
+			
+			if (line.toUpperCase().contains("DESCONTO")) {
+				String lineA = StringUtils.substringAfter(line.toUpperCase(), "DESCONTO").trim();
+				lineA = StringUtils.remove(lineA, ":");
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DESCONTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
 			if (line.contains("Valor total:")) {
 				String lineA = StringUtils.substringAfter(line, "Valor total:").trim();
 				DiffValue diffValue = new DiffValue();
@@ -542,6 +554,17 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
+				if(lines[i+1].toUpperCase().contains("CNPJ")) {
+				String lineB = StringUtils.substringAfter(lines[i+1].toUpperCase(), "CNPJ");
+				lineB = StringUtils.remove(lineB, ":");
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(CNPJ_BEN);
+				diffValue2.setNewValue(lineB);
+				diffValue2.setLine(i+1);
+				list.add(diffValue2);
+				}
+				
+				
 			}
 			if (line.contains("Data de débito:")) {
 				String lineA = StringUtils.substringAfter(line, "Data de débito:").trim();
@@ -1083,6 +1106,18 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 					log.error(e.getMessage());
 				}
 			}
+		}
+	}
+	
+	@Override
+	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service,
+			ExtratoService extratoService) {
+		if(!comprovantes.isEmpty()) {
+			Comprovante comprovante = comprovantes.stream().findFirst().get();
+			Long parceiroId = comprovante.getParceiro().getId();
+			Long agenciabancariaId = comprovante.getAgenciabancaria().getId();
+			Set<String> periodos = comprovantes.stream().map(c -> c.getPeriodo()).collect(Collectors.toSet());
+			periodos.forEach(p -> service.callComprovanteBradesco(parceiroId, agenciabancariaId, p));
 		}
 	}
 

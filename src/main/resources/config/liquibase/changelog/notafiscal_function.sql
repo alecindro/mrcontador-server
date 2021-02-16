@@ -4,87 +4,87 @@ CREATE OR REPLACE FUNCTION ${schema}.processa_notafiscal("pNOT_CODIGO" bigint)
 AS $function$
 declare
 pNOT_CODIGO ALIAS for $1;
-REC   RECORD; 
 vRETORNO NUMERIC;
 vHISTORICOFINAL TEXT;
-vTAXA NUMERIC;
-vRETORNOCONTA numeric;
-vNOTAFISCALID numeric;
-vNUMERONOTA TEXT;
-vVALORPARCELANOTA numeric;
-vEMPRESANOTA TEXT;
-vNPARCELA TEXT;
-vNOTDATAPARCELA DATE;
-vNOTCNPJ TEXT;
-vCONTATARIFA numeric;
-vPARCEIROID numeric;
+selected_nota ${schema}.notafiscal%rowtype;
+selected_inteligent2 ${schema}.inteligent%rowtype;
+vInteligent_id numeric;
+vDatalancamento DATE;
+vNumerodocumento TEXT;
+vNumerocontrole TEXT;
+vPeriodo TEXT;
+vCnpj TEXT;
+vBeneficiario TEXT;
+vComprovante_id NUMERIC;
+vParceiro_id NUMERIC;
+vAgenciabancaria_id NUMERIC;
+vExtrato_id NUMERIC;
+vPagamento NUMERIC;
+vTAXA  NUMERIC;
+vCom_juros NUMERIC;
+vCom_multa NUMERIC;
+vCom_desconto NUMERIC;
 
 begin
-	raise INFO 'NOTA FISCAL: %', pNOT_CODIGO;
+  vTAXA := 0;
   vRETORNO:= 0;  
-SELECT NF.ID, NF.NOT_NUMERO, 
-NF.NOT_VALORPARCELA,NF.NOT_EMPRESA, NF.not_parcela, NF.NOT_DATAPARCELA, NF.NOT_CNPJ, NF.PARCEIRO_ID 
-INTO  vNOTAFISCALID, vNUMERONOTA,  vVALORPARCELANOTA, vEMPRESANOTA, 
-vNPARCELA, vNOTDATAPARCELA, vNOTCNPJ, vPARCEIROID  
+SELECT * 
+INTO selected_nota 
 from ${schema}.NOTAFISCAL NF WHERE NF.tno_codigo =0 AND NF.ID  = pNOT_CODIGO;
-
-SELECT DESPESA_TARIFA INTO vCONTATARIFA FROM  ${schema}.PARCEIRO WHERE ID = vPARCEIROID;
-  
-FOR REC IN 
-SELECT I.ID AS INTELIGENT_ID, I.HISTORICOFINAL as vHISTORICOFINAL, I.TIPO_VALOR as vTIPOVALOR, 
-I.datalancamento as vDATAEXTRATO, I.numerodocumento as vNUMERODOCUMENTO,
-I.numerocontrole as vNUMEROCONTROLE, I.periodo as vPERIODO, I.cnpj as vCNPJ, 
-I.beneficiario as vBENEFICIARIO, 
-I.agenciabancaria_id as vAGENCIABANCARIAID, 
-I.extrato_id as vCODIGEXTRATO, I.comprovante_id as vCOMPROVANTEID,
-C.com_valorpagamento as vVALORPAGAMENTO, C.com_juros as vCOMJUROS, 
-C.com_multa as vCOMMULTA, C.com_desconto AS vDESCONTO
-    FROM ${schema}.INTELIGENT I INNER JOIN
-    ${schema}.COMPROVANTE C ON I.COMPROVANTE_ID = C.ID
-    WHERE I.ASSOCIADO = false
-    and I.tipo_valor = 'PRINCIPAL'
-     and (C.COM_CNPJ = vNOTCNPJ or substring(C.COM_CNPJ,1,8) = substring(vNOTCNPJ,1,8))
-    and C.COM_VALORDOCUMENTO >= vVALORPARCELANOTA
-    AND C.COM_DATAVENCIMENTO >= vNOTDATAPARCELA
-    AND C.TIPO_COMPROVANTE = 'TITULO'
-	AND I.PARCEIRO_ID = vPARCEIROID
-	ORDER BY C.COM_VALORDOCUMENTO ASC
-	LIMIT 1
-   
- loop
-  raise INFO 'INTELIGENT_ID: %', REC.INTELIGENT_ID;
-    vTAXA:= REC.vVALORPAGAMENTO - vVALORPARCELANOTA - REC.vCOMJUROS - REC.vCOMMULTA + REC.vDESCONTO;
- 	vHISTORICOFINAL   := 'Pagto. NFe '|| vNUMERONOTA || '/' || vNPARCELA || ' de ' || vEMPRESANOTA;
+SELECT i.id, i.datalancamento, i.numerodocumento, i.numerocontrole, i.periodo, i.cnpj,
+i.beneficiario, i.comprovante_id, i.parceiro_id, i.agenciabancaria_id, i.extrato_id, min(c.COM_VALORPAGAMENTO),  c.com_juros, c.com_multa, c.com_desconto 
+into vInteligent_id, vDatalancamento, vNumerodocumento, vNumerocontrole, vPeriodo, vCnpj, vBeneficiario, vComprovante_id,
+vParceiro_id, vAgenciabancaria_id, vExtrato_id, vPagamento, vCom_juros, vCom_multa, vCom_desconto
+from ${schema}.inteligent i
+    inner join ${schema}.comprovante c 
+    on i.comprovante_id = c.id
+    WHERE 
+    i.tipo_valor = 'PRINCIPAL'
+    and (i.cnpj = selected_nota.not_cnpj or substring(i.cnpj,1,8) = substring(selected_nota.not_cnpj,1,8))
+    and (c.TIPO_COMPROVANTE = 'TRANSFERENCIA' or c.TIPO_COMPROVANTE = 'TITULO')
+      and ((c.com_valordocumento = selected_nota.not_valorparcela AND c.COM_DATAVENCIMENTO >= cast((selected_nota.not_dataparcela - 7)as DATE)) OR
+    (c.com_valordocumento >= selected_nota.not_valorparcela AND c.COM_DATAVENCIMENTO >= selected_nota.not_dataparcela))
+	AND i.PARCEIRO_ID = selected_nota.parceiro_id
+    AND i.notafiscal_id IS NULL
+	group by c.id, i.id limit 1;
+ 
+	if (vInteligent_id is not null) then
+    vTAXA:= vPagamento - selected_nota.not_valorparcela - vCom_juros - vCom_multa + vCom_desconto;
+ 	vHISTORICOFINAL   := 'Pagto. NFe '|| selected_nota.not_numero || '/' || selected_nota.not_parcela || ' de ' || selected_nota.NOT_EMPRESA;
     IF (vTAXA > 0) then
-      raise INFO 'vTAXA: %, vHISTORICOFINAL: %, vNOTAFISCALID: %, INTELIGENT_ID: %', vTAXA, vHISTORICOFINAL, vNOTAFISCALID, REC.INTELIGENT_ID;
-    	 update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID, tipo_inteligent ='C'  where id = REC.INTELIGENT_ID;
-    	 vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| vNUMERONOTA || '/' || vNPARCELA || ' de ' || vEMPRESANOTA;
-	   	raise INFO 'vCONTATARIFA: %', vCONTATARIFA;
-    	IF (vCONTATARIFA IS NOT NULL) THEN 
-    		raise INFO 'vCONTATARIFA: % % % % % % % % % % % % %', REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
-	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA, REC.vCNPJ,REC.vBENEFICIARIO,REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vCONTATARIFA;
-		INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal, conta_id) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
-	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,true,
-	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vHISTORICOFINAL, vCONTATARIFA);
-		ELSE
-		INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-	     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES ('Pagto. de Taxa bancária','TAXA',REC.vDATAEXTRATO,REC.vNUMERODOCUMENTO,
-	     		REC.vNUMEROCONTROLE,REC.vPERIODO, vTAXA*-1,false,
-	     		REC.vCNPJ,REC.vBENEFICIARIO, 'C',REC.vCOMPROVANTEID,vPARCEIROID,REC.vAGENCIABANCARIAID, REC.vCODIGEXTRATO, vNOTAFISCALID, vHISTORICOFINAL);
-		SELECT ${schema}.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
-		END IF;		
+   	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = selected_nota.id, debito = vPagamento-vTAXA, tipo_inteligent ='C'  where id = vInteligent_id;
+	    vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| selected_nota.not_numero || '/' || selected_nota.not_parcela || ' de ' || selected_nota.NOT_EMPRESA;
+    	SELECT *
+	    FROM ${schema}.INTELIGENT 
+	    into selected_inteligent2
+	    WHERE tipo_valor = 'JUROS'
+	    and (cnpj = selected_nota.not_cnpj or substring(cnpj,1,8) = substring(selected_nota.not_cnpj,1,8))
+	    and vTAXA = selected_nota.not_valorparcela
+	    AND datalancamento >= selected_nota.not_dataparcela
+	    AND parceiro_id = selected_nota.parceiro_id
+		AND notafiscal_id IS NULL
+		ORDER BY datalancamento ASC
+		LIMIT 1;
+		
+			if (selected_inteligent2.id is not null) then
+			 update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = selected_nota.id, tipo_inteligent ='C'  where id = selected_inteligent2.id;
+			else
+				INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
+			     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES 
+						('Pagto. de Taxa bancária','TAXA',vDatalancamento,vNumerodocumento,vNumerocontrole,vPeriodo, vTAXA*-1,false,
+			     		vCnpj,vBeneficiario, 'C',vComprovante_id,vParceiro_id,vAgenciabancaria_id,vExtrato_id, selected_nota.id, vHISTORICOFINAL);
+		   	END IF;
    	else
- 	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = vNOTAFISCALID  where id = REC.INTELIGENT_ID;
-		SELECT ${schema}.PROCESSA_CONTA(CAST(REC.INTELIGENT_ID AS int8)) into vRETORNOCONTA;
+ 	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = selected_nota.id  where id = vInteligent_id;
    	END IF;
    vRETORNO:= vRETORNO + 1;
- END LOOP; 
+ 
     if (vRETORNO > 0) THEN
-	update ${schema}.notafiscal set processado = true where ID = pNOT_CODIGO;
+	update ${schema}.notafiscal set processado = true where ID = selected_nota.id;
 	end if;	
-   	
+END IF;   	
 RETURN vRETORNO;
 END;
 $function$
-;
+
+

@@ -85,8 +85,8 @@ public class ComprovanteService {
     	comprovanteRepository.callComprovante(comprovanteId);
     }
     
-    public void callComprovanteBB(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteBB(comprovanteId);
+    public void callComprovanteBB(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteBB(parceiroId,agenciabancariaId,periodo);
     }
     
     public void callComprovanteCEF(Long comprovanteId) {
@@ -114,8 +114,8 @@ public class ComprovanteService {
     	comprovanteRepository.callComprovanteUnicred(comprovanteId);
     }
     
-    public void callComprovanteBradesco(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteBradesco(comprovanteId);
+    public void callComprovanteBradesco(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteBradesco(parceiroId,agenciabancariaId,periodo);
     }
     
     public void callNotaFiscal(Long parceiroId, LocalDate date) {

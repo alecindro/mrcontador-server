@@ -3,9 +3,9 @@ package br.com.mrcontador.file.extrato;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -21,7 +21,6 @@ import br.com.mrcontador.erros.ExtratoException;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
-import br.com.mrcontador.util.MrContadorUtil;
 
 @Service
 public class ExtratoPdfFacade extends ExtratoFacade{
@@ -34,14 +33,12 @@ public class ExtratoPdfFacade extends ExtratoFacade{
 		PdfParserExtrato pdfParser = PdfParserExtratoFactory.getParser(agenciaBancaria);
 		OfxDTO ofxDTO = process(pdfParser, fileDTO, agenciaBancaria);
 		List<Extrato> extratos = save(fileDTO, ofxDTO, agenciaBancaria);
-		Set<String> periodos = new HashSet<>();
-		extratos.forEach(extrato -> {
-			periodos.add(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
-		});
+		Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+		
 		pdfParser.callExtrato(extratoService,extratos,fileDTO.getParceiro().getId());
-		pdfParser.callRegraInteligent(extratoService, fileDTO.getParceiro().getId(), periodos);		
-		pdfParser.extrasFunctions(extratoService, extratos,agenciaBancaria);
-		pdfParser.callProcessaNotafiscalGeral(extratoService, fileDTO.getParceiro().getId(), extratos);
+		//pdfParser.callRegraInteligent(extratoService, fileDTO.getParceiro().getId(), periodos);		
+		//pdfParser.extrasFunctions(extratoService, extratos,agenciaBancaria);
+		//pdfParser.callProcessaNotafiscalGeral(extratoService, fileDTO.getParceiro().getId(), extratos);
 		return periodos.stream().findFirst().get();
 	}
 
