@@ -43,24 +43,22 @@ from ${schema}.inteligent i
     and (i.cnpj = selected_nota.not_cnpj or substring(i.cnpj,1,8) = substring(selected_nota.not_cnpj,1,8))
     and (c.TIPO_COMPROVANTE = 'TRANSFERENCIA' or c.TIPO_COMPROVANTE = 'TITULO')
       and ((c.com_valordocumento = selected_nota.not_valorparcela AND c.COM_DATAVENCIMENTO >= cast((selected_nota.not_dataparcela - 7)as DATE)) OR
-    (c.com_valordocumento >= selected_nota.not_valorparcela AND c.COM_DATAVENCIMENTO >= selected_nota.not_dataparcela))
+    (c.com_valordocumento >= selected_nota.not_valorparcela AND c.COM_DATAVENCIMENTO = selected_nota.not_dataparcela))
 	AND i.PARCEIRO_ID = selected_nota.parceiro_id
     AND i.notafiscal_id IS NULL
-	group by c.id, i.id limit 1;
+	group by c.id, i.id order by c.com_valordocumento asc limit 1;
  
 	if (vInteligent_id is not null) then
-    vTAXA:= vPagamento - selected_nota.not_valorparcela - vCom_juros - vCom_multa + vCom_desconto;
+    vTAXA:= vPagamento - selected_nota.not_valorparcela - vCom_juros - vCom_multa - vCom_desconto;
  	vHISTORICOFINAL   := 'Pagto. NFe '|| selected_nota.not_numero || '/' || selected_nota.not_parcela || ' de ' || selected_nota.NOT_EMPRESA;
     IF (vTAXA > 0) then
-   	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = selected_nota.id, debito = vPagamento-vTAXA, tipo_inteligent ='C'  where id = vInteligent_id;
+   	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = selected_nota.id, debito = (vPagamento-vTAXA) *-1, tipo_inteligent ='C'  where id = vInteligent_id;
 	    vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| selected_nota.not_numero || '/' || selected_nota.not_parcela || ' de ' || selected_nota.NOT_EMPRESA;
     	SELECT *
 	    FROM ${schema}.INTELIGENT 
 	    into selected_inteligent2
 	    WHERE tipo_valor = 'JUROS'
-	    and (cnpj = selected_nota.not_cnpj or substring(cnpj,1,8) = substring(selected_nota.not_cnpj,1,8))
-	    and vTAXA = selected_nota.not_valorparcela
-	    AND datalancamento >= selected_nota.not_dataparcela
+	    and comprovante_id = vComprovante_id
 	    AND parceiro_id = selected_nota.parceiro_id
 		AND notafiscal_id IS NULL
 		ORDER BY datalancamento ASC
@@ -86,5 +84,4 @@ END IF;
 RETURN vRETORNO;
 END;
 $function$
-
-
+;

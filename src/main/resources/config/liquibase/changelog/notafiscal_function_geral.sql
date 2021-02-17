@@ -7,15 +7,10 @@ declare
  pDATA_INICIAL ALIAS for $2;
   vRETORNO NUMERIC;
   vQUANTIDADE NUMERIC;
-  qu NUMERIC;
  REC   RECORD; 
  
  begin
 	  vRETORNO:= 0; 
-SELECT  count(id)  into qu FROM ${schema}.NOTAFISCAL  WHERE  TNO_CODIGO=0
-    AND PARCEIRO_ID = CAST(pPAR_CODIGO AS int8) 
-    AND PROCESSADO = false 
-    and NOT_DATAPARCELA >= cast((pDATA_INICIAL -120)as DATE);
 for REC in 
  SELECT  id FROM ${schema}.NOTAFISCAL  WHERE  TNO_CODIGO=0
     AND PARCEIRO_ID = CAST(pPAR_CODIGO AS int8) 
@@ -23,7 +18,7 @@ for REC in
     and NOT_DATAPARCELA >= cast((pDATA_INICIAL -120)as DATE)
     order by NOT_DATAPARCELA desc
  LOOP
- SELECT * from ${schema}.processa_notafiscal_novo(cast(REC.id as INT8)) INTO vQUANTIDADE;
+ SELECT * from ${schema}.processa_notafiscal(cast(REC.id as INT8)) INTO vQUANTIDADE;
    vRETORNO:= vRETORNO + vQUANTIDADE; 
 END LOOP; 
   RETURN COALESCE(vRETORNO ,0);
