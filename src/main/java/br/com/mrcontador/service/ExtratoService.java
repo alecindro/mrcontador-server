@@ -98,37 +98,49 @@ public class ExtratoService {
 	@Transactional
 	public void callExtratoCEF(List<Extrato> extratos, Long parceiroId) {
 		log.info("call extrato");
-		extratos.forEach(extrato -> {
-			try {
-				extratoRepository.callExtratoCef(extrato.getId(), extrato.getAgenciabancaria().getId());
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		});
+		if (!extratos.isEmpty()) {
+			Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+			Long agenciaBancariaId = extratos.stream().findFirst().get().getAgenciabancaria().getId();
+			periodos.forEach(periodo -> {
+				try {
+					extratoRepository.callExtratoCef(parceiroId, agenciaBancariaId, periodo);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}
 	}
 
 	@Transactional
 	public void callExtratoSantander(List<Extrato> extratos, Long parceiroId) {
 		log.info("call extrato");
-		extratos.forEach(extrato -> {
-			try {
-				extratoRepository.callExtratoSantander(extrato.getId(), extrato.getAgenciabancaria().getId());
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		});
+		if (!extratos.isEmpty()) {
+			Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+			Long agenciaBancariaId = extratos.stream().findFirst().get().getAgenciabancaria().getId();
+			periodos.forEach(periodo -> {
+				try {
+					extratoRepository.callExtratoSantander(parceiroId, agenciaBancariaId, periodo);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}
 	}
 
 	@Transactional
 	public void callExtratoSafra(List<Extrato> extratos, Long parceiroId) {
 		log.info("call extrato");
-		extratos.forEach(extrato -> {
-			try {
-				extratoRepository.callExtratoSafra(extrato.getId(), extrato.getAgenciabancaria().getId());
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		});
+		if (!extratos.isEmpty()) {
+			Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+			Long agenciaBancariaId = extratos.stream().findFirst().get().getAgenciabancaria().getId();
+			periodos.forEach(periodo -> {
+				try {
+					extratoRepository.callExtratoSafra(parceiroId, agenciaBancariaId, periodo);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}
 	}
 
 	@Transactional
@@ -150,37 +162,49 @@ public class ExtratoService {
 	@Transactional
 	public void callExtratoCredicrea(List<Extrato> extratos, Long parceiroId) {
 		log.info("call extrato");
-		extratos.forEach(extrato -> {
-			try {
-				extratoRepository.callExtratoCredicrea(extrato.getId(), extrato.getAgenciabancaria().getId());
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		});
+		if (!extratos.isEmpty()) {
+			Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+			Long agenciaBancariaId = extratos.stream().findFirst().get().getAgenciabancaria().getId();
+			periodos.forEach(periodo -> {
+				try {
+					extratoRepository.callExtratoCredicrea(parceiroId, agenciaBancariaId, periodo);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}
 	}
 
 	@Transactional
 	public void callExtratoItau(List<Extrato> extratos, Long parceiroId) {
 		log.info("call extrato");
-		extratos.forEach(extrato -> {
-			try {
-				extratoRepository.callExtratoItau(extrato.getId(), extrato.getAgenciabancaria().getId());
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		});
+		if (!extratos.isEmpty()) {
+			Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+			Long agenciaBancariaId = extratos.stream().findFirst().get().getAgenciabancaria().getId();
+			periodos.forEach(periodo -> {
+				try {
+					extratoRepository.callExtratoItau(parceiroId, agenciaBancariaId, periodo);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}
 	}
 
 	@Transactional
 	public void callExtratoUnicred(List<Extrato> extratos, Long parceiroId) {
 		log.info("call extrato");
-		extratos.forEach(extrato -> {
-			try {
-				extratoRepository.callExtratoUnicred(extrato.getId(), extrato.getAgenciabancaria().getId());
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		});
+		if (!extratos.isEmpty()) {
+			Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+			Long agenciaBancariaId = extratos.stream().findFirst().get().getAgenciabancaria().getId();
+			periodos.forEach(periodo -> {
+				try {
+					extratoRepository.callExtratoUnicred(parceiroId, agenciaBancariaId, periodo);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}
 	}
 
 	@Transactional

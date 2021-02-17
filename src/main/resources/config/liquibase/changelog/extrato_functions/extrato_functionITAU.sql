@@ -1,134 +1,57 @@
-CREATE OR REPLACE FUNCTION ${schema}.extrato_functionITAU("pEXT_CODIGO" bigint, "pAG_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ${schema}.extrato_functionITAU("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
 DECLARE
-  pEXT_CODIGO ALIAS FOR $1;  
-   pAG_CODIGO ALIAS FOR $2;  
+  pParceiroId ALIAS FOR $1;  
+  pAgenciaId ALIAS FOR $2; 
+  pPeriodo ALIAS FOR $3; 
   vRETORNO NUMERIC;
-  vCODIGEXTRATO NUMERIC;
-  vDATAEXTRATO DATE;  
-  vHISTORICO VARCHAR(150);
-  vNUMERODOCUMENTO VARCHAR(35);
-  vNUMEROCONTROLE VARCHAR(35);
-  vDESCRICAO VARCHAR(30);
-  vDEBITO NUMERIC;
-  vCREDITO NUMERIC;
-  vASSOCIADO BOOLEAN;
-  vAGENCIABANCARIAID NUMERIC;
-  vPARCEIROID NUMERIC;
-  vTIPOINTELIGENTE VARCHAR(1);
+  vRETORNO_COMPROVANTE NUMERIC;
+  vBANCOID NUMERIC;
+  vAGEAGENCIA TEXT;
+  vAGENUMERO TEXT;
+  vAGENCIAAPLICACAOID NUMERIC;
+  vCONTAAPLICACAOID NUMERIC;
+  vAPLICACAO_AUT NUMERIC;
+  REC_EXTRATO RECORD;
+  vHISTORICOFINAL TEXT;
    
-  cEXTRATOBANCARIO CURSOR FOR
-  SELECT  ID, EXT_DATALANCAMENTO, EXT_HISTORICO, EXT_NUMERODOCUMENTO, EXT_NUMEROCONTROLE, EXT_DESCRICAO, EXT_DEBITO, EXT_CREDITO, 
-  AGENCIABANCARIA_ID
-  FROM ${schema}.EXTRATO
-  WHERE EXTRATO.ID= pEXT_CODIGO;  
- 
- vCONTAJUROS numeric;
-vPERIODO text;
+BEGIN  
+    vRETORNO:= 0;
 
-RECEXTRATO RECORD;
-vHISTORICOFINAL text;
-
-vQUANTIDADENOTA numeric;
-vAPLICACAO_AUT numeric;
-
-
- vBANCOID numeric;
-vAGEAGENCIA text;
-  vAGENUMERO text;
-  vAGENCIAAPLICACAOID numeric;
-  vCONTAAPLICACAOID numeric;
-
-
-BEGIN 
-  vRETORNO:= 0;
- vCONTAJUROS:=-1;
  -- pesquisa a agencia bancaria
- SELECT   a.PARCEIRO_ID, a.BANCO_ID, a.AGE_AGENCIA, a.AGE_NUMERO INTO vPARCEIROID, vBANCOID, vAGEAGENCIA, vAGENUMERO from ${schema}.AGENCIABANCARIA a where a.ID = pAG_CODIGO AND a.TIPO_AGENCIA = 'CONTA';
+ SELECT   a.BANCO_ID, a.AGE_AGENCIA, a.AGE_NUMERO INTO vBANCOID, vAGEAGENCIA, vAGENUMERO from ${schema}.AGENCIABANCARIA a 
+ where a.ID = pAgenciaId AND a.TIPO_AGENCIA = 'CONTA';
 -- pesquisa a aplicacao automatica
-SELECT  a.ID, A.CONTA_ID INTO vAGENCIAAPLICACAOID, vCONTAAPLICACAOID from ${schema}.AGENCIABANCARIA a where a.PARCEIRO_ID = vPARCEIROID AND a.TIPO_AGENCIA = 'APLICACAO' AND a.AGE_AGENCIA = vAGEAGENCIA AND a.AGE_NUMERO = vAGENUMERO;
+SELECT  a.ID, A.CONTA_ID INTO vAGENCIAAPLICACAOID, vCONTAAPLICACAOID from ${schema}.AGENCIABANCARIA a 
+where a.PARCEIRO_ID = pParceiroId AND a.TIPO_AGENCIA = 'APLICACAO' AND a.AGE_AGENCIA = vAGEAGENCIA
+ AND a.AGE_NUMERO = vAGENUMERO;
  
-   OPEN cEXTRATOBANCARIO;
-  LOOP
-  FETCH cEXTRATOBANCARIO INTO vCODIGEXTRATO, vDATAEXTRATO, vHISTORICO, vNUMERODOCUMENTO, vNUMEROCONTROLE, vDESCRICAO, vDEBITO, vCREDITO,
-  vAGENCIABANCARIAID;
-  EXIT WHEN NOT FOUND;
-   vASSOCIADO      := FALSE; 
-   vTIPOINTELIGENTE := 'x';
-   SELECT despesa_juros INTO vCONTAJUROS FROM  ${schema}.PARCEIRO WHERE ID = vPARCEIROID;
-   vPERIODO = concat(extract(month from vDATAEXTRATO),extract(year from vDATAEXTRATO));
-  -- associa extrato ao inteligent
-     INSERT INTO ${schema}.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
+ FOR REC_EXTRATO IN
+    SELECT  *
+    FROM  ${schema}.EXTRATO e
+    WHERE e.parceiro_id = pParceiroId
+    and e.agenciabancaria_id = pAgenciaId
+    and e.periodo = pPeriodo
+    and e.processado = false
+ LOOP
+    INSERT INTO ${schema}.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
                                     historico, NUMERODOCUMENTO, NUMEROCONTROLE, DEBITO, CREDITO, 
                                      periodo, associado, tipo_inteligent
                                   )
-                           VALUES ( vCODIGEXTRATO, vPARCEIROID, vAGENCIABANCARIAID, vDATAEXTRATO,
-                                    vHISTORICO, vNUMERODOCUMENTO, vNUMEROCONTROLE, vDEBITO, vCREDITO, 
-                                    vPERIODO, vASSOCIADO, vTIPOINTELIGENTE
+                           VALUES ( REC_EXTRATO.ID, pParceiroId, pAgenciaId, REC_EXTRATO.ext_datalancamento,
+                                    REC_EXTRATO.EXT_HISTORICO, REC_EXTRATO.EXT_NUMERODOCUMENTO, REC_EXTRATO.EXT_NUMEROCONTROLE, 
+                                    REC_EXTRATO.EXT_DEBITO, REC_EXTRATO.EXT_CREDITO, 
+                                    pPERIODO, false, 'x'
                                   );
-   UPDATE ${schema}.EXTRATO SET processado = true where id = pEXT_CODIGO;
-
- -- comprovante
-if (vAPLICACAO_AUT = 0) then
-   for RECEXTRATO in select C.ID, C.COM_DOCUMENTO, C.COM_CNPJ, C.COM_BENEFICIARIO, C.COM_DATAVENCIMENTO, C.COM_VALORDOCUMENTO, C.agenciabancaria_id,
-	C.COM_VALORPAGAMENTO, C.COM_DATAPAGAMENTO, C.AGENCIABANCARIA_ID, C.COM_MULTA,
-     C.COM_JUROS, C.COM_DESCONTO 
-    FROM  ${schema}.COMPROVANTE C
-	WHERE C.PARCEIRO_ID= vPARCEIROID
-      AND C.AGENCIABANCARIA_ID= vAGENCIABANCARIAID
-      AND C.processado= FALSE
-      and C.COM_DATAPAGAMENTO <= vDATAEXTRATO
-      and C.COM_VALORPAGAMENTO = vDEBITO*-1
-    ORDER BY C.COM_DATAPAGAMENTO desc 
-    LIMIT 1	
-    loop
-   IF ((RECEXTRATO.COM_MULTA > 0) OR (RECEXTRATO.COM_JUROS >0)) THEN
-    vTIPOINTELIGENTE := 'C';
-   END IF; 
-   IF (RECEXTRATO.COM_DESCONTO >0) THEN
-    vTIPOINTELIGENTE := 'D';
-   END IF;
-   vHISTORICOFINAL   := 'Pagto. de '|| RECEXTRATO.COM_BENEFICIARIO;
-   -- associa comprovante ao inteligent
-   UPDATE  ${schema}.INTELIGENT SET COMPROVANTE_ID= RECEXTRATO.ID,CNPJ= RECEXTRATO.COM_CNPJ,  BENEFICIARIO= RECEXTRATO.COM_BENEFICIARIO, TIPO_INTELIGENT = vTIPOINTELIGENTE, TIPO_VALOR = 'PRINCIPAL', HISTORICOFINAL = vHISTORICOFINAL WHERE extrato_id = vCODIGEXTRATO;
-       IF ((RECEXTRATO.COM_MULTA > 0) OR (RECEXTRATO.COM_JUROS >0)) THEN
-     	vHISTORICOFINAL   := 'Pagto. de Juros de '|| RECEXTRATO.COM_BENEFICIARIO;
-     -- atualiza o valor do inteligente para o valor do documento do extrato  
-     UPDATE  ${schema}.INTELIGENT SET debito = RECEXTRATO.COM_VALORDOCUMENTO*-1 WHERE extrato_id = vCODIGEXTRATO;
-       IF( vCONTAJUROS > -1) then
-       -- insere juros e a conta juros
-     	INSERT INTO  ${schema}.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal, conta_id) VALUES ('Pagto. de Juros','JUROS',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO,  CASE WHEN RECEXTRATO.COM_JUROS > 0 THEN RECEXTRATO.COM_JUROS*-1 ELSE RECEXTRATO.COM_MULTA*-1 END,true,
-     		RECEXTRATO.COM_CNPJ,RECEXTRATO.COM_BENEFICIARIO, vTIPOINTELIGENTE,RECEXTRATO.ID,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO, vHISTORICOFINAL, vCONTAJUROS);
-     	else
-     	-- insere juros
-		INSERT INTO  ${schema}.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
-     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Pagto. de Juros','JUROS',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO,  CASE WHEN vCOMJUROS > 0 THEN vCOMJUROS*-1 ELSE vCOMMULTA*-1 END,false,
-     		RECEXTRATO.COM_CNPJ,RECEXTRATO.COM_BENEFICIARIO, vTIPOINTELIGENTE,RECEXTRATO.ID,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO, vHISTORICOFINAL);
-		END IF;
-     END IF;
-	 IF (RECEXTRATO.COM_DESCONTO > 0) THEN
-     vHISTORICOFINAL   := 'Receb. de Desconto de '|| RECEXTRATO.COM_BENEFICIARIO;
-     -- insere desconto
-      UPDATE  ${schema}.INTELIGENT SET debito = RECEXTRATO.COM_VALORDOCUMENTO*-1 WHERE extrato_id = vCODIGEXTRATO;
-     	INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
-     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES 
-			('Receb. de desconto','DESCONTO',vDATAEXTRATO,vNUMERODOCUMENTO,vNUMEROCONTROLE,vPERIODO, RECEXTRATO.COM_DESCONTO,false,
-     		RECEXTRATO.COM_CNPJ,RECEXTRATO.COM_BENEFICIARIO, vTIPOINTELIGENTE,RECEXTRATO.ID,vPARCEIROID,vAGENCIABANCARIAID, vCODIGEXTRATO, vHISTORICOFINAL);
-     END IF;
-    -- atualiza comprovante para processsado
-  UPDATE ${schema}.COMPROVANTE SET PROCESSADO = TRUE WHERE ID = RECEXTRATO.ID;
- end loop;
-END IF;
-
-  vRETORNO:= vRETORNO + 1;
-  END LOOP;
-  CLOSE cEXTRATOBANCARIO;  
-          
+	UPDATE ${schema}.EXTRATO SET processado = true where id = REC_EXTRATO.ID;
+	vRETORNO = vRETORNO +1;
+ END LOOP;
+   IF (vRETORNO > 0) THEN 
+        SELECT * INTO vRETORNO_COMPROVANTE FROM ${schema}.comprovante_itau(pParceiroId,pAgenciaId,pPeriodo); 
+        END IF;
   RETURN COALESCE(vRETORNO ,0);
-
 END;
 $function$
 ;

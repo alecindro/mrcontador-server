@@ -37,23 +37,23 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@Query(nativeQuery = true, value = "select extrato_functionBRADESCO(?,?,?)")
 	int callExtratoBradesco(Long parceiroId, Long agenciaId,String periodo);
 	
-	@Query(nativeQuery = true, value = "select extrato_functionSANTANDER(?,?)")
-	int callExtratoSantander(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionSANTANDER(?,?,?)")
+	int callExtratoSantander(Long parceiroId, Long agenciaId,String periodo);
 	
-	@Query(nativeQuery = true, value = "select extrato_functionCEF(?,?)")
-	int callExtratoCef(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionCEF(?,?,?)")
+	int callExtratoCef(Long parceiroId, Long agenciaId,String periodo);
 
-	@Query(nativeQuery = true, value = "select extrato_functionCREDICREA(?,?)")
-	int callExtratoCredicrea(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionCREDICREA(?,?,?)")
+	int callExtratoCredicrea(Long parceiroId, Long agenciaId,String periodo);
 
-	@Query(nativeQuery = true, value = "select extrato_functionITAU(?,?)")
-	int callExtratoItau(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionITAU(?,?,?)")
+	int callExtratoItau(Long parceiroId, Long agenciaId,String periodo);
 
-	@Query(nativeQuery = true, value = "select extrato_functionSAFRA(?,?)")
-	int callExtratoSafra(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionSAFRA(?,?,?)")
+	int callExtratoSafra(Long parceiroId, Long agenciaId,String periodo);
 
-	@Query(nativeQuery = true, value = "select extrato_functionUNICRED(?,?)")
-	int callExtratoUnicred(Long extratoId, Long agenciaId);
+	@Query(nativeQuery = true, value = "select extrato_functionUNICRED(?,?,?)")
+	int callExtratoUnicred(Long parceiroId, Long agenciaId,String periodo);
 	
 	@Query(nativeQuery = true, value = "select extraBB_function(?)")
 	int callExtraFunctionsBB(Long extratoId);
