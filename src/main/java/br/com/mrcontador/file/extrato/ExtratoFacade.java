@@ -55,6 +55,7 @@ public abstract class ExtratoFacade {
 			extrato.setExtNumerodocumento(ofxData.getDocumento());
 			extrato.setAgenciaOrigem(ofxData.getAgenciaOrigem());
 			extrato.setPeriodo(MrContadorUtil.periodo(extrato.getExtDatalancamento()));
+			extrato.setProcessado(false);
 			if (ofxData instanceof PdfData) {
 				extrato.setInfoAdicional(((PdfData) ofxData).getInfAdicional());
 			}
