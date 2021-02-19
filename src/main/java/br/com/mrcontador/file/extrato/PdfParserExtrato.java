@@ -1,9 +1,7 @@
 package br.com.mrcontador.file.extrato;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,19 +68,6 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 		try {
 			log.info("callRegraInteligent");
 			service.callRegraInteligent(parceiroId, periodos);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-		
-	}
-
-	
-	protected void callProcessaNotafiscalGeral(ExtratoService service, Long parceiroId, List<Extrato> extratos) {
-		try {
-		//	log.info("callProcessaNotafiscalGeral");
-		LocalDate min = extratos.stream().min(Comparator.comparing(Extrato::getExtDatalancamento)).get().getExtDatalancamento();
-			min = min.minusMonths(4);
-		service.callProcessaNotafiscalGeral(parceiroId, min);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

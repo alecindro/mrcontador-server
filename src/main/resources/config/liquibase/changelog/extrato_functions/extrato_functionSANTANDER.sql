@@ -8,6 +8,7 @@ DECLARE
   pPeriodo ALIAS FOR $3; 
   vRETORNO NUMERIC;
   vRETORNO_COMPROVANTE NUMERIC;
+  vRETORNO_SETUP NUMERIC;
   vBANCOID NUMERIC;
   vAGEAGENCIA TEXT;
   vAGENUMERO TEXT;
@@ -50,7 +51,10 @@ where a.PARCEIRO_ID = pParceiroId AND a.TIPO_AGENCIA = 'APLICACAO' AND a.AGE_AGE
  END LOOP;
    IF (vRETORNO > 0) THEN 
         SELECT * INTO vRETORNO_COMPROVANTE FROM ${schema}.comprovante_santander(pParceiroId,pAgenciaId,pPeriodo); 
+       if(vRETORNO_COMPROVANTE = 0 ) then
+        select * into vRETORNO_SETUP from ${schema}.setup_function(pParceiroId,pPeriodo);
         END IF;
+   end if;
   RETURN COALESCE(vRETORNO ,0);
 END;
 $function$

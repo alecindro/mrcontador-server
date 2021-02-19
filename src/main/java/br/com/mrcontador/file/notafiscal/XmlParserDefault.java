@@ -3,6 +3,7 @@ package br.com.mrcontador.file.notafiscal;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,13 +112,10 @@ public class XmlParserDefault implements FileParser {
 		list.forEach(_nota->{
 			_nota.setArquivo(xml);
 			_nota.setArquivoPDF(pdf);
-    		_nota = notafiscalService.save(_nota);
-    		try {
-				notafiscalService.callProcessaNotafiscal(_nota.getId());
-			}catch(Exception e) {
-				log.error(e.getMessage(),e);
-			}	
+    		_nota = notafiscalService.save(_nota);    		
     	});
+		LocalDate maxDate = list.stream().map(nf -> nf.getNotDataparcela()).max(LocalDate::compareTo).get();
+		notafiscalService.callProcessaNotafiscalGeral(dto.getParceiro().getId(), maxDate);
 		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list);
 		
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
@@ -182,13 +180,8 @@ public class XmlParserDefault implements FileParser {
     		
     	});
 		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(), list);
-		list.forEach(notaFiscal -> {
-			try {
-				notafiscalService.callProcessaNotafiscal(notaFiscal.getId());
-			}catch(Exception e) {
-				log.error(e.getMessage(),e);
-			}
-		});
+		LocalDate maxDate = list.stream().map(nf -> nf.getNotDataparcela()).max(LocalDate::compareTo).get();
+		notafiscalService.callProcessaNotafiscalGeral(dto.getParceiro().getId(), maxDate);
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
 	}
 

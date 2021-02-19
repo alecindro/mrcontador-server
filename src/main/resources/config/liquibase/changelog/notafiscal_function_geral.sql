@@ -8,6 +8,8 @@ declare
   vRETORNO NUMERIC;
   vQUANTIDADE NUMERIC;
  REC   RECORD; 
+vQTDCONTA NUMERIC;
+pPeriodo DATE;
  
  begin
 	  vRETORNO:= 0; 
@@ -21,8 +23,12 @@ for REC in
  SELECT * from ${schema}.processa_notafiscal(cast(REC.id as INT8)) INTO vQUANTIDADE;
    vRETORNO:= vRETORNO + vQUANTIDADE; 
 END LOOP; 
-  RETURN COALESCE(vRETORNO ,0);
+select * from  ${schema}.processa_conta(pPAR_CODIGO,CONCAT(extract (month from pDATA_INICIAL) , extract (YEAR from pDATA_INICIAL ))) into vQTDCONTA;
+pPeriodo := cast((pDATA_INICIAL -30)as DATE);
+if (CONCAT(extract (month from pDATA_INICIAL) , extract (YEAR from pDATA_INICIAL )) <> CONCAT(extract (month from pPeriodo) , extract (YEAR from pPeriodo))) then
+select * from  ${schema}.processa_conta(pPAR_CODIGO,CONCAT(extract (month from pPeriodo) , extract (YEAR from pPeriodo))) into vQTDCONTA;
+end if;
+RETURN COALESCE(vRETORNO ,0);
 END;
 $function$
-
-
+;

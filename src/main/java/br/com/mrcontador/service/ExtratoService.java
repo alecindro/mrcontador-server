@@ -1,6 +1,5 @@
 package br.com.mrcontador.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -25,11 +24,10 @@ public class ExtratoService {
 	private final Logger log = LoggerFactory.getLogger(ExtratoService.class);
 
 	private final ExtratoRepository extratoRepository;
-	private final NotafiscalService notafiscalService;
+	
 
-	public ExtratoService(ExtratoRepository extratoRepository, NotafiscalService notafiscalService) {
+	public ExtratoService(ExtratoRepository extratoRepository) {
 		this.extratoRepository = extratoRepository;
-		this.notafiscalService = notafiscalService;
 	}
 
 	/**
@@ -219,10 +217,7 @@ public class ExtratoService {
 
 	}
 
-	@Transactional
-	public void callProcessaNotafiscalGeral(Long parceiroId, LocalDate date) {
-		notafiscalService.callProcessaNotafiscalGeral(parceiroId, date);
-	}
+
 
 	@Transactional
 	public void callExtraFunctionsSantander(Long extratoId) {

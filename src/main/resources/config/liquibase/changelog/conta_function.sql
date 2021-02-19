@@ -1,26 +1,27 @@
-CREATE OR REPLACE FUNCTION ${schema}.processa_conta("pINT_CODIGO" bigint)
+CREATE OR REPLACE FUNCTION ${schema}.processa_conta("parceiroId" bigint, "pPeriodo" character varying)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
 declare
-pINT_CODIGO ALIAS for $1;
-vRETORNO NUMERIC;
-vCONTAID NUMERIC;
-vCNPJ TEXT;
-vPARCEIROID NUMERIC;
-vCOUNT_CONTA NUMERIC;
+  pParceiroId ALIAS FOR $1;  
+  pPeriodo ALIAS FOR $2; 
+  vRETORNO NUMERIC;
+  vRETORNO_SETUP NUMERIC;
+  REC_CONTA RECORD;
+  REC_INTELIGENT RECORD;
 BEGIN
 vRETORNO := 0;	
-SELECT CNPJ,parceiro_id INTO vCNPJ, vPARCEIROID FROM ${schema}.INTELIGENT where id = pINT_CODIGO;
-
-SELECT COUNT(ID) INTO vCOUNT_CONTA FROM ${schema}.CONTA WHERE (CON_CNPJ = vCNPJ  or substring(CON_CNPJ,1,8) = substring(vCNPJ,1,8)) AND PARCEIRO_ID = vPARCEIROID and substring(con_classificacao,1,2) = '2.';
-	IF(vCOUNT_CONTA = 1) THEN
-		SELECT ID INTO vCONTAID FROM ${schema}.CONTA WHERE (CON_CNPJ = vCNPJ  or substring(CON_CNPJ,1,8) = substring(vCNPJ,1,8)) AND PARCEIRO_ID = vPARCEIROID and substring(con_classificacao,1,2) = '2.';
-			IF(vCONTAID is NOT null) then
-			  update ${schema}.INTELIGENT SET ASSOCIADO = TRUE, CONTA_ID = vCONTAID WHERE ID = pINT_CODIGO;
-			  vRETORNO := 1;
-			END IF;
-	END IF;
+	FOR REC_CONTA IN
+		select * from ${schema}.conta where parceiro_id = pParceiroId and (con_cnpj is not null and con_cnpj <> '')
+	loop
+		for REC_INTELIGENT IN
+		select * from ${schema}.inteligent where periodo = pPeriodo and parceiro_id = pParceiroId and associado = false and (CNPJ = REC_CONTA.con_cnpj  or substring(CNPJ,1,8) = substring(REC_CONTA.con_cnpj,1,8)) 
+		loop
+			update ${schema}.inteligent set associado = true, conta_id = REC_CONTA.id where id = REC_INTELIGENT.id;
+			vRETORNO :=	vRETORNO +1;		
+		end loop;
+	end loop;
+select * from ${schema}.setup_function(pParceiroId,pPeriodo) into vRETORNO_SETUP;
 return vRETORNO;
 END;
 $function$

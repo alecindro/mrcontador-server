@@ -48,7 +48,7 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 		Long parceiroId = comprovante.getParceiro().getId();
 		extratoService.callRegraInteligent(parceiroId, periodos);
 		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
-		service.callNotaFiscal(parceiroId, date);
+		service.callProcessaNotafiscalGeral(parceiroId, date);
     }
 	
 

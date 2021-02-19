@@ -26,7 +26,8 @@ public class ComprovanteService {
     private final ComprovanteRepository comprovanteRepository;
     private final NotafiscalService notafiscalService;
 
-    public ComprovanteService(ComprovanteRepository comprovanteRepository, NotafiscalService notafiscalService) {
+    public ComprovanteService(ComprovanteRepository comprovanteRepository,
+    		NotafiscalService notafiscalService) {
         this.comprovanteRepository = comprovanteRepository;
         this.notafiscalService = notafiscalService;
     }
@@ -41,6 +42,11 @@ public class ComprovanteService {
         log.debug("Request to save Comprovante : {}", comprovante);
         return comprovanteRepository.save(comprovante);
     }
+    
+	@Transactional
+	public void callProcessaNotafiscalGeral(Long parceiroId, LocalDate date) {
+		notafiscalService.callProcessaNotafiscalGeral(parceiroId, date);
+	}
 
     /**
      * Get all the comprovantes.
@@ -118,9 +124,6 @@ public class ComprovanteService {
     	comprovanteRepository.callComprovanteBradesco(parceiroId,agenciabancariaId,periodo);
     }
     
-    public void callNotaFiscal(Long parceiroId, LocalDate date) {
-    	notafiscalService.callProcessaNotafiscalGeral(parceiroId, date);
-    }
     
 	public void updateArquivo(Long id, Long arquivoId) {
 		comprovanteRepository.updateArquivo(id, arquivoId);
