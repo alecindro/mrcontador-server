@@ -4,8 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,8 +117,13 @@ public class XmlParserDefault implements FileParser {
 			_nota.setArquivoPDF(pdf);
     		_nota = notafiscalService.save(_nota);    		
     	});
-		LocalDate maxDate = list.stream().map(nf -> nf.getNotDataparcela()).max(LocalDate::compareTo).get();
-		notafiscalService.callProcessaNotafiscalGeral(dto.getParceiro().getId(), maxDate);
+		Map<String,Optional<Notafiscal>> map = list.stream().collect(Collectors.groupingBy(Notafiscal::getPeriodo, Collectors.maxBy(Comparator.comparing(Notafiscal::getNotDataparcela))));
+		map.values().forEach(nf ->{
+			if(nf.isPresent()) {
+				notafiscalService.callProcessaNotafiscalGeral(dto.getParceiro().getId(), nf.get().getNotDataparcela());		
+			}
+		});
+		
 		s3Service.uploadNota(notafiscalService, pdf, xml, nfNotaProcessada, dto.getOutputStream(),list);
 		
 		return MrContadorUtil.periodo(list.stream().findFirst().get().getNotDatasaida());
