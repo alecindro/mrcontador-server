@@ -18,7 +18,7 @@ for REC in
     AND PARCEIRO_ID = CAST(pPAR_CODIGO AS int8) 
     AND PROCESSADO = false 
     and NOT_DATAPARCELA >= cast((pDATA_INICIAL -120)as DATE)
-    order by NOT_DATAPARCELA desc
+    order by NOT_DATAPARCELA asc
  LOOP
  SELECT * from ${schema}.processa_notafiscal(cast(REC.id as INT8)) INTO vQUANTIDADE;
    vRETORNO:= vRETORNO + vQUANTIDADE; 

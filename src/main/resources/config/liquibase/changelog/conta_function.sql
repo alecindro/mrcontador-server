@@ -12,10 +12,11 @@ declare
 BEGIN
 vRETORNO := 0;	
 	FOR REC_CONTA IN
-		select * from ${schema}.conta where parceiro_id = pParceiroId and (con_cnpj is not null and con_cnpj <> '') and tipo_valor = 'PRINCIPAL'
+		select * from ${schema}.conta where parceiro_id = pParceiroId and (con_cnpj is not null and con_cnpj <> '')
 	loop
 		for REC_INTELIGENT IN
 		select * from ${schema}.inteligent where periodo = pPeriodo and parceiro_id = pParceiroId and associado = false and (CNPJ = REC_CONTA.con_cnpj  or substring(CNPJ,1,8) = substring(REC_CONTA.con_cnpj,1,8)) 
+		 and tipo_valor = 'PRINCIPAL'
 		loop
 			update ${schema}.inteligent set associado = true, conta_id = REC_CONTA.id where id = REC_INTELIGENT.id;
 			vRETORNO :=	vRETORNO +1;		

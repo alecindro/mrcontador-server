@@ -54,7 +54,7 @@ BEGIN
      		selected_comprovante.com_cnpj,selected_comprovante.com_beneficiario, REC_INTELIGENT.tipo_inteligent,selected_comprovante.id,pParceiroId,pAgenciaId, REC_INTELIGENT.extrato_id, vHISTORICOFINAL);
 		   	end if;    
      		IF (selected_comprovante.com_desconto < 0) THEN
-     			vDEBITO_INTELIGENT := vDEBITO_INTELIGENT - selected_comprovante.com_desconto;
+     			vDEBITO_INTELIGENT := vDEBITO_INTELIGENT + selected_comprovante.com_desconto;
     	    	vTIPOINTELIGENTE := 'D';
         		vHISTORICOFINAL   := 'Receb. de Desconto de '|| selected_comprovante.com_beneficiario;
       			UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT WHERE ID = REC_INTELIGENT.id;
