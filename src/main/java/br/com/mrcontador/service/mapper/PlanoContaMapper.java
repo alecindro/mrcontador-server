@@ -16,6 +16,7 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 	@Override
 	public Conta toEntity(PlanoContaDetail dto) {
 		Conta conta = new Conta();
+		conta.setConGrau(-1);
 		conta.setConClassificacao(StringUtils.normalizeSpace(dto.getClassificacao()));
 		conta.setConCnpj(MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getCnpj()))));
 		if (StringUtils.isNumeric(dto.getCodigo().trim())) {
@@ -23,6 +24,11 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 		}
 		if (dto.getGrau() != null && StringUtils.isNumeric(dto.getGrau().trim())) {
 			conta.setConGrau(Integer.valueOf(dto.getGrau().trim()));
+		} else {
+			String _grau = MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getGrau()));
+			if(StringUtils.isNumeric(_grau)) {
+				conta.setConGrau(Integer.valueOf(_grau.trim()));
+			}
 		}
 		conta.setConTipo(StringUtils.normalizeSpace(dto.getT()));
 		conta.setConDescricao(StringUtils.normalizeSpace(dto.getDescricao()));

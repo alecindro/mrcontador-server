@@ -52,8 +52,12 @@ public class ContaService {
     	Date dataCadastro = new Date();
     	Instant created = Instant.now();
     	contas.forEach(conta -> {
+    		try {
     		contaRepository.createConta(dataCadastro, conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getConConta(), created, user, conta.getArquivo().getId(), parceiro.getId());
     		contaRepository.updateConta(conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getArquivo().getId(), created, user, conta.getConConta(), parceiro.getId());
+    		} catch(Exception e) {
+    			throw new RuntimeException();
+    		}
     	});
     	contaRepository.callContaUpdateFunction(parceiro.getId());
     	contas = contaRepository.findByParceiro(parceiro);
