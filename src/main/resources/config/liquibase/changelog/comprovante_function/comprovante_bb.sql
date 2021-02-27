@@ -11,7 +11,7 @@ DECLARE
   selected_comprovante ${schema}.comprovante%rowtype;
   vHISTORICOFINAL TEXT;
   vTIPOINTELIGENTE TEXT;
-  vMAXDATE DATE;
+  vMINDATE DATE;
   vRETORNO_NOTA NUMERIC;
   vDEBITO_INTELIGENT NUMERIC;
   
@@ -86,11 +86,11 @@ BEGIN
 		END IF;
 	END  LOOP;
 	IF (vRETORNO > 0) THEN
-	SELECT MAX(COM_DATAPAGAMENTO) INTO vMAXDATE FROM ${schema}.comprovante  
+	SELECT MIN(COM_DATAVENCIMENTO) INTO vMINDATE FROM ${schema}.comprovante  
 	    where periodo = pPeriodo 
 	 	and agenciabancaria_id = pAgenciaId
 	 	and parceiro_id = pParceiroId;
-	 	SELECT * FROM ${schema}.processa_notafiscalgeral(pParceiroId, vMAXDATE) INTO vRETORNO_NOTA;
+	 	SELECT * FROM ${schema}.processa_notafiscalgeral(pParceiroId, vMINDATE) INTO vRETORNO_NOTA;
 	END IF;
   RETURN COALESCE(vRETORNO ,0);
 

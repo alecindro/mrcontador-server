@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.comprovante_bradesco("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
+CREATE OR REPLACE FUNCTION ${schema}.comprovante_bb("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -11,7 +11,7 @@ DECLARE
   selected_comprovante ${schema}.comprovante%rowtype;
   vHISTORICOFINAL TEXT;
   vTIPOINTELIGENTE TEXT;
-  vMAXDATE DATE;
+  vMINDATE DATE;
   vRETORNO_NOTA NUMERIC;
   vDEBITO_INTELIGENT NUMERIC;
   
@@ -37,7 +37,7 @@ BEGIN
 	 	limit 1;
 	 	vTIPOINTELIGENTE := 'x';
 	 	IF (selected_comprovante.id is not null)THEN
-	 		vDEBITO_INTELIGENT := REC_INTELIGENT.debito;
+	 	vDEBITO_INTELIGENT := REC_INTELIGENT.debito;
 	 		vHISTORICOFINAL   := 'Pagto. de '|| selected_comprovante.com_beneficiario;
      		UPDATE  ${schema}.INTELIGENT SET COMPROVANTE_ID= selected_comprovante.id,CNPJ= selected_comprovante.com_cnpj,BENEFICIARIO= selected_comprovante.com_beneficiario,
      		 TIPO_INTELIGENT = vTIPOINTELIGENTE, TIPO_VALOR = 'PRINCIPAL', HISTORICOFINAL = vHISTORICOFINAL WHERE ID = REC_INTELIGENT.id;
@@ -50,11 +50,11 @@ BEGIN
      		INSERT INTO  ${schema}.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Pagto. de Juros','JUROS',
      		REC_INTELIGENT.datalancamento,REC_INTELIGENT.numerodocumento,REC_INTELIGENT.numerocontrole,REC_INTELIGENT.periodo,  
-     		(selected_comprovante.com_multa + selected_comprovante.com_juros)*-1,false,
+     		(selected_comprovante.com_juros + selected_comprovante.com_multa)*-1,false,
      		selected_comprovante.com_cnpj,selected_comprovante.com_beneficiario, REC_INTELIGENT.tipo_inteligent,selected_comprovante.id,pParceiroId,pAgenciaId, REC_INTELIGENT.extrato_id, vHISTORICOFINAL);
-		    END IF;
+		   	end if;    
      		IF (selected_comprovante.com_desconto < 0) THEN
-		    	vDEBITO_INTELIGENT := vDEBITO_INTELIGENT - selected_comprovante.com_desconto;
+     			vDEBITO_INTELIGENT := vDEBITO_INTELIGENT + selected_comprovante.com_desconto;
     	    	vTIPOINTELIGENTE := 'D';
         		vHISTORICOFINAL   := 'Receb. de Desconto de '|| selected_comprovante.com_beneficiario;
       			UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT WHERE ID = REC_INTELIGENT.id;
@@ -76,6 +76,7 @@ BEGIN
 	 			order by com_datapagamento desc
 	 			limit 1;
 	 			  IF (selected_comprovante.id is not null)THEN
+	 			  raise info 'id %',selected_comprovante.id;
 	 			  vHISTORICOFINAL   := 'Pagto. de '|| selected_comprovante.com_beneficiario;
 	 			  UPDATE  ${schema}.INTELIGENT SET COMPROVANTE_ID= selected_comprovante.id,CNPJ= selected_comprovante.com_cnpj,BENEFICIARIO= selected_comprovante.com_beneficiario,
      		 	   TIPO_INTELIGENT = vTIPOINTELIGENTE, TIPO_VALOR = 'PRINCIPAL', HISTORICOFINAL = vHISTORICOFINAL WHERE ID = REC_INTELIGENT.id;
@@ -85,11 +86,11 @@ BEGIN
 		END IF;
 	END  LOOP;
 	IF (vRETORNO > 0) THEN
-	SELECT MAX(COM_DATAPAGAMENTO) INTO vMAXDATE FROM ${schema}.comprovante  
+	SELECT MIN(COM_DATAVENCIMENTO) INTO vMINDATE FROM ${schema}.comprovante  
 	    where periodo = pPeriodo 
 	 	and agenciabancaria_id = pAgenciaId
 	 	and parceiro_id = pParceiroId;
-	 	SELECT * FROM ${schema}.processa_notafiscalgeral(pParceiroId, vMAXDATE) INTO vRETORNO_NOTA;
+	 	SELECT * FROM ${schema}.processa_notafiscalgeral(pParceiroId, vMINDATE) INTO vRETORNO_NOTA;
 	END IF;
   RETURN COALESCE(vRETORNO ,0);
 

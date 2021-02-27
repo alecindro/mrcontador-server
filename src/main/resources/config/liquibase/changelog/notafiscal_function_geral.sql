@@ -8,6 +8,7 @@ declare
   vRETORNO NUMERIC;
   vQUANTIDADE NUMERIC;
  REC   RECORD; 
+REC_PERIODO RECORD;
 vQTDCONTA NUMERIC;
 pPeriodo DATE;
  
@@ -17,17 +18,23 @@ for REC in
  SELECT  id FROM ${schema}.NOTAFISCAL  WHERE  TNO_CODIGO=0
     AND PARCEIRO_ID = CAST(pPAR_CODIGO AS int8) 
     AND PROCESSADO = false 
-    and NOT_DATAPARCELA >= cast((pDATA_INICIAL -120)as DATE)
-    order by NOT_DATAPARCELA asc
+    and NOT_DATAPARCELA >= cast((pDATA_INICIAL)as DATE)
+    order by NOT_DATAPARCELA DESC
  LOOP
  SELECT * from ${schema}.processa_notafiscal(cast(REC.id as INT8)) INTO vQUANTIDADE;
    vRETORNO:= vRETORNO + vQUANTIDADE; 
 END LOOP; 
-select * from  ${schema}.processa_conta(pPAR_CODIGO,CONCAT(extract (month from pDATA_INICIAL) , extract (YEAR from pDATA_INICIAL ))) into vQTDCONTA;
-pPeriodo := cast((pDATA_INICIAL -30)as DATE);
-if (CONCAT(extract (month from pDATA_INICIAL) , extract (YEAR from pDATA_INICIAL )) <> CONCAT(extract (month from pPeriodo) , extract (YEAR from pPeriodo))) then
-select * from  ${schema}.processa_conta(pPAR_CODIGO,CONCAT(extract (month from pPeriodo) , extract (YEAR from pPeriodo))) into vQTDCONTA;
-end if;
+for REC_PERIODO in 
+select periodo from (
+ SELECT  DISTINCT ON (periodo) * FROM ${schema}.NOTAFISCAL  WHERE  TNO_CODIGO=0
+    AND PARCEIRO_ID = 10 
+    and processado = true
+    and NOT_DATAPARCELA >= '2012-12-18'
+    ) t
+    order by NOT_DATAPARCELA asc
+   LOOP
+select * from  ${schema}.processa_conta(pPAR_CODIGO,REC_PERIODO.PERIODO) into vQTDCONTA;
+end loop;
 RETURN COALESCE(vRETORNO ,0);
 END;
 $function$
