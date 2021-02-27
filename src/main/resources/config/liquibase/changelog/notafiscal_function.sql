@@ -87,14 +87,14 @@ end if;
 	if (vInteligent_id is not null) then
     vTAXA:= vPagamento - selected_nota.not_valorparcela - vCom_juros - vCom_multa + vCom_desconto;
  	vHISTORICOFINAL   := 'Pagto. NFe '|| selected_nota.not_numero || '/' || selected_nota.not_parcela || ' de ' || selected_nota.NOT_EMPRESA;
-    IF (vTAXA > 0) then
+    IF (vTAXA > 0 and vTAXA < 3.5) then
    	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = selected_nota.id, debito = (vPagamento-vTAXA - vCom_juros - vCom_multa + vCom_desconto) *-1, tipo_inteligent ='C'  where id = vInteligent_id;
 	    vHISTORICOFINAL   := 'Pagto. de taxa bancária ref. '|| selected_nota.not_numero || '/' || selected_nota.not_parcela || ' de ' || selected_nota.NOT_EMPRESA;
    			INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
 			     		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, notafiscal_id, historicofinal) VALUES 
 						('Pagto. de Taxa bancária','TAXA',vDatalancamento,vNumerodocumento,vNumerocontrole,vPeriodo, vTAXA*-1,false,
 			     		vCnpj,vBeneficiario, 'C',vComprovante_id,vParceiro_id,vAgenciabancaria_id,vExtrato_id, selected_nota.id, vHISTORICOFINAL);
-   	else
+   	elseif (vTAXA = 0) THEN
  	   	update ${schema}.INTELIGENT set historicofinal = vHISTORICOFINAL, notafiscal_id = selected_nota.id  where id = vInteligent_id;
    	END IF;
    vRETORNO:= vRETORNO + 1;
