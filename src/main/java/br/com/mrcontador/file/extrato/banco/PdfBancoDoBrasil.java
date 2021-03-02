@@ -121,13 +121,6 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 	}
 
 	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		extratos.forEach(ext -> service.callExtraFunctionsBB(ext.getId()));
-	}
-
-
-
-	@Override
 	protected int getLineHeader() {
 		return 9;
 	}

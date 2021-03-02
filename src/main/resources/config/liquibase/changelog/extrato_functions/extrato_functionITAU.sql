@@ -8,7 +8,7 @@ DECLARE
   pPeriodo ALIAS FOR $3; 
   vRETORNO NUMERIC;
   vRETORNO_COMPROVANTE NUMERIC;
-  vRETORNO_SETUP NUMERIC;
+ vRETORNO_SETUP NUMERIC;
   vBANCOID NUMERIC;
   vAGEAGENCIA TEXT;
   vAGENUMERO TEXT;
@@ -37,6 +37,9 @@ where a.PARCEIRO_ID = pParceiroId AND a.TIPO_AGENCIA = 'APLICACAO' AND a.AGE_AGE
     and e.periodo = pPeriodo
     and e.processado = false
  LOOP
+
+  -- Aplicacao automatica
+  vAPLICACAO_AUT := 0;
     INSERT INTO ${schema}.INTELIGENT ( extrato_id, parceiro_id, agenciabancaria_id, datalancamento,
                                     historico, NUMERODOCUMENTO, NUMEROCONTROLE, DEBITO, CREDITO, 
                                      periodo, associado, tipo_inteligent
@@ -46,15 +49,19 @@ where a.PARCEIRO_ID = pParceiroId AND a.TIPO_AGENCIA = 'APLICACAO' AND a.AGE_AGE
                                     REC_EXTRATO.EXT_DEBITO, REC_EXTRATO.EXT_CREDITO, 
                                     pPERIODO, false, 'x'
                                   );
-	UPDATE ${schema}.EXTRATO SET processado = true where id = REC_EXTRATO.ID;
-	vRETORNO = vRETORNO +1;
+vAPLICACAO_AUT := 1;
+
+IF (vAPLICACAO_AUT > 0) THEN
+ UPDATE ${schema}.EXTRATO SET processado = true where id = REC_EXTRATO.ID;
+ vRETORNO = vRETORNO +1;
+END IF; 	
  END LOOP;
-    IF (vRETORNO > 0) THEN 
+   IF (vRETORNO > 0) THEN 
         SELECT * INTO vRETORNO_COMPROVANTE FROM ${schema}.comprovante_itau(pParceiroId,pAgenciaId,pPeriodo); 
        if(vRETORNO_COMPROVANTE = 0 ) then
         select * into vRETORNO_SETUP from ${schema}.setup_function(pParceiroId,pPeriodo);
         END IF;
-   end if; 
+   end if;    
   RETURN COALESCE(vRETORNO ,0);
 END;
 $function$

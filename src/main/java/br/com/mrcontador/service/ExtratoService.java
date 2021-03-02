@@ -218,32 +218,4 @@ public class ExtratoService {
 	}
 
 
-
-	@Transactional
-	public void callExtraFunctionsSantander(Long extratoId) {
-		try {
-			extratoRepository.callExtraFunctionsSantander(extratoId);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
-	@Transactional
-	public void callExtraFunctionsBradesco(Long extratoId) {
-		try {
-			extratoRepository.callExtraFunctionsBradesco(extratoId);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
-	@Transactional
-	public void callExtraFunctionsBB(Long extratoId) {
-		try {
-			extratoRepository.callExtraFunctionsBB(extratoId);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-
 }

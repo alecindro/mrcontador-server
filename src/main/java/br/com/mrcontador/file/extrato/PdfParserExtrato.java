@@ -53,9 +53,6 @@ public abstract class PdfParserExtrato extends PdfReaderPreserveSpace{
 	
 	protected abstract int getLineHeader();
 	
-	public abstract void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia);
-	
-	
 	protected abstract TipoEntrada getTipo(String value);
 	
 	protected abstract void readLine(String line, PdfData data, int numberRow);

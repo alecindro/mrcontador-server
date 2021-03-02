@@ -39,17 +39,8 @@ public abstract class ComprovanteBanco implements ParserComprovante {
 			return service.save(comprovante);
 	}
 	
-	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service, ExtratoService extratoService) {
-		comprovantes.forEach(comprovante ->{
-			service.callComprovante(comprovante.getId());	
-		});
-		Set<String> periodos = comprovantes.stream().map(Comprovante::getPeriodo).collect(Collectors.toSet());
-		Comprovante comprovante = comprovantes.parallelStream().findFirst().get();
-		Long parceiroId = comprovante.getParceiro().getId();
-		extratoService.callRegraInteligent(parceiroId, periodos);
-		LocalDate date = comprovante.getComDatavencimento().minusMonths(4);
-		service.callProcessaNotafiscalGeral(parceiroId, date);
-    }
+	public abstract void callFunction(List<Comprovante> comprovantes, ComprovanteService service,
+			ExtratoService extratoService) ;
 	
 
 	public List<Comprovante> parse(String comprovante, String pattern, Agenciabancaria agenciabancaria,

@@ -43,12 +43,6 @@ public class PdfSafra extends PdfParserExtrato {
 	}
 
 	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	protected TipoEntrada getTipo(String value) {
 		// TODO Auto-generated method stub
 		return null;

@@ -45,12 +45,6 @@ public class PdfUnicred extends PdfParserExtrato{
 	}
 
 	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	protected TipoEntrada getTipo(String value) {
 		if (MrContadorUtil.isNegative(value)) {
 			return TipoEntrada.DEBIT;
@@ -110,12 +104,20 @@ public class PdfUnicred extends PdfParserExtrato{
 			if(StringUtils.normalizeSpace(line).contains(BREAK)) {
 				break;
 			}
+			if(line.toUpperCase().contains("PÁGINA")) {
+				continue;
+			}
 			readLine(line, data, i);
 			datas.add(data);
 			if (i < lines.length - 1) {
+				if(lines[i+1].toUpperCase().contains("PÁGINA")) {
+					i = i+1;
+				}
 				if(StringUtils.normalizeSpace(lines[i + 1]).contains(BREAK)) {
 					break;
 				}
+				
+				
 				if (!MrContadorUtil.isDate(StringUtils.substring(lines[i + 1], DATA_COLUMN,DCTO_COLUMN).trim(), dateFormatter)) {
 					i = i + 1;
 					data.setInfAdicional(StringUtils.normalizeSpace(StringUtils.substring(lines[i], DATA_COLUMN)));

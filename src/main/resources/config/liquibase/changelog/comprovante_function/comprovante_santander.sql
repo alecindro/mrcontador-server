@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.comprovante_bb("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
+CREATE OR REPLACE FUNCTION ${schema}.comprovante_santander("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$

@@ -25,32 +25,38 @@ public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>,
 	@Query("FROM Comprovante AS co LEFT JOIN FETCH co.arquivo WHERE co.id = ?1")
 	Optional<Comprovante> findById(Long id);
 	
-	@Query(nativeQuery = true, value = "select processa_comprovante(?)")
+	/*@Query(nativeQuery = true, value = "select processa_comprovante(?)")
 	int callComprovante(Long comprovanteId);
-	
+	*/
 	@Query(nativeQuery = true, value = "select comprovante_bb(?,?,?)")
 	int callComprovanteBB(Long parceiroId, Long agenciabancariaId, String periodo);
 	
-	@Query(nativeQuery = true, value = "select comprovante_santander(?)")
-	int callComprovanteSantander(Long comprovanteId);
+	@Query(nativeQuery = true, value = "select comprovante_santander(?,?,?)")
+	int callComprovanteSantander(Long parceiroId, Long agenciabancariaId, String periodo);
 	
-	@Query(nativeQuery = true, value = "select comprovante_cef(?)")
-	int callComprovanteCEF(Long comprovanteId);
+	@Query(nativeQuery = true, value = "select comprovante_cef(?,?,?)")
+	int callComprovanteCEF(Long parceiroId, Long agenciabancariaId, String periodo);
 
-	@Query(nativeQuery = true, value = "select comprovante_credicrea(?)")
-	int callComprovanteCredicrea(Long comprovanteId);
+	@Query(nativeQuery = true, value = "select comprovante_credicrea(?,?,?)")
+	int callComprovanteCredicrea(Long parceiroId, Long agenciabancariaId, String periodo);
 
-	@Query(nativeQuery = true, value = "select comprovante_itau(?)")
-	int callComprovanteItau(Long comprovanteId);
+	@Query(nativeQuery = true, value = "select comprovante_itau(?,?,?)")
+	int callComprovanteItau(Long parceiroId, Long agenciabancariaId, String periodo);
 
-	@Query(nativeQuery = true, value = "select comprovante_safra(?)")
-	int callComprovanteSafra(Long comprovanteId);
+	@Query(nativeQuery = true, value = "select comprovante_safra(?,?,?)")
+	int callComprovanteSafra(Long parceiroId, Long agenciabancariaId, String periodo);
 	
-	@Query(nativeQuery = true, value = "select comprovante_unicred(?)")
-	int callComprovanteUnicred(Long comprovanteId);
+	@Query(nativeQuery = true, value = "select comprovante_unicred(?,?,?)")
+	int callComprovanteUnicred(Long parceiroId, Long agenciabancariaId, String periodo);
 	
 	@Query(nativeQuery = true, value = "select comprovante_bradesco(?,?,?)")
 	int callComprovanteBradesco(Long parceiroId, Long agenciabancariaId, String periodo);
+	
+	@Query(nativeQuery = true, value = "select comprovante_sicoob(?,?,?)")
+	int callComprovanteSicoob(Long parceiroId, Long agenciabancariaId, String periodo);
+	
+	@Query(nativeQuery = true, value = "select comprovante_sicred(?,?,?)")
+	int callComprovanteSicred(Long parceiroId, Long agenciabancariaId, String periodo);
 	
 	@Query(nativeQuery = true, value = "select processa_comprovantegeral(?)")
 	int callComprovanteGeral(Long parceiroId);

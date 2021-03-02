@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.Splitter;
@@ -26,6 +28,7 @@ import br.com.mrcontador.file.comprovante.DiffValue;
 import br.com.mrcontador.file.comprovante.PPDocumentDTO;
 import br.com.mrcontador.file.comprovante.TipoComprovante;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -769,6 +772,16 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 			}
 		}
 	}
-
+	@Override
+	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service,
+			ExtratoService extratoService) {
+		if(!comprovantes.isEmpty()) {
+			Comprovante comprovante = comprovantes.stream().findFirst().get();
+			Long parceiroId = comprovante.getParceiro().getId();
+			Long agenciabancariaId = comprovante.getAgenciabancaria().getId();
+			Set<String> periodos = comprovantes.stream().map(c -> c.getPeriodo()).collect(Collectors.toSet());
+			periodos.forEach(p -> service.callComprovanteUnicred(parceiroId, agenciabancariaId, p));
+		}
+	}
 
 }

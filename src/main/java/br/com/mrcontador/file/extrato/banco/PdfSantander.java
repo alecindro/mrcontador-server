@@ -60,11 +60,6 @@ public class PdfSantander extends PdfParserExtrato {
 		return 6;
 	}
 
-	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		extratos.forEach(ext->service.callExtraFunctionsSantander(ext.getId()));
-
-	}
 
 	@Override
 	protected TipoEntrada getTipo(String value) {

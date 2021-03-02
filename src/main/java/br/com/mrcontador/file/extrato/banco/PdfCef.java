@@ -40,12 +40,7 @@ public class PdfCef extends PdfParserExtrato {
 	public PdfCef() throws IOException {
 		super();
 	}
-
-	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		// TODO Auto-generated method stub
-	}
-
+	
 	@Override
 	protected TipoEntrada getTipo(String value) {
 		String tipo = StringUtils.right(StringUtils.normalizeSpace(value), 1);

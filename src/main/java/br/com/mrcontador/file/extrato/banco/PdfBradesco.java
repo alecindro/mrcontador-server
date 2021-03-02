@@ -45,10 +45,6 @@ public class PdfBradesco extends PdfParserExtrato {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void extrasFunctions(ExtratoService service, List<Extrato> extratos, Agenciabancaria agencia) {
-		extratos.forEach(ext->service.callExtraFunctionsBradesco(ext.getId()));
-	}
 
 	@Override
 	protected TipoEntrada getTipo(String value) {

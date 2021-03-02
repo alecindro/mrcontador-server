@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.extrato_functionSAFRA("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
+CREATE OR REPLACE FUNCTION ${schema}.extrato_functionUNICRED("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
@@ -50,14 +50,14 @@ where a.PARCEIRO_ID = pParceiroId AND a.TIPO_AGENCIA = 'APLICACAO' AND a.AGE_AGE
                                     pPERIODO, false, 'x'
                                   );
 vAPLICACAO_AUT := 1;
-
+END IF;
 IF (vAPLICACAO_AUT > 0) THEN
  UPDATE ${schema}.EXTRATO SET processado = true where id = REC_EXTRATO.ID;
  vRETORNO = vRETORNO +1;
 END IF; 	
  END LOOP;
    IF (vRETORNO > 0) THEN 
-        SELECT * INTO vRETORNO_COMPROVANTE FROM ${schema}.comprovante_safra(pParceiroId,pAgenciaId,pPeriodo); 
+        SELECT * INTO vRETORNO_COMPROVANTE FROM ${schema}.comprovante_unicred(pParceiroId,pAgenciaId,pPeriodo); 
        if(vRETORNO_COMPROVANTE = 0 ) then
         select * into vRETORNO_SETUP from ${schema}.setup_function(pParceiroId,pPeriodo);
         END IF;

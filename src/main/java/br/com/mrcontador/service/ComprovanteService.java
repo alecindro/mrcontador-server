@@ -87,44 +87,46 @@ public class ComprovanteService {
     	return comprovanteRepository.saveAll(comprovantes);
     }
     
-    public void callComprovante(Long comprovanteId) {
-    	comprovanteRepository.callComprovante(comprovanteId);
-    }
-    
     public void callComprovanteBB(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteBB(parceiroId,agenciabancariaId,periodo);
     }
     
-    public void callComprovanteCEF(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteCEF(comprovanteId);
+    public void callComprovanteCEF(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteCEF(parceiroId,agenciabancariaId,periodo);
     }
     
-    public void callComprovanteCredicrea(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteCredicrea(comprovanteId);
+    public void callComprovanteCredicrea(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteCredicrea(parceiroId,agenciabancariaId,periodo);
     }
     
-    public void callComprovanteItau(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteItau(comprovanteId);
+    public void callComprovanteItau(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteItau(parceiroId,agenciabancariaId,periodo);
     }
     
-    public void callComprovanteSafra(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteSafra(comprovanteId);
+    public void callComprovanteSafra(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteSafra(parceiroId,agenciabancariaId,periodo);
     }
     
-    public void callComprovanteSantander(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteSantander(comprovanteId);
+    public void callComprovanteSantander(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteSantander(parceiroId,agenciabancariaId,periodo);
     }
     
     
-    public void callComprovanteUnicred(Long comprovanteId) {
-    	comprovanteRepository.callComprovanteUnicred(comprovanteId);
+    public void callComprovanteUnicred(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteUnicred(parceiroId,agenciabancariaId,periodo);
     }
     
     public void callComprovanteBradesco(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteBradesco(parceiroId,agenciabancariaId,periodo);
     }
     
+    public void callComprovanteSicredi(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteSicred(parceiroId,agenciabancariaId,periodo);
+    }
     
+    public void callComprovanteSicoob(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteSicoob(parceiroId,agenciabancariaId,periodo);
+    }
 	public void updateArquivo(Long id, Long arquivoId) {
 		comprovanteRepository.updateArquivo(id, arquivoId);
 	}

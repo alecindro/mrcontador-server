@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION ${schema}.comprovante_itau("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
+CREATE OR REPLACE FUNCTION ${schema}.comprovante_sicred("parceiroId" bigint, "agenciaID" bigint, "pPeriodo" character varying)
  RETURNS numeric
  LANGUAGE plpgsql
 AS $function$
