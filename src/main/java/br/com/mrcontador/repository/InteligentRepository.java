@@ -26,13 +26,13 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
 	@Query(nativeQuery = true, value = "select processa_inteligente(?,?,?,?)")
 	int callInteligent(Long parceiroID,Long agenciaBancariaID,Date begin,Date end);
 
-  @EntityGraph(attributePaths = "{comprovante,notafiscal,conta,extrato}")
+  @EntityGraph(attributePaths = {"comprovante","notafiscal","conta","extrato","parceiro","agenciabancaria"})
 	List<Inteligent> findAll();
   
-  @EntityGraph(attributePaths = {"comprovante","notafiscal","conta","extrato"})
+  @EntityGraph(attributePaths = {"comprovante","notafiscal","conta","extrato","parceiro","agenciabancaria"})
   List<Inteligent> findAll(@Nullable Specification<Inteligent> spec, Sort sort);
   
-  @EntityGraph(attributePaths = {"comprovante","notafiscal","conta","extrato"})
+  @EntityGraph(attributePaths = {"comprovante","notafiscal","conta","extrato","parceiro","agenciabancaria"})
   List<Inteligent> findAll(@Nullable Specification<Inteligent> spec);
   
   @Query(value="select periodo from inteligent where parceiro_id = :parceiroId and agenciabancaria_id = :agenciabancariaId group by periodo order by cast(periodo as integer) desc", nativeQuery = true)
