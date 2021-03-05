@@ -70,13 +70,15 @@ public class ContadorService {
      * @return the persisted entity.
      * @throws Exception 
      */
+    @Transactional
     public ContadorDTO save(ContadorDTO contadorDTO) throws Exception {
     	log.debug("Request to save Contador : {}", contadorDTO);
         Contador contador = contadorMapper.toEntity(contadorDTO);
         String datasource = SecurityUtils.DS_PREFIX.concat(contador.getCnpj().replaceAll("\\D", ""));
+  
+        springLiquibase.createSchema(datasource, dataSource);
         contador.setDatasource(datasource);
         contador = contadorRepository.save(contador);
-        springLiquibase.createSchema(contador.getDatasource(), dataSource);
         authorityRepository.save(new Authority(contador.getDatasource()));
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(contador.getEmail());
