@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
@@ -139,7 +140,7 @@ public class UploadFileResource {
 		}
 		
 			FileDTO fileDTO = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), parceiro.get(),TipoDocumento.COMPROVANTE);
+					TenantContext.getTenantSchema(), parceiro.get(),TipoDocumento.COMPROVANTE);
 			fileDTO.setIdAgencia(idAgencia);			
 			String periodo = fileService.processComprovante(fileDTO, agencia.get());
 			return ResponseEntity
