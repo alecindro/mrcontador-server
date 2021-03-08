@@ -64,6 +64,7 @@ public class S3Service {
 	@Async("taskExecutor")
 	public void uploadErro(FileDTO dto) {
 		TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+		log.info("Pesquisando contador: "+dto.getContador());
 		Optional<Contador> contador = contadorServive.findByDatasource(dto.getContador());
 		String dir = properties.getErrorFolder();
 		String filename = MrContadorUtil.genErroFileName(dto.getContador(), dto.getContentType());

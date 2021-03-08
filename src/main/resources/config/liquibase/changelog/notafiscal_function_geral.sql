@@ -27,9 +27,9 @@ END LOOP;
 for REC_PERIODO in 
 select periodo from (
  SELECT  DISTINCT ON (periodo) * FROM ${schema}.NOTAFISCAL  WHERE  TNO_CODIGO=0
-    AND PARCEIRO_ID = 10 
+    AND PARCEIRO_ID = pPAR_CODIGO 
     and processado = true
-    and NOT_DATAPARCELA >= '2012-12-18'
+    and NOT_DATAPARCELA >= cast((pDATA_INICIAL)as DATE)
     ) t
     order by NOT_DATAPARCELA asc
    LOOP
