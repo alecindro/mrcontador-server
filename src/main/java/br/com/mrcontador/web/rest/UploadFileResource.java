@@ -55,7 +55,7 @@ public class UploadFileResource {
 	@PostMapping("/upload/planoconta")
 	public ResponseEntity<Void> uploadPlanoConta(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
-		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		log.info("Processando Plano de conta: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> oParceiro = parceiroService.findOne(parceiroId);
 		if(oParceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
@@ -81,7 +81,7 @@ public class UploadFileResource {
 	@PutMapping("/upload/planoconta")
 	public ResponseEntity<Void> updatePlanoConta(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
-		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		log.info("Processando Plano de conta: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> oParceiro = parceiroService.findOne(parceiroId);
 		if(oParceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
@@ -103,7 +103,7 @@ public class UploadFileResource {
 	public ResponseEntity<String> uploadExtrato(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro,
 			@RequestParam(required = true, name = "idAgenciabancaria") Long idAgencia) throws Exception {
-		log.info("Processando Extrato: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		log.info("Processando Extrato: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> oParceiro = parceiroService.findOne(idParceiro);
 		if(oParceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
@@ -129,7 +129,7 @@ public class UploadFileResource {
 	public ResponseEntity<String> uploadComprovante(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro,
 			@RequestParam(required = true, name = "idAgenciabancaria") Long idAgencia) throws Exception {
-		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		log.info("Processando comprovante: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		if (parceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
@@ -152,7 +152,7 @@ public class UploadFileResource {
 	@PostMapping("/upload/nf")
 	public ResponseEntity<String> uploadNF(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro) throws Exception {
-		log.info("Processando arquivo: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		log.info("Processando nota fiscal: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
 		if (parceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
@@ -173,7 +173,7 @@ public class UploadFileResource {
 	@PostMapping("/upload/ns")
 	public ResponseEntity<Void> uploadNS(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro) throws Exception {
-		log.info("Processando arquivo: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		log.info("Processando nota de serviço: {}. Cliente: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		throw new MrContadorException("error.notimplemented", "parametro");
 	}
 

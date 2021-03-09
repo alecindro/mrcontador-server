@@ -304,9 +304,9 @@ int i = 12;
 		List<DiffValue> list = new ArrayList<DiffValue>();
 		int i = 0;
 		for (String line : lines) {
-			line = StringUtils.normalizeSpace(line.trim());
+			line = StringUtils.normalizeSpace(line.trim()).toUpperCase();
 
-			if (line.contains("CONTA")) {
+			if (line.contains("CONTA") && line.contains("USUÁRIO")) {
 				String value = StringUtils.remove(line, ":");
 				value = StringUtils.split(StringUtils.substringAfter(value, "CONTA"))[0];
 				DiffValue diffValue = new DiffValue();
@@ -349,11 +349,18 @@ int i = 12;
 			if (line.contains("VALOR")) {
 				String value = StringUtils.remove(line, ":");
 				value = StringUtils.substringAfter(value, "VALOR").trim();
+			  if(MrContadorUtil.containsNumber(value)) {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(VALOR_DOC);
+				diffValue2.setNewValue(value);
+				diffValue2.setLine(i);
+				list.add(diffValue2);
+			  }
 			}
 			
 			if (line.contains("CNPJ")) {
