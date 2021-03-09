@@ -55,6 +55,9 @@ int i = 12;
 			if (line.equals("COMPROVANTE DE PAGAMENTO DE CONVENIO")) {
 				return parsePagtoConvenio(_lines, agenciabancaria, parceiro);
 			}
+			if (line.equals("COMPROVANTE DE PAGAMENTO DE CONVÊNIO")) {
+				return parsePagtoConvenio(_lines, agenciabancaria, parceiro);
+			}
 			if (line.contains("ARRECADACAO DE DARF")) {
 				return parseDarf(_lines, agenciabancaria, parceiro);
 			}
@@ -567,6 +570,15 @@ int i = 12;
 				String value = StringUtils.substringAfter(line, "Valor Nominal:").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_DOC);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+
+			}
+			if (line.contains("Descontos:")) {
+				String value = StringUtils.substringAfter(line, "Descontos:").trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DESCONTO);
 				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
