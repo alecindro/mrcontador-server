@@ -82,4 +82,8 @@ public class ContaService {
     	contaRepository.updateArquivo(id, arquivoId);
     }
     
+    public int callContaFunction(Long parceiroId, String periodo) {
+    	return contaRepository.callContaFunction(parceiroId, periodo);
+    }
+    
 }

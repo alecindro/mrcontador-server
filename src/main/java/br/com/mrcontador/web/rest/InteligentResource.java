@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.service.InteligentNfDTOService;
 import br.com.mrcontador.service.InteligentQueryService;
 import br.com.mrcontador.service.InteligentService;
 import br.com.mrcontador.service.dto.InteligentCriteria;
+import br.com.mrcontador.service.dto.InteligentNfDTO;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -40,13 +42,18 @@ public class InteligentResource {
 	private final InteligentService inteligentService;
 
 	private final InteligentQueryService inteligentQueryService;
+	
+	private final InteligentNfDTOService inteligentNfDTOService;
 
 	@Value("${jhipster.clientApp.name}")
 	private String applicationName;
 
-	public InteligentResource(InteligentService inteligentService, InteligentQueryService inteligentQueryService) {
+	public InteligentResource(InteligentService inteligentService, 
+			InteligentQueryService inteligentQueryService,
+			InteligentNfDTOService inteligentNfDTOService) {
 		this.inteligentService = inteligentService;
 		this.inteligentQueryService = inteligentQueryService;
+		this.inteligentNfDTOService = inteligentNfDTOService;
 	}
 
 	@PostMapping("/inteligents")
@@ -59,6 +66,22 @@ public class InteligentResource {
 		return ResponseEntity.created(new URI("/api/inteligents/"))
 				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.created", ""))
 				.body(inteligent);
+	}
+	
+	@PostMapping("/inteligents/nf")
+	public ResponseEntity<Void> associateNf(@RequestBody InteligentNfDTO inteligentNfDTO) throws URISyntaxException {
+		log.debug("REST save InteligentNfDTO: {}", inteligentNfDTO);
+		inteligentNfDTOService.save(inteligentNfDTO);
+		return ResponseEntity.created(new URI("/api/inteligents/nf"))
+				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.nfassociate", "")).build();
+	}
+	
+	@PutMapping("/inteligents/nf")
+	public ResponseEntity<Void> removeNf(@RequestBody Inteligent inteligent) throws URISyntaxException {
+		log.debug("REST removeNf Inteligent: {}", inteligent);
+		inteligentNfDTOService.removeNF(inteligent);
+		return ResponseEntity.created(new URI("/api/inteligents/nf"))
+				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.nfdesassociate", "")).build();
 	}
 
 	@PutMapping("/inteligents")

@@ -44,6 +44,18 @@ public class InteligentService {
         log.debug("Request to save Inteligent : {}", inteligent);
         return inteligentRepository.save(inteligent);
     }
+    
+    /**
+     * Save a inteligent.
+     *
+     * @param inteligent the entity to save.
+     * @return the persisted entity.
+     */
+    public List<Inteligent> saveAll(List<Inteligent> inteligents) {
+        log.debug("Request to save Inteligent : {}", inteligents);
+        return inteligentRepository.saveAll(inteligents);
+    }
+
 
     /**
      * Get all the inteligents.

@@ -105,6 +105,7 @@
     <sqlFile path="config/liquibase/changelog/contas_update_function.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
 <include file="config/liquibase/changelog/alter_conta.sql" relativeToChangelogFile="false"/>
+<include file="config/liquibase/changelog/notalfiscal_alterindex.sql" relativeToChangelogFile="false"/>
 
 
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
