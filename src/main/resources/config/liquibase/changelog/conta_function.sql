@@ -9,17 +9,25 @@ declare
   vRETORNO_SETUP NUMERIC;
   REC_CONTA RECORD;
   REC_INTELIGENT RECORD;
+  REC_INTELIGENT2 RECORD;
 BEGIN
 vRETORNO := 0;	
 	FOR REC_CONTA IN
 		select * from ${schema}.conta where parceiro_id = pParceiroId and (con_cnpj is not null and con_cnpj <> '') and con_classificacao like '2.%'
 	loop
 		for REC_INTELIGENT IN
-		select * from ${schema}.inteligent where periodo = pPeriodo and parceiro_id = pParceiroId and associado = false and (CNPJ = REC_CONTA.con_cnpj  or substring(CNPJ,1,8) = substring(REC_CONTA.con_cnpj,1,8)) 
+		select * from ${schema}.inteligent where periodo = pPeriodo and parceiro_id = pParceiroId and associado = false and CNPJ = REC_CONTA.con_cnpj 
 		 and tipo_valor = 'PRINCIPAL'
 		loop
 			update ${schema}.inteligent set associado = true, conta_id = REC_CONTA.id where id = REC_INTELIGENT.id;
-			vRETORNO :=	vRETORNO +1;		
+			vRETORNO :=	vRETORNO +1;
+		end loop;
+		for REC_INTELIGENT2 IN
+		select * from ${schema}.inteligent where periodo = pPeriodo and parceiro_id = pParceiroId and associado = false and substring(CNPJ,1,8) = substring(REC_CONTA.con_cnpj,1,8)
+		 and tipo_valor = 'PRINCIPAL'
+		loop
+			update ${schema}.inteligent set associado = true, conta_id = REC_CONTA.id where id = REC_INTELIGENT2.id;
+			vRETORNO :=	vRETORNO +1;	
 		end loop;
 	end loop;
 select * from ${schema}.setup_function(pParceiroId,pPeriodo) into vRETORNO_SETUP;

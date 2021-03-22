@@ -169,6 +169,28 @@ public class UploadFileResource {
 			throw new MrContadorException("nfe.imported");
 		}
 	}
+	
+	
+	@PostMapping("/upload/nf/integra")
+	public ResponseEntity<String> uploadNFINtegra(@RequestParam("file") MultipartFile file,
+			@RequestParam(required = true, name = "cnpj") String cnpj) throws Exception {
+		log.info("Processando nota fiscal: {}. Contador: {}", file.getName(), cnpj);
+		Optional<Parceiro> parceiro  = parceiroService.findByParCnpjcpf(cnpj);
+		if (parceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
+		}
+		try {
+			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
+					SecurityUtils.getCurrentTenantHeader(), parceiro.get(),TipoDocumento.NOTA);
+			String periodo = fileService.processNFE(dto);
+			return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
+					.headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName())).body(periodo);
+		} catch (MrContadorException e) {
+			throw e;
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new MrContadorException("nfe.imported");
+		}
+	}
 
 	@PostMapping("/upload/ns")
 	public ResponseEntity<Void> uploadNS(@RequestParam("file") MultipartFile file,

@@ -20,7 +20,7 @@
   <include file="config/liquibase/changelog_mrcontador/data.sql" relativeToChangelogFile="false"/>
    <include file="config/liquibase/changelog_mrcontador/alter_arquivoerro.sql" relativeToChangelogFile="false"/>
    <include file="config/liquibase/changelog_mrcontador/alter_arquivoerro2.sql" relativeToChangelogFile="false"/>
-  
+  <include file="config/liquibase/changelog_mrcontador/sieg.sql" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

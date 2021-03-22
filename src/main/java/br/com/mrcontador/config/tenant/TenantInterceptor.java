@@ -18,24 +18,25 @@ public class TenantInterceptor extends HandlerInterceptorAdapter{
 
 	 Logger logger = LoggerFactory.getLogger(getClass());
 	 public static final String TENANT_HEADER = "tenant-uuid";
+	 private static final String INTEGRATION_HEADER = "integration-uuid";
 
 	 @Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		 String tenantUuid = request.getHeader(TENANT_HEADER);
+		 String integrationUuid = request.getHeader(INTEGRATION_HEADER);
+		 
 		 if(tenantUuid == null) {
 			 TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
 			 return super.preHandle(request, response, handler);
 		 }
 		 List<String> roles = SecurityUtils.getAuthorities();
 		 boolean permit = roles.stream().anyMatch(role -> role.equalsIgnoreCase(tenantUuid));
-		 if(!permit) {
+		 
+		 if(integrationUuid == null && !permit ) {
 			 throw new RuntimeException("not.valide");
 		 }
-		 for(String role : roles) {
-			 logger.debug("Role: {}",role);
-			 
-		 }
+		
 		 
 		 logger.debug("Set TenantContext: {}",tenantUuid);
 	        TenantContext.setTenantSchema(tenantUuid);

@@ -204,6 +204,22 @@ public class ExtratoService {
 			});
 		}
 	}
+	
+	@Transactional
+	public void callExtratoSicred(List<Extrato> extratos, Long parceiroId) {
+		log.info("call extrato");
+		if (!extratos.isEmpty()) {
+			Set<String> periodos = extratos.stream().map(e -> e.getPeriodo()).collect(Collectors.toSet());
+			Long agenciaBancariaId = extratos.stream().findFirst().get().getAgenciabancaria().getId();
+			periodos.forEach(periodo -> {
+				try {
+					extratoRepository.callExtratoSicred(parceiroId, agenciaBancariaId, periodo);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
+				}
+			});
+		}
+	}
 
 	@Transactional
 	public void callRegraInteligent(Long parceiroId, Set<String> periodos) {

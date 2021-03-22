@@ -13,6 +13,7 @@ import br.com.mrcontador.file.extrato.banco.PdfCredicrea;
 import br.com.mrcontador.file.extrato.banco.PdfItau;
 import br.com.mrcontador.file.extrato.banco.PdfSafra;
 import br.com.mrcontador.file.extrato.banco.PdfSantander;
+import br.com.mrcontador.file.extrato.banco.PdfSicredi;
 import br.com.mrcontador.file.extrato.banco.PdfUnicred;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -39,6 +40,8 @@ public class PdfParserExtratoFactory {
 				return new PdfItau();
 			case SAFRA:
 				return new PdfSafra();
+			case SICRED:
+				return new PdfSicredi();
 			default:
 				throw new MrContadorException("extrato.pdf.banknotimplemented", agenciaBancaria.getBanCodigobancario());
 			}

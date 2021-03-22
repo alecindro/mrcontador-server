@@ -55,6 +55,9 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	@Query(nativeQuery = true, value = "select extrato_functionUNICRED(?,?,?)")
 	int callExtratoUnicred(Long parceiroId, Long agenciaId,String periodo);
 	
+	@Query(nativeQuery = true, value = "select extrato_functionSICRED(?,?,?)")
+	int callExtratoSicred(Long parceiroId, Long agenciaId,String periodo);
+	
 	
 	@Modifying(flushAutomatically = true)
 	@Query(value = "update extrato set processado = true where id = :extratoId", nativeQuery = true)

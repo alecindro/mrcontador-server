@@ -129,6 +129,11 @@ public class ParceiroResource {
 	public ResponseEntity<List<Parceiro>> getAllParceiros() {
 		return ResponseEntity.ok().body(parceiroService.findAll());
 	}
+	
+	@GetMapping("/parceiros/active/sieg")
+	public ResponseEntity<List<Parceiro>> getActiveSiegParceiros() {
+		return ResponseEntity.ok().body(parceiroService.findAll());
+	}
 
 	@GetMapping("/parceiros/cnpj")
 	public ResponseEntity<Parceiro> getParceiroByCnpj(@RequestParam String cnpj) {

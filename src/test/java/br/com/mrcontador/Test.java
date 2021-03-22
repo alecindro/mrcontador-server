@@ -2,6 +2,8 @@ package br.com.mrcontador;
 
 import java.time.LocalDate;
 
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class Test {
@@ -10,9 +12,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		
-		LocalDate localDate = LocalDate.now();
-		localDate = localDate.minusMonths(8);
-		String value = localDate.getMonthValue()+""+localDate.getYear();
+		String value = StringUtils.wrap("dlrBShy4udotZL90xOzCHA==","XhY");
 		
 		System.out.println(value);
 		/*String t = "CIELO VENDAS D�BITO";
