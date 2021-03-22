@@ -98,6 +98,13 @@ public class MrContadorUtil {
 			return new BigDecimal(onlyMoney(value));
 		}
 	}
+	
+	public static String toMoney(BigDecimal value) {
+		String result = value.toString();
+		result = result.replaceAll("\\,", "");
+		result = result.replaceAll("\\.", ",");
+		return result;
+	}
 
 	public static String removeDots(String value) {
 		if (value != null) {

@@ -5,11 +5,14 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Inteligent;
+import br.com.mrcontador.util.MrContadorUtil;
 
 public class ExportDominio implements ExportLancamento{
 	
@@ -22,16 +25,16 @@ public class ExportDominio implements ExportLancamento{
 	private DecimalFormat df;
 	
 	public String process(List<Inteligent> inteligents, Agenciabancaria agencia, String codigoEmpresa, String cnpjParceiro) {
-		LocalDate datainicial = inteligents.stream().map(i -> i.getDatalancamento()).min(LocalDate::compareTo).get();
-		LocalDate dataFinal = inteligents.stream().map(i -> i.getDatalancamento()).max(LocalDate::compareTo).get();
-		StringBuilder builder = cabecalho(codigoEmpresa, datainicial, dataFinal, tipoNota, tipoLayout, cnpjParceiro);
+		StringBuilder builder = new StringBuilder();
+		process(builder, inteligents);
+		/*StringBuilder builder = cabecalho(codigoEmpresa, datainicial, dataFinal, tipoNota, tipoLayout, cnpjParceiro);
 		inteligents.forEach(inteligent ->{
 			processLineHeader(builder, inteligent);
 			processLineBody(builder, inteligent, agencia,codigoEmpresa);
 			processLineFooter(builder, codigoEmpresa);
 			
 		});
-		processFooter(builder);
+		processFooter(builder);*/
 		return builder.toString();
 	}
 	
@@ -54,6 +57,40 @@ public class ExportDominio implements ExportLancamento{
 		builder.append(System.getProperty("line.separator"));
 		return builder;
 	}
+	private void processFirstLine(StringBuilder builder, Inteligent inteligent) {
+		builder.append("|");
+		builder.append("0000|");
+		builder.append(inteligent.getParceiro().getParCnpjcpf());
+		builder.append("|");
+		builder.append(System.getProperty("line.separator"));	
+	}
+	
+	private void process(StringBuilder builder, List<Inteligent> inteligents) {
+		processFirstLine(builder, inteligents.get(0));
+		Map<String, List<Inteligent>> mapByNumDoc = inteligents.stream().filter(inteligent -> inteligent.getDebito() != null).collect(Collectors.groupingBy(Inteligent::getNumerodocumento));
+		for(String key : mapByNumDoc.keySet()) {
+			List<Inteligent> list = mapByNumDoc.get(key);
+			builder.append("|6000|");
+			builder.append(list.get(0).getTipoInteligent());
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));
+			for(Inteligent _inteligent : list) {
+			builder.append("|6100|");
+			builder.append(formatter.format(_inteligent.getDatalancamento()));
+			builder.append("|");
+			builder.append(_inteligent.getConta().getConConta());
+			builder.append("|");
+			builder.append(MrContadorUtil.toMoney(_inteligent.getDebito()));
+			builder.append("|");
+			builder.append(_inteligent.getHistoricofinal());
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));
+			}
+			
+		}
+	}
+	
+	
 	private void processLineHeader(StringBuilder builder, Inteligent inteligent) {
 		builder.append("02");
 		seq = seq + 1;

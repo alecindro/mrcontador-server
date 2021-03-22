@@ -180,8 +180,8 @@ public class UploadFileResource {
 			throw new MrContadorException("parceiro.notfound");
 		}
 		try {
-			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), parceiro.get(),TipoDocumento.NOTA);
+			FileDTO dto = fileService.getFileDTO("application/xml", file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
+					TenantContext.getTenantSchema(), parceiro.get(),TipoDocumento.NOTA);
 			String periodo = fileService.processNFE(dto);
 			return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
 					.headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName())).body(periodo);

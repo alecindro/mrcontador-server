@@ -1,5 +1,7 @@
 package br.com.mrcontador.exportacao;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -11,10 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
-import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.export.ExportDominio;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.InteligentQueryService;
 import br.com.mrcontador.service.dto.InteligentCriteria;
@@ -35,20 +35,31 @@ public class ExportDominioTest {
 	
 	@Test
 	public void teste() {
-		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
+		TenantContext.setTenantSchema("ds_04656282000130");
 		InteligentCriteria criteria = new InteligentCriteria();
 		LongFilter p = new LongFilter();
 		p.setEquals(2L);
 		StringFilter f = new StringFilter();
-		f.setEquals("12020");
+		f.setEquals("12021");
 		BooleanFilter b = new BooleanFilter();
 		b.setEquals(true);
 		criteria.setParceiroId(p);
 		criteria.setPeriodo(f);
 		criteria.setAssociado(b);
+		LongFilter a = new LongFilter();
+		a.setEquals(6L);
+		criteria.setAgenciabancariaId(a);
 		List<Inteligent> list = service.findByCriteria(criteria);
-		Agenciabancaria agencia = agService.findOne(1L).get();
 		ExportDominio ex = new ExportDominio();
-		System.out.println(ex.process(list,agencia, "45", "10539433000173"));
+		String result = ex.process(list,null, "45", "10539433000173");
+		try {
+		      FileWriter myWriter = new FileWriter("C:\\java\\testes\\exportacao_dominio.txt");
+		      myWriter.write(result);
+		      myWriter.close();
+		      System.out.println("Successfully wrote to the file.");
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
 	}
 }
