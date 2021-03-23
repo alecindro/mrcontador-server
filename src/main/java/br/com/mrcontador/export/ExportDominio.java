@@ -88,13 +88,13 @@ public class ExportDominio implements ExportLancamento {
 		//|6100|18/01/2021||7|1776,51||PAGAMENTO DE BOLETO||||
 		Extrato extrato = inteligents.get(0).getExtrato();
 		builder.append("|6100|");
-		builder.append(formatter.format(inteligents.get(0).getDatalancamento()));
+		builder.append(formatter.format(extrato.getExtDatalancamento()));
 		builder.append("|");
 		builder.append(conta);
 		builder.append("|");
 		builder.append(MrContadorUtil.toMoney(extrato.getExtDebito().signum()<0?extrato.getExtDebito().negate():extrato.getExtDebito()));
 		builder.append("|");
-		builder.append(_inteligent.getHistoricofinal());
+		builder.append(extrato.getExtHistorico());
 		builder.append("||||");
 		builder.append(System.getProperty("line.separator"));
 		for (Inteligent _inteligent : inteligents) {
