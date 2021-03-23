@@ -46,7 +46,7 @@ BEGIN
  	 			vDEBITO_INTELIGENT := vDEBITO_INTELIGENT + selected_comprovante.com_juros + selected_comprovante.com_multa;
     			vTIPOINTELIGENTE := 'C';
     			vHISTORICOFINAL   := 'Pagto. de Juros de '|| selected_comprovante.com_beneficiario;
-        	UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT and tipo_inteligent = vTIPOINTELIGENT WHERE ID = REC_INTELIGENT.id;
+        	UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT , tipo_inteligent = vTIPOINTELIGENTE WHERE ID = REC_INTELIGENT.id;
      		INSERT INTO  ${schema}.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Pagto. de Juros','JUROS',
      		REC_INTELIGENT.datalancamento,REC_INTELIGENT.numerodocumento,REC_INTELIGENT.numerocontrole,REC_INTELIGENT.periodo,  
@@ -57,7 +57,7 @@ BEGIN
      			vDEBITO_INTELIGENT := vDEBITO_INTELIGENT + selected_comprovante.com_desconto;
     	    	vTIPOINTELIGENTE := 'D';
         		vHISTORICOFINAL   := 'Receb. de Desconto de '|| selected_comprovante.com_beneficiario;
-      			UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT and tipo_inteligent = vTIPOINTELIGENT WHERE ID = REC_INTELIGENT.id;
+      			UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT, tipo_inteligent = vTIPOINTELIGENTE WHERE ID = REC_INTELIGENT.id;
      	        INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Receb. de desconto','DESCONTO',
      		REC_INTELIGENT.datalancamento,REC_INTELIGENT.numerodocumento,REC_INTELIGENT.numerocontrole,REC_INTELIGENT.periodo, selected_comprovante.com_desconto*-1,false,

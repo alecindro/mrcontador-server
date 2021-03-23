@@ -1,6 +1,7 @@
 package br.com.mrcontador.util;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -18,16 +19,17 @@ import br.com.mrcontador.file.TipoDocumento;
 public class MrContadorUtil {
 
 	private static Random random = new Random();
-	
+
 	private static Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+	private static DecimalFormat df = new DecimalFormat();
 
 	public static boolean isMoney(String value) {
-	    if (value == null) {
-	        return false; 
-	    }
-	    value = value.replace(".", "");
+		if (value == null) {
+			return false;
+		}
+		value = value.replace(".", "");
 		value = value.replace(",", ".");
-	    return pattern.matcher(value).matches();
+		return pattern.matcher(value).matches();
 	}
 
 	public static String onlyNumbers(String value) {
@@ -36,26 +38,25 @@ public class MrContadorUtil {
 		}
 		return value;
 	}
-	
+
 	public static String onlyLetters(String value) {
 		if (value != null) {
 			return value.replaceAll("[^a-zA-Z]", "");
 		}
 		return value;
 	}
-	
-	
-    public static boolean isDate(String dateStr, DateTimeFormatter formatter) {        
-    	try {
-    		formatter.parse(dateStr);
-        } catch (DateTimeParseException e) {
-            return false;
-        }
-        return true;
-    }
-	
+
+	public static boolean isDate(String dateStr, DateTimeFormatter formatter) {
+		try {
+			formatter.parse(dateStr);
+		} catch (DateTimeParseException e) {
+			return false;
+		}
+		return true;
+	}
+
 	public static boolean isNegative(String value) {
-		if(Integer.signum(Integer.valueOf(onlyMoney(value)))==-1) {
+		if (Integer.signum(Integer.valueOf(onlyMoney(value))) == -1) {
 			return true;
 		}
 		return false;
@@ -87,23 +88,23 @@ public class MrContadorUtil {
 		}
 		return value;
 	}
-	
+
 	public static BigDecimal toMoney(String value) {
 		try {
 			String _value = value.replace("C", "").trim();
 			_value = _value.replace("D", "").trim();
 			_value = _value.replace("R$", "").trim();
-		return new BigDecimal(_value);
-		}catch (NumberFormatException e) {
+			return new BigDecimal(_value);
+		} catch (NumberFormatException e) {
 			return new BigDecimal(onlyMoney(value));
 		}
 	}
-	
+
 	public static String toMoney(BigDecimal value) {
-		String result = value.toString();
-		result = result.replaceAll("\\,", "");
-		result = result.replaceAll("\\.", ",");
-		return result;
+		df.setMaximumFractionDigits(2);
+		df.setMinimumFractionDigits(0);
+		df.setGroupingUsed(false);
+		return df.format(value);
 	}
 
 	public static String removeDots(String value) {
@@ -156,9 +157,11 @@ public class MrContadorUtil {
 	}
 
 	private static String getDateFileName() {
-		/*LocalDateTime z = LocalDateTime.now();
-		return z.getYear() + "" + z.getMonthValue() + "" + z.getDayOfMonth() + "_" + z.getHour() + "" + z.getMinute()
-				+ "" + z.getSecond();*/
+		/*
+		 * LocalDateTime z = LocalDateTime.now(); return z.getYear() + "" +
+		 * z.getMonthValue() + "" + z.getDayOfMonth() + "_" + z.getHour() + "" +
+		 * z.getMinute() + "" + z.getSecond();
+		 */
 		return String.valueOf(Math.random());
 	}
 
@@ -200,7 +203,7 @@ public class MrContadorUtil {
 		pattern = removeDigit(pattern);
 		pattern = removeZerosFromInital(pattern.trim());
 		pattern = onlyNumbers(pattern);
-		
+
 		if (value.equalsIgnoreCase(pattern)) {
 			return true;
 		}
@@ -233,29 +236,26 @@ public class MrContadorUtil {
 	public static String periodo(LocalDate localDate) {
 		return localDate.getMonthValue() + "" + localDate.getYear();
 	}
-	
+
 	public static String removeDigit(String value) {
 		String[] values = StringUtils.splitByWholeSeparator(value, "-");
-		if(values.length>1) {
-		values = Arrays.copyOf(values, values.length-1);
-		return StringUtils.join(values);
+		if (values.length > 1) {
+			values = Arrays.copyOf(values, values.length - 1);
+			return StringUtils.join(values);
 		}
 		return values[0];
 	}
-	
 
-    public static int fimDeSemana(LocalDate ld) {
-        DayOfWeek d = ld.getDayOfWeek();
-        int result = 0;
-        if (d == DayOfWeek.SATURDAY) {
-        	result = 2;
-        }
-        if ( d == DayOfWeek.SUNDAY) {
-        	result = 1;
-        }
-        return result;
-    }
-
-	
+	public static int fimDeSemana(LocalDate ld) {
+		DayOfWeek d = ld.getDayOfWeek();
+		int result = 0;
+		if (d == DayOfWeek.SATURDAY) {
+			result = 2;
+		}
+		if (d == DayOfWeek.SUNDAY) {
+			result = 1;
+		}
+		return result;
+	}
 
 }

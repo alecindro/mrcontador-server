@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.export.ExportDominio;
 import br.com.mrcontador.service.AgenciabancariaService;
@@ -51,7 +52,8 @@ public class ExportDominioTest {
 		criteria.setAgenciabancariaId(a);
 		List<Inteligent> list = service.findByCriteria(criteria);
 		ExportDominio ex = new ExportDominio();
-		String result = ex.process(list,null, "45", "10539433000173");
+		Agenciabancaria agencia = agService.findOne(6L).get();
+		String result = ex.process(list,agencia.getConta());
 		try {
 		      FileWriter myWriter = new FileWriter("C:\\java\\testes\\exportacao_dominio.txt");
 		      myWriter.write(result);
