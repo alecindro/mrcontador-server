@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.domain.Notafiscal;
 import br.com.mrcontador.service.dto.InteligentNfDTO;
-import liquibase.pro.packaged.in;
 
 @Service
 public class InteligentNfDTOService {
@@ -28,8 +27,8 @@ public class InteligentNfDTOService {
 			notafiscalService.save(inteligent.getNotafiscal());
 			}
 		}
-		inteligentService.saveAll(inteligentNfDTO.getInteligents());
 		if(!inteligentNfDTO.getInteligents().isEmpty()) {
+			inteligentService.saveAll(inteligentNfDTO.getInteligents());
 			Inteligent inteligent = inteligentNfDTO.getInteligents().get(0);
 			Long parceiroId = inteligent.getParceiro().getId();
 			String periodo = inteligent.getPeriodo();
@@ -40,8 +39,10 @@ public class InteligentNfDTOService {
 	@Transactional
 	public void removeNF(Inteligent inteligent) {
 		Notafiscal nf = inteligent.getNotafiscal();
+		if(nf!=null) {
 		nf.processado(false);
 		notafiscalService.save(nf);
+		}
 		inteligent.setAssociado(false);
 		inteligent.setNotafiscal(null);
 		inteligent.setConta(null);
