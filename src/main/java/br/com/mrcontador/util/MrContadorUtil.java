@@ -21,7 +21,7 @@ public class MrContadorUtil {
 	private static Random random = new Random();
 
 	private static Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-	private static DecimalFormat df = new DecimalFormat();
+	private static DecimalFormat df = new DecimalFormat("#,##0.00");
 
 	public static boolean isMoney(String value) {
 		if (value == null) {
@@ -101,9 +101,6 @@ public class MrContadorUtil {
 	}
 
 	public static String toMoney(BigDecimal value) {
-		df.setMaximumFractionDigits(2);
-		df.setMinimumFractionDigits(0);
-		df.setGroupingUsed(false);
 		return df.format(value);
 	}
 
