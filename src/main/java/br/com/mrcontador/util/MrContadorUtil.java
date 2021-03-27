@@ -22,6 +22,7 @@ public class MrContadorUtil {
 
 	private static Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 	private static DecimalFormat df = new DecimalFormat("#,##0.00");
+	private static DecimalFormat dfDominio = new DecimalFormat("###0.00");
 
 	public static boolean isMoney(String value) {
 		if (value == null) {
@@ -102,6 +103,10 @@ public class MrContadorUtil {
 
 	public static String toMoney(BigDecimal value) {
 		return df.format(value);
+	}
+	
+	public static String toMoneyExportDominio(BigDecimal value) {
+		return dfDominio.format(value);
 	}
 
 	public static String removeDots(String value) {

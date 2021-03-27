@@ -30,10 +30,19 @@ public class ExportDominio implements ExportLancamento {
 
 	private void process(StringBuilder builder, List<Inteligent> inteligents, Conta contaAgenciaBancaria) {
 		processFirstLine(builder, inteligents.get(0));
-		Map<String, List<Inteligent>> mapByNumDoc = inteligents.stream()
+		Map<String, List<Inteligent>> debitos = inteligents.stream().filter(i -> i.getExtrato().getExtDebito() != null)
 				.collect(Collectors.groupingBy(Inteligent::getNumerodocumento));
-		for (String key : mapByNumDoc.keySet()) {
-			List<Inteligent> list = mapByNumDoc.get(key);
+		Map<String, List<Inteligent>> creditos = inteligents.stream()
+				.filter(i -> i.getExtrato().getExtCredito() != null)
+				.collect(Collectors.groupingBy(Inteligent::getNumerodocumento));
+		processDebitos(builder, debitos, contaAgenciaBancaria);
+		processCreditos(builder, creditos, contaAgenciaBancaria);
+	}
+
+	private void processDebitos(StringBuilder builder, Map<String, List<Inteligent>> debitos,
+			Conta contaAgenciaBancaria) {
+		for (String key : debitos.keySet()) {
+			List<Inteligent> list = debitos.get(key);
 			String tipoInteligente = list.get(0).getTipoInteligent();
 			builder.append("|6000|");
 			builder.append(tipoInteligente);
@@ -41,13 +50,13 @@ public class ExportDominio implements ExportLancamento {
 			builder.append(System.getProperty("line.separator"));
 			switch (tipoInteligente) {
 			case "x":
-				processX(builder, list, contaAgenciaBancaria.getConConta());
+				processDebitoX(builder, list, contaAgenciaBancaria.getConConta());
 				break;
 			case "D":
-				processD(builder, list, contaAgenciaBancaria.getConConta());
+				processDebitoD(builder, list, contaAgenciaBancaria.getConConta());
 				break;
 			case "C":
-				processC(builder, list, contaAgenciaBancaria.getConConta());
+				processDebitoC(builder, list, contaAgenciaBancaria.getConConta());
 				break;
 			default:
 				break;
@@ -55,20 +64,43 @@ public class ExportDominio implements ExportLancamento {
 		}
 	}
 
-	private void processX(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+	private void processCreditos(StringBuilder builder, Map<String, List<Inteligent>> creditos,
+			Conta contaAgenciaBancaria) {
+		for (String key : creditos.keySet()) {
+			List<Inteligent> list = creditos.get(key);
+			String tipoInteligente = list.get(0).getTipoInteligent();
+			builder.append("|6000|");
+			builder.append(tipoInteligente);
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));
+			switch (tipoInteligente) {
+			case "x":
+				processCreditoX(builder, list, contaAgenciaBancaria.getConConta());
+				break;
+			case "D":
+				processCreditoD(builder, list, contaAgenciaBancaria.getConConta());
+				break;
+			case "C":
+				processCreditoC(builder, list, contaAgenciaBancaria.getConConta());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	private void processDebitoX(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
 		for (Inteligent _inteligent : inteligents) {
 			builder.append("|6100|");
 			builder.append(formatter.format(_inteligent.getDatalancamento()));
 			builder.append("|");
-			builder.append(conta);
-			builder.append("|");
 			builder.append(_inteligent.getConta().getConConta());
 			builder.append("|");
-			builder.append(_inteligent.getCredito() != null ? MrContadorUtil.toMoney(_inteligent.getCredito())
-					: MrContadorUtil.toMoney(_inteligent.getDebito().negate()));
+			builder.append(conta);
 			builder.append("|");
+			builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getDebito().negate()));
 			builder.append("|");
-			builder.append(_inteligent.getNotafiscal() != null ? "53" : "20");
+			// builder.append(_inteligent.getNotafiscal() != null ? "53" : "20");
 			builder.append("|");
 			builder.append(_inteligent.getHistoricofinal());
 			builder.append("||||");
@@ -76,20 +108,17 @@ public class ExportDominio implements ExportLancamento {
 		}
 	}
 
-	private void processC(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
-		Extrato extrato = inteligents.get(0).getExtrato();
+	private void processDebitoC(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+		Inteligent principal = inteligents.get(0);
+		Extrato extrato = principal.getExtrato();
 		builder.append("|6100|");
 		builder.append(formatter.format(extrato.getExtDatalancamento()));
-		builder.append("|");
+		builder.append("||");
 		builder.append(conta);
-		builder.append("|");
-		if(extrato.getExtDebito()!=null) {
-		builder.append(MrContadorUtil.toMoney(
+		builder.append("||");
+		builder.append(MrContadorUtil.toMoneyExportDominio(
 				extrato.getExtDebito().signum() < 0 ? extrato.getExtDebito().negate() : extrato.getExtDebito()));
-		}else {
-			builder.append(MrContadorUtil.toMoney(extrato.getExtCredito()));
-		}
-		builder.append("|");
+		builder.append("||");
 		builder.append(extrato.getExtHistorico());
 		builder.append("||||");
 		builder.append(System.getProperty("line.separator"));
@@ -98,15 +127,10 @@ public class ExportDominio implements ExportLancamento {
 			builder.append(formatter.format(_inteligent.getDatalancamento()));
 			builder.append("|");
 			builder.append(_inteligent.getConta().getConConta());
+			builder.append("||");
+			builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getDebito().negate()));
 			builder.append("|");
-			if (_inteligent.getDebito() != null) {
-				builder.append(MrContadorUtil.toMoney(_inteligent.getDebito().negate()));
-			} else {
-				builder.append(MrContadorUtil.toMoney(_inteligent.getCredito()));
-			}
-			builder.append("|");
-			builder.append("|");
-			builder.append(codHistorico(_inteligent));
+			// builder.append(codHistorico(_inteligent));
 			builder.append("|");
 			builder.append(_inteligent.getHistoricofinal());
 			builder.append("||||");
@@ -114,36 +138,122 @@ public class ExportDominio implements ExportLancamento {
 		}
 	}
 
-	private void processD(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
-		Extrato extrato = inteligents.get(0).getExtrato();
+	private void processDebitoD(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+		Inteligent principal = inteligents.get(0);
+		Extrato extrato = principal.getExtrato();
 		builder.append("|6100|");
 		builder.append(formatter.format(extrato.getExtDatalancamento()));
-		builder.append("|");
+		builder.append("||");
 		builder.append(conta);
 		builder.append("|");
-		if(extrato.getExtDebito()!=null) {
-		builder.append(MrContadorUtil.toMoney(
+		builder.append(MrContadorUtil.toMoneyExportDominio(
 				extrato.getExtDebito().signum() < 0 ? extrato.getExtDebito().negate() : extrato.getExtDebito()));
-		}else {
-			builder.append(MrContadorUtil.toMoney(extrato.getExtCredito()));
-		}
-		builder.append("|");
-		builder.append(extrato.getExtHistorico());
+
+		builder.append("||");
+		builder.append(principal.getHistoricofinal());
 		builder.append("||||");
 		builder.append(System.getProperty("line.separator"));
 		for (Inteligent _inteligent : inteligents) {
 			builder.append("|6100|");
 			builder.append(formatter.format(_inteligent.getDatalancamento()));
 			builder.append("|");
-			builder.append(conta);
-			builder.append("|");
-			if (_inteligent.getDebito() != null) {
-				builder.append(MrContadorUtil.toMoney(_inteligent.getDebito().negate()));
+			if (_inteligent.getTipoValor().contentEquals("DESCONTO")) {
+				builder.append("|");
+				builder.append(_inteligent.getConta().getConConta());
+				builder.append("|");
+				builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getCredito()));
 			} else {
-				builder.append(MrContadorUtil.toMoney(_inteligent.getCredito()));
+				builder.append(_inteligent.getConta().getConConta());
+				builder.append("||");
+				builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getDebito()));
 			}
 			builder.append("|");
-			builder.append(codHistorico(_inteligent));
+			// builder.append(codHistorico(_inteligent));
+			builder.append("|");
+			builder.append(_inteligent.getHistoricofinal());
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));
+		}
+	}
+
+	private void processCreditoX(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+		for (Inteligent _inteligent : inteligents) {
+			builder.append("|6100|");
+			builder.append(formatter.format(_inteligent.getDatalancamento()));
+			builder.append("|");
+			builder.append(conta);
+			builder.append("|");
+			builder.append(_inteligent.getConta().getConConta());
+			builder.append("|");
+			builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getCredito()));
+			builder.append("|");
+			// builder.append(_inteligent.getNotafiscal() != null ? "53" : "20");
+			builder.append("|");
+			builder.append(_inteligent.getHistoricofinal());
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));
+		}
+	}
+
+	private void processCreditoC(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+		Inteligent principal = inteligents.stream().filter(i -> i.getTipoInteligent().contentEquals("PRINCIPAL"))
+				.findFirst().get();
+		Extrato extrato = principal.getExtrato();
+		builder.append("|6100|");
+		builder.append(formatter.format(extrato.getExtDatalancamento()));
+		builder.append("|");
+		builder.append(conta);
+		builder.append("||");
+		builder.append(MrContadorUtil.toMoneyExportDominio(extrato.getExtCredito()));
+		builder.append("||");
+		builder.append(principal.getHistoricofinal());
+		builder.append("||||");
+		builder.append(System.getProperty("line.separator"));
+		for (Inteligent _inteligent : inteligents) {
+			builder.append("|6100|");
+			builder.append(formatter.format(_inteligent.getDatalancamento()));
+			if(_inteligent.getTipoValor().contentEquals("DESCONTO")) {
+			builder.append("|");
+			builder.append(_inteligent.getConta().getConConta());
+			builder.append("||");
+			builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getDebito().negate()));
+			}else {
+				builder.append("||");
+				builder.append(_inteligent.getConta().getConConta());
+				builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getCredito()));					
+			}
+			builder.append("|");
+			// builder.append(codHistorico(_inteligent));
+			builder.append("|");
+			builder.append(_inteligent.getHistoricofinal());
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));
+		}
+	}
+
+	private void processCreditoD(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+		Inteligent principal = inteligents.stream().filter(i -> i.getTipoInteligent().contentEquals("PRINCIPAL"))
+				.findFirst().get();
+		Extrato extrato = principal.getExtrato();
+		builder.append("|6100|");
+		builder.append(formatter.format(extrato.getExtDatalancamento()));
+		builder.append("|");
+		builder.append(conta);
+		builder.append("||");
+		builder.append(MrContadorUtil.toMoneyExportDominio(extrato.getExtCredito()));
+		builder.append("||");
+		builder.append(principal.getHistoricofinal());
+		builder.append("||||");
+		builder.append(System.getProperty("line.separator"));
+		for (Inteligent _inteligent : inteligents) {
+			builder.append("|6100|");
+			builder.append(formatter.format(_inteligent.getDatalancamento()));
+			builder.append("||");
+			builder.append(_inteligent.getConta().getConConta());
+			builder.append("|");
+			builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getCredito()));	
+			builder.append("|");
+			// builder.append(codHistorico(_inteligent));
 			builder.append("|");
 			builder.append(_inteligent.getHistoricofinal());
 			builder.append("||||");

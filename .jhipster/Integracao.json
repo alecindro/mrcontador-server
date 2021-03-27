@@ -1,0 +1,45 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "parceiro",
+      "otherEntityName": "parceiro",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "integracao"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "integrador",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoIntegracao",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dataInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "dataCadastro",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "habilitado",
+      "fieldType": "Boolean"
+    }
+  ],
+  "changelogDate": "20210324174238",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceClass",
+  "entityTableName": "integracao",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "no"
+}

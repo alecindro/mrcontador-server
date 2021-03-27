@@ -136,7 +136,7 @@ public class ComprovanteSicredi extends ComprovanteBanco {
 			}
 			if (line.contains("FGTS")) {
 				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setOldValue(OBS);
 				diffValue.setNewValue(line);
 				diffValue.setLine(i);
 				list.add(diffValue);

@@ -41,7 +41,7 @@ public class ExportDominioTest {
 		LongFilter p = new LongFilter();
 		p.setEquals(2L);
 		StringFilter f = new StringFilter();
-		f.setEquals("12021");
+		f.setEquals("22021");
 		BooleanFilter b = new BooleanFilter();
 		b.setEquals(true);
 		criteria.setParceiroId(p);

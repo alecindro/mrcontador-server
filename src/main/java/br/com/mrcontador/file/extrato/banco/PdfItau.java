@@ -34,6 +34,7 @@ public class PdfItau extends PdfParserExtrato {
 	private static final int VALUE_COLUMN = 141;
 	private static final int SALDO_COLUMN = 234;
 	private static final String PERIODO = "Extrato de";
+	private static final String PERIODO2 = "Periodo de";
 	private static final String EXTRATO= "EXTRATO";
 	private static Logger log = LoggerFactory.getLogger(PdfItau.class);
 	private DataItau dataItau;
@@ -72,10 +73,14 @@ public class PdfItau extends PdfParserExtrato {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.ITAU.getCodigoBancario());
 		boolean isExtrato  = false;
-		for (int i = 0; i < lineHeader; i++) {
+		for (int i = 0; i < lines.length; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if(line.contains(PERIODO)) {
 				String periodoInicial = StringUtils.substringBefore(StringUtils.substringAfter(line, PERIODO).trim(),StringUtils.SPACE);
+				dataItau = new DataItau(periodoInicial);
+			}
+			if(line.toUpperCase().contains(PERIODO2.toUpperCase())) {
+				String periodoInicial = StringUtils.substringBefore(StringUtils.substringAfter(line.toUpperCase(), PERIODO2.toUpperCase()).trim(),StringUtils.SPACE);
 				dataItau = new DataItau(periodoInicial);
 			}
 			if (line.contains(AGENCIA)) {

@@ -3,7 +3,6 @@ package br.com.mrcontador.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.mrcontador.domain.Agenciabancaria_;
 // for static metamodels
 import br.com.mrcontador.domain.Atividade_;
+import br.com.mrcontador.domain.Integracao_;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.domain.Parceiro_;
 import br.com.mrcontador.domain.Socio_;
@@ -203,16 +203,20 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
                 specification = specification.and(buildSpecification(criteria.getAgenciabancariaId(),
                     root -> root.join(Parceiro_.agenciabancarias, JoinType.LEFT).get(Agenciabancaria_.id)));
             }
+            if (criteria.getIntegracaoId() != null) {
+                specification = specification.and(buildSpecification(criteria.getIntegracaoId(),
+                    root -> root.join(Parceiro_.integracaos, JoinType.LEFT).get(Integracao_.id)));
+            }
             
             
         }
         return specification;
     }
-    
+  /*  
     private Specification<Parceiro> joinSocio() {
     	 return (root, query, builder) -> {
     		 return ((Join)root.fetch(Parceiro_.socios,JoinType.LEFT).getParent().fetch(Parceiro_.atividades,JoinType.LEFT).getParent().fetch(Parceiro_.agenciabancarias,JoinType.LEFT)).getOn();
     	 };
     }
-
+*/
 }

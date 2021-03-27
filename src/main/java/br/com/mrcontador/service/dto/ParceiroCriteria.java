@@ -94,6 +94,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
     private LongFilter socioId;
     
     private LongFilter agenciabancariaId;
+    
+    private LongFilter integracaoId;
 
     public ParceiroCriteria() {
     }
@@ -134,6 +136,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
         this.atividadeId = other.atividadeId == null ? null : other.atividadeId.copy();
         this.socioId = other.socioId == null ? null : other.socioId.copy();
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
+        this.integracaoId = other.integracaoId == null ? null : other.integracaoId.copy();
     }
 
     @Override
@@ -422,11 +425,17 @@ public class ParceiroCriteria implements Serializable, Criteria {
 
 	public void setAgenciabancariaId(LongFilter agenciabancariaId) {
 		this.agenciabancariaId = agenciabancariaId;
+	}	
+
+	public LongFilter getIntegracaoId() {
+		return integracaoId;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setIntegracaoId(LongFilter integracaoId) {
+		this.integracaoId = integracaoId;
 	}
+
+
 
 	@Override
     public boolean equals(Object o) {
@@ -472,7 +481,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
             Objects.equals(enabled, that.enabled) &&
             Objects.equals(atividadeId, that.atividadeId) &&
             Objects.equals(socioId, that.socioId) &&
-            Objects.equals(agenciabancariaId, that.agenciabancariaId);
+            Objects.equals(agenciabancariaId, that.agenciabancariaId) && 
+            Objects.equals(integracaoId, that.integracaoId);
     }
 
     @Override
@@ -512,7 +522,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
         enabled,
         atividadeId,
         socioId,
-        agenciabancariaId
+        agenciabancariaId,
+        integracaoId
         );
     }
 
@@ -555,6 +566,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
                 (atividadeId != null ? "atividadeId=" + atividadeId + ", " : "") +
                 (socioId != null ? "socioId=" + socioId + ", " : "") +
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
+                (integracaoId != null ? "integracaoId=" + integracaoId + ", " : "") +
             "}";
     }
 

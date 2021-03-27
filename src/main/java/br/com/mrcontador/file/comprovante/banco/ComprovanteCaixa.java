@@ -46,6 +46,26 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 		if (_lines == null || _lines.length < 7) {
 			throw new ComprovanteException("Comprovante está sem informação");
 		}
+		if (StringUtils.normalizeSpace(_lines[0]).trim().contains("Comprovante de Pagamento de Boleto")) {
+			return parsePagtoBoleto(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[0]).trim().contains("Comprovante de pagamento de GPS")) {
+			return parsePagtoGPS(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[0]).trim().contains("Comprovante de pagamento de FGTS")) {
+			return parseFGTS(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[0]).trim()
+				.contains("TEV")) {
+			return parsePagtoTEV(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[0]).trim()
+				.contains("concessionária")) {
+			return parsePagtoAgua(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[0]).trim().contains("tributos do governo")) {
+			return parseTributosFederais(_lines, agenciabancaria, parceiro);
+		}
 		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de Pagamento de Boleto")) {
 			return parsePagtoBoleto(_lines, agenciabancaria, parceiro);
 		}

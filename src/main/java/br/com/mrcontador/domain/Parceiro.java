@@ -159,6 +159,11 @@ public class Parceiro implements Serializable {
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Agenciabancaria> agenciabancarias;
     
+    @OneToMany(mappedBy = "parceiro", fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Set<Integracao> integracaos;
+    
     @ManyToOne
     @JoinColumn(name="despesa_juros")
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
@@ -584,6 +589,24 @@ public class Parceiro implements Serializable {
     public Parceiro addAgenciabancaria(Agenciabancaria agenciabancaria) {
         this.getAgenciabancarias().add(agenciabancaria);
         agenciabancaria.setParceiro(this);
+        return this;
+    }
+    
+    public Set<Integracao> getIntegracaos() {
+    	if(integracaos == null) {
+    		integracaos =  new HashSet<>();
+    	}
+        return integracaos;
+    }
+
+    public Parceiro integracaos(Set<Integracao> integracaos) {
+        this.integracaos = integracaos;
+        return this;
+    }
+
+    public Parceiro addIntegracao(Integracao integracao) {
+        this.getIntegracaos().add(integracao);
+        integracao.setParceiro(this);
         return this;
     }
 
