@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.tools.ant.taskdefs.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,9 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		}
 		if (StringUtils.normalizeSpace(_lines[1].trim()).contains("GPS")) {
 			return parseGPS(_lines, agenciabancaria, parceiro);
+		}
+		if (StringUtils.normalizeSpace(_lines[0].trim()).contains("Internet Banking Empresarial")) {
+			return parsePIX(_lines, agenciabancaria, parceiro);
 		}
 		throw new ComprovanteException("doc.not.comprovante");
 	}
@@ -569,6 +573,117 @@ public class ComprovanteSantander extends ComprovanteBanco {
 		list.add(diffValue2);
 		List<Comprovante> comprovantes = new ArrayList<>();
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
+		return comprovantes;
+	}
+	
+	private List<Comprovante> parsePIX(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
+			throws ComprovanteException {
+		List<DiffValue> list = new ArrayList<DiffValue>();
+		int i = 0;
+		for (String line : lines) {
+			line = StringUtils.normalizeSpace(line.trim());
+			if (line.contains("Agência:")) {
+				String lineA = StringUtils
+						.substringBefore(StringUtils.substringAfter(line, "Agência: "), StringUtils.SPACE).trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(AGENCIA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+				String lineB = StringUtils.substringAfter(line, "Conta:").trim();
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(CONTA);
+				diffValue2.setNewValue(lineB);
+				diffValue2.setLine(i);
+				list.add(diffValue2);
+			}
+			if (line.contains("Valor Pago")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_PGTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Valor original")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(VALOR_DOC);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Desconto/Abatimento")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DESCONTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Juros")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(JUROS);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Multa")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(MULTA);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("CPF/CNPJ")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				String[] values = lineA.split(StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(CNPJ_BEN);
+				diffValue.setNewValue(values[values.length-1]);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Data/")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				String[] values = lineA.split(StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_PGTO);
+				diffValue.setNewValue(values[1]);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("ID/Transação")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+1]).trim();
+				String[] values = lineA.split(StringUtils.SPACE);
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DOCUMENTO);
+				diffValue.setNewValue(values[0]);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("Dados do recebedor")) {
+				String lineA = StringUtils.normalizeSpace(lines[i+2]).trim();
+				String[] values = lineA.split(StringUtils.SPACE);
+				String last = values[values.length-2];
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(FORNECEDOR);
+				diffValue.setNewValue(StringUtils.substringBefore(lineA, last));
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			i = i+1;
+			
+		}
+		DiffValue diffValue = new DiffValue();
+		diffValue.setOldValue(OBS);
+		diffValue.setNewValue("PIX");
+		diffValue.setLine(i);
+		list.add(diffValue);
+		List<Comprovante> comprovantes = new ArrayList<>();
+		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.TRANSFERENCIA));
 		return comprovantes;
 	}
 

@@ -44,10 +44,7 @@ public class ExportDominio implements ExportLancamento {
 		for (String key : debitos.keySet()) {
 			List<Inteligent> list = debitos.get(key);
 			String tipoInteligente = list.get(0).getTipoInteligent();
-			builder.append("|6000|");
-			builder.append(tipoInteligente);
-			builder.append("||||");
-			builder.append(System.getProperty("line.separator"));
+		
 			switch (tipoInteligente) {
 			case "x":
 				processDebitoX(builder, list, contaAgenciaBancaria.getConConta());
@@ -69,19 +66,15 @@ public class ExportDominio implements ExportLancamento {
 		for (String key : creditos.keySet()) {
 			List<Inteligent> list = creditos.get(key);
 			String tipoInteligente = list.get(0).getTipoInteligent();
-			builder.append("|6000|");
-			builder.append(tipoInteligente);
-			builder.append("||||");
-			builder.append(System.getProperty("line.separator"));
 			switch (tipoInteligente) {
 			case "x":
-				processCreditoX(builder, list, contaAgenciaBancaria.getConConta());
+				processCreditoX(builder, list, contaAgenciaBancaria.getConConta(), tipoInteligente);
 				break;
 			case "D":
-				processCreditoD(builder, list, contaAgenciaBancaria.getConConta());
+				processCreditoD(builder, list, contaAgenciaBancaria.getConConta(), tipoInteligente);
 				break;
 			case "C":
-				processCreditoC(builder, list, contaAgenciaBancaria.getConConta());
+				processCreditoC(builder, list, contaAgenciaBancaria.getConConta(), tipoInteligente);
 				break;
 			default:
 				break;
@@ -91,6 +84,10 @@ public class ExportDominio implements ExportLancamento {
 
 	private void processDebitoX(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
 		for (Inteligent _inteligent : inteligents) {
+			builder.append("|6000|");
+			builder.append(_inteligent.getTipoInteligent());
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));
 			builder.append("|6100|");
 			builder.append(formatter.format(_inteligent.getDatalancamento()));
 			builder.append("|");
@@ -111,11 +108,15 @@ public class ExportDominio implements ExportLancamento {
 	private void processDebitoC(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
 		Inteligent principal = inteligents.get(0);
 		Extrato extrato = principal.getExtrato();
+		builder.append("|6000|");
+		builder.append(principal.getTipoInteligent());
+		builder.append("||||");
+		builder.append(System.getProperty("line.separator"));
 		builder.append("|6100|");
 		builder.append(formatter.format(extrato.getExtDatalancamento()));
 		builder.append("||");
 		builder.append(conta);
-		builder.append("||");
+		builder.append("|");
 		builder.append(MrContadorUtil.toMoneyExportDominio(
 				extrato.getExtDebito().signum() < 0 ? extrato.getExtDebito().negate() : extrato.getExtDebito()));
 		builder.append("||");
@@ -138,19 +139,9 @@ public class ExportDominio implements ExportLancamento {
 		}
 	}
 
-	private void processDebitoD(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
-		Inteligent principal = inteligents.get(0);
-		Extrato extrato = principal.getExtrato();
-		builder.append("|6100|");
-		builder.append(formatter.format(extrato.getExtDatalancamento()));
-		builder.append("||");
-		builder.append(conta);
-		builder.append("|");
-		builder.append(MrContadorUtil.toMoneyExportDominio(
-				extrato.getExtDebito().signum() < 0 ? extrato.getExtDebito().negate() : extrato.getExtDebito()));
-
-		builder.append("||");
-		builder.append(principal.getHistoricofinal());
+	private void processDebitoD(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {	
+		builder.append("|6000|");
+		builder.append(inteligents.get(0).getTipoInteligent());
 		builder.append("||||");
 		builder.append(System.getProperty("line.separator"));
 		for (Inteligent _inteligent : inteligents) {
@@ -165,7 +156,7 @@ public class ExportDominio implements ExportLancamento {
 			} else {
 				builder.append(_inteligent.getConta().getConConta());
 				builder.append("||");
-				builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getDebito()));
+				builder.append(MrContadorUtil.toMoneyExportDominio(_inteligent.getDebito().negate()));
 			}
 			builder.append("|");
 			// builder.append(codHistorico(_inteligent));
@@ -174,10 +165,28 @@ public class ExportDominio implements ExportLancamento {
 			builder.append("||||");
 			builder.append(System.getProperty("line.separator"));
 		}
+		Inteligent principal = inteligents.get(0);
+		Extrato extrato = principal.getExtrato();
+		builder.append("|6100|");
+		builder.append(formatter.format(extrato.getExtDatalancamento()));
+		builder.append("||");
+		builder.append(conta);
+		builder.append("|");
+		builder.append(MrContadorUtil.toMoneyExportDominio(
+				extrato.getExtDebito().signum() < 0 ? extrato.getExtDebito().negate() : extrato.getExtDebito()));
+
+		builder.append("||");
+		builder.append(principal.getHistoricofinal());
+		builder.append("||||");
+		builder.append(System.getProperty("line.separator"));
 	}
 
-	private void processCreditoX(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+	private void processCreditoX(StringBuilder builder, List<Inteligent> inteligents, Integer conta, String tipoInteligente) {
 		for (Inteligent _inteligent : inteligents) {
+			builder.append("|6000|");
+			builder.append(tipoInteligente);
+			builder.append("||||");
+			builder.append(System.getProperty("line.separator"));		
 			builder.append("|6100|");
 			builder.append(formatter.format(_inteligent.getDatalancamento()));
 			builder.append("|");
@@ -195,7 +204,11 @@ public class ExportDominio implements ExportLancamento {
 		}
 	}
 
-	private void processCreditoC(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+	private void processCreditoC(StringBuilder builder, List<Inteligent> inteligents, Integer conta, String tipoInteligente) {
+		builder.append("|6000|");
+		builder.append(tipoInteligente);
+		builder.append("||||");
+		builder.append(System.getProperty("line.separator"));		
 		Inteligent principal = inteligents.stream().filter(i -> i.getTipoInteligent().contentEquals("PRINCIPAL"))
 				.findFirst().get();
 		Extrato extrato = principal.getExtrato();
@@ -231,7 +244,11 @@ public class ExportDominio implements ExportLancamento {
 		}
 	}
 
-	private void processCreditoD(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
+	private void processCreditoD(StringBuilder builder, List<Inteligent> inteligents, Integer conta, String tipoInteligente) {
+		builder.append("|6000|");
+		builder.append(tipoInteligente);
+		builder.append("||||");
+		builder.append(System.getProperty("line.separator"));		
 		Inteligent principal = inteligents.stream().filter(i -> i.getTipoInteligent().contentEquals("PRINCIPAL"))
 				.findFirst().get();
 		Extrato extrato = principal.getExtrato();

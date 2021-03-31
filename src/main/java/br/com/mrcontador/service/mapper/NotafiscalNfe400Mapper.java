@@ -13,6 +13,9 @@ import br.com.mrcontador.util.MrContadorUtil;
 
 
 public class NotafiscalNfe400Mapper {
+	
+	private static final String CFOP_INTERESTADUAL = "6910";
+	private static final String CFOP_ESTADUAL = "5910";
 
 	public List<Notafiscal> toEntity(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe, Parceiro parceiro, boolean isEmitente) {
 		List<Notafiscal> list = new ArrayList<>();
@@ -43,7 +46,9 @@ public class NotafiscalNfe400Mapper {
 			nf.setNotDatasaida(nfe.getNota().getInfo().getIdentificacao().getDataHoraSaidaOuEntrada().toLocalDate());
 		}
 		nf.setNotDescricao(nfe.getNota().getInfo().getIdentificacao().getNaturezaOperacao());
-		nf.setNotValornota(new BigDecimal(nfe.getNota().getInfo().getTotal().getIcmsTotal().getValorTotalNFe()));
+		BigDecimal bonificacao = calculateBonificacao(nfe);
+		BigDecimal valorNota = new BigDecimal(nfe.getNota().getInfo().getTotal().getIcmsTotal().getValorTotalNFe());
+		nf.setNotValornota(valorNota.subtract(bonificacao));
 		if(!contemParcela) {
 			nf.setNotDataparcela(nf.getNotDatasaida());
 			nf.setNotParcela("001");
@@ -67,5 +72,17 @@ public class NotafiscalNfe400Mapper {
 		}
 		
 		return nf;
+	}
+	
+	private BigDecimal calculateBonificacao(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaProcessada nfe) {
+		BigDecimal result = BigDecimal.ZERO;
+		for(com.fincatto.documentofiscal.nfe400.classes.nota.NFNotaInfoItem nfNotaItem : nfe.getNota().getInfo().getItens()) {
+			if(nfNotaItem.getProduto()!= null && nfNotaItem.getProduto().getCfop() != null) {
+				if(nfNotaItem.getProduto().getCfop().contentEquals(CFOP_ESTADUAL) || nfNotaItem.getProduto().getCfop().contentEquals(CFOP_INTERESTADUAL)){
+						result = result.add(new BigDecimal(nfNotaItem.getProduto().getValorTotalBruto()));
+				}
+			}
+		}
+		return result;
 	}
 }

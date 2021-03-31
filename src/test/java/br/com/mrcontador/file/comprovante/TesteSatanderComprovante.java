@@ -26,7 +26,7 @@ public class TesteSatanderComprovante {
 	
 	public static void main(String[] args) throws Exception {
 		TesteSatanderComprovante teste = new TesteSatanderComprovante();
-		teste.caixa("/home/alecindro/Documents/drcontabil/docs/comprovantes/santander/GerarPDF_17052020191226-1-mesclado.pdf");
+		teste.teste1("C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\wtf sushi\\teste2\\COMPROVANTES\\02.2021\\comprovante (1).pdf");
 		//teste.teste1();
 		/*try (Stream<Path> filePathStream=Files.walk(Paths.get("/home/alecindro/Documents/drcontabil/docs/comprovantes/bradesco/bradesco.pdf"))) {
 		    filePathStream.forEach(filePath -> {
@@ -52,14 +52,15 @@ public class TesteSatanderComprovante {
 		agencia.setAgeAgencia("1651");
 		agencia.setAgeNumero("13-000889-8");
 		Parceiro parceiro = new Parceiro();
-		//parceiro.setParCnpjcpf("018.158.321/0001-84");		
+		parceiro.setParCnpjcpf("24.408.746/0001-05");		
 		agencia.setBanCodigobancario(BancoCodigoBancario.SANTANDER.getCodigoBancario());
-		String comprovante = stripper.getText(pages.get(4));
+		String comprovante = stripper.getText(document);
 		ComprovanteSantander cb = new ComprovanteSantander();
 		cb.parse(comprovante, agencia, parceiro);
 		
 		document.close();
 	}
+	
 	
 	private void caixa(String file) throws Exception {
 		Agenciabancaria agencia = new Agenciabancaria();
