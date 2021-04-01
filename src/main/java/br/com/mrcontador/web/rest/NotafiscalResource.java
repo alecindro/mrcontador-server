@@ -114,10 +114,11 @@ public class NotafiscalResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
     
-    @GetMapping("/notafiscals/near")
-    public ResponseEntity<List<Notafiscal>> findNotafiscals(@RequestParam("cnpj") Long cnpj, @RequestParam("valor") BigDecimal valor, @RequestParam("dataInicial") LocalDate dataInicial) {
-    	List<Notafiscal> notas = notafiscalService.find(String.valueOf(cnpj), valor, dataInicial);
-        return ResponseEntity.ok().body(notas);
+    @GetMapping("/notafiscals/all")
+    public ResponseEntity<List<Notafiscal>> findNotafiscals(NotafiscalCriteria criteria) {
+        log.debug("REST request to get Notafiscals by criteria: {}", criteria);
+        List<Notafiscal> page = notafiscalQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(page);
     }
 
     /**
