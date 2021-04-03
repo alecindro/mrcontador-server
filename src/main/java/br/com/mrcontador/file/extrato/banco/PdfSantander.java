@@ -35,7 +35,7 @@ public class PdfSantander extends PdfParserExtrato {
 	private static final int DATA_COLUMN = 21;
 	private static final int HISTORY_COLUMN = 45;
 	private static final int DCTO_COLUMN = 201;
-	private static final int VALUE_COLUMN = 226;
+	private int value_column;
 	private static final int SALDO_COLUMN = 246;
 	private static final String CONTAEMPRESARIAL = "Conta:";
 	private static final int DATA_EMPRESARIAL_COLUMN = 14;
@@ -71,15 +71,16 @@ public class PdfSantander extends PdfParserExtrato {
 
 	@Override
 	protected void readLine(String line, PdfData data, int numberRow) {
-		log.info("Linha {} ", numberRow);
-		String date = StringUtils.normalizeSpace(StringUtils.substring(line, DATA_COLUMN, HISTORY_COLUMN));
+		log.info("Linha {} ", numberRow);		
+		String date = StringUtils.normalizeSpace(line).split(StringUtils.SPACE)[0];
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(date), dateFormatter)));
-		String historico = StringUtils.normalizeSpace(StringUtils.substring(line, HISTORY_COLUMN, DCTO_COLUMN));
+		String valor = StringUtils.normalizeSpace(StringUtils.substring(line,value_column)).split(StringUtils.SPACE)[0];
+		String[] values = StringUtils.substring(line, 0, value_column).trim().split(StringUtils.SPACE);
+		String numDoc = StringUtils.normalizeSpace(values[values.length-1]);
+		String historico = StringUtils.normalizeSpace(StringUtils.substringBefore(StringUtils.substringAfter(line, date),numDoc));
 		data.setHistorico(historico.trim());
-		String numDoc = StringUtils.normalizeSpace(StringUtils.substring(line, DCTO_COLUMN, VALUE_COLUMN));
 		data.setDocumento(numDoc);
-		String valor = StringUtils.normalizeSpace(StringUtils.substring(line, VALUE_COLUMN, SALDO_COLUMN));
-		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
+			data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 		int signum = data.getValor().signum();
 		data.setTipoEntrada(TipoEntrada.CREDIT);
 		if (signum == -1) {
@@ -90,13 +91,14 @@ public class PdfSantander extends PdfParserExtrato {
 	
 	private void readLineEmpresarial(String line, PdfData data, int numberRow) {
 		log.info("Linha {} ", numberRow);
-		String date = StringUtils.normalizeSpace(StringUtils.substring(line, DATA_EMPRESARIAL_COLUMN, HISTORY_EMPRESARIAL_COLUMN));
+		String date = StringUtils.normalizeSpace(line).split(StringUtils.SPACE)[0];
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(date), dateFormatter)));
-		String historico = StringUtils.normalizeSpace(StringUtils.substring(line, HISTORY_EMPRESARIAL_COLUMN, DCTO_EMPRESARIAL_COLUMN));
+		String valor = StringUtils.normalizeSpace(StringUtils.substring(line,value_column).split(StringUtils.SPACE)[0]);
+		String[] values = StringUtils.substring(line, 0, value_column).trim().split(StringUtils.SPACE);
+		String numDoc = StringUtils.normalizeSpace(values[values.length-1]);
+		String historico = StringUtils.normalizeSpace(StringUtils.substringBefore(StringUtils.substringAfter(line, date),numDoc));
 		data.setHistorico(historico.trim());
-		String numDoc = StringUtils.normalizeSpace(StringUtils.substring(line, DCTO_EMPRESARIAL_COLUMN, VALUE_EMPRESARIAL_COLUMN));
 		data.setDocumento(numDoc);
-		String valor = StringUtils.normalizeSpace(StringUtils.substring(line, VALUE_EMPRESARIAL_COLUMN, SALDO_EMPRESARIAL_COLUMN));
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 		int signum = data.getValor().signum();
 		data.setTipoEntrada(TipoEntrada.CREDIT);
@@ -117,6 +119,9 @@ public class PdfSantander extends PdfParserExtrato {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
+			if(lines[i].toUpperCase().contains("VALOR")) {
+				value_column = lines[i].toUpperCase().indexOf("VALOR");
+			}
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA)) {
 				dto.setAgencia(StringUtils.substringBefore(StringUtils.substringAfter(line, AGENCIA), CONTA).trim());
@@ -137,6 +142,9 @@ public class PdfSantander extends PdfParserExtrato {
 		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		boolean isExtrato = false;
 		for (int i = 0; i < lineHeader; i++) {
+			if(lines[i].toUpperCase().contains("VALOR")) {
+				value_column = lines[i].toUpperCase().indexOf("VALOR");
+			}
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA)) {
 				dto.setAgencia(StringUtils.substringBefore(StringUtils.substringAfter(line, AGENCIA), CONTAEMPRESARIAL).trim());
@@ -154,9 +162,9 @@ public class PdfSantander extends PdfParserExtrato {
 
 	@Override
 	protected List<OfxData> parseBody(String[] lines, int lineHeader) {
-		if(isempresarial) {
+		/*if(isempresarial) {
 			return parseBodyEmpresarial(lines, getLineHeader());
-		}
+		}*/
 		List<OfxData> datas = new ArrayList<>();
 		for (int i = lineHeader; i < lines.length; i++) {
 			String line = lines[i];
@@ -164,12 +172,19 @@ public class PdfSantander extends PdfParserExtrato {
 			if (StringUtils.normalizeSpace(line).contains(SALDO_ANTERIOR)) {
 				continue;
 			}
-
+			if(StringUtils.normalizeSpace(line).contains("Saldo de Conta Corrente")) {
+				break;
+			}
+			String _data = StringUtils.normalizeSpace(line).split(StringUtils.SPACE)[0];
 			if (!StringUtils.isNumeric(StringUtils
-					.normalizeSpace(StringUtils.remove(StringUtils.substring(line, DATA_COLUMN, HISTORY_COLUMN), "/")))
-					|| StringUtils.substring(line, DATA_COLUMN, HISTORY_COLUMN).isBlank()) {
+					.normalizeSpace(StringUtils.remove(_data, "/")))
+					|| _data.isBlank()) {
 				continue;
 			}
+			if(StringUtils.normalizeSpace(line).toUpperCase().contains("INTERNET BANKING")) {
+				continue;
+			}
+		
 			readLine(line, data, i);
 			datas.add(data);
 		}
