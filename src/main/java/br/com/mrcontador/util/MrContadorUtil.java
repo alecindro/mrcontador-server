@@ -106,7 +106,7 @@ public class MrContadorUtil {
 	}
 	
 	public static String toMoneyExportDominio(BigDecimal value) {
-		return dfDominio.format(value);
+		return dfDominio.format(value).replace(".", ",");
 	}
 
 	public static String removeDots(String value) {
