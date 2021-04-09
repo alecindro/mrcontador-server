@@ -299,7 +299,21 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
 			if (line.contains("Conta de débito:")) {
-				String[] values = StringUtils.substringAfter(line, "Conta de débito:").split("\\|");
+				String conta = "";
+				String[] values = null;
+				if(line.contains("\\|")) {
+				values = StringUtils.substringAfter(line, "Conta de débito:").split("\\|");
+				}else {
+					if(line.contains("/")) {
+						values = StringUtils.substringAfter(line, "Conta de débito:").split("/");
+					}
+				}
+				if(values.length == 2) {
+				  conta = values[1].split("\\.")[1];	
+				}
+				if(values.length == 3) {
+					conta = values[2];
+				}
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(AGENCIA);
 				diffValue.setNewValue(values[0].trim());
@@ -307,7 +321,7 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 				list.add(diffValue);
 				DiffValue diffValue2 = new DiffValue();
 				diffValue2.setOldValue(CONTA);
-				diffValue2.setNewValue(values[2].trim());
+				diffValue2.setNewValue(conta.trim());
 				diffValue2.setLine(i);
 				list.add(diffValue2);
 			}

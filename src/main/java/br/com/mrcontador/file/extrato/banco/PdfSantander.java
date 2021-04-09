@@ -120,7 +120,7 @@ public class PdfSantander extends PdfParserExtrato {
 		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		for (int i = 0; i < lineHeader; i++) {
 			if(lines[i].toUpperCase().contains("VALOR")) {
-				value_column = lines[i].toUpperCase().indexOf("VALOR");
+				value_column = lines[i].toUpperCase().indexOf("VALOR")-1;
 			}
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA)) {
@@ -143,7 +143,7 @@ public class PdfSantander extends PdfParserExtrato {
 		boolean isExtrato = false;
 		for (int i = 0; i < lineHeader; i++) {
 			if(lines[i].toUpperCase().contains("VALOR")) {
-				value_column = lines[i].toUpperCase().indexOf("VALOR");
+				value_column = lines[i].toUpperCase().indexOf("VALOR")-1;
 			}
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains(AGENCIA)) {
