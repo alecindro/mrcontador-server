@@ -1,8 +1,12 @@
 package br.com.mrcontador.file.extrato.banco;
 
+import java.util.List;
+
 import br.com.mrcontador.domain.Agenciabancaria;
+import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class OfxSicred extends OfxParserBanco{
@@ -33,5 +37,11 @@ public class OfxSicred extends OfxParserBanco{
 		}
 
 	}
+	
+	@Override
+	public void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			extratoService.callExtratoSicred(extratos,parceiroId);
+   }
 
 }

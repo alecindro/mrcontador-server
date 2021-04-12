@@ -1,8 +1,12 @@
 package br.com.mrcontador.file.extrato.banco;
 
+import java.util.List;
+
 import com.webcohesion.ofx4j.domain.data.banking.BankAccountDetails;
 
+import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
+import br.com.mrcontador.service.ExtratoService;
 
 public class OfxItau extends OfxParserBanco{
 	
@@ -23,5 +27,11 @@ public class OfxItau extends OfxParserBanco{
 		}
 		return dto;
 	}
+	
+	@Override
+	public void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			extratoService.callExtratoItau(extratos,parceiroId);
+   }
 
 }

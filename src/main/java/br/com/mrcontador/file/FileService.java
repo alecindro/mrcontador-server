@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.domain.TipoAgencia;
@@ -15,22 +14,22 @@ import br.com.mrcontador.erros.AgenciaException;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.comprovante.ParserComprovanteFacade;
 import br.com.mrcontador.file.extrato.ExtratoPdfFacade;
+import br.com.mrcontador.file.extrato.OfxParserfacade;
 import br.com.mrcontador.file.notafiscal.XmlParserDefault;
 import br.com.mrcontador.file.planoconta.PdfParserPlanoConta;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
-import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.FileDTO;
 import br.com.mrcontador.service.file.S3Service;
 
 @Service
-public class FileService {
+public class FileService {	
 
 	@Autowired
 	private PdfParserPlanoConta pdfParserPlanoConta;
 	@Autowired
 	private XmlParserDefault xmlParserDefault;
-	//@Autowired
-	//private OfxParserDefault ofxParserDefault;
+	@Autowired
+	private OfxParserfacade ofxParserDefault;
 	@Autowired
 	private ExtratoPdfFacade pdfParserDefault;
 	@Autowired
@@ -58,6 +57,8 @@ public class FileService {
 			case "xml":
 				break;
 			case "octet-stream":
+				break;
+			case "form-data":
 				break;
 			default:
 				throw new MrContadorException("file.no.implemented.error", fileDTO.getContentType());
@@ -90,7 +91,7 @@ public class FileService {
 		validateConta(agenciabancaria);
 		String media = com.google.common.net.MediaType.parse(contentType).subtype();
 		if (media != "pdf") {
-			throw new MrContadorException("ofx.notextrato");
+			return ofxParserDefault.process(fileDTO, agenciabancaria);
 		}
 		if (media == "pdf") {
 			return pdfParserDefault.process(fileDTO, agenciabancaria);

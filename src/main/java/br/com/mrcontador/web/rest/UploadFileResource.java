@@ -124,7 +124,7 @@ public class UploadFileResource {
 			throw new MrContadorException("extrato.imported");
 		}
 	}
-
+	
 	@PostMapping("/upload/comprovante")
 	public ResponseEntity<String> uploadComprovante(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro,

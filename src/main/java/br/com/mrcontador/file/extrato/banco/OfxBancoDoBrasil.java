@@ -15,8 +15,10 @@ import com.webcohesion.ofx4j.domain.data.banking.BankingResponseMessageSet;
 import com.webcohesion.ofx4j.io.AggregateUnmarshaller;
 import com.webcohesion.ofx4j.io.OFXParseException;
 
+import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.file.extrato.dto.ListOfxDto;
 import br.com.mrcontador.file.extrato.dto.OfxDTO;
+import br.com.mrcontador.service.ExtratoService;
 
 public class OfxBancoDoBrasil extends OfxParserBanco{
 	
@@ -40,6 +42,12 @@ public class OfxBancoDoBrasil extends OfxParserBanco{
 				listOfxDto.add(dto);
 			}
 	}
+	
+	@Override
+	public void callExtrato(ExtratoService extratoService, List<Extrato> extratos,
+			Long parceiroId) {
+			extratoService.callExtratoBB(extratos,parceiroId);
+   }
 
 
 }
