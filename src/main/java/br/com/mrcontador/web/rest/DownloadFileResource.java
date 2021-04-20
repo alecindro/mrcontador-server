@@ -147,8 +147,8 @@ public class DownloadFileResource {
 		Agenciabancaria agencia = agenciabancariaService.findOne(agenciabancariaId).get();
 		Parceiro parceiro = parceiroService.findOne(parceiroId).get();
 		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.DOMINIO_SISTEMAS);
-		String result = lancamento.process(inteligents, agencia.getConta());
-		Resource resource = new ByteArrayResource(result.getBytes());
+		byte[] result = lancamento.process(inteligents, agencia.getConta());
+		Resource resource = new ByteArrayResource(result);
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/plain"))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"lancamento_" + org.apache.commons.lang3.StringUtils.deleteWhitespace(parceiro.getParRazaosocial())+"_"+periodo + ".txt\"")
 				.body(resource);

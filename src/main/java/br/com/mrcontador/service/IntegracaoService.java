@@ -66,6 +66,7 @@ public class IntegracaoService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Integracao : {}", id);
         integracaoRepository.deleteById(id);

@@ -85,6 +85,7 @@ public class NotafiscalService {
 	}
 
 
+	@Transactional
 	public void callProcessaNotafiscal(Long notaId) {
 			notafiscalRepository.callProcessaNotafiscal(notaId);
 	}
@@ -98,10 +99,12 @@ public class NotafiscalService {
 		return notafiscalRepository.find(cnpj, valor, valorFinal, datainicial, datafinal);
 	}
 
+	@Transactional
 	public void updateArquivo(Long id, Long arquivoId, Long arquivoPdfId) {
 		notafiscalRepository.updateArquivo(id, arquivoId, arquivoPdfId);
 	}
 	
+	@Transactional
 	public void callProcessaNotafiscalGeral(Long parceiroId, LocalDate date) {
 		notafiscalRepository.callProcessaNotafiscalGeral(parceiroId, date);
 	}

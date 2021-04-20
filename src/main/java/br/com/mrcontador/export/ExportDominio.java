@@ -1,5 +1,6 @@
 package br.com.mrcontador.export;
 
+import java.nio.charset.Charset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,10 @@ public class ExportDominio implements ExportLancamento {
 
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	public String process(List<Inteligent> inteligents, Conta contaAgenciaBancaria) {
+	public byte[] process(List<Inteligent> inteligents, Conta contaAgenciaBancaria) {
 		StringBuilder builder = new StringBuilder();
 		process(builder, inteligents, contaAgenciaBancaria);
-		return builder.toString();
+		return builder.toString().toUpperCase().getBytes(Charset.forName("ISO-8859-1"));
 	}
 
 	private void processFirstLine(StringBuilder builder, Inteligent inteligent) {

@@ -53,10 +53,10 @@ public class ExportDominioTest {
 		List<Inteligent> list = service.findByCriteria(criteria);
 		ExportDominio ex = new ExportDominio();
 		Agenciabancaria agencia = agService.findOne(6L).get();
-		String result = ex.process(list,agencia.getConta());
+		byte[] result = ex.process(list,agencia.getConta());
 		try {
 		      FileWriter myWriter = new FileWriter("C:\\java\\testes\\exportacao_dominio.txt");
-		      myWriter.write(result);
+		      myWriter.write(new String(result));
 		      myWriter.close();
 		      System.out.println("Successfully wrote to the file.");
 		    } catch (IOException e) {

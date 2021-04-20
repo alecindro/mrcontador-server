@@ -78,6 +78,7 @@ public class ComprovanteService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Comprovante : {}", id);
         comprovanteRepository.deleteById(id);
@@ -87,46 +88,47 @@ public class ComprovanteService {
     	return comprovanteRepository.saveAll(comprovantes);
     }
     
+    @Transactional
     public void callComprovanteBB(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteBB(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteCEF(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteCEF(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteCredicrea(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteCredicrea(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteItau(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteItau(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteSafra(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteSafra(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteSantander(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteSantander(parceiroId,agenciabancariaId,periodo);
     }
-    
-    
+    @Transactional
     public void callComprovanteUnicred(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteUnicred(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteBradesco(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteBradesco(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteSicredi(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteSicred(parceiroId,agenciabancariaId,periodo);
     }
-    
+    @Transactional
     public void callComprovanteSicoob(Long parceiroId, Long agenciabancariaId, String periodo) {
     	comprovanteRepository.callComprovanteSicoob(parceiroId,agenciabancariaId,periodo);
     }
+    @Transactional
 	public void updateArquivo(Long id, Long arquivoId) {
 		comprovanteRepository.updateArquivo(id, arquivoId);
 	}
