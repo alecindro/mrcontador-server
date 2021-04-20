@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -197,8 +196,8 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Data/hora da operação:")) {
-				String value = StringUtils.substringAfter(line, "Data/hora da operação:").trim().split("\\s")[0];
+			if (line.contains("Data de Efetivação")) {
+				String value = lines[i+1].trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DATA_PGTO);
 				diffValue.setNewValue(value);
