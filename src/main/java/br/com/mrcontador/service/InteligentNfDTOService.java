@@ -29,11 +29,12 @@ public class InteligentNfDTOService {
 		}
 		if(!inteligentNfDTO.getInteligents().isEmpty()) {
 			inteligentService.saveAll(inteligentNfDTO.getInteligents());
-			Inteligent inteligent = inteligentNfDTO.getInteligents().get(0);
-			Long parceiroId = inteligent.getParceiro().getId();
-			String periodo = inteligent.getPeriodo();
-			contaService.callContaFunction(parceiroId, periodo);
+			for(Inteligent inteligent : inteligentNfDTO.getInteligents()) {
+				contaService.callContaFunctionInteligent(inteligent.getId());	
+			}
+			
 		}
+	
 	}
 	
 	@Transactional

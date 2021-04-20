@@ -50,4 +50,8 @@ public interface ContaRepository extends JpaRepository<Conta, Long>, JpaSpecific
 		
 		@Query(nativeQuery = true, value = "select processa_conta(?,?)")
 		int callContaFunction(Long parceiroId,String periodo);
+		
+		@Query(nativeQuery = true, value = "select processa_contaInteligent(?)")
+		int callContaFunctionInteligent(Long inteligentId);
+		
 }

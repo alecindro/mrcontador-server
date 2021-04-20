@@ -113,6 +113,10 @@
     <sqlFile path="config/liquibase/changelog/extrato_functions/extrato_functionsicred.sql" splitStatements="false" relativeToChangelogFile="false"/>
 </changeSet>
 <include file="config/liquibase/changelog/integracao.sql" relativeToChangelogFile="false"/>
+
+<changeSet author="alecindro" id="58">
+    <sqlFile path="config/liquibase/changelog/contaInteligentFunction.sql" splitStatements="false" relativeToChangelogFile="false"/>
+</changeSet>
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

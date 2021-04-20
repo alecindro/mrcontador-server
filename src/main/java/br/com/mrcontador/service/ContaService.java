@@ -86,4 +86,8 @@ public class ContaService {
     	return contaRepository.callContaFunction(parceiroId, periodo);
     }
     
+    public int callContaFunctionInteligent(Long inteligentId) {
+    	return contaRepository.callContaFunctionInteligent(inteligentId);
+    }
+    
 }

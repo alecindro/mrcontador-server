@@ -6,7 +6,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -134,7 +136,7 @@ public class PdfSicredi extends PdfParserExtrato{
 
 	@Override
 	protected List<OfxData> parseBody(String[] lines, int lineHeader) {
-		List<OfxData> datas = new ArrayList<>();
+		Set<OfxData> datas = new HashSet<>();
 		boolean type2 = true;
 		String[] cols = StringUtils.normalizeSpace(lines[0]).split(StringUtils.SPACE);
 		if(cols.length==2 && cols[1].toUpperCase().contentEquals("SICREDI") ) {
@@ -154,7 +156,7 @@ public class PdfSicredi extends PdfParserExtrato{
 			}
 			
 		}
-		return datas;
+		return new ArrayList<OfxData>(datas);
 	}
 
 }
