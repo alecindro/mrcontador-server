@@ -300,7 +300,7 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 			if (line.contains("Conta de débito:")) {
 				String conta = "";
 				String[] values = null;
-				if(line.contains("\\|")) {
+				if(line.contains("|")) {
 				values = StringUtils.substringAfter(line, "Conta de débito:").split("\\|");
 				}else {
 					if(line.contains("/")) {
