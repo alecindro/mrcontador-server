@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.tools.ant.taskdefs.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
