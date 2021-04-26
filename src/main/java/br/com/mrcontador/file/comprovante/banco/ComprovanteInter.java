@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -270,7 +272,13 @@ public class ComprovanteInter extends ComprovanteBanco {
 	@Override
 	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service,
 			ExtratoService extratoService) {
-		// TODO Auto-generated method stub
+		if(!comprovantes.isEmpty()) {
+			Comprovante comprovante = comprovantes.stream().findFirst().get();
+			Long parceiroId = comprovante.getParceiro().getId();
+			Long agenciabancariaId = comprovante.getAgenciabancaria().getId();
+			Set<String> periodos = comprovantes.stream().map(c -> c.getPeriodo()).collect(Collectors.toSet());
+			periodos.forEach(p -> service.callComprovanteInter(parceiroId, agenciabancariaId, p));
+		}
 
 	}
 

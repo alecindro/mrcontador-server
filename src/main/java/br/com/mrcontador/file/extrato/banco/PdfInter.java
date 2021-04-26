@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.mrcontador.domain.BancoCodigoBancario;
 import br.com.mrcontador.domain.Extrato;
@@ -23,22 +25,22 @@ import br.com.mrcontador.util.MrContadorUtil;
 
 public class PdfInter extends PdfParserExtrato {
 	
+	private static Logger log = LoggerFactory.getLogger(PdfInter.class);
+
 	protected DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	public PdfInter() throws IOException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected void callExtrato(ExtratoService extratoService, List<Extrato> extratos, Long parceiroId) {
-		// TODO Auto-generated method stub
-		
+		log.info("Processando callExtrato");
+		extratoService.callExtratoCredicrea(extratos, parceiroId);
 	}
 
 	@Override
 	protected int getLineHeader() {
-		// TODO Auto-generated method stub
 		return 7;
 	}
 

@@ -129,6 +129,10 @@ public class ComprovanteService {
     	comprovanteRepository.callComprovanteSicoob(parceiroId,agenciabancariaId,periodo);
     }
     @Transactional
+    public void callComprovanteInter(Long parceiroId, Long agenciabancariaId, String periodo) {
+    	comprovanteRepository.callComprovanteInter(parceiroId,agenciabancariaId,periodo);
+    }
+    @Transactional
 	public void updateArquivo(Long id, Long arquivoId) {
 		comprovanteRepository.updateArquivo(id, arquivoId);
 	}
