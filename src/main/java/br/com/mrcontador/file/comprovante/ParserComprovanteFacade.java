@@ -59,8 +59,8 @@ public class ParserComprovanteFacade {
 				
 				try {
 					List<Comprovante> _comprovantes = parser.parse(pddComprovante.getComprovante(), agencia, fileDTO.getParceiro());
-					_comprovantes.forEach(c-> c.setPeriodo(MrContadorUtil.periodo(c.getComDatapagamento())));
 					if (_comprovantes != null && !_comprovantes.isEmpty()) {
+						_comprovantes.forEach(c-> c.setPeriodo(MrContadorUtil.periodo(c.getComDatapagamento())));
 						for(Comprovante _comprovante : _comprovantes){
 							try {
 							_comprovante.setArquivo(arquivo);	

@@ -6,6 +6,7 @@ import br.com.mrcontador.file.comprovante.banco.ComprovanteBB;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteBradesco;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteCaixa;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteCredCrea;
+import br.com.mrcontador.file.comprovante.banco.ComprovanteInter;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteItau;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSantander;
 import br.com.mrcontador.file.comprovante.banco.ComprovanteSicoob;
@@ -37,6 +38,8 @@ public class ParserComprovanteFactory {
 			return new ComprovanteUnicred();
 		case SICRED:
 			return new ComprovanteSicredi();
+		case INTER:
+			return new ComprovanteInter();
 		default:
 			throw new MrContadorException("parsercomprovante.notfound", codigoBancario);
 

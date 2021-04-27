@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,11 +30,13 @@ import br.com.mrcontador.file.planoconta.PdfReaderPreserveSpace;
 import br.com.mrcontador.service.ComprovanteService;
 import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.dto.FileDTO;
+import br.com.mrcontador.util.MrContadorUtil;
 import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
 
 public class ComprovanteInter extends ComprovanteBanco {
 
 	private static Logger log = LoggerFactory.getLogger(ComprovanteInter.class);
+	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	@Override
 	public List<Comprovante> parse(String comprovante, Agenciabancaria agenciabancaria, Parceiro parceiro)
@@ -54,7 +57,7 @@ public class ComprovanteInter extends ComprovanteBanco {
 			if (line.contains("Agendamento")) {
 				return null;
 			}
-			
+
 		}
 		throw new ComprovanteException("doc.not.comprovante");
 	}
@@ -117,7 +120,7 @@ public class ComprovanteInter extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			i = i+1;
+			i = i + 1;
 
 		}
 		DiffValue diffValue = new DiffValue();
@@ -132,7 +135,7 @@ public class ComprovanteInter extends ComprovanteBanco {
 
 	private List<Comprovante> parsePagamento(String[] lines, Agenciabancaria agenciabancaria, Parceiro parceiro)
 			throws ComprovanteException {
-	List<DiffValue> list = new ArrayList<DiffValue>();
+		List<DiffValue> list = new ArrayList<DiffValue>();
 		int i = 0;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim());
@@ -151,24 +154,23 @@ public class ComprovanteInter extends ComprovanteBanco {
 				list.add(diffValue2);
 			}
 			if (line.contains("débito:")) {
-				String[] values = line.split(StringUtils.SPACE);
-				if(values.length>3 && !StringUtils.isEmpty(values[3])) {
+				String value = StringUtils.reverse(StringUtils.reverse(line).split(StringUtils.SPACE)[0]);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DATA_PGTO);
-				diffValue.setNewValue(values[3]);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.contains("vencimento:")) {
+				String value = StringUtils.reverse(StringUtils.reverse(line).split(StringUtils.SPACE)[0]);
+				if(MrContadorUtil.isDate(value, dateFormatter)) {
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(DATA_VCTO);
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
 				}
-			}
-			if (line.contains("vencimento:")) {
-				String[] values = line.split(StringUtils.SPACE);
-				if (values.length>3 && !StringUtils.isEmpty(values[3])) {
-					DiffValue diffValue = new DiffValue();
-					diffValue.setOldValue(DATA_VCTO);
-					diffValue.setNewValue(values[3]);
-					diffValue.setLine(i);
-					list.add(diffValue);
-				}
+
 			}
 			if (line.contains("Documento:")) {
 				String documento = StringUtils.normalizeSpace(StringUtils.substringAfter(line, "Documento:"));
@@ -180,38 +182,33 @@ public class ComprovanteInter extends ComprovanteBanco {
 			}
 
 			if (line.contains("desconto:")) {
-				String[] values = line.split(StringUtils.SPACE);
-				if(values.length>2 && !StringUtils.isEmpty(values[2])) {
+				String value = StringUtils.reverse(StringUtils.reverse(line).split(StringUtils.SPACE)[0]);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DESCONTO);
-				diffValue.setNewValue(values[2]);
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
-				}
 			}
 			if (line.contains("acrescimo:")) {
-				String[] values = line.split(StringUtils.SPACE);
-				if(values.length>2 && !StringUtils.isEmpty(values[2])) {
+				String value = StringUtils.reverse(StringUtils.reverse(line).split(StringUtils.SPACE)[0]);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(JUROS);
-				diffValue.setNewValue(values[2]);
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
-				}
 			}
 			if (line.contains("total:")) {
-				String[] values = line.split(StringUtils.SPACE);
-				if(values.length>2 && !StringUtils.isEmpty(values[2])) {
+				String value = StringUtils.reverse(StringUtils.reverse(line).split(StringUtils.SPACE)[0]);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
-				diffValue.setNewValue(values[2]);
+				diffValue.setNewValue(value);
 				diffValue.setLine(i);
 				list.add(diffValue);
-				}
 			}
 			if (line.contains("Descrição:")) {
 				String descricao = StringUtils.substringAfter(line, "Descrição:");
-				if(StringUtils.isEmpty(descricao)) {
+				String favorecido = StringUtils.substringAfter(StringUtils.normalizeSpace(lines[i + 1]), "Favorecido:");
+				if (StringUtils.isEmpty(descricao)) {
 					descricao = "Comprovante Pagamento";
 				}
 				DiffValue diffValue = new DiffValue();
@@ -219,18 +216,16 @@ public class ComprovanteInter extends ComprovanteBanco {
 				diffValue.setNewValue(descricao);
 				diffValue.setLine(i);
 				list.add(diffValue);
-			}
-			if(line.contains("Favorecido:")) {
-				String descricao = StringUtils.substringAfter(line, "Favorecido:");
-				if(!StringUtils.isEmpty(descricao)) {
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(FORNECEDOR);
-				diffValue.setNewValue(descricao);
-				diffValue.setLine(i);
-				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(FORNECEDOR);
+				diffValue2.setNewValue(descricao);
+				diffValue2.setLine(i + 1);
+				list.add(diffValue2);
+				if (!StringUtils.isEmpty(favorecido)) {
+					diffValue2.setNewValue(favorecido);
 				}
 			}
-			i = i+1;
+				i = i + 1;
 		}
 		List<Comprovante> comprovantes = new ArrayList<>();
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.TITULO));
@@ -272,7 +267,7 @@ public class ComprovanteInter extends ComprovanteBanco {
 	@Override
 	public void callFunction(List<Comprovante> comprovantes, ComprovanteService service,
 			ExtratoService extratoService) {
-		if(!comprovantes.isEmpty()) {
+		if (!comprovantes.isEmpty()) {
 			Comprovante comprovante = comprovantes.stream().findFirst().get();
 			Long parceiroId = comprovante.getParceiro().getId();
 			Long agenciabancariaId = comprovante.getAgenciabancaria().getId();

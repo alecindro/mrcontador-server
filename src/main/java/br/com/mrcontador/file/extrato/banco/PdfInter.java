@@ -24,7 +24,7 @@ import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.util.MrContadorUtil;
 
 public class PdfInter extends PdfParserExtrato {
-	
+
 	private static Logger log = LoggerFactory.getLogger(PdfInter.class);
 
 	protected DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -62,31 +62,52 @@ public class PdfInter extends PdfParserExtrato {
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dataLancamento), dateFormatter)));
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 		data.setTipoEntrada(TipoEntrada.CREDIT);
-		if(signal.contains("-")) {
+		if (signal.contains("-")) {
 			data.setTipoEntrada(TipoEntrada.DEBIT);
 			data.setValor(data.getValor().negate());
 		}
-		
+
+	}
+
+	private void readLines(String line, String line2, PdfData data, int numberRow) {
+		String reverse = StringUtils.reverse(line);
+		String[] values = reverse.split(StringUtils.SPACE);
+		String valor = StringUtils.reverse(values[2]);
+		String signal = StringUtils.reverse(values[3]);
+		String dataLancamento = line.split(StringUtils.SPACE)[0];
+		String lancamento = StringUtils.substringBefore(StringUtils.remove(line, dataLancamento), signal);
+		if (StringUtils.isAllBlank(lancamento)) {
+			lancamento = StringUtils.normalizeSpace(line2);
+		}
+		data.setHistorico(lancamento);
+		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dataLancamento), dateFormatter)));
+		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
+		data.setTipoEntrada(TipoEntrada.CREDIT);
+		if (signal.contains("-")) {
+			data.setTipoEntrada(TipoEntrada.DEBIT);
+			data.setValor(data.getValor().negate());
+		}
+
 	}
 
 	@Override
 	protected OfxDTO parseDataBanco(String[] lines, int lineHeader) {
 		OfxDTO dto = new OfxDTO();
-		dto.setBanco(BancoCodigoBancario.CREDCREA.getCodigoBancario());
+		dto.setBanco(BancoCodigoBancario.INTER.getCodigoBancario());
 		boolean isExtrato = false;
 		for (int i = 0; i < lineHeader; i++) {
-			String line = StringUtils.normalizeSpace(lines[i]);			
+			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains("Agência:")) {
 				String agencia = StringUtils.substringAfter(line, "Agência:").split(StringUtils.SPACE)[0];
 				dto.setAgencia(MrContadorUtil.removeZerosFromInital(agencia.trim()));
 				String conta = StringUtils.substringAfter(line, "Conta:").split(StringUtils.SPACE)[0];
 				dto.setConta(MrContadorUtil.removeZerosFromInital(conta.trim()));
 			}
-			if(line.toUpperCase().contains("EXTRATO")) {
+			if (line.toUpperCase().contains("EXTRATO")) {
 				isExtrato = true;
 			}
 		}
-		if(!isExtrato) {
+		if (!isExtrato) {
 			throw new ExtratoException("doc.not.extrato");
 		}
 		return dto;
@@ -96,24 +117,24 @@ public class PdfInter extends PdfParserExtrato {
 	protected List<OfxData> parseBody(String[] lines, int lineHeader) {
 		List<OfxData> datas = new ArrayList<>();
 		int start = 0;
-		for(String line : lines) {
+		for (String line : lines) {
 			start = start + 1;
-			if(line.contains("Lançamentos") && line.contains("Valor") && line.contains("Saldo")) {
+			if (line.contains("Lançamentos") && line.contains("Valor") && line.contains("Saldo")) {
 				break;
 			}
 		}
-		for (int i = start; i<lines.length;i++) {
-			String 	line = StringUtils.normalizeSpace(lines[i]);
-			if(!isData(line)) {
-				break;
+		for (int i = start; i < lines.length; i++) {
+			String line = StringUtils.normalizeSpace(lines[i]);
+			if (!isData(line)) {
+				continue;
 			}
 			PdfData data = new PdfData();
-			readLine(line, data, i);
+			readLines(line, lines[i - 1], data, i);
 			datas.add(data);
 		}
 		return datas;
 	}
-	
+
 	private boolean isData(String line) {
 		String data = line.split(StringUtils.SPACE)[0];
 		return MrContadorUtil.isDate(data, dateFormatter);
