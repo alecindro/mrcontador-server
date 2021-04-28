@@ -52,20 +52,7 @@ public class PdfInter extends PdfParserExtrato {
 
 	@Override
 	protected void readLine(String line, PdfData data, int numberRow) {
-		String reverse = StringUtils.reverse(line);
-		String[] values = reverse.split(StringUtils.SPACE);
-		String valor = StringUtils.reverse(values[2]);
-		String signal = StringUtils.reverse(values[3]);
-		String dataLancamento = line.split(StringUtils.SPACE)[0];
-		String lancamento = StringUtils.substringBefore(StringUtils.remove(line, dataLancamento), signal);
-		data.setHistorico(lancamento);
-		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dataLancamento), dateFormatter)));
-		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
-		data.setTipoEntrada(TipoEntrada.CREDIT);
-		if (signal.contains("-")) {
-			data.setTipoEntrada(TipoEntrada.DEBIT);
-			data.setValor(data.getValor().negate());
-		}
+
 
 	}
 
@@ -81,6 +68,7 @@ public class PdfInter extends PdfParserExtrato {
 		}
 		data.setHistorico(lancamento);
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dataLancamento), dateFormatter)));
+		data.setDocumento(MrContadorUtil.onlyNumbers(dataLancamento)+"-"+numberRow);
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 		data.setTipoEntrada(TipoEntrada.CREDIT);
 		if (signal.contains("-")) {
