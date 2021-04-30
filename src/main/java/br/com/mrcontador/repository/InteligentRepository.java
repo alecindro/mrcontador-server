@@ -35,7 +35,7 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   @EntityGraph(attributePaths = {"comprovante","notafiscal","conta","extrato","parceiro","agenciabancaria"})
   List<Inteligent> findAll(@Nullable Specification<Inteligent> spec);
   
-  @Query(value="select periodo from inteligent where parceiro_id = :parceiroId and agenciabancaria_id = :agenciabancariaId group by periodo order by cast(periodo as integer) desc", nativeQuery = true)
+  @Query(value="select concat(mes,ano) as periodo from (select extract(month from datalancamento) as mes,  extract(YEAR from datalancamento) as ano from inteligent where parceiro_id = 10 and agenciabancaria_id = 22 group by ano, mes order by ano  desc, mes desc) as p", nativeQuery = true)
   public List<String> periodos(@Param("parceiroId") Long parceiroId, @Param("agenciabancariaId") Long agenciabancariaId);
   
   @Modifying(flushAutomatically = true)

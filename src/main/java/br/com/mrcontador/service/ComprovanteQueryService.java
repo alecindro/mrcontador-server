@@ -114,6 +114,9 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
             if (criteria.getProcessado() != null) {
                 specification = specification.and(buildSpecification(criteria.getProcessado(), Comprovante_.processado));
             }
+            if (criteria.getPeriodo() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getPeriodo(), Comprovante_.periodo));
+            }
             if (criteria.getParceiroId() != null) {
                 specification = specification.and(buildSpecification(criteria.getParceiroId(),
                     root -> root.join(Comprovante_.parceiro, JoinType.LEFT).get(Parceiro_.id)));
