@@ -65,43 +65,43 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 		if (StringUtils.normalizeSpace(_lines[0]).trim().contains("tributos do governo")) {
 			return parsePagtoGPS(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de Pagamento de Boleto")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Comprovante de Pagamento de Boleto")) {
 			return parsePagtoBoleto(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("2ª Via - Comprovante de Pagamento de Boleto")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("2ª Via - Comprovante de Pagamento de Boleto")) {
 			return parsePagtoBoleto(_lines, agenciabancaria, parceiro);
 		}
 		
 		if (StringUtils.normalizeSpace(_lines[1]).trim()
-				.equals("Comprovante de pagamento de água, luz, telefone e gás")) {
+				.contains("Comprovante de pagamento de água, luz, telefone e gás")) {
 			return parsePagtoAgua(_lines, agenciabancaria, parceiro);
 		}
 		if (StringUtils.normalizeSpace(_lines[1]).trim()
-				.equals("Comprovante de transferência entre contas da CAIXA - TEV")) {
+				.contains("Comprovante de transferência entre contas da CAIXA - TEV")) {
 			return parsePagtoTEV(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de pagamento de GPS")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Comprovante de pagamento de GPS")) {
 			return parsePagtoGPS(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[2]).trim().equals("Comprovante de Autorização da Folha")) {
+		if (StringUtils.normalizeSpace(_lines[2]).trim().contains("Comprovante de Autorização da Folha")) {
 			return parseAutFolha(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de transferência eletrônica disponível")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Comprovante de transferência eletrônica disponível")) {
 			return parseCreditoTED(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de pagamento de FGTS")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Comprovante de pagamento de FGTS")) {
 			return parseFGTS(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Consulta Detalhes da Folha")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Consulta Detalhes da Folha")) {
 			return null;
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de agendamento de transferência entre contas da CAIXA - TEV")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Comprovante de agendamento de transferência entre contas da CAIXA - TEV")) {
 			return null;
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de pagamento de Simples Nacional")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Comprovante de pagamento de Simples Nacional")) {
 			return parseSimplesNacional(_lines, agenciabancaria, parceiro);
 		}
-		if (StringUtils.normalizeSpace(_lines[1]).trim().equals("Comprovante de pagamento de tributos federais")) {
+		if (StringUtils.normalizeSpace(_lines[1]).trim().contains("Comprovante de pagamento de tributos federais")) {
 			return parseTributosFederais(_lines, agenciabancaria, parceiro);
 		}
 		throw new ComprovanteException("doc.not.comprovante");
@@ -712,6 +712,11 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 		diffValue.setOldValue(OBS);
 		diffValue.setNewValue("Comprovante de pagamento de FGTS");
 		diffValue.setLine(i);
+		DiffValue diffValue2 = new DiffValue();
+		diffValue2.setOldValue(FORNECEDOR);
+		diffValue2.setNewValue("FGTS");
+		diffValue2.setLine(i);
+		list.add(diffValue2);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro,TipoComprovante.OUTROS));
@@ -845,6 +850,12 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 		diffValue.setOldValue(OBS);
 		diffValue.setNewValue("Comprovante de pagamento de tributos federais");
 		diffValue.setLine(i);
+		list.add(diffValue);
+		DiffValue diffValue2 = new DiffValue();
+		diffValue2.setOldValue(FORNECEDOR);
+		diffValue2.setNewValue("Tributos Federais");
+		diffValue2.setLine(i);
+		list.add(diffValue2);
 		list.add(diffValue);
 		List<Comprovante> comprovantes = new ArrayList<>();
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));

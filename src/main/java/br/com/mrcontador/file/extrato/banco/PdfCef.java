@@ -80,9 +80,11 @@ public class PdfCef extends PdfParserExtrato {
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);			
 			if (line.contains(CONTA)) {
-				String[] values = StringUtils.substringAfter(line, CONTA).split("/");
-				dto.setAgencia(MrContadorUtil.removeZerosFromInital(values[0].trim()));
-				dto.setConta(MrContadorUtil.removeZerosFromInital(values[2].trim()));
+				String value = StringUtils.substringAfter(line, CONTA).trim();
+				dto.setAgencia(MrContadorUtil.removeZerosFromInital(StringUtils.split(value,StringUtils.SPACE)[0]));
+				value = StringUtils.reverse(value);
+				value = StringUtils.split(value, StringUtils.SPACE)[0];
+				dto.setConta(MrContadorUtil.removeZerosFromInital(StringUtils.reverse(value)));
 			}
 			if(line.toUpperCase().contains(EXTRATO)) {
 				isExtrato = true;
