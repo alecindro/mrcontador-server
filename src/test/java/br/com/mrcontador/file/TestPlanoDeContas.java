@@ -33,7 +33,7 @@ public class TestPlanoDeContas {
 	@Test
 	public void teste() {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "/home/alecindro/Documents/drcontabil/docs/Plano de Contas - mercado dassoler.pdf";
+		String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\Plano de Contas - Luiz.pdf";
 		File initialFile = new File(folder);
 		FileDTO dto = new FileDTO();
 	    try {

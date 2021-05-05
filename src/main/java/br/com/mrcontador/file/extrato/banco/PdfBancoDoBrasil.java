@@ -73,9 +73,9 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 			}
 			readLine(line, data, i);
 			if (i < lines.length - 1) {
-				if (StringUtils.isWhitespace(StringUtils.left(lines[i + 1], 83))) {
+				if (StringUtils.isWhitespace(StringUtils.left(lines[i + 1], 82))) {
 					i = i + 1;
-					data.setInfAdicional(StringUtils.normalizeSpace(StringUtils.substring(lines[i], 83)));
+					data.setInfAdicional(StringUtils.normalizeSpace(StringUtils.substring(lines[i], 82)));
 				}
 			}
 

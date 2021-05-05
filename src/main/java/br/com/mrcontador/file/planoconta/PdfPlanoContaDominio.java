@@ -33,6 +33,7 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 
 	@Override
 	public PlanoConta process(List<PDDocument> pages) throws IOException {
+		
 		if(pages.isEmpty()) {
 			throw new FileException("error.pdf.empty");
 		}
@@ -47,13 +48,14 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 				lines = Arrays.copyOf(lines, lines.length-1);
 			}
 			numberPage++;
-			
+			System.out.println(numberPage);
 			
 		
 			if(first) {
 				parseHeader(lines);
 				first = false;
 			}
+			
 			parseBody(lines);
 		}
 		return planoConta;
@@ -67,6 +69,7 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 			PlanoContaDetail planoContaDetail = new PlanoContaDetail();
 			int	maxRowSize = line.length();
 			for(String key : mapHeader.keySet()) {
+try {
 				Header header = mapHeader.get(key);				
 				String value = line.substring(header.getBegin(), header.getEnd()>maxRowSize?maxRowSize:header.getEnd()).trim();
 				switch (key.trim()) {
@@ -97,6 +100,10 @@ public class PdfPlanoContaDominio extends PlanoContaPdf implements PdfReader {
 				default:
 					break;
 				}
+}catch (Exception e) {
+	e.printStackTrace();
+	throw new RuntimeException(e.getMessage());
+}
 			}
 			planoConta.addPlanoContaDetail(planoContaDetail);
 		}
