@@ -122,7 +122,7 @@ public class PdfParserPlanoConta {
 	private PdfReader getIdentifier(SistemaPlanoConta sistemaPlanoConta) throws IOException {
 		switch (sistemaPlanoConta) {
 		case DOMINIO_SISTEMAS:
-			return new PdfPlanoContaDominio();
+			return new PdfPlanoContaDominio2();
 
 		default:
 			throw new RuntimeException("pdf.systemnotimplemented");

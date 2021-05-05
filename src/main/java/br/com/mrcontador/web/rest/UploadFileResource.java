@@ -66,6 +66,7 @@ public class UploadFileResource {
 			Optional<Conta> oConta = contaService.findFirstByParceiro(oParceiro.get());
 			if(oConta.isEmpty()) {
 			fileService.processPlanoConta(dto, SistemaPlanoConta.DOMINIO_SISTEMAS);
+			parceiroService.save(oParceiro.get());
 			} else {
 				fileService.updatePlanoConta(dto, SistemaPlanoConta.DOMINIO_SISTEMAS);
 			}

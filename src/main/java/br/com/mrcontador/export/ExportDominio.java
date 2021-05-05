@@ -31,10 +31,10 @@ public class ExportDominio implements ExportLancamento {
 
 	private void process(StringBuilder builder, List<Inteligent> inteligents, Conta contaAgenciaBancaria) {
 		processFirstLine(builder, inteligents.get(0));
-		Map<String, List<Inteligent>> debitos = inteligents.stream().filter(i -> i.getExtrato().getExtDebito() != null)
+		Map<String, List<Inteligent>> debitos = inteligents.stream().filter(i -> i.getDebito() != null)
 				.collect(Collectors.groupingBy(Inteligent::getNumerodocumento));
 		Map<String, List<Inteligent>> creditos = inteligents.stream()
-				.filter(i -> i.getExtrato().getExtCredito() != null)
+				.filter(i -> i.getCredito() != null)
 				.collect(Collectors.groupingBy(Inteligent::getNumerodocumento));
 		processDebitos(builder, debitos, contaAgenciaBancaria);
 		processCreditos(builder, creditos, contaAgenciaBancaria);

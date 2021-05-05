@@ -16,22 +16,17 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 	@Override
 	public Conta toEntity(PlanoContaDetail dto) {
 		Conta conta = new Conta();
-		conta.setConGrau(-1);
+		conta.setConGrau(StringUtils.isNumeric(dto.getGrau())? Integer.valueOf(dto.getGrau()):-1);
 		conta.setConClassificacao(StringUtils.normalizeSpace(dto.getClassificacao()));
 		conta.setConCnpj(MrContadorUtil.removeZerosFromInital(MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getCnpj()))));
+		if(conta.getConCnpj().length()>14) {
+			conta.setConCnpj(StringUtils.reverse(StringUtils.reverse(conta.getConCnpj()).substring(0, 15)));
+		}
 		if (StringUtils.isNumeric(dto.getCodigo().trim())) {
 			conta.setConConta(Integer.valueOf(dto.getCodigo().trim()));
-		}
-		if (dto.getGrau() != null && StringUtils.isNumeric(dto.getGrau().trim())) {
-			conta.setConGrau(Integer.valueOf(dto.getGrau().trim()));
-		} else {
-			String _grau = MrContadorUtil.onlyNumbers(StringUtils.normalizeSpace(dto.getGrau()));
-			if(StringUtils.isNumeric(_grau)) {
-				conta.setConGrau(Integer.valueOf(_grau.trim()));
-			}
-		}
+		}	
 		conta.setConTipo(StringUtils.normalizeSpace(dto.getT()));
-		conta.setConDescricao(StringUtils.normalizeSpace(dto.getDescricao()));
+		conta.setConDescricao(StringUtils.substring(StringUtils.normalizeSpace(dto.getDescricao()),0,254));
 		return conta;
 	}
 
