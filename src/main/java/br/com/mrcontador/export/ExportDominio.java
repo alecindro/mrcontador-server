@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import br.com.mrcontador.domain.Conta;
-import br.com.mrcontador.domain.Extrato;
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -108,20 +107,19 @@ public class ExportDominio implements ExportLancamento {
 
 	private void processDebitoC(StringBuilder builder, List<Inteligent> inteligents, Integer conta) {
 		Inteligent principal = inteligents.get(0);
-		Extrato extrato = principal.getExtrato();
 		builder.append("|6000|");
 		builder.append(principal.getTipoInteligent());
 		builder.append("||||");
 		builder.append(System.getProperty("line.separator"));
 		builder.append("|6100|");
-		builder.append(formatter.format(extrato.getExtDatalancamento()));
+		builder.append(formatter.format(principal.getDatalancamento()));
 		builder.append("||");
 		builder.append(conta);
 		builder.append("|");
 		builder.append(MrContadorUtil.toMoneyExportDominio(
-				extrato.getExtDebito().signum() < 0 ? extrato.getExtDebito().negate() : extrato.getExtDebito()));
+				principal.getDebito().signum() < 0 ? principal.getDebito().negate() : principal.getDebito()));
 		builder.append("||");
-		builder.append(extrato.getExtHistorico());
+		builder.append(principal.getHistoricofinal());
 		builder.append("||||");
 		builder.append(System.getProperty("line.separator"));
 		for (Inteligent _inteligent : inteligents) {
@@ -167,14 +165,13 @@ public class ExportDominio implements ExportLancamento {
 			builder.append(System.getProperty("line.separator"));
 		}
 		Inteligent principal = inteligents.get(0);
-		Extrato extrato = principal.getExtrato();
 		builder.append("|6100|");
-		builder.append(formatter.format(extrato.getExtDatalancamento()));
+		builder.append(formatter.format(principal.getDatalancamento()));
 		builder.append("||");
 		builder.append(conta);
 		builder.append("|");
 		builder.append(MrContadorUtil.toMoneyExportDominio(
-				extrato.getExtDebito().signum() < 0 ? extrato.getExtDebito().negate() : extrato.getExtDebito()));
+				principal.getDebito().signum() < 0 ? principal.getDebito().negate() : principal.getDebito()));
 
 		builder.append("||");
 		builder.append(principal.getHistoricofinal());
@@ -212,13 +209,12 @@ public class ExportDominio implements ExportLancamento {
 		builder.append(System.getProperty("line.separator"));		
 		Inteligent principal = inteligents.stream().filter(i -> i.getTipoInteligent().contentEquals("PRINCIPAL"))
 				.findFirst().get();
-		Extrato extrato = principal.getExtrato();
 		builder.append("|6100|");
-		builder.append(formatter.format(extrato.getExtDatalancamento()));
+		builder.append(formatter.format(principal.getDatalancamento()));
 		builder.append("|");
 		builder.append(conta);
 		builder.append("||");
-		builder.append(MrContadorUtil.toMoneyExportDominio(extrato.getExtCredito()));
+		builder.append(MrContadorUtil.toMoneyExportDominio(principal.getCredito()));
 		builder.append("||");
 		builder.append(principal.getHistoricofinal());
 		builder.append("||||");
@@ -252,13 +248,12 @@ public class ExportDominio implements ExportLancamento {
 		builder.append(System.getProperty("line.separator"));		
 		Inteligent principal = inteligents.stream().filter(i -> i.getTipoInteligent().contentEquals("PRINCIPAL"))
 				.findFirst().get();
-		Extrato extrato = principal.getExtrato();
 		builder.append("|6100|");
-		builder.append(formatter.format(extrato.getExtDatalancamento()));
+		builder.append(formatter.format(principal.getDatalancamento()));
 		builder.append("|");
 		builder.append(conta);
 		builder.append("||");
-		builder.append(MrContadorUtil.toMoneyExportDominio(extrato.getExtCredito()));
+		builder.append(MrContadorUtil.toMoneyExportDominio(principal.getCredito()));
 		builder.append("||");
 		builder.append(principal.getHistoricofinal());
 		builder.append("||||");
