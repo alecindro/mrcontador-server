@@ -54,10 +54,9 @@ BEGIN
      		selected_comprovante.com_cnpj,selected_comprovante.com_beneficiario, REC_INTELIGENT.tipo_inteligent,selected_comprovante.id,pParceiroId,pAgenciaId, REC_INTELIGENT.extrato_id, vHISTORICOFINAL);
 		   	end if;    
      		IF (selected_comprovante.com_desconto < 0) THEN
-     			vDEBITO_INTELIGENT := vDEBITO_INTELIGENT + selected_comprovante.com_desconto;
     	    	vTIPOINTELIGENTE := 'D';
         		vHISTORICOFINAL   := 'Receb. de Desconto de '|| selected_comprovante.com_beneficiario;
-      			UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT, tipo_inteligent = vTIPOINTELIGENTE WHERE ID = REC_INTELIGENT.id;
+      			UPDATE  ${schema}.INTELIGENT SET tipo_inteligent = vTIPOINTELIGENTE WHERE ID = REC_INTELIGENT.id;
      	        INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Receb. de desconto','DESCONTO',
      		REC_INTELIGENT.datalancamento,REC_INTELIGENT.numerodocumento,REC_INTELIGENT.numerocontrole,REC_INTELIGENT.periodo, selected_comprovante.com_desconto*-1,false,
