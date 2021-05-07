@@ -118,11 +118,14 @@ public class PdfSantander extends PdfParserExtrato {
 		boolean isExtrato = false;
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
-		for (int i = 0; i < lineHeader; i++) {
-			if(lines[i].toUpperCase().contains("VALOR")) {
-				value_column = lines[i].toUpperCase().indexOf("VALOR")-1;
+		int i = 0;
+		for (String line : lines){
+			if(line.toUpperCase().contains("VALOR") && line.toUpperCase().contains("SALDO") && line.toUpperCase().contains("DATA")) {
+				value_column = line.toUpperCase().indexOf("VALOR")-1;
+				lineHeader = i;
+				break;
 			}
-			String line = StringUtils.normalizeSpace(lines[i]);
+			line = StringUtils.normalizeSpace(line);
 			if (line.contains(AGENCIA)) {
 				dto.setAgencia(StringUtils.substringBefore(StringUtils.substringAfter(line, AGENCIA), CONTA).trim());
 				dto.setConta(StringUtils.substringAfter(line, CONTA).trim());
@@ -130,6 +133,7 @@ public class PdfSantander extends PdfParserExtrato {
 			if(line.toUpperCase().contains(EXTRATO)) {
 				isExtrato = true;
 			}
+			i = i+1;
 		}
 		if(!isExtrato) {
 			throw new ExtratoException("doc.not.extrato");
@@ -141,11 +145,14 @@ public class PdfSantander extends PdfParserExtrato {
 		OfxDTO dto = new OfxDTO();
 		dto.setBanco(BancoCodigoBancario.SANTANDER.getCodigoBancario());
 		boolean isExtrato = false;
-		for (int i = 0; i < lineHeader; i++) {
-			if(lines[i].toUpperCase().contains("VALOR")) {
-				value_column = lines[i].toUpperCase().indexOf("VALOR")-1;
+		int i = 0;
+		for (String line : lines){
+			if(line.toUpperCase().contains("VALOR") && line.toUpperCase().contains("SALDO") && line.toUpperCase().contains("DATA")) {
+				value_column = line.toUpperCase().indexOf("VALOR")-1;
+				lineHeader = i;
+				break;
 			}
-			String line = StringUtils.normalizeSpace(lines[i]);
+			line = StringUtils.normalizeSpace(line);
 			if (line.contains(AGENCIA)) {
 				dto.setAgencia(StringUtils.substringBefore(StringUtils.substringAfter(line, AGENCIA), CONTAEMPRESARIAL).trim());
 				dto.setConta(StringUtils.substringAfter(line, CONTAEMPRESARIAL).trim());
@@ -153,6 +160,7 @@ public class PdfSantander extends PdfParserExtrato {
 			if(line.toUpperCase().contains(EXTRATO)) {
 				isExtrato = true;
 			}
+			i = i+1;
 		}
 		if(!isExtrato) {
 			throw new ExtratoException("doc.not.extrato");
@@ -172,7 +180,7 @@ public class PdfSantander extends PdfParserExtrato {
 			if (StringUtils.normalizeSpace(line).contains(SALDO_ANTERIOR)) {
 				continue;
 			}
-			if(StringUtils.normalizeSpace(line).contains("Saldo de Conta Corrente")) {
+			if(StringUtils.deleteWhitespace(line).toUpperCase().contains("SALDODECONTACORRENTE")) {
 				break;
 			}
 			String _data = StringUtils.normalizeSpace(line).split(StringUtils.SPACE)[0];
