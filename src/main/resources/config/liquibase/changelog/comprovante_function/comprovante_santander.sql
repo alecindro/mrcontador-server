@@ -69,7 +69,7 @@ BEGIN
 	 			and agenciabancaria_id = pAgenciaId
 	 			and parceiro_id = pParceiroId
 	 			and processado = false
-	 			and com_datapagamento < REC_INTELIGENT.datalancamento
+	 			and com_datapagamento - REC_INTELIGENT.datalancamento  between -3 and 3
 	 			and com_valorpagamento*-1 = REC_INTELIGENT.debito
 	 			AND tipo_comprovante ='TRANSFERENCIA'
 	 			order by com_datapagamento desc

@@ -241,6 +241,24 @@ public class ComprovanteCaixa extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
+			if(line.toUpperCase().contains("JUROS")) {
+				String[] values = StringUtils.split(line, StringUtils.SPACE);
+				String value = values[values.length-1].trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(JUROS);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if(line.toUpperCase().contains("MULTA")) {
+				String[] values = StringUtils.split(line, StringUtils.SPACE);
+				String value = values[values.length-1].trim();
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(MULTA);
+				diffValue.setNewValue(value);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
 			i = i + 1;
 		}
 		DiffValue diffValue = new DiffValue();
