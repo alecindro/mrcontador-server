@@ -78,6 +78,9 @@ public class PdfSantander extends PdfParserExtrato {
 		String[] values = StringUtils.substring(line, 0, value_column).trim().split(StringUtils.SPACE);
 		String numDoc = StringUtils.normalizeSpace(values[values.length-1]);
 		String historico = StringUtils.normalizeSpace(StringUtils.substringBefore(StringUtils.substringAfter(line, date),numDoc));
+		if(numDoc.contentEquals("000000")) {
+			numDoc = MrContadorUtil.onlyNumbers(date)+"_"+numberRow;
+		}
 		data.setHistorico(historico.trim());
 		data.setDocumento(numDoc);
 			data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
@@ -97,7 +100,9 @@ public class PdfSantander extends PdfParserExtrato {
 		String[] values = StringUtils.substring(line, 0, value_column).trim().split(StringUtils.SPACE);
 		String numDoc = StringUtils.normalizeSpace(values[values.length-1]);
 		String historico = StringUtils.normalizeSpace(StringUtils.substringBefore(StringUtils.substringAfter(line, date),numDoc));
-		data.setHistorico(historico.trim());
+		if(numDoc.contentEquals("000000")) {
+			numDoc = MrContadorUtil.onlyNumbers(date)+"_"+numberRow;
+		}data.setHistorico(historico.trim());
 		data.setDocumento(numDoc);
 		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
 		int signum = data.getValor().signum();

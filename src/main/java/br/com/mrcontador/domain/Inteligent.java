@@ -438,24 +438,18 @@ public class Inteligent implements Serializable {
         return 31;
     }
 
+	@Override
+	public String toString() {
+		return "Inteligent [id=" + id + ", historico=" + historico + ", historicofinal=" + historicofinal
+				+ ", datalancamento=" + datalancamento + ", associado=" + associado + ", periodo=" + periodo
+				+ ", debito=" + debito + ", credito=" + credito + ", datainicio=" + datainicio + ", datafim=" + datafim
+				+ ", cnpj=" + cnpj + ", beneficiario=" + beneficiario + ", numerocontrole=" + numerocontrole
+				+ ", numerodocumento=" + numerodocumento + ", tipoInteligent=" + tipoInteligent + ", tipoValor="
+				+ tipoValor + ", comprovante=" + comprovante + ", notafiscal=" + notafiscal + ", notaservico="
+				+ notaservico + ", conta=" + conta + ", extrato=" + extrato + ", parceiro=" + parceiro
+				+ ", agenciabancaria=" + agenciabancaria + ", regra=" + regra + "]";
+	}
+
     // prettier-ignore
-    @Override
-    public String toString() {
-        return "Inteligent{" +
-            "id=" + getId() +
-            ", historico='" + getHistorico() + "'" +
-            ", historicofinal='" + getHistoricofinal() + "'" +
-            ", datalancamento='" + getDatalancamento() + "'" +
-            ", associado='" + isAssociado() + "'" +
-            ", periodo='" + getPeriodo() + "'" +
-            ", debito=" + getDebito() +
-            ", credito=" + getCredito() +
-            ", datainicio='" + getDatainicio() + "'" +
-            ", datafim='" + getDatafim() + "'" +
-            ", cnpj='" + getCnpj() + "'" +
-            ", beneficiario='" + getBeneficiario() + "'" +
-            ", numerocontrole='" + getNumerocontrole() + "'" +
-            ", numerodocumento='" + getNumerodocumento() + "'" +
-            "}";
-    }
+
 }
