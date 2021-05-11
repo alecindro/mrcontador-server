@@ -104,9 +104,8 @@ public class ComprovanteResource {
     @GetMapping("/comprovantes")
     public ResponseEntity<List<Comprovante>> getAllComprovantes(ComprovanteCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Comprovantes by criteria: {}", criteria);
-        Page<Comprovante> page = comprovanteQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        List<Comprovante> page = comprovanteQueryService.findByCriteria(criteria, pageable.getSort());
+        return ResponseEntity.ok().body(page);
     }
 
     /**

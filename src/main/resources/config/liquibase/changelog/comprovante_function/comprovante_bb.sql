@@ -44,23 +44,23 @@ BEGIN
      		 UPDATE ${schema}.COMPROVANTE SET PROCESSADO = TRUE WHERE ID = selected_comprovante.id; 
  	 		IF ((selected_comprovante.com_multa > 0) OR (selected_comprovante.com_juros >0)) THEN
  	 			vDEBITO_INTELIGENT := vDEBITO_INTELIGENT + selected_comprovante.com_juros + selected_comprovante.com_multa;
-    			vTIPOINTELIGENTE := 'C';
+    			vTIPOINTELIGENTE := 'D';
     			vHISTORICOFINAL   := 'Pagto. de Juros de '|| selected_comprovante.com_beneficiario;
         	UPDATE  ${schema}.INTELIGENT SET debito = vDEBITO_INTELIGENT , tipo_inteligent = vTIPOINTELIGENTE WHERE ID = REC_INTELIGENT.id;
      		INSERT INTO  ${schema}.INTELIGENT (historico,tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,debito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Pagto. de Juros','JUROS',
      		REC_INTELIGENT.datalancamento,REC_INTELIGENT.numerodocumento,REC_INTELIGENT.numerocontrole,REC_INTELIGENT.periodo,  
      		(selected_comprovante.com_juros + selected_comprovante.com_multa)*-1,false,
-     		selected_comprovante.com_cnpj,selected_comprovante.com_beneficiario, REC_INTELIGENT.tipo_inteligent,selected_comprovante.id,pParceiroId,pAgenciaId, REC_INTELIGENT.extrato_id, vHISTORICOFINAL);
+     		selected_comprovante.com_cnpj,selected_comprovante.com_beneficiario, vTIPOINTELIGENTE,selected_comprovante.id,pParceiroId,pAgenciaId, REC_INTELIGENT.extrato_id, vHISTORICOFINAL);
 		   	end if;    
      		IF (selected_comprovante.com_desconto < 0) THEN
-     			vTIPOINTELIGENTE := 'D';
+     			vTIPOINTELIGENTE := 'C';
         		vHISTORICOFINAL   := 'Receb. de Desconto de '|| selected_comprovante.com_beneficiario;
       			UPDATE  ${schema}.INTELIGENT SET tipo_inteligent = vTIPOINTELIGENTE WHERE ID = REC_INTELIGENT.id;
      	        INSERT INTO  ${schema}.INTELIGENT (historico, tipo_valor,datalancamento,numerodocumento,numerocontrole,periodo,credito,associado,
      		cnpj,beneficiario,tipo_inteligent,comprovante_id,parceiro_id,agenciabancaria_id, extrato_id, historicofinal) VALUES ('Receb. de desconto','DESCONTO',
      		REC_INTELIGENT.datalancamento,REC_INTELIGENT.numerodocumento,REC_INTELIGENT.numerocontrole,REC_INTELIGENT.periodo, selected_comprovante.com_desconto*-1,false,
-     		selected_comprovante.com_cnpj,selected_comprovante.com_beneficiario, REC_INTELIGENT.tipo_inteligent,selected_comprovante.id,pParceiroId,pAgenciaId, REC_INTELIGENT.extrato_id, vHISTORICOFINAL);
+     		selected_comprovante.com_cnpj,selected_comprovante.com_beneficiario, vTIPOINTELIGENTE,selected_comprovante.id,pParceiroId,pAgenciaId, REC_INTELIGENT.extrato_id, vHISTORICOFINAL);
    			END IF;
 		    vRETORNO = vRETORNO +1;
 		ELSE

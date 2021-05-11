@@ -106,9 +106,8 @@ public class ExtratoResource {
     @GetMapping("/extratoes")
     public ResponseEntity<List<Extrato>> getAllExtratoes(ExtratoCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Extratoes by criteria: {}", criteria);
-        Page<Extrato> page = extratoQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        List<Extrato> page = extratoQueryService.findByCriteria(criteria, pageable.getSort());
+        return ResponseEntity.ok().body(page);
     }
 
     /**

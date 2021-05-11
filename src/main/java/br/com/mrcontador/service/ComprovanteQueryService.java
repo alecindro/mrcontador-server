@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,13 @@ public class ComprovanteQueryService extends QueryService<Comprovante> {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Comprovante> specification = createSpecification(criteria);
         return comprovanteRepository.findAll(specification, page);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Comprovante> findByCriteria(ComprovanteCriteria criteria, Sort sort) {
+        log.debug("find by criteria : {}, sort: {}", criteria, sort);
+        final Specification<Comprovante> specification = createSpecification(criteria);
+        return comprovanteRepository.findAll(specification, sort);
     }
 
     /**
