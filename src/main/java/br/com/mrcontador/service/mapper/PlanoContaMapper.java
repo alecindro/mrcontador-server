@@ -42,11 +42,10 @@ public class PlanoContaMapper implements EntityMapper<PlanoContaDetail, Conta> {
 		return null;
 	}
 
-	public List<Conta> toEntity(List<PlanoContaDetail> dtoList, Parceiro parceiro, Arquivo arquivo) {
+	public List<Conta> toEntity(List<PlanoContaDetail> dtoList, Parceiro parceiro) {
 		List<Conta> contas = new ArrayList<>();
 		for(PlanoContaDetail dto : dtoList) {
 			Conta conta = toEntity(dto);
-			conta.setArquivo(arquivo);
 			conta.setParceiro(parceiro);
 			contas.add(conta);
 		}

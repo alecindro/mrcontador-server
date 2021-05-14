@@ -110,6 +110,13 @@ public class S3Service {
 		arquivo = arquivoService.save(arquivo);
 		return arquivo;
 	}
+	
+	private void saveArquivo(FileDTO dto, ArquivoService arquivoService) {
+		log.info("Salvando arquivo: {}", dto.getName());
+		ArquivoMapper mapper = new ArquivoMapper();
+		Arquivo arquivo = mapper.toEntity(dto);
+		arquivoService.save(arquivo);
+	}
 
 	private ArquivoErro saveArquivoErro(FileDTO dto, Optional<Contador> contador) {
 		log.info("Salvando arquivo: {}", dto.getName());
@@ -247,10 +254,12 @@ public class S3Service {
 	 * }
 	 */
 
-	public Arquivo uploadPlanoConta(FileDTO dto) {
+	@Async("taskExecutor")
+	public void uploadPlanoConta(FileDTO dto,ArquivoService arquivoService,String tenant) {
+		TenantContext.setTenantSchema(tenant);
 		dto.setTipoDocumento(TipoDocumento.PLANO_DE_CONTA);
 		upload(properties.getPlanoContaFolder(), dto);
-		return saveArquivo(dto);
+		saveArquivo(dto,arquivoService);
 	}
 
 	private FileDTO upload(String type, FileDTO dto) {

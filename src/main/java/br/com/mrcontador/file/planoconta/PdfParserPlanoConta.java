@@ -3,7 +3,6 @@ package br.com.mrcontador.file.planoconta;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +11,12 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.mrcontador.domain.Arquivo;
+import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Conta;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.dto.PlanoConta;
+import br.com.mrcontador.service.ArquivoService;
 import br.com.mrcontador.service.ContaService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
@@ -33,10 +33,12 @@ public class PdfParserPlanoConta {
 	private ContaService contaService;
 	@Autowired
 	private ParceiroService parceiroService;
+	@Autowired
+	private ArquivoService arquivoService;
 
 
 	public void process(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
-		PDDocument document;
+		PDDocument document = null;
 		InputStream first = null;
 		try {
 
@@ -45,8 +47,8 @@ public class PdfParserPlanoConta {
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
 			validatePlano(dto.getParceiro(), planoConta.getCnpjCliente());
 			PlanoContaMapper mapper = new PlanoContaMapper();
-			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
-			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), arquivo);
+			s3Service.uploadPlanoConta(dto,arquivoService,TenantContext.getTenantSchema());
+			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro());
 			contaService.save(contas);			
 		
 		} catch (CnpjAlreadyExistException e) {
@@ -58,6 +60,9 @@ public class PdfParserPlanoConta {
 			throw new MrContadorException("planodeconta.parse.error", e.getMessage(), e);
 		} finally {
 			try {
+				if(document != null) {
+				document.close();
+				}
 				if (first != null) {
 					first.close();
 				}
@@ -84,9 +89,9 @@ public class PdfParserPlanoConta {
 			first = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
 			document = PDDocument.load(first);
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
-			Arquivo arquivo = s3Service.uploadPlanoConta(dto);
+			s3Service.uploadPlanoConta(dto,arquivoService,TenantContext.getTenantSchema());
 			PlanoContaMapper mapper = new PlanoContaMapper();
-			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro(), arquivo);
+			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro());
 			contaService.update(contas, dto.getUsuario(), dto.getParceiro());
 		} catch (MrContadorException e) {
 			throw e;
@@ -98,11 +103,6 @@ public class PdfParserPlanoConta {
 				if (document != null) {
 				document.close();
 				}
-			} catch (IOException e1) {
-			
-				e1.printStackTrace();
-			}
-			try {
 				if (first != null) {
 					first.close();
 				}

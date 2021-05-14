@@ -320,15 +320,17 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 		int i = 0;
 		for (String line : lines) {
 			line = StringUtils.normalizeSpace(line.trim()).toUpperCase();
-
+try {
 			if (line.contains("CONTA")) {
 				String  value = StringUtils.remove(line, ":");
-				value = StringUtils.split(StringUtils.substringAfter(value, "CONTA"))[0];
+				String[] values = StringUtils.split(StringUtils.substringAfter(value, "CONTA"));
+				if(values.length > 0 && StringUtils.isNumeric(values[0])) {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CONTA);
-				diffValue.setNewValue(value);
+				diffValue.setNewValue(values[0]);
 				diffValue.setLine(i);
 				list.add(diffValue);
+				}
 			}
 
 			if (line.contains("AUTENTICAÇÃO DOCUMENTO")) {
@@ -345,7 +347,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
 				String  value = StringUtils.remove(line, ":");
-				value = StringUtils.substringAfter(value, "CREDITADO");
+				value = StringUtils.substringAfter(value, "CREDITADO").trim();
 				diffValue.setNewValue(value);
 								list.add(diffValue);
 			}
@@ -361,7 +363,7 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 		
-			if (line.contains("VALOR")) {
+			if (line.contains("VALOR:")) {
 				String  value = StringUtils.remove(line, ":");
 				value = StringUtils.substringAfter(value, "VALOR").trim();
 				DiffValue diffValue = new DiffValue();
@@ -371,7 +373,11 @@ public class ComprovanteUnicred extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			i = i + 1;
+}catch(Exception e) {
+	e.printStackTrace();
+}
 		}
+	
 		DiffValue diffValue = new DiffValue();
 		diffValue.setOldValue(OBS);
 		diffValue.setNewValue("Comprovante de Transferência entre Contas");

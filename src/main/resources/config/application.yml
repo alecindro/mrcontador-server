@@ -118,8 +118,7 @@ spring:
 
 server:
   servlet:
-    session:
-      cookie:
+    cookie:
         http-only: true
   encoding:
     charset: UTF-8

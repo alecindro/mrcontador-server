@@ -28,17 +28,17 @@ public interface ContaRepository extends JpaRepository<Conta, Long>, JpaSpecific
 	
 	  @Modifying(flushAutomatically = true)
 	  @Query(value ="update conta set con_classificacao = :conClassificacao, con_tipo = :conTipo, con_descricao = :conDescricao, "
-	  		+ "con_cnpj = :conCnpj, con_grau = :conGrau, arquivo_id = :arquivoId, last_modified_by = :user, last_modified_date = :lastModifiedDate where con_conta = :conConta and parceiro_id = :parceiroId",nativeQuery = true )
+	  		+ "con_cnpj = :conCnpj, con_grau = :conGrau, last_modified_by = :user, last_modified_date = :lastModifiedDate where con_conta = :conConta and parceiro_id = :parceiroId",nativeQuery = true )
 	  void updateConta(@Param("conClassificacao") String conClassificacao, @Param("conTipo") String conTipo,
-			  @Param("conDescricao") String conDescricao, @Param("conCnpj") String conCnpj, @Param("conGrau") Integer conGrau, @Param("arquivoId") Long arquivoId, 
+			  @Param("conDescricao") String conDescricao, @Param("conCnpj") String conCnpj, @Param("conGrau") Integer conGrau, 
 			  @Param("lastModifiedDate") Instant lastModifiedDate, @Param("user") String user, @Param("conConta") Integer conConta, @Param("parceiroId") Long parceiroId);
 	  
 	  @Modifying(flushAutomatically = true)
-	  @Query(value ="insert into conta (data_cadastro,con_classificacao, con_tipo, con_descricao, con_cnpj, con_grau, con_conta, created_by, created_date, parceiro_id, arquivo_id) values ("
-	  		+ ":dataCadastro,:conClassificacao, :conTipo, :conDescricao, :conCnpj, :conGrau, :conConta,:createdBy, :createdDate, :parceiroId, :arquivoId) ON CONFLICT on constraint conta_unique DO nothing",nativeQuery = true )
+	  @Query(value ="insert into conta (data_cadastro,con_classificacao, con_tipo, con_descricao, con_cnpj, con_grau, con_conta, created_by, created_date, parceiro_id) values ("
+	  		+ ":dataCadastro,:conClassificacao, :conTipo, :conDescricao, :conCnpj, :conGrau, :conConta,:createdBy, :createdDate, :parceiroId) ON CONFLICT on constraint conta_unique DO nothing",nativeQuery = true )
 	  void createConta(@Param("dataCadastro") Date dataCadastro, @Param("conClassificacao") String conClassificacao, @Param("conTipo") String conTipo,
 			  @Param("conDescricao") String conDescricao, @Param("conCnpj") String conCnpj, @Param("conGrau") Integer conGrau, @Param("conConta") Integer conConta, 
-			  @Param("createdDate") Instant createdDate, @Param("createdBy") String user, @Param("arquivoId") Long arquivoId, 
+			  @Param("createdDate") Instant createdDate, @Param("createdBy") String user, 
 			  @Param("parceiroId") Long parceiroId);
 	  
 	  @Modifying(flushAutomatically = true)

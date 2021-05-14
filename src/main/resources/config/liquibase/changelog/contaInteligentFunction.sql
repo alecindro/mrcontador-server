@@ -9,6 +9,8 @@ declare
   vCOUNTCONTA NUMERIC;
   vCOUNTID NUMERIC;
   REC_INTELIGENT  ${schema}.inteligent%rowtype;
+  REC_REGRA  ${schema}.regra%rowtype;
+  REC_EXTRATO  ${schema}.extrato%rowtype;
 BEGIN
 vRETORNO := 0;	
 		select * from ${schema}.inteligent into REC_INTELIGENT where id =  pInteligentId;
@@ -25,6 +27,15 @@ vRETORNO := 0;
 			vRETORNO :=	vRETORNO +1;
 			END IF;
 		END IF;
+		IF (vRETORNO = 0) THEN
+			SELECT * FROM ${schema}.extrato into REC_EXTRATO WHERE id = REC_INTELIGENT.extrato_id;
+			SELECT * FROM ${schema}.regra into REC_REGRA WHERE parceiro_id = REC_INTELIGENT.parceiro_id AND ((REC_INTELIGENT.historico = REG_DESCRICAO AND TIPO_REGRA = 'HISTORICO')
+			OR (REC_EXTRATO.info_adicional = REG_DESCRICAO AND TIPO_REGRA = 'INFORMACAO_ADICIONAL') OR (REC_INTELIGENT.BENEFICIARIO = REG_DESCRICAO AND TIPO_REGRA = 'BENEFICIARIO'));
+		    IF (REC_REGRA.id is not null) then		    
+			  UPDATE ${schema}.INTELIGENT SET CONTA_ID = REC_REGRA.CONTA_ID, HISTORICOFINAL = REC_REGRA.REG_HISTORICO, REGRA_ID = REC_REGRA.ID, ASSOCIADO = TRUE
+		      WHERE ID = REC_INTELIGENT.ID;
+	  		END IF;
+	  	END IF;	
 return vRETORNO;
 END;
 $function$;

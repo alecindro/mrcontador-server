@@ -45,7 +45,8 @@ public class ContaService {
     	contas.forEach(conta -> {
     		conta.setDataCadastro(new Date());
     	});
-    	return contaRepository.saveAll(contas);
+    	contas.forEach(c -> contaRepository.save(c));
+    	return contas;
     }
     
     public List<Conta> update(List<Conta> contas, String user, Parceiro parceiro ){
@@ -53,9 +54,10 @@ public class ContaService {
     	Instant created = Instant.now();
     	contas.forEach(conta -> {
     		try {
-    		contaRepository.createConta(dataCadastro, conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getConConta(), created, user, conta.getArquivo().getId(), parceiro.getId());
-    		contaRepository.updateConta(conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getArquivo().getId(), created, user, conta.getConConta(), parceiro.getId());
+    		contaRepository.createConta(dataCadastro, conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(), conta.getConConta(), created, user,parceiro.getId());
+    		contaRepository.updateConta(conta.getConClassificacao(), conta.getConTipo(), conta.getConDescricao(), conta.getConCnpj(), conta.getConGrau(),  created, user, conta.getConConta(), parceiro.getId());
     		} catch(Exception e) {
+    			log.error(e.getMessage(),e);
     			throw new RuntimeException();
     		}
     	});

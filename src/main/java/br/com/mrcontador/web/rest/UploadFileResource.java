@@ -53,7 +53,7 @@ public class UploadFileResource {
 	}
 
 	@PostMapping("/upload/planoconta")
-	public ResponseEntity<Void> uploadPlanoConta(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<Void> uploadPlanoConta(@RequestParam(required = true, name = "file") MultipartFile file,
 			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
 		log.info("Processando Plano de conta: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> oParceiro = parceiroService.findOne(parceiroId);
@@ -82,7 +82,7 @@ public class UploadFileResource {
 	@PutMapping("/upload/planoconta")
 	public ResponseEntity<Void> updatePlanoConta(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "parceiroId") Long parceiroId) throws Exception {
-		log.info("Processando Plano de conta: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
+		log.info("Atualizando Plano de conta: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
 		Optional<Parceiro> oParceiro = parceiroService.findOne(parceiroId);
 		if(oParceiro.isEmpty()) {
 			throw new MrContadorException("parceiro.notfound");
