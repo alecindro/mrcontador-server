@@ -3,18 +3,14 @@ package br.com.mrcontador.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-import br.com.mrcontador.domain.TipoAgencia;
+import br.com.mrcontador.domain.Integrador;
 import br.com.mrcontador.domain.TipoIntegracao;
-import br.com.mrcontador.service.dto.AgenciabancariaCriteria.TipoAgenciaFilter;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
 
 /**
  * Criteria class for the {@link br.com.mrcontador.domain.Integracao} entity. This class is used
@@ -44,13 +40,31 @@ public class IntegracaoCriteria implements Serializable, Criteria {
 	        }
 
 	    }
+	 
+	 public static class IntegradorFilter extends Filter<Integrador> {
+
+	      private static final long serialVersionUID = 1L;
+
+			public IntegradorFilter() {
+	        }
+
+	        public IntegradorFilter(IntegradorFilter filter) {
+	            super(filter);
+	        }
+
+	        @Override
+	        public IntegradorFilter copy() {
+	            return new IntegradorFilter(this);
+	        }
+
+	    }
 
 
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;
 
-    private StringFilter integrador;
+    private IntegradorFilter integrador;
 
     private LocalDateFilter dataInicio;
 
@@ -88,11 +102,11 @@ public class IntegracaoCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public StringFilter getIntegrador() {
+    public IntegradorFilter getIntegrador() {
         return integrador;
     }
 
-    public void setIntegrador(StringFilter integrador) {
+    public void setIntegrador(IntegradorFilter integrador) {
         this.integrador = integrador;
     }
 

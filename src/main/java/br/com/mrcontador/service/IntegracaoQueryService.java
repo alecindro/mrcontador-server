@@ -86,7 +86,7 @@ public class IntegracaoQueryService extends QueryService<Integracao> {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Integracao_.id));
             }
             if (criteria.getIntegrador() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getIntegrador(), Integracao_.integrador));
+                specification = specification.and(buildSpecification(criteria.getIntegrador(), Integracao_.integrador));
             }
             if (criteria.getTipoIntegracao() != null) {
                 specification = specification.and(buildSpecification(criteria.getTipoIntegracao(), Integracao_.tipoIntegracao));

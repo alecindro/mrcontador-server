@@ -1,6 +1,7 @@
 package br.com.mrcontador.web.rest;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Agenciabancaria;
 import br.com.mrcontador.domain.Conta;
+import br.com.mrcontador.domain.Integracao;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.file.FileService;
@@ -26,6 +28,7 @@ import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ContaService;
+import br.com.mrcontador.service.IntegracaoService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -40,16 +43,19 @@ public class UploadFileResource {
 	private final ParceiroService parceiroService;
 	private final AgenciabancariaService agenciabancariaService;
 	private final ContaService contaService;
+	private final IntegracaoService integracaoService;
 
 	@Value("${jhipster.clientApp.name}")
 	private String applicationName;
 
 	public UploadFileResource(FileService fileService, ParceiroService parceiroService,
-			AgenciabancariaService agenciabancariaService, ContaService contaService) {
+			AgenciabancariaService agenciabancariaService, ContaService contaService,
+			 IntegracaoService integracaoService) {
 		this.parceiroService = parceiroService;
 		this.fileService = fileService;
 		this.agenciabancariaService = agenciabancariaService;
 		this.contaService = contaService;
+		this.integracaoService = integracaoService;
 	}
 
 	@PostMapping("/upload/planoconta")
@@ -152,16 +158,19 @@ public class UploadFileResource {
 
 	@PostMapping("/upload/nf")
 	public ResponseEntity<String> uploadNF(@RequestParam("file") MultipartFile file,
-			@RequestParam(required = true, name = "idParceiro") Long idParceiro) throws Exception {
+			@RequestParam(required = true, name = "idIntregacao") Long idIntegracao) throws Exception {
 		log.info("Processando nota fiscal: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
-		Optional<Parceiro> parceiro = parceiroService.findOne(idParceiro);
-		if (parceiro.isEmpty()) {
-			throw new MrContadorException("parceiro.notfound");
+		Optional<Integracao> oIntegracao =  integracaoService.findOne(idIntegracao);
+		if (oIntegracao.isEmpty()) {
+			throw new MrContadorException("integracao.notfound");
 		}
 		try {
+			Integracao integracao = oIntegracao.get();
 			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), parceiro.get(),TipoDocumento.NOTA);
+					SecurityUtils.getCurrentTenantHeader(), integracao.getParceiro(),TipoDocumento.NOTA);
 			String periodo = fileService.processNFE(dto);
+			integracao.setDataInicio(LocalDate.now());
+			integracaoService.save(integracao);
 			return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
 					.headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName())).body(periodo);
 		} catch (MrContadorException e) {

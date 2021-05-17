@@ -45,8 +45,7 @@ public class ContaService {
     	contas.forEach(conta -> {
     		conta.setDataCadastro(new Date());
     	});
-    	contas.forEach(c -> contaRepository.save(c));
-    	return contas;
+    	return contaRepository.saveAll(contas);
     }
     
     public List<Conta> update(List<Conta> contas, String user, Parceiro parceiro ){

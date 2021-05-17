@@ -25,7 +25,8 @@ public class Integracao implements Serializable {
     private Long id;
 
     @Column(name = "integrador")
-    private String integrador;
+    @Enumerated(EnumType.STRING)
+    private Integrador integrador;
 
     @Column(name = "tipo_integracao")
     @Enumerated(EnumType.STRING)
@@ -54,16 +55,16 @@ public class Integracao implements Serializable {
         this.id = id;
     }
 
-    public String getIntegrador() {
+    public Integrador getIntegrador() {
         return integrador;
     }
 
-    public Integracao integrador(String integrador) {
+    public Integracao integrador(Integrador integrador) {
         this.integrador = integrador;
         return this;
     }
 
-    public void setIntegrador(String integrador) {
+    public void setIntegrador(Integrador integrador) {
         this.integrador = integrador;
     }
 
