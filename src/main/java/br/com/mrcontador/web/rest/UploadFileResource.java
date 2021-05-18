@@ -176,23 +176,19 @@ public class UploadFileResource {
 			throw new MrContadorException("nfe.imported");
 		}
 	}
-	
 
 	@PostMapping("/upload/nf/integra")
 	public ResponseEntity<String> uploadNFINtegra(@RequestParam("file") MultipartFile file,
-			@RequestParam(required = true, name = "idIntregacao") Long idIntegracao) throws Exception {
-		log.info("Processando nota fiscal: {}. Contador: {}", file.getName(), SecurityUtils.getCurrentTenantHeader());
-		Optional<Integracao> oIntegracao =  integracaoService.findOne(idIntegracao);
-		if (oIntegracao.isEmpty()) {
-			throw new MrContadorException("integracao.notfound");
+			@RequestParam(required = true, name = "cnpj") String cnpj) throws Exception {
+		log.info("Processando nota fiscal: {}. Contador: {}", file.getName(), cnpj);
+		Optional<Parceiro> parceiro  = parceiroService.findByParCnpjcpf(cnpj);
+		if (parceiro.isEmpty()) {
+			throw new MrContadorException("parceiro.notfound");
 		}
 		try {
-			Integracao integracao = oIntegracao.get();
-			FileDTO dto = fileService.getFileDTO(file.getContentType(), file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
-					SecurityUtils.getCurrentTenantHeader(), integracao.getParceiro(),TipoDocumento.NOTA);
+			FileDTO dto = fileService.getFileDTO("application/xml", file.getOriginalFilename(), file.getSize(), file.getInputStream(), SecurityUtils.getCurrentUserLogin(),
+					TenantContext.getTenantSchema(), parceiro.get(),TipoDocumento.NOTA);
 			String periodo = fileService.processNFE(dto);
-			integracao.setDataInicio(LocalDate.now());
-			integracaoService.save(integracao);
 			return ResponseEntity.created(new URI("/api/uploadplanoconta/"))
 					.headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "uploadNF", file.getName())).body(periodo);
 		} catch (MrContadorException e) {
@@ -201,7 +197,7 @@ public class UploadFileResource {
 			throw new MrContadorException("nfe.imported");
 		}
 	}
-	
+
 	@PostMapping("/upload/ns")
 	public ResponseEntity<Void> uploadNS(@RequestParam("file") MultipartFile file,
 			@RequestParam(required = true, name = "idParceiro") Long idParceiro) throws Exception {
