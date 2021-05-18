@@ -47,9 +47,9 @@ public class PdfParserPlanoConta {
 			PlanoConta planoConta = parsePlanoConta(sistemaPlanoConta, document);
 			validatePlano(dto.getParceiro(), planoConta.getCnpjCliente());
 			PlanoContaMapper mapper = new PlanoContaMapper();
-			s3Service.uploadPlanoConta(dto,arquivoService,TenantContext.getTenantSchema());
 			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro());
-			contaService.save(contas);			
+			contaService.save(contas);		
+			s3Service.uploadPlanoConta(dto,arquivoService,TenantContext.getTenantSchema());
 		
 		} catch (CnpjAlreadyExistException e) {
 			throw e;
