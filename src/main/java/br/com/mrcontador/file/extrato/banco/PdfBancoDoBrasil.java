@@ -69,7 +69,10 @@ public class PdfBancoDoBrasil extends PdfParserExtrato {
 				continue;
 			}
 			if (StringUtils.deleteWhitespace(line).contains(SALDO_FINAL)) {
-				break;
+				continue;
+			}
+			if(!MrContadorUtil.isDate(StringUtils.left(StringUtils.trim(line), 10), dateFormatter)) {
+				continue;
 			}
 			readLine(line, data, i);
 			if (i < lines.length - 1) {
