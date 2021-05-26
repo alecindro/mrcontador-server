@@ -10,7 +10,7 @@ public class ExportLancamentoFactory {
 		if(SistemaPlanoConta.DOMINIO_SISTEMAS.equals(sistemaPlanoConta)) {
 			return new ExportDominio();
 		}
-		throw new MrContadorException("sismtea.not.implemented");
+		throw new MrContadorException("sistema.not.implemented");
 	}
 
 		
