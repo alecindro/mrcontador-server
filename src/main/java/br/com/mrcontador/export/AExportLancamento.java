@@ -61,18 +61,6 @@ public abstract class AExportLancamento implements ExportLancamento {
 			}
 			
 		}
-		for(LocalDate _date : debitos.keySet()) {
-		processDebitos(builder, debitos.get(_date), contaAgenciaBancaria);
-		}
-		for(LocalDate _date : debitosSemTipo.keySet()) {
-		processDebitosSemTipoValor(builder, debitosSemTipo.get(_date), contaAgenciaBancaria);
-		}
-		for(LocalDate _date : creditos.keySet()) {
-			processCreditos(builder, creditos.get(_date), contaAgenciaBancaria);
-		}
-		for(LocalDate _date : creditosSemTipo.keySet()) {
-			processCreditosSemTipoValor(builder, creditosSemTipo.get(_date), contaAgenciaBancaria);
-		}
 	}
 	private void processDebitosSemTipoValor(StringBuilder builder, List<Inteligent> list,
 			Conta contaAgenciaBancaria) {

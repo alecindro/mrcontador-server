@@ -39,20 +39,20 @@ public class ExportDominioTest {
 		TenantContext.setTenantSchema("ds_04656282000130");
 		InteligentCriteria criteria = new InteligentCriteria();
 		LongFilter p = new LongFilter();
-		p.setEquals(5L);
+		p.setEquals(6L);
 		StringFilter f = new StringFilter();
-		f.setEquals("42021");
+		f.setEquals("32021");
 		BooleanFilter b = new BooleanFilter();
 		b.setEquals(true);
 		criteria.setParceiroId(p);
 		criteria.setPeriodo(f);
 		criteria.setAssociado(b);
 		LongFilter a = new LongFilter();
-		a.setEquals(12L);
+		a.setEquals(15L);
 		criteria.setAgenciabancariaId(a);
 		List<Inteligent> list = service.findByCriteria(criteria);
 		ExportDominio ex = new ExportDominio();
-		Agenciabancaria agencia = agService.findOne(12L).get();
+		Agenciabancaria agencia = agService.findOne(15L).get();
 		byte[] result = ex.process(list,agencia.getConta());
 		try {
 		      FileWriter myWriter = new FileWriter("C:\\java\\testes\\exportacao_dominio.txt");
