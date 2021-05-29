@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.erros.MrContadorException;
+import br.com.mrcontador.repository.InteligentRepository.InteligentStats;
 import br.com.mrcontador.service.InteligentNfDTOService;
 import br.com.mrcontador.service.InteligentQueryService;
 import br.com.mrcontador.service.InteligentService;
@@ -112,6 +113,13 @@ public class InteligentResource {
 		// HttpHeaders headers =
 		// PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(),
 		// page);
+		return ResponseEntity.ok().body(page);
+	}
+	
+	@GetMapping("/inteligents/stats")
+	public ResponseEntity<List<InteligentStats>> getInteligentStats(Long parceiroId) {
+		log.debug("REST request to get Inteligents stats: {}", parceiroId);
+		List<InteligentStats> page = inteligentService.getInteligentStats(parceiroId);
 		return ResponseEntity.ok().body(page);
 	}
 

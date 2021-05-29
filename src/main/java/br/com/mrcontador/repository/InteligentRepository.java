@@ -1,5 +1,6 @@
 package br.com.mrcontador.repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -61,5 +62,16 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   @Modifying(flushAutomatically = true)
   @Query(value="update inteligent set historicofinal = null, conta_id = null, associado = false, regra_id = null  where regra_id = :regraId and parceiro_id = :parceiroId",nativeQuery = true)
   void deleteRegra(@Param("regraId") Long regraId, @Param("parceiroId") Long parceiroId);
+  
+  @Query(value="select  max(datalancamento) as max_data, periodo, count(id) as qtd,  sum(case when associado = true then 0 else 1 end) as divergente from ds_04656282000130.inteligent  where parceiro_id = :parceiroId group by periodo order by max_data desc limit 6",nativeQuery = true)
+  List<InteligentStats> getInteligentStats(@Param("parceiroId") Long parceiroId);
+  
+  public interface InteligentStats{
+	  LocalDate getMaxDate();
+	  String getPeriodo();
+	  Integer getQuantidade();
+	  Integer getDivergente();
+	  
+  }
   
 }

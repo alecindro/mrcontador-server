@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import br.com.mrcontador.config.type.TipoRegra;
 import br.com.mrcontador.domain.Inteligent;
 import br.com.mrcontador.domain.Regra;
 import br.com.mrcontador.repository.InteligentRepository;
+import br.com.mrcontador.repository.InteligentRepository.InteligentStats;
 import br.com.mrcontador.util.MrContadorUtil;
 
 /**
@@ -120,5 +122,9 @@ public class InteligentService {
     
     public List<String> periodos(Long parceiroId, Long agenciabancariaId){
     	return inteligentRepository.periodos(parceiroId, agenciabancariaId);
+    }
+    
+    public  List<InteligentStats> getInteligentStats(Long parceiroId){
+    	return inteligentRepository.getInteligentStats(parceiroId);
     }
 }
