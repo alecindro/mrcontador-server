@@ -2,13 +2,17 @@ package br.com.mrcontador.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,17 +22,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.mrcontador.domain.Inteligent;
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.repository.InteligentRepository.InteligentStats;
 import br.com.mrcontador.service.InteligentNfDTOService;
 import br.com.mrcontador.service.InteligentQueryService;
 import br.com.mrcontador.service.InteligentService;
+import br.com.mrcontador.service.ParceiroQueryService;
 import br.com.mrcontador.service.dto.InteligentCriteria;
 import br.com.mrcontador.service.dto.InteligentNfDTO;
+import br.com.mrcontador.service.dto.InteligentStatsDTO;
+import br.com.mrcontador.service.dto.ParceiroCriteria;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 
 /**
@@ -43,18 +53,20 @@ public class InteligentResource {
 	private final InteligentService inteligentService;
 
 	private final InteligentQueryService inteligentQueryService;
-	
+
 	private final InteligentNfDTOService inteligentNfDTOService;
+
+	private final ParceiroQueryService parceiroQueryService;
 
 	@Value("${jhipster.clientApp.name}")
 	private String applicationName;
 
-	public InteligentResource(InteligentService inteligentService, 
-			InteligentQueryService inteligentQueryService,
-			InteligentNfDTOService inteligentNfDTOService) {
+	public InteligentResource(InteligentService inteligentService, InteligentQueryService inteligentQueryService,
+			InteligentNfDTOService inteligentNfDTOService, ParceiroQueryService parceiroQueryService) {
 		this.inteligentService = inteligentService;
 		this.inteligentQueryService = inteligentQueryService;
 		this.inteligentNfDTOService = inteligentNfDTOService;
+		this.parceiroQueryService = parceiroQueryService;
 	}
 
 	@PostMapping("/inteligents")
@@ -68,21 +80,23 @@ public class InteligentResource {
 				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.created", ""))
 				.body(inteligent);
 	}
-	
+
 	@PostMapping("/inteligents/nf")
 	public ResponseEntity<Void> associateNf(@RequestBody InteligentNfDTO inteligentNfDTO) throws URISyntaxException {
 		log.debug("REST save InteligentNfDTO: {}", inteligentNfDTO);
 		inteligentNfDTOService.save(inteligentNfDTO);
 		return ResponseEntity.created(new URI("/api/inteligents/nf"))
-				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.nfassociate", "")).build();
+				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.nfassociate", ""))
+				.build();
 	}
-	
+
 	@PutMapping("/inteligents/nf")
 	public ResponseEntity<Void> removeNf(@RequestBody Inteligent inteligent) throws URISyntaxException {
 		log.debug("REST removeNf Inteligent: {}", inteligent);
 		inteligentNfDTOService.removeNF(inteligent);
 		return ResponseEntity.created(new URI("/api/inteligents/nf"))
-				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.nfdesassociate", "")).build();
+				.headers(HeaderUtil.createAlert(applicationName, "mrcontadorFrontApp.inteligent.nfdesassociate", ""))
+				.build();
 	}
 
 	@PutMapping("/inteligents")
@@ -115,12 +129,24 @@ public class InteligentResource {
 		// page);
 		return ResponseEntity.ok().body(page);
 	}
-	
+
 	@GetMapping("/inteligents/stats")
-	public ResponseEntity<List<InteligentStats>> getInteligentStats(Long parceiroId) {
-		log.debug("REST request to get Inteligents stats: {}", parceiroId);
-		List<InteligentStats> page = inteligentService.getInteligentStats(parceiroId);
-		return ResponseEntity.ok().body(page);
+	public ResponseEntity<List<InteligentStatsDTO>> getInteligentStats(ParceiroCriteria criteria, Pageable pageable) {
+		log.debug("REST request to get InteligentStats by criteria: {}", criteria);
+		Page<Parceiro> page = parceiroQueryService.findByCriteria(criteria, pageable);
+		HttpHeaders headers = PaginationUtil
+				.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+		List<InteligentStatsDTO> list = new ArrayList<>();
+		if (page.hasContent()) {
+			for (Parceiro parceiro : page.getContent()) {
+				InteligentStatsDTO dto = new InteligentStatsDTO();
+				dto.setParceiro(parceiro);
+				List<InteligentStats> stats = inteligentService.getInteligentStats(parceiro.getId());
+				dto.setStats(stats);
+				list.add(dto);
+			}
+		}
+		return ResponseEntity.ok().headers(headers).body(list);
 	}
 
 	@GetMapping("/inteligents/periodo")
