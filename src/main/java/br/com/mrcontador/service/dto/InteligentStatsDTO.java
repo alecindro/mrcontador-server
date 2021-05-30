@@ -6,14 +6,14 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.repository.InteligentRepository.InteligentStats;
 
 public class InteligentStatsDTO {
-	private List<InteligentStats> stats;
+	private List<InteligentStats> inteligentStats;
 	private Parceiro parceiro;
 	
-	public List<InteligentStats> getStats() {
-		return stats;
+	public List<InteligentStats> getInteligentStats() {
+		return inteligentStats;
 	}
-	public void setStats(List<InteligentStats> stats) {
-		this.stats = stats;
+	public void setInteligentStats(List<InteligentStats> inteligentStats) {
+		this.inteligentStats = inteligentStats;
 	}
 	public Parceiro getParceiro() {
 		return parceiro;
