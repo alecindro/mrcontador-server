@@ -142,7 +142,7 @@ public class InteligentResource {
 				InteligentStatsDTO dto = new InteligentStatsDTO();
 				dto.setParceiro(parceiro);
 				List<InteligentStats> stats = inteligentService.getInteligentStats(parceiro.getId());
-				dto.setStats(stats);
+				dto.setInteligentStats(stats);
 				list.add(dto);
 			}
 		}
