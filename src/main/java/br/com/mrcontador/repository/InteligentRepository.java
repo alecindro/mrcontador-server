@@ -63,7 +63,7 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   @Query(value="update inteligent set historicofinal = null, conta_id = null, associado = false, regra_id = null  where regra_id = :regraId and parceiro_id = :parceiroId",nativeQuery = true)
   void deleteRegra(@Param("regraId") Long regraId, @Param("parceiroId") Long parceiroId);
   
-  @Query(value="select  max(datalancamento) as maxDate, periodo, count(id) as quantidade,  sum(case when associado = true then 0 else 1 end) as divergente from ds_04656282000130.inteligent  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6",nativeQuery = true)
+  @Query(value="select  max(datalancamento) as maxDate, periodo, count(id) as quantidade,  sum(case when associado = true then 0 else 1 end) as divergente from inteligent  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6",nativeQuery = true)
   List<InteligentStats> getInteligentStats(@Param("parceiroId") Long parceiroId);
   
   public interface InteligentStats{
@@ -74,4 +74,16 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
 	  
   }
   
+  @Query(value="select COUNT(id) as total, 'INTELIGENT' as tipo from inteligent where parceiro_id = :parceiroId " + 
+  		"union " + 
+  		"select COUNT(id) as total, 'COMPROVANTE' as tipo from comprovante where parceiro_id = :parceiroId " + 
+  		"union " + 
+  		"select COUNT(id) as total, 'EXTRATO' as tipo from extrato where parceiro_id = :parceiroId " + 
+  		"union " + 
+  		"select COUNT(id) as total, 'NFS' as tipo from notafiscal where parceiro_id = :parceiroId",nativeQuery = true)
+  List<StatsCount> getStatsCount(@Param("parceiroId") Long parceiroId);
+  public interface StatsCount{
+	  Long getTotal();
+	  String getTipo();
+  }
 }

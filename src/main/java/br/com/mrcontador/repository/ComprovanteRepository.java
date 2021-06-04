@@ -1,5 +1,6 @@
 package br.com.mrcontador.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,4 +82,18 @@ public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>,
 	@Modifying(flushAutomatically = true)
 	@Query(value = "update comprovante set arquivo_id = :arquivoId where id = :comprovanteId", nativeQuery = true)
 	void updateArquivo(@Param("comprovanteId") Long id, @Param("arquivoId") Long arquivoId);
+	
+	@Query(value = "select  max(com_datapagamento) as maxDate, periodo, count(id) as quantidade,  sum(case when processado = true then 0 else 1 end) as divergente from comprovante  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6", nativeQuery = true)
+	List<ComprovanteStats> getComprovanteStats(@Param("parceiroId") Long parceiroId);
+
+	public interface ComprovanteStats {
+		LocalDate getMaxDate();
+
+		String getPeriodo();
+
+		Integer getQuantidade();
+
+		Integer getDivergente();
+
+	}
 }

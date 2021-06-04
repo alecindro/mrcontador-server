@@ -1,5 +1,6 @@
 package br.com.mrcontador.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import br.com.mrcontador.domain.Extrato;
+import br.com.mrcontador.repository.ComprovanteRepository.ComprovanteStats;
 
 /**
  * Spring Data repository for the Extrato entity.
@@ -82,5 +84,19 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 			"and r.parceiro_id = :parceiroId) as subquery " + 
 			"where id = subquery.intel_id;", nativeQuery = true)
 	void regraInteligent(@Param("parceiroId") Long parceiroId,@Param("periodo") String periodo);
+	
+	@Query(value = "select  max(ext_datalancamento) as maxDate, periodo, count(id) as quantidade,  sum(case when processado = true then 0 else 1 end) as divergente from extrato  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6", nativeQuery = true)
+	List<ExtratoStats> getExtratoStats(@Param("parceiroId") Long parceiroId);
+
+	public interface ExtratoStats {
+		LocalDate getMaxDate();
+
+		String getPeriodo();
+
+		Integer getQuantidade();
+
+		Integer getDivergente();
+
+	}
 
 }

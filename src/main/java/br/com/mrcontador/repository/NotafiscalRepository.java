@@ -17,6 +17,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import br.com.mrcontador.domain.Notafiscal;
+import br.com.mrcontador.repository.InteligentRepository.InteligentStats;
 
 /**
  * Spring Data  repository for the Notafiscal entity.
@@ -47,4 +48,18 @@ public interface NotafiscalRepository extends JpaRepository<Notafiscal, Long>, J
 	  		+ " and (not_dataparcela between :datainicial and  :datafinal) and tno_codigo = 0 and processado = false order by not_dataparcela asc", nativeQuery = true)
 		List<Notafiscal> find(@Param("cnpj") String cnpj, @Param("valorInicial") BigDecimal valorInicial, @Param("valorFinal") BigDecimal valorFinal, 
 				@Param("datainicial") LocalDate datainicial, @Param("datafinal") LocalDate datafinal );
+	  
+		@Query(value = "select  max(not_dataparcela) as maxDate, periodo, count(id) as quantidade,  sum(case when processado = true then 0 else 1 end) as divergente from notafiscal  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6", nativeQuery = true)
+		List<NFSStats> getNotaFiscalStats(@Param("parceiroId") Long parceiroId);
+
+		public interface NFSStats {
+			LocalDate getMaxDate();
+
+			String getPeriodo();
+
+			Integer getQuantidade();
+
+			Integer getDivergente();
+
+		}
 }
