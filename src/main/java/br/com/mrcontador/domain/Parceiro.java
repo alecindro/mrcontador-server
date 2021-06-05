@@ -164,6 +164,12 @@ public class Parceiro implements Serializable {
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
     private Set<Integracao> integracaos;
     
+    
+    @OneToMany(mappedBy = "parceiro", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
+    private Set<PermissaoParceiro> permissaos;
+    
     @ManyToOne
     @JoinColumn(name="despesa_juros")
     @JsonIgnoreProperties(value = "parceiro", allowSetters = true)
@@ -607,6 +613,24 @@ public class Parceiro implements Serializable {
     public Parceiro addIntegracao(Integracao integracao) {
         this.getIntegracaos().add(integracao);
         integracao.setParceiro(this);
+        return this;
+    }
+    
+    public Set<PermissaoParceiro> getPermissaos() {
+    	if(permissaos == null) {
+    		permissaos =  new HashSet<>();
+    	}
+        return permissaos;
+    }
+
+    public Parceiro permissaos(Set<PermissaoParceiro> permissaos) {
+        this.permissaos = permissaos;
+        return this;
+    }
+
+    public Parceiro addPermissao(PermissaoParceiro permissao) {
+        this.getPermissaos().add(permissao);
+        permissao.setParceiro(this);
         return this;
     }
 

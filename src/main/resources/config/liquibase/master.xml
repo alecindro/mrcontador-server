@@ -124,6 +124,8 @@
 </changeSet>
 <include file="config/liquibase/changelog/data2.sql" relativeToChangelogFile="false"/>
 <include file="config/liquibase/changelog/alter_conta_descrica.sql" relativeToChangelogFile="false"/>
+<include file="config/liquibase/changelog/exportacao.sql" relativeToChangelogFile="false"/>
+<include file="config/liquibase/changelog/permissao_parceiro.sql" relativeToChangelogFile="false"/>
 
    <!--  jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

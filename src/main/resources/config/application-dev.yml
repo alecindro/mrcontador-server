@@ -41,8 +41,8 @@ spring:
     #url: jdbc:postgresql://mrcontadordb.cd4all6waihc.us-east-1.rds.amazonaws.com:5432/postgres?reWriteBatchedInserts=true
     #username: postgres
     #password: mrcontador2018!
-    #url: jdbc:postgresql://192.168.10.4:5432/mrc_dev?reWriteBatchedInserts=true
-    url: jdbc:postgresql://localhost:5432/mrcontador?reWriteBatchedInserts=true
+    #url: jdbc:postgresql://192.168.10.9:5432/mrc_dev?reWriteBatchedInserts=true
+    url: jdbc:postgresql://192.168.10.9:5432/mrcontador?reWriteBatchedInserts=true
     username: postgres
     password: banana2018!
     driverClassName: org.postgresql.Driver

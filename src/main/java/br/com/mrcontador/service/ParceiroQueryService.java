@@ -19,10 +19,13 @@ import br.com.mrcontador.domain.Atividade_;
 import br.com.mrcontador.domain.Integracao_;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.domain.Parceiro_;
+import br.com.mrcontador.domain.PermissaoParceiro_;
 import br.com.mrcontador.domain.Socio_;
 import br.com.mrcontador.repository.ParceiroRepository;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.ParceiroCriteria;
 import io.github.jhipster.service.QueryService;
+import io.github.jhipster.service.filter.StringFilter;
 
 /**
  * Service for executing complex queries for {@link Parceiro} entities in the database.
@@ -207,8 +210,10 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
                 specification = specification.and(buildSpecification(criteria.getIntegracaoId(),
                     root -> root.join(Parceiro_.integracaos, JoinType.LEFT).get(Integracao_.id)));
             }
-            
-            
+            StringFilter userFilter = new StringFilter();
+            userFilter.setEquals(SecurityUtils.getCurrentUserLogin().get());
+            specification = specification.and(buildSpecification(userFilter,
+                    root -> root.join(Parceiro_.permissaos, JoinType.INNER).get(PermissaoParceiro_.usuario)));
         }
         return specification;
     }

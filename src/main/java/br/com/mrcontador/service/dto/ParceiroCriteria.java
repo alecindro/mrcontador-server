@@ -2,11 +2,10 @@ package br.com.mrcontador.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
@@ -96,6 +95,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
     private LongFilter agenciabancariaId;
     
     private LongFilter integracaoId;
+    
+    private LongFilter permissaoId;
 
     public ParceiroCriteria() {
     }
@@ -137,6 +138,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
         this.socioId = other.socioId == null ? null : other.socioId.copy();
         this.agenciabancariaId = other.agenciabancariaId == null ? null : other.agenciabancariaId.copy();
         this.integracaoId = other.integracaoId == null ? null : other.integracaoId.copy();
+        this.permissaoId = other.permissaoId == null ? null : other.permissaoId.copy();
     }
 
     @Override
@@ -434,8 +436,14 @@ public class ParceiroCriteria implements Serializable, Criteria {
 	public void setIntegracaoId(LongFilter integracaoId) {
 		this.integracaoId = integracaoId;
 	}
+	
+	public LongFilter getPermissaoId() {
+		return permissaoId;
+	}
 
-
+	public void setPermissaoId(LongFilter permissaoId) {
+		this.permissaoId = permissaoId;
+	}
 
 	@Override
     public boolean equals(Object o) {
@@ -482,7 +490,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
             Objects.equals(atividadeId, that.atividadeId) &&
             Objects.equals(socioId, that.socioId) &&
             Objects.equals(agenciabancariaId, that.agenciabancariaId) && 
-            Objects.equals(integracaoId, that.integracaoId);
+            Objects.equals(integracaoId, that.integracaoId) &&
+            Objects.equals(permissaoId, that.permissaoId);
     }
 
     @Override
@@ -523,7 +532,8 @@ public class ParceiroCriteria implements Serializable, Criteria {
         atividadeId,
         socioId,
         agenciabancariaId,
-        integracaoId
+        integracaoId,
+        permissaoId
         );
     }
 
@@ -567,6 +577,7 @@ public class ParceiroCriteria implements Serializable, Criteria {
                 (socioId != null ? "socioId=" + socioId + ", " : "") +
                 (agenciabancariaId != null ? "agenciabancariaId=" + agenciabancariaId + ", " : "") +
                 (integracaoId != null ? "integracaoId=" + integracaoId + ", " : "") +
+                (permissaoId != null ? "permissaoId=" + permissaoId + ", " : "") +
             "}";
     }
 

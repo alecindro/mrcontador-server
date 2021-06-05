@@ -26,8 +26,10 @@ import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.export.ExportLancamento;
 import br.com.mrcontador.export.ExportLancamentoFactory;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.AgenciabancariaService;
 import br.com.mrcontador.service.ComprovanteService;
+import br.com.mrcontador.service.ExportacaoService;
 import br.com.mrcontador.service.ExtratoService;
 import br.com.mrcontador.service.InteligentQueryService;
 import br.com.mrcontador.service.NotafiscalService;
@@ -51,11 +53,13 @@ public class DownloadFileResource {
 	private final InteligentQueryService inteligentQueryService;
 	private final AgenciabancariaService agenciabancariaService;
 	private final ParceiroService parceiroService;
+	private final ExportacaoService exportacaoService;
 
 	public DownloadFileResource(S3Service s3Service, ComprovanteService comprovanteService,
 			NotafiscalService notafiscalService, ExtratoService extratoService,
 			InteligentQueryService inteligentQueryService, AgenciabancariaService agenciabancariaService,
-			ParceiroService parceiroService) {
+			ParceiroService parceiroService,
+			ExportacaoService exportacaoService) {
 		this.s3Service = s3Service;
 		this.comprovanteService = comprovanteService;
 		this.notafiscalService = notafiscalService;
@@ -63,6 +67,7 @@ public class DownloadFileResource {
 		this.inteligentQueryService = inteligentQueryService;
 		this.parceiroService = parceiroService;
 		this.agenciabancariaService = agenciabancariaService;
+		this.exportacaoService = exportacaoService;
 	}
 
 	@GetMapping("/downloadFile/comprovante/{id}")
@@ -149,6 +154,7 @@ public class DownloadFileResource {
 		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.DOMINIO_SISTEMAS);
 		byte[] result = lancamento.process(inteligents, agencia.getConta());
 		Resource resource = new ByteArrayResource(result);
+		exportacaoService.save(parceiro, periodo, SecurityUtils.getCurrentUserLogin().get());
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/plain"))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"lancamento_" + org.apache.commons.lang3.StringUtils.deleteWhitespace(parceiro.getParRazaosocial())+"_"+periodo + ".txt\"")
 				.body(resource);
