@@ -73,7 +73,7 @@ public class ExportDominioTest {
 		Parceiro parceiro = parceiroService.findOne(parceiroId).get();
 		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.DOMINIO_SISTEMAS);
 		byte[] result = lancamento.process(inteligents, agencia.getConta());
-		exportacaoService.save(parceiro, periodo, "alecindro");
+		exportacaoService.save(parceiro, agencia,periodo, "alecindro");
 		/*try {
 		      FileWriter myWriter = new FileWriter("C:\\java\\testes\\exportacao_dominio.txt");
 		      myWriter.write(new String(result));

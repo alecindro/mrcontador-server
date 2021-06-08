@@ -44,6 +44,11 @@ public class Exportacao implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "exportacao", allowSetters = true)
     private Parceiro parceiro;
+    
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "exportacao", allowSetters = true)
+    private Agenciabancaria agenciabancaria;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -93,10 +98,20 @@ public class Exportacao implements Serializable {
         this.parceiro = parceiro;
     }
     
+    public Exportacao agenciabancaria(Agenciabancaria agenciabancaria) {
+		this.agenciabancaria = agenciabancaria;
+        return this;
+    }
     
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public Agenciabancaria getAgenciabancaria() {
+		return agenciabancaria;
+	}
 
-    public String getPeriodo() {
+	public void setAgenciabancaria(Agenciabancaria agenciabancaria) {
+		this.agenciabancaria = agenciabancaria;
+	}
+
+	public String getPeriodo() {
 		return periodo;
 	}
 

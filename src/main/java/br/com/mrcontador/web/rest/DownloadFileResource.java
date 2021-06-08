@@ -154,7 +154,7 @@ public class DownloadFileResource {
 		ExportLancamento lancamento = ExportLancamentoFactory.get(SistemaPlanoConta.DOMINIO_SISTEMAS);
 		byte[] result = lancamento.process(inteligents, agencia.getConta());
 		Resource resource = new ByteArrayResource(result);
-		exportacaoService.save(parceiro, periodo, SecurityUtils.getCurrentUserLogin().get());
+		exportacaoService.save(parceiro,agencia, periodo, SecurityUtils.getCurrentUserLogin().get());
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/plain"))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"lancamento_" + org.apache.commons.lang3.StringUtils.deleteWhitespace(parceiro.getParRazaosocial())+"_"+periodo + ".txt\"")
 				.body(resource);
