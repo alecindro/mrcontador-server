@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * A Arquivo.
  */
 @Entity
-@Table(name = "arquivo")
+@Table(name = "exportacao")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Exportacao implements Serializable {
 

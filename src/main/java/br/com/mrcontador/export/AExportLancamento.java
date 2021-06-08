@@ -90,7 +90,7 @@ public abstract class AExportLancamento implements ExportLancamento {
 				break;
 			default:
 				break;
-			}
+			}			
 		}
 	}
 	
@@ -113,6 +113,9 @@ public abstract class AExportLancamento implements ExportLancamento {
 		}
 		if(list.stream().filter(i -> i.getTipoValor().contentEquals(TipoValor.TAXA.name())).count()>0) {
 			return TipoExtratoDominio.C;
+		}
+		if(list.stream().allMatch(i -> i.getTipoValor().contentEquals(TipoValor.PRINCIPAL.name()))) {
+			return TipoExtratoDominio.x;
 		}
 		}catch(Exception e){
 			e.printStackTrace();

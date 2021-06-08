@@ -91,11 +91,11 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 			throws ComprovanteException {
 		List<DiffValue> list = new ArrayList<DiffValue>();
 		int i = 0;
-		for (String line : lines) {
+		String line = StringUtils.join(lines, StringUtils.SPACE);
 			line = StringUtils.normalizeSpace(line.trim());
 			if (line.contains("Agência:")) {
-				String lineA = StringUtils.substringBefore(
-						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Agência:")), "|").trim();
+				String lineA = StringUtils.split(StringUtils.substringAfter(line, "Agência:").trim(),StringUtils.SPACE)[0];
+				lineA = MrContadorUtil.onlyNumbers(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(AGENCIA);
 				diffValue.setNewValue(lineA);
@@ -103,28 +103,29 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("Conta:")) {
-				String lineA = StringUtils.substringBefore(
-						StringUtils.deleteWhitespace(StringUtils.substringAfter(line, "Conta:")), "|Tipo:").trim();
+				String lineA = StringUtils.split(StringUtils.substringAfter(line, "Conta:").trim(),StringUtils.SPACE)[0];
+				lineA = MrContadorUtil.onlyNumbers(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CONTA);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Descrição:") && line.contains("IDENTIFICADOR:")) {
-				String lineA = StringUtils
-						.substringBefore(StringUtils.substringAfter(line, "Descrição:").trim(), "IDENTIFICADOR:")
-						.trim();
+			if (line.contains("IDENTIFICADOR:")) {
+				String lineA = StringUtils.split(StringUtils.substringAfter(line, "IDENTIFICADOR:").trim(),StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(OBS);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
+				DiffValue diffValue2 = new DiffValue();
+				diffValue2.setOldValue(DOCUMENTO);
+				diffValue2.setNewValue(lineA);
+				diffValue2.setLine(i);
+				list.add(diffValue2);
 			}
-			if (line.contains("Descrição:") && line.contains("REFERENCIA:")) {
-				String lineA = StringUtils
-						.substringBefore(StringUtils.substringAfter(line, "Descrição:").trim(), "REFERENCIA:")
-						.trim();
+			if (line.contains("Descrição:")) {
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Descrição:").trim(),"IDENTIFICADOR").trim();
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(OBS);
 				diffValue.setNewValue(lineA);
@@ -132,7 +133,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("CNPJ:")) {
-				String lineA = StringUtils.substringAfter(line, "CNPJ:").trim();
+				String lineA = StringUtils.split(StringUtils.substringAfter(line, "CNPJ:").trim(),StringUtils.SPACE)[0];
 				lineA = MrContadorUtil.onlyNumbers(lineA);
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(CNPJ_PAG);
@@ -140,7 +141,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Data de débito:") && line.contains("Data do vencimento:")) {
+			if (line.contains("Data de débito:")) {
 				String lineA = StringUtils.substringAfter(line, "Data de débito:").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DATA_PGTO);
@@ -148,30 +149,16 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Data de débito:") && lines[i + 1].contains("Data do vencimento:")) {
-				String lineA = StringUtils.substringAfter(line, "Data de débito:").trim();
-				if (StringUtils.isBlank(lineA)) {
-					lineA = StringUtils.substringBefore(StringUtils.normalizeSpace(lines[i + 1]), "Data do vencimento:")
-							.trim();
-				}
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(DATA_PGTO);
-				diffValue.setNewValue(lineA);
-				diffValue.setLine(i);
-				list.add(diffValue);
-			}
 			if (line.contains("Valor principal:")) {
-				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Valor principal:").trim(),
-						"Desconto:");
+				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Valor principal:").trim(),"Desconto");
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_DOC);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.contains("Valor principal:") && line.contains("Data do vencimento:")) {
-				String lineA = StringUtils.substringBefore(
-						StringUtils.substringAfter(line, "Data do vencimento:").trim(), "Valor principal:").trim();
+			if (line.contains("Data do vencimento:")) {
+				String lineA = StringUtils.substringAfter(line, "Data do vencimento:").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DATA_VCTO);
 				diffValue.setNewValue(lineA);
@@ -179,33 +166,24 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("Valor do pagamento:")) {
-				String lineA = StringUtils.substringAfter(line, "Valor do pagamento: R$").trim();
+				String lineA = StringUtils.substringAfter(StringUtils.substringAfter(line, "Valor do pagamento:").trim(),"R$").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(VALOR_PGTO);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.toUpperCase().contains("IDENTIFICADOR")) {
-				String lineA =  StringUtils.substringBefore(StringUtils.substringAfter(line.toUpperCase(), "IDENTIFICADOR").trim(),StringUtils.SPACE);
-				lineA = StringUtils.remove(lineA, ":");
+
+			if (line.toUpperCase().contains("COD.CONTROLE") && !list.stream().anyMatch(diff -> diff.getOldValue().contentEquals(DOCUMENTO))) {
+				String  lineA = StringUtils.remove(line, ":").trim();
+				lineA = StringUtils.substringAfter(lineA.toUpperCase(), "COD.CONTROLE").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DOCUMENTO);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
 			}
-			if (line.toUpperCase().contains("COD.CONTROLE")) {
-				String lineA =  StringUtils.substringAfter(line.toUpperCase(), "COD.CONTROLE");
-				lineA = StringUtils.remove(lineA, ":").trim();
-				lineA = StringUtils.substringBefore(lineA,StringUtils.SPACE);
-				DiffValue diffValue = new DiffValue();
-				diffValue.setOldValue(DOCUMENTO);
-				diffValue.setNewValue(lineA);
-				diffValue.setLine(i);
-				list.add(diffValue);
-			}
-			if (line.toUpperCase().contains("REFERENCIA")) {
+			if (line.toUpperCase().contains("REFERENCIA") && !list.stream().anyMatch(diff -> diff.getOldValue().contentEquals(DOCUMENTO))) {
 				String lineA =  StringUtils.substringAfter(line.toUpperCase(), "REFERENCIA:").trim().split(StringUtils.SPACE)[0];
 				lineA = StringUtils.remove(lineA, ":").trim();
 				lineA = StringUtils.substringBefore(lineA, StringUtils.SPACE);
@@ -216,7 +194,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("Órgão:")) {
-				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Órgão:").trim(),StringUtils.SPACE);
+				String lineA =  StringUtils.substringAfter(line, "Órgão:").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(FORNECEDOR);
 				diffValue.setNewValue(lineA);
@@ -224,7 +202,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("Multa:")) {
-				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Multa:").trim(),"Valor do pagamento");
+				String lineA =  StringUtils.substringAfter(StringUtils.substringAfter(line, "Multa:").trim(),"R$").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(MULTA);
 				diffValue.setNewValue(lineA);
@@ -232,7 +210,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("Juros:")) {
-				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Juros:").trim(),"Multa:");
+				String lineA =  StringUtils.substringAfter(StringUtils.substringAfter(line, "Juros:").trim(),"R$").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(JUROS);
 				diffValue.setNewValue(lineA);
@@ -240,7 +218,7 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			if (line.contains("Desconto:")) {
-				String lineA = StringUtils.substringBefore(StringUtils.substringAfter(line, "Desconto:").trim(),"Juros:");
+				String lineA =  StringUtils.substringAfter(StringUtils.substringAfter(line, "Desconto:").trim(),"R$").trim().split(StringUtils.SPACE)[0];
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DESCONTO);
 				diffValue.setNewValue(lineA);
@@ -248,7 +226,6 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				list.add(diffValue);
 			}
 			i = i + 1;
-		}
 		List<Comprovante> comprovantes = new ArrayList<>();
 		comprovantes.add(toEntity(list, agenciabancaria, parceiro, TipoComprovante.OUTROS));
 		return comprovantes;
@@ -342,6 +319,25 @@ public class ComprovanteBradesco extends ComprovanteBanco {
 				lineA = StringUtils.remove(lineA, ":");
 				DiffValue diffValue = new DiffValue();
 				diffValue.setOldValue(DESCONTO);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			
+			if (line.toUpperCase().contains("JUROS")) {
+				String lineA = StringUtils.substringAfter(line.toUpperCase(), "JUROS").trim();
+				lineA = StringUtils.remove(lineA, ":");
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(JUROS);
+				diffValue.setNewValue(lineA);
+				diffValue.setLine(i);
+				list.add(diffValue);
+			}
+			if (line.toUpperCase().contains("MULTA")) {
+				String lineA = StringUtils.substringAfter(line.toUpperCase(), "MULTA").trim();
+				lineA = StringUtils.remove(lineA, ":");
+				DiffValue diffValue = new DiffValue();
+				diffValue.setOldValue(MULTA);
 				diffValue.setNewValue(lineA);
 				diffValue.setLine(i);
 				list.add(diffValue);
