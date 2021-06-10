@@ -42,10 +42,13 @@ public class ContaService {
     }
     
     public List<Conta> save(List<Conta> contas){
+    	log.debug("total de contas: {}", contas.size());
     	contas.forEach(conta -> {
     		conta.setDataCadastro(new Date());
+    		contaRepository.save(conta);
+    		log.debug("salvando contas: {} ", conta.getConGrau());
     	});
-    	return contaRepository.saveAll(contas);
+    	return contas;
     }
     
     public List<Conta> update(List<Conta> contas, String user, Parceiro parceiro ){

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,38 +19,34 @@ import br.com.mrcontador.config.tenant.TenantContext;
 import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.file.planoconta.SistemaPlanoConta;
 import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.FileDTO;
 
 @SpringBootTest(classes = MrcontadorServerApp.class)
-@ActiveProfiles("dev")
+@ActiveProfiles("prod")
 @RunWith(SpringRunner.class)
 public class TestPlanoDeContas {
 
 	
 	@Autowired
 	private FileService fileService;
+	@Autowired
+	private ParceiroService parceiroService;
 
 	
 	@Test
 	public void teste() {
-		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs\\Plano de Contas - Luiz.pdf";
+		TenantContext.setTenantSchema("ds_04656282000130");
+		String folder = "/home/alecindro/Documents/drcontabil/docs/Plano de Contas - CDCL.pdf";
 		File initialFile = new File(folder);
-		FileDTO dto = new FileDTO();
-	    try {
+		try {
 			InputStream stream = new FileInputStream(initialFile);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			stream.transferTo(baos);
 			stream.close();
-			dto.setContentType("application/pdf");
-			dto.setOutputStream(baos);
-			dto.setContador("ds_demo");
-			dto.setOriginalFilename(initialFile.getName());
-			dto.setSize(initialFile.length());
-			dto.setUsuario("SYSTEM");
-			Parceiro parceiro = new Parceiro();
-			parceiro.setId(1L);
-			dto.setParceiro(parceiro);
+			Optional<Parceiro> oParceiro = parceiroService.findOne(26L);
+			FileDTO dto = fileService.getFileDTO("application/pdf", initialFile.getName(), initialFile.length(), stream,Optional.of("alecindrocastillho@gmail.com"), "ds_04656282000130",
+					 oParceiro.get(),TipoDocumento.PLANO_DE_CONTA);
      		fileService.processPlanoConta(dto,SistemaPlanoConta.DOMINIO_SISTEMAS);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -28,6 +28,7 @@ public class PdfPlanoContaDominio2 extends PlanoContaPdf implements PdfReader {
 		int numberOfPages = pages.size();
 		int numberPage = 1;
 		for (PDDocument page : pages) {
+			log.info("Processando página: {}", numberPage);
 			String pdfFileInText = super.getText(page);
 			String lines[] = pdfFileInText.split("\\n");
 			if (numberOfPages == numberPage) {
@@ -39,6 +40,7 @@ public class PdfPlanoContaDominio2 extends PlanoContaPdf implements PdfReader {
 				first = false;
 			}
 			parseBody(planoConta, lines);
+			page.close();
 		}
 		return planoConta;
 	}

@@ -82,8 +82,25 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   		"union " + 
   		"select COUNT(id) as total, 'NFS' as tipo from notafiscal where parceiro_id = :parceiroId",nativeQuery = true)
   List<StatsCount> getStatsCount(@Param("parceiroId") Long parceiroId);
+  
+  @Query(value="select i1.periodo as periodo, max(i1.datalancamento) as maxLancamento, (case when max(e.data_cadastro) is null then false else true end) as exportado from inteligent i1 " + 
+  		" left join exportacao e on i1.periodo = e.periodo and " + 
+  		" i1.agenciabancaria_id =e.agenciabancaria_id and i1.parceiro_id = e.parceiro_id " + 
+  		" where i1.parceiro_id = :parceiroId and i1.agenciabancaria_id = :agenciabancariaId " + 
+  		" and not exists (select 1 from inteligent i2 where i1.id = i2.id and associado  = false limit 1) " + 
+  		" group by i1.periodo " + 
+  		" order by maxLancamento desc " + 
+  		" limit 6;",nativeQuery = true)
+  List<StatsExport> getStatsExport(@Param("parceiroId") Long parceiroId,@Param("agenciabancariaId") Long agenciabancariaId);
+  
   public interface StatsCount{
 	  Long getTotal();
+	  LocalDate getMaxLancamento();
 	  String getTipo();
+  }
+  
+  public interface StatsExport{
+	  String getPeriodo();
+	  Boolean getExportado();
   }
 }

@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ public class PdfParserPlanoConta {
 	private ParceiroService parceiroService;
 	@Autowired
 	private ArquivoService arquivoService;
-
+	private final Logger log = LoggerFactory.getLogger(PdfParserPlanoConta.class);
 
 	public void process(FileDTO dto, SistemaPlanoConta sistemaPlanoConta) {
 		PDDocument document = null;
@@ -48,6 +50,7 @@ public class PdfParserPlanoConta {
 			validatePlano(dto.getParceiro(), planoConta.getCnpjCliente());
 			PlanoContaMapper mapper = new PlanoContaMapper();
 			List<Conta> contas = mapper.toEntity(planoConta.getPlanoContaDetails(), dto.getParceiro());
+			log.info("Salvando Plano de Conta do parceiro: {}", dto.getParceiro().getParRazaosocial());
 			contaService.save(contas);		
 			s3Service.uploadPlanoConta(dto,arquivoService,TenantContext.getTenantSchema());
 		
