@@ -1,5 +1,6 @@
 package br.com.mrcontador.file.notafiscal;
 
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
@@ -17,18 +18,21 @@ public class NotaDefault extends DFBase {
 	    private static final long serialVersionUID = -6327121382813587248L;
 
 	   
-	    @Element(name = "protNFe")
-	    private NFProtocolo protocolo;
+	    @Attribute(name = "versao")
+	    private String versao;
 
 
-		public NFProtocolo getProtocolo() {
-			return protocolo;
+		public String getVersao() {
+			return versao;
 		}
 
 
-		public void setProtocolo(NFProtocolo protocolo) {
-			this.protocolo = protocolo;
+		public void setVersao(String versao) {
+			this.versao = versao;
 		}
+
+
+	
 
 		
 	    

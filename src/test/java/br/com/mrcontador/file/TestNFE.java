@@ -30,13 +30,13 @@ public class TestNFE {
 	@Test
 	public void test() throws Exception {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder = "/home/alecindro/Documents/drcontabil/docs/nfe2";
+		String folder = "/home/alecindro/Downloads/35210343648971000155550060003302571062687572.xml";
 		File fileEntry = new File(folder);	
 		
-		for(File initialFile : fileEntry.listFiles()) {
+	
 		FileDTO dto = new FileDTO();
 	    try {
-			InputStream stream = new FileInputStream(initialFile);
+			InputStream stream = new FileInputStream(fileEntry);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			stream.transferTo(baos);
 			stream.close();
@@ -47,14 +47,14 @@ public class TestNFE {
 			parceiro.setParCnpjcpf("10539433000173");
 			parceiro.setId(2L);
 			dto.setParceiro(parceiro);
-			dto.setOriginalFilename(initialFile.getName());
-			dto.setSize(initialFile.length());
+			dto.setOriginalFilename("teste");
+			dto.setSize(10l);
 			dto.setUsuario("SYSTEM");
 			fileService.processNFE(dto);
 	} catch(Exception e) {
 		e.printStackTrace();
 	}
-		}
+		
 	    
 	}
 	private ByteArrayOutputStream load(String folder) throws IOException {
