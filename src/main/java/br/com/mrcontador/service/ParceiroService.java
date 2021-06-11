@@ -1,5 +1,6 @@
 package br.com.mrcontador.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.mrcontador.client.CnpjClient;
 import br.com.mrcontador.client.dto.PessoaJuridica;
 import br.com.mrcontador.domain.Parceiro;
+import br.com.mrcontador.domain.PermissaoParceiro;
 import br.com.mrcontador.erros.MrContadorException;
 import br.com.mrcontador.repository.ParceiroRepository;
+import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.mapper.ParceiroPJMapper;
 import br.com.mrcontador.util.MrContadorUtil;
 
@@ -28,11 +31,14 @@ public class ParceiroService {
 	private final Logger log = LoggerFactory.getLogger(ParceiroService.class);
 
 	private final ParceiroRepository parceiroRepository;
+	
+	private final PermissaoParceiroService permissaoParceiroService;
 
 	private final CnpjClient cnpjClient;
 
-	public ParceiroService(ParceiroRepository parceiroRepository, CnpjClient cnpjClient) {
+	public ParceiroService(ParceiroRepository parceiroRepository,PermissaoParceiroService permissaoParceiroService, CnpjClient cnpjClient) {
 		this.parceiroRepository = parceiroRepository;
+		this.permissaoParceiroService = permissaoParceiroService;
 		this.cnpjClient = cnpjClient;
 	}
 
@@ -44,10 +50,19 @@ public class ParceiroService {
 	 */
 
 	public Parceiro save(Parceiro parceiro) {
+	
 		if (parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
 			parceiro.setCadastroStatus(parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() + 1);
 		}
-		return parceiroRepository.save(parceiro);
+		parceiro =  parceiroRepository.save(parceiro);
+			if(parceiro.getCadastroStatus() == 0) {
+			PermissaoParceiro permissaoParceiro = new PermissaoParceiro();
+			permissaoParceiro.setDataCadastro(LocalDate.now());
+			permissaoParceiro.setParceiro(parceiro);
+			permissaoParceiro.setUsuario(SecurityUtils.getCurrentUserLogin().get());
+			permissaoParceiroService.save(permissaoParceiro);
+		}
+		return parceiro;
 	}
 
 	public Parceiro update(Parceiro parceiro) {

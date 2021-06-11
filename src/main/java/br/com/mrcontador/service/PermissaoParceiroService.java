@@ -17,4 +17,8 @@ public class PermissaoParceiroService {
 	public List<PermissaoParceiro> findByUsuario(String usuario){
 		return repository.findByUsuario(usuario);
 	}
+	
+	public PermissaoParceiro save(PermissaoParceiro permissaoParceiro) {
+		return repository.save(permissaoParceiro);
+	}
 }

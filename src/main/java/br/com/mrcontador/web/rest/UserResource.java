@@ -1,21 +1,12 @@
 package br.com.mrcontador.web.rest;
 
-import br.com.mrcontador.config.Constants;
-import br.com.mrcontador.config.tenant.TenantContext;
-import br.com.mrcontador.domain.User;
-import br.com.mrcontador.repository.UserRepository;
-import br.com.mrcontador.security.AuthoritiesConstants;
-import br.com.mrcontador.security.SecurityUtils;
-import br.com.mrcontador.service.MailService;
-import br.com.mrcontador.service.UserService;
-import br.com.mrcontador.service.dto.UserDTO;
-import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
-import br.com.mrcontador.web.rest.errors.EmailAlreadyUsedException;
-import br.com.mrcontador.web.rest.errors.LoginAlreadyUsedException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +17,35 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
+import br.com.mrcontador.config.Constants;
+import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.User;
+import br.com.mrcontador.repository.UserRepository;
+import br.com.mrcontador.security.AuthoritiesConstants;
+import br.com.mrcontador.security.SecurityUtils;
+import br.com.mrcontador.service.MailService;
+import br.com.mrcontador.service.UserQueryService;
+import br.com.mrcontador.service.UserService;
+import br.com.mrcontador.service.dto.UserCriteria;
+import br.com.mrcontador.service.dto.UserDTO;
+import br.com.mrcontador.service.dto.Usuario;
+import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
+import br.com.mrcontador.web.rest.errors.EmailAlreadyUsedException;
+import br.com.mrcontador.web.rest.errors.LoginAlreadyUsedException;
+import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing users.
@@ -68,15 +81,17 @@ public class UserResource {
     private String applicationName;
 
     private final UserService userService;
+    private final UserQueryService userQueryService; 
 
     private final UserRepository userRepository;
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, UserQueryService userQueryService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.userQueryService = userQueryService;
     }
 
     /**
@@ -154,6 +169,22 @@ public class UserResource {
     	final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+    
+    @GetMapping("/users/noadmin")
+    public ResponseEntity<List<Usuario>> getAllUsers() {
+    	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
+    	UserCriteria userCriteria = new UserCriteria();
+    	StringFilter ds = new StringFilter();
+    	ds.setEquals(SecurityUtils.getCurrentTenantHeader());
+    	userCriteria.setDatasource(ds);
+    	StringFilter auth = new StringFilter();
+    	auth.setNotEquals(AuthoritiesConstants.ADMIN);
+    	userCriteria.setAuthorityName(auth);
+    	List<User> users = userQueryService.findByCriteriaNotAuthority(userCriteria);
+    	List<Usuario> usuarios = new ArrayList<>();
+    	users.forEach(user -> usuarios.add(new Usuario(user.getLogin())));
+        return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
     /**

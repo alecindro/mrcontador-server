@@ -58,7 +58,7 @@ public class XmlParserDefault implements FileParser {
 		InputStream doc = null;
 		try {
 			doc = new ByteArrayInputStream(dto.getOutputStream().toByteArray());
-			NotaDefault notaDefault = new DFPersister().read(NotaDefault.class, doc, false);
+			NotaDefault notaDefault = new DFPersister().read(NotaDefault.class, doc);
 			String periodo = "";
 			switch (notaDefault.getProtocolo().getVersao()) {
 			case "4.00":
