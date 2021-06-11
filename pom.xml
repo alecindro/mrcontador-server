@@ -85,7 +85,7 @@
 		<junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
 		<!-- <tika.version>1.24.1</tika.version> -->
 		<awssdk-s3.version>2.13.52</awssdk-s3.version>
-		<nfe.version>3.0.36</nfe.version>
+		<nfe.version>3.0.55</nfe.version>
 		 <simple-xml.version>2.7.1</simple-xml.version>
 		<ofx4j.version>1.27</ofx4j.version>
 		<diff-utils.version>4.5</diff-utils.version>
