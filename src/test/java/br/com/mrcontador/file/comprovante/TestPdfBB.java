@@ -36,8 +36,8 @@ public class TestPdfBB {
 
 	@Test
 	public void test() throws Exception {
-		TenantContext.setTenantSchema("ds_04656282000130");
-		testComprovante("/home/alecindro/Documents/drcontabil/upload/44d236ba-65b8-435f-996b-d774a2da4607 (1).pdf", 23L, 75L);
+		TenantContext.setTenantSchema("ds_demo");
+		testComprovante("/home/alecindro/Documents/drcontabil/docs/DASSOLER/05-2021.pdf", 10L, 22L);
 	}
 	
 	public void testComprovante(String folder, Long parceiroId, Long agenciaId) throws Exception {
@@ -70,7 +70,7 @@ public class TestPdfBB {
 			File file = new File(folder);
 			FileInputStream stream = new FileInputStream(file);
 			FileDTO dto = fileService.getFileDTO("application/pdf", file.getName(), file.length(), stream,
-					Optional.of("alecindroastilho@gmail.com"), "ds_04656282000130", parceiro.get(),TipoDocumento.COMPROVANTE);
+					Optional.of("demo"), "ds_demo", parceiro.get(),TipoDocumento.COMPROVANTE);
 			fileService.processComprovante(dto, agencia);
 	}
 

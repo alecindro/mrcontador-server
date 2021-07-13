@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.repository.InteligentRepository.InteligentStats;
 import br.com.mrcontador.service.InteligentService;
 
@@ -20,6 +21,7 @@ public class InteligentStatsTest {
 	
 	@Autowired
 	private InteligentService service;
+	
 	
 	@Test
 	public void test() {

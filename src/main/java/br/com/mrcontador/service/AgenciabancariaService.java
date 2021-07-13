@@ -1,5 +1,6 @@
 package br.com.mrcontador.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class AgenciabancariaService {
     public Agenciabancaria update(Agenciabancaria agenciabancaria) {
         log.debug("Request to save Agenciabancaria : {}", agenciabancaria);
         if(!agenciabancaria.isAgeSituacao()) {
-        	Optional<Agenciabancaria> aplicacao = agenciabancariaRepository.findByParceiroAndTipoAgencia(agenciabancaria.getParceiro(), TipoAgencia.APLICACAO);
+        	Optional<Agenciabancaria> aplicacao = agenciabancariaRepository.findById(agenciabancaria.getId());
         	if(aplicacao.isPresent()) {
         		aplicacao.get().setAgeSituacao(false);
         		agenciabancariaRepository.save(aplicacao.get());
@@ -96,9 +97,9 @@ public class AgenciabancariaService {
     }
     
     public Agenciabancaria createCaixa(Conta conta) {
-    	Optional<Agenciabancaria> _agencia = agenciabancariaRepository.findByParceiroAndTipoAgencia(conta.getParceiro(), TipoAgencia.CAIXA);
+    	List<Agenciabancaria> _agencia = agenciabancariaRepository.findByParceiroAndTipoAgencia(conta.getParceiro(), TipoAgencia.CAIXA);
     	if(!_agencia.isEmpty()) {
-    		return _agencia.get();
+    		return _agencia.get(0);
     	}
     	Agenciabancaria agencia = new Agenciabancaria();
     	agencia.setAgeAgencia(TipoAgencia.CAIXA.name());
@@ -130,4 +131,5 @@ public class AgenciabancariaService {
     	//extratoService.callExtratoAplicacao(agenciabancaria.getId());
     	return agencia;
     }
+  
 }

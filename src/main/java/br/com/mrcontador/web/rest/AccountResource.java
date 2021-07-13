@@ -83,7 +83,7 @@ public class AccountResource {
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
     	if (!checkPasswordLength(managedUserVM.getPassword())) {
-            throw new InvalidPasswordException();
+            throw new InvalidPasswordException("password.messages.size");
         }
         Set<Authority> authorities = new HashSet<>();
         authorityService.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
@@ -164,7 +164,7 @@ public class AccountResource {
     @PostMapping(path = "/account/change-password")
     public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
         if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
-            throw new InvalidPasswordException();
+            throw new InvalidPasswordException("password.messages.size");
         }
         TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
@@ -199,7 +199,7 @@ public class AccountResource {
     public void finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
     	if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
-            throw new InvalidPasswordException();
+            throw new InvalidPasswordException("password.messages.size");
         }
         Optional<User> user =
             userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());

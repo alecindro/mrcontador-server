@@ -79,6 +79,13 @@ public class ParceiroQueryService extends QueryService<Parceiro> {
         final Specification<Parceiro> specification = createSpecification(criteria,Specification.where(null));
         return parceiroRepository.findAll(specification, page);
     }
+    
+    @Transactional(readOnly = true)
+    public List<Parceiro> findByAllCriteria(ParceiroCriteria criteria) {
+        log.debug("find by criteria : {}", criteria);
+        final Specification<Parceiro> specification = createSpecification(criteria,Specification.where(null));
+        return parceiroRepository.findAll(specification);
+    }
 
     /**
      * Return the number of matching entities in the database.

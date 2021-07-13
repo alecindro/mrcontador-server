@@ -4,6 +4,7 @@ import br.com.mrcontador.config.Constants;
 
 import br.com.mrcontador.domain.Authority;
 import br.com.mrcontador.domain.User;
+import br.com.mrcontador.security.SecurityUtils;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
@@ -75,7 +76,7 @@ public class UserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream()
-            .map(Authority::getName)
+            .map(Authority::getName).filter(auth-> !auth.startsWith(SecurityUtils.DS_PREFIX))
             .collect(Collectors.toSet());
         this.datasource = user.getDatasource();
         this.funcao = user.getFuncao();

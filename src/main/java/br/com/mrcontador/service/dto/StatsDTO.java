@@ -1,5 +1,6 @@
 package br.com.mrcontador.service.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.mrcontador.repository.ComprovanteRepository.ComprovanteStats;
@@ -42,18 +43,27 @@ public class StatsDTO {
 		this.notafiscalCount = notafiscalCount;
 	}
 	public List<InteligentStats> getInteligentStats() {
+		if(inteligentStats == null) {
+			inteligentStats = new ArrayList<>();
+		}
 		return inteligentStats;
 	}
 	public void setInteligentStats(List<InteligentStats> inteligentStats) {
 		this.inteligentStats = inteligentStats;
 	}
 	public List<ExtratoStats> getExtratoStats() {
+		if(extratoStats == null) {
+			extratoStats = new ArrayList<>();
+		}
 		return extratoStats;
 	}
 	public void setExtratoStats(List<ExtratoStats> extratoStats) {
 		this.extratoStats = extratoStats;
 	}
 	public List<ComprovanteStats> getComprovanteStats() {
+		if(comprovanteStats == null) {
+			comprovanteStats = new ArrayList<>();
+		}
 		return comprovanteStats;
 	}
 	public void setComprovanteStats(List<ComprovanteStats> comprovanteStats) {

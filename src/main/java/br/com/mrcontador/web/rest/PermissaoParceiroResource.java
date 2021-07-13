@@ -1,6 +1,5 @@
 package br.com.mrcontador.web.rest;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -20,7 +19,7 @@ import br.com.mrcontador.domain.PermissaoParceiro;
 import br.com.mrcontador.service.PermissaoParceiroQueryService;
 import br.com.mrcontador.service.PermissaoParceiroService;
 import br.com.mrcontador.service.dto.PermissaoParceiroCriteria;
-import io.github.jhipster.web.util.HeaderUtil;
+import br.com.mrcontador.service.dto.PermissaoParceiroDTO;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +28,6 @@ public class PermissaoParceiroResource {
 	private final Logger log = LoggerFactory.getLogger(PermissaoParceiroResource.class);
 	private final PermissaoParceiroQueryService permissaoParceiroQueryService;
 	private final PermissaoParceiroService permissaoParceiroService;
-	private static final String ENTITY_NAME = "permissaoParceiro";
 
 	@Value("${jhipster.clientApp.name}")
 	private String applicationName;
@@ -47,13 +45,10 @@ public class PermissaoParceiroResource {
 		return ResponseEntity.ok().body(result);
 	}
 	@PostMapping("/permissaoparceiros")
-	public ResponseEntity<PermissaoParceiro> createParceiro(@Valid @RequestBody PermissaoParceiro permissaoParceiro)
+	public ResponseEntity<List<PermissaoParceiro>> createPermissaoParceiro(@Valid @RequestBody PermissaoParceiroDTO permissaos)
 			throws URISyntaxException {
-		log.debug("REST request to save Parceiro : {}", permissaoParceiro);
-		PermissaoParceiro result = permissaoParceiroService.save(permissaoParceiro);
-		return ResponseEntity
-				.created(new URI("/api/parceiros/" + result.getId())).headers(HeaderUtil
-						.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-				.body(result);
+		log.debug("REST request to save PermissaoParceiro");
+		List<PermissaoParceiro> result = permissaoParceiroService.save(permissaos.getPermissaos());
+		return ResponseEntity.ok().body(result);
 	}
 }

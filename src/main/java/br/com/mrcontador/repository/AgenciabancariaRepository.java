@@ -1,6 +1,6 @@
 package br.com.mrcontador.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -17,5 +17,5 @@ import br.com.mrcontador.domain.TipoAgencia;
 @Repository
 public interface AgenciabancariaRepository extends JpaRepository<Agenciabancaria, Long>, JpaSpecificationExecutor<Agenciabancaria> {
 	
-	Optional<Agenciabancaria> findByParceiroAndTipoAgencia(Parceiro parceiro, TipoAgencia tipoAgencia);
+	List<Agenciabancaria> findByParceiroAndTipoAgencia(Parceiro parceiro, TipoAgencia tipoAgencia);
 }

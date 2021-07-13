@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.mrcontador.domain.User;
@@ -43,4 +45,9 @@ public interface UserRepository extends JpaRepository<User, Long>,JpaSpecificati
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
 
     Page<User> findAllByLoginNotAndDatasource(Pageable pageable, String login, String datasource);
+    
+    @Query(value = "select u.* from ds_mrcontador.jhi_user u inner join ds_mrcontador.jhi_user_authority ju " + 
+    		"on u.id  = ju.user_id where not starts_with(ju.authority_name,'ds_') and ju.authority_name <> 'ROLE_ADMIN' " + 
+    		"and u.datasource  = :datasource order by u.login asc", nativeQuery = true)
+    List<User> findAllByDataSourceAndNotLogin(@Param("datasource") String datasource);
 }

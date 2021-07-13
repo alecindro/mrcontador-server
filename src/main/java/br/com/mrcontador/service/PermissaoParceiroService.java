@@ -1,5 +1,6 @@
 package br.com.mrcontador.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,11 @@ public class PermissaoParceiroService {
 		return repository.findByUsuario(usuario);
 	}
 	
-	public PermissaoParceiro save(PermissaoParceiro permissaoParceiro) {
-		return repository.save(permissaoParceiro);
+	public List<PermissaoParceiro> save(List<PermissaoParceiro> permissaos) {
+		repository.deleteAll(permissaos);
+		for(PermissaoParceiro p : permissaos) {
+			p.setDataCadastro(LocalDate.now());
+		}
+		return repository.saveAll(permissaos);
 	}
 }

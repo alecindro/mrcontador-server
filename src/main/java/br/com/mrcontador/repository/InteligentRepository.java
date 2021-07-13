@@ -63,26 +63,31 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   @Query(value="update inteligent set historicofinal = null, conta_id = null, associado = false, regra_id = null  where regra_id = :regraId and parceiro_id = :parceiroId",nativeQuery = true)
   void deleteRegra(@Param("regraId") Long regraId, @Param("parceiroId") Long parceiroId);
   
+  @Query(value="select  max(i.datalancamento) as maxDate, i.periodo, count(i.id) as quantidade,  sum(case when i.associado = true then 0 else 1 end) as divergente, " + 
+  		"a.age_numero as agencia, b.ban_sigla as siglabanco, "+
+  		"(select COUNT(i1.id) from inteligent i1 inner join agenciabancaria a1 on i1.agenciabancaria_id = a1.id where i1.parceiro_id = :parceiroId and i1.agenciabancaria_id = :agenciabancariaId) as total from inteligent i " + 
+  		"inner join agenciabancaria a on i.agenciabancaria_id = a.id " + 
+  		"inner join banco b on a.banco_id = b.id " + 
+  		"where i.parceiro_id = :parceiroId and i.agenciabancaria_id = :agenciabancariaId group by i.periodo, a.age_numero, a.id,b.ban_sigla order by maxDate desc, a.id  limit 6",nativeQuery = true)
+  List<InteligentStats> getInteligentStats(@Param("parceiroId") Long parceiroId, @Param("agenciabancariaId") Long agenciabancariaId);
+  
   @Query(value="select  max(datalancamento) as maxDate, periodo, count(id) as quantidade,  sum(case when associado = true then 0 else 1 end) as divergente from inteligent  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6",nativeQuery = true)
   List<InteligentStats> getInteligentStats(@Param("parceiroId") Long parceiroId);
+  
   
   public interface InteligentStats{
 	  LocalDate getMaxDate();
 	  String getPeriodo();
 	  Integer getQuantidade();
 	  Integer getDivergente();
-	  
+	  String getAgencia();
+	  String getSiglabanco();
+	  Long getTotal();
   }
   
-  @Query(value="select COUNT(id) as total, 'INTELIGENT' as tipo from inteligent where parceiro_id = :parceiroId " + 
-  		"union " + 
-  		"select COUNT(id) as total, 'COMPROVANTE' as tipo from comprovante where parceiro_id = :parceiroId " + 
-  		"union " + 
-  		"select COUNT(id) as total, 'EXTRATO' as tipo from extrato where parceiro_id = :parceiroId " + 
-  		"union " + 
-  		"select COUNT(id) as total, 'NFS' as tipo from notafiscal where parceiro_id = :parceiroId",nativeQuery = true)
-  List<StatsCount> getStatsCount(@Param("parceiroId") Long parceiroId);
-  
+  @Query(value="select  count(distinct periodo) from inteligent  where parceiro_id = :parceiroId",nativeQuery = true)
+  Long getCountPeriodos(@Param("parceiroId") Long parceiroId);
+    
   @Query(value="select i1.periodo as periodo, max(i1.datalancamento) as maxLancamento, (case when max(e.data_cadastro) is null then false else true end) as exportado from inteligent i1 " + 
   		" left join exportacao e on i1.periodo = e.periodo and " + 
   		" i1.agenciabancaria_id =e.agenciabancaria_id and i1.parceiro_id = e.parceiro_id " + 
@@ -92,12 +97,6 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   		" order by maxLancamento desc " + 
   		" limit 6;",nativeQuery = true)
   List<StatsExport> getStatsExport(@Param("parceiroId") Long parceiroId,@Param("agenciabancariaId") Long agenciabancariaId);
-  
-  public interface StatsCount{
-	  Long getTotal();
-	  LocalDate getMaxLancamento();
-	  String getTipo();
-  }
   
   public interface StatsExport{
 	  String getPeriodo();

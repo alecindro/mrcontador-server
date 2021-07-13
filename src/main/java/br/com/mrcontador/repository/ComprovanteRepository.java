@@ -83,17 +83,22 @@ public interface ComprovanteRepository extends JpaRepository<Comprovante, Long>,
 	@Query(value = "update comprovante set arquivo_id = :arquivoId where id = :comprovanteId", nativeQuery = true)
 	void updateArquivo(@Param("comprovanteId") Long id, @Param("arquivoId") Long arquivoId);
 	
-	@Query(value = "select  max(com_datapagamento) as maxDate, periodo, count(id) as quantidade,  sum(case when processado = true then 0 else 1 end) as divergente from comprovante  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6", nativeQuery = true)
-	List<ComprovanteStats> getComprovanteStats(@Param("parceiroId") Long parceiroId);
+	@Query(value = "select  max(c.com_datapagamento) as maxDate, c.periodo, count(c.id) as quantidade,  " + 
+			"sum(case when c.processado = true then 0 else 1 end) as divergente, " + 
+			"a.age_numero as agencia, b.ban_sigla as siglabanco, "+
+			"(select COUNT(i1.id) from comprovante i1 inner join agenciabancaria a1 on i1.agenciabancaria_id = a1.id where i1.parceiro_id = :parceiroId and i1.agenciabancaria_id = :agenciabancariaId) as total from comprovante c " + 
+			"inner join agenciabancaria a on c.agenciabancaria_id = a.id " + 
+			"inner join banco b on a.banco_id = b.id " + 
+			"where c.parceiro_id = :parceiroId and c.agenciabancaria_id = :agenciabancariaId group by c.periodo,a.age_numero, a.id,b.ban_sigla order by maxDate desc, a.id   limit 6", nativeQuery = true)
+	List<ComprovanteStats> getComprovanteStats(@Param("parceiroId") Long parceiroId, @Param("agenciabancariaId") Long agenciabancariaId);
 
 	public interface ComprovanteStats {
 		LocalDate getMaxDate();
-
 		String getPeriodo();
-
 		Integer getQuantidade();
-
 		Integer getDivergente();
-
+		String getAgencia();
+		String getSiglabanco();
+		Long getTotal();
 	}
 }

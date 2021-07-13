@@ -40,7 +40,7 @@ public class TestUploadExtratoCEF {
 	public void create() throws Exception{
 		  
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		String folder1 = "C:\\Users\\alecindro.castilho\\Documents\\study\\mrcontador\\docs dassoler\\fuzz\\11.2019 - 05.2020 .PDF";
+		String folder1 = "/home/alecindro/Documents/drcontabil/upload/05-2021.pdf";
 		String folder2 = "/home/alecindro/Documents/drcontabil/docs/teste/02-2020/02-2020.pdf";
 		String folder3 = "/home/alecindro/Documents/drcontabil/docs/teste/03-2020/03-2020.pdf";
 		String folder4 = "/home/alecindro/Documents/drcontabil/docs/teste/04-2020/04-2020.pdf";
@@ -49,8 +49,8 @@ public class TestUploadExtratoCEF {
 		
 		
 		
-		Agenciabancaria agencia = agenciaService.findOne(2L).get();
-		Optional<Parceiro> parceiro = parceiroService.findOne(1L);
+		Agenciabancaria agencia = agenciaService.findOne(18L).get();
+		Optional<Parceiro> parceiro = parceiroService.findOne(8L);
 		process(folder1, agencia, parceiro);
 		//process(folder2, agencia, parceiro);
 		//process(folder3, agencia, parceiro);

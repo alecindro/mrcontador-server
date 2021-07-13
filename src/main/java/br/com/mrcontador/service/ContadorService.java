@@ -22,6 +22,7 @@ import br.com.mrcontador.security.AuthoritiesConstants;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.ContadorDTO;
 import br.com.mrcontador.service.dto.UserDTO;
+import br.com.mrcontador.service.dto.UserPermissaoDTO;
 import br.com.mrcontador.service.mapper.ContadorMapper;
 import liquibase.integration.spring.SpringLiquibase;
 
@@ -89,7 +90,8 @@ public class ContadorService {
         userDTO.getAuthorities().add(contador.getDatasource());
         userDTO.getAuthorities().add(AuthoritiesConstants.ADMIN);
         userDTO.getAuthorities().add(AuthoritiesConstants.USER);
-        User user = userService.createUser(userDTO);
+        UserPermissaoDTO UserPermissaoDTO = new UserPermissaoDTO(userDTO, null); 
+        User user = userService.createUser(UserPermissaoDTO);
         mailService.sendCreationEmail(user);
         return contadorMapper.toDto(contador);
     }

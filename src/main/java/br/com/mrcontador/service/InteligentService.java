@@ -126,4 +126,8 @@ public class InteligentService {
     public  List<InteligentStats> getInteligentStats(Long parceiroId){
     	return inteligentRepository.getInteligentStats(parceiroId);
     }
+    
+    public Long getCountPeriodos(Long parceiroId){
+    	return inteligentRepository.getCountPeriodos(parceiroId);
+    }
 }

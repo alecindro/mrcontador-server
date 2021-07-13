@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.mrcontador.MrcontadorServerApp;
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.StatsService;
 import br.com.mrcontador.service.dto.StatsDTO;
@@ -24,7 +25,9 @@ public class StatsDTOTest {
 	@Test
 	public void test() {
 		TenantContext.setTenantSchema(SecurityUtils.DEMO_TENANT);
-		 StatsDTO dto = service.getStats(1L);
+		Parceiro parceiro = new Parceiro();
+		parceiro.setId(1l);
+		 StatsDTO dto = service.getStats(parceiro);
 		 	 System.out.println(dto.toString());
 		 
 		 

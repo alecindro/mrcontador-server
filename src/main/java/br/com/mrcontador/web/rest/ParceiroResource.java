@@ -2,6 +2,7 @@ package br.com.mrcontador.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ import br.com.mrcontador.domain.Parceiro;
 import br.com.mrcontador.service.ParceiroQueryService;
 import br.com.mrcontador.service.ParceiroService;
 import br.com.mrcontador.service.dto.ParceiroCriteria;
+import br.com.mrcontador.service.dto.ParceiroSelectDTO;
 import br.com.mrcontador.service.mapper.ParceiroPJMapper;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -130,6 +132,17 @@ public class ParceiroResource {
 		return ResponseEntity.ok().body(parceiroService.findAll());
 	}
 	
+	@GetMapping("/parceiros/allselectdto")
+	public ResponseEntity<List<ParceiroSelectDTO>> getAllDtoParceiros() {
+		List<ParceiroSelectDTO> list = new ArrayList<>();
+		parceiroService.findAll().forEach(p -> {
+			ParceiroSelectDTO dto = new ParceiroSelectDTO();
+			dto.to(p);
+			list.add(dto);
+		});
+		return ResponseEntity.ok().body(list);
+	}
+	
 	@GetMapping("/parceiros/active/sieg")
 	public ResponseEntity<List<Parceiro>> getActiveSiegParceiros() {
 		return ResponseEntity.ok().body(parceiroService.findAll());
@@ -143,6 +156,7 @@ public class ParceiroResource {
 			PessoaJuridica pj = cnpjClient.fromRecitaWs(cnpj);
 			ParceiroPJMapper mapper = new ParceiroPJMapper();
 			parceiro = mapper.toEntity(pj);
+			parceiro.setCadastroStatus(1);
 		} else {
 			if(_parceiro.get().isEnabled()) {
 				throw new BadRequestAlertException("Parceiro já cadastrado", ENTITY_NAME, "parceiroexists");

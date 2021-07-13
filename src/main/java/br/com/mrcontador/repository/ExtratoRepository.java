@@ -85,18 +85,24 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 			"where id = subquery.intel_id;", nativeQuery = true)
 	void regraInteligent(@Param("parceiroId") Long parceiroId,@Param("periodo") String periodo);
 	
-	@Query(value = "select  max(ext_datalancamento) as maxDate, periodo, count(id) as quantidade,  sum(case when processado = true then 0 else 1 end) as divergente from extrato  where parceiro_id = :parceiroId group by periodo order by maxDate desc limit 6", nativeQuery = true)
-	List<ExtratoStats> getExtratoStats(@Param("parceiroId") Long parceiroId);
+	@Query(value = "select  max(e.ext_datalancamento) as maxDate, e.periodo, count(e.id) as quantidade, " + 
+			"sum(case when e.processado = true then 0 else 1 end) as divergente, " +
+			"a.age_numero as agencia, b.ban_sigla as siglabanco, "+
+			"(select COUNT(i1.id) from extrato i1 inner join agenciabancaria a1 on i1.agenciabancaria_id = a1.id where i1.parceiro_id = :parceiroId and i1.agenciabancaria_id = :agenciabancariaId) as total from extrato e " + 
+			"inner join agenciabancaria a on e.agenciabancaria_id = a.id " + 
+			"inner join banco b on a.banco_id = b.id " + 
+			"where e.parceiro_id = :parceiroId and e.agenciabancaria_id = :agenciabancariaId " + 
+			"group by e.periodo,a.age_numero, a.id,b.ban_sigla order by maxDate desc, a.id   limit 6;", nativeQuery = true)
+	List<ExtratoStats> getExtratoStats(@Param("parceiroId") Long parceiroId,@Param("agenciabancariaId") Long agenciabancariaId);
 
 	public interface ExtratoStats {
 		LocalDate getMaxDate();
-
 		String getPeriodo();
-
 		Integer getQuantidade();
-
 		Integer getDivergente();
-
+		String getAgencia();
+		String getSiglabanco();
+		Long getTotal();
 	}
 
 }

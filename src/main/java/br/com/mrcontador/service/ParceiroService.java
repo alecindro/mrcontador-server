@@ -50,19 +50,7 @@ public class ParceiroService {
 	 */
 
 	public Parceiro save(Parceiro parceiro) {
-	
-		if (parceiro.getCadastroStatus() == null || parceiro.getCadastroStatus() < 4) {
-			parceiro.setCadastroStatus(parceiro.getCadastroStatus() == null ? 0 : parceiro.getCadastroStatus() + 1);
-		}
-		parceiro =  parceiroRepository.save(parceiro);
-			if(parceiro.getCadastroStatus() == 0) {
-			PermissaoParceiro permissaoParceiro = new PermissaoParceiro();
-			permissaoParceiro.setDataCadastro(LocalDate.now());
-			permissaoParceiro.setParceiro(parceiro);
-			permissaoParceiro.setUsuario(SecurityUtils.getCurrentUserLogin().get());
-			permissaoParceiroService.save(permissaoParceiro);
-		}
-		return parceiro;
+		return parceiroRepository.save(parceiro);
 	}
 
 	public Parceiro update(Parceiro parceiro) {

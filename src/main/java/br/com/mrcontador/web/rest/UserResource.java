@@ -2,7 +2,7 @@ package br.com.mrcontador.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,20 +29,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.mrcontador.config.Constants;
 import br.com.mrcontador.config.tenant.TenantContext;
+import br.com.mrcontador.domain.PermissaoParceiro;
 import br.com.mrcontador.domain.User;
 import br.com.mrcontador.repository.UserRepository;
 import br.com.mrcontador.security.AuthoritiesConstants;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.MailService;
-import br.com.mrcontador.service.UserQueryService;
+import br.com.mrcontador.service.PermissaoParceiroService;
 import br.com.mrcontador.service.UserService;
-import br.com.mrcontador.service.dto.UserCriteria;
 import br.com.mrcontador.service.dto.UserDTO;
-import br.com.mrcontador.service.dto.Usuario;
+import br.com.mrcontador.service.dto.UserPermissaoDTO;
 import br.com.mrcontador.web.rest.errors.BadRequestAlertException;
 import br.com.mrcontador.web.rest.errors.EmailAlreadyUsedException;
 import br.com.mrcontador.web.rest.errors.LoginAlreadyUsedException;
-import io.github.jhipster.service.filter.StringFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -81,17 +80,17 @@ public class UserResource {
     private String applicationName;
 
     private final UserService userService;
-    private final UserQueryService userQueryService; 
-
+    private final PermissaoParceiroService permissaoParceiroService;
     private final UserRepository userRepository;
-
+    
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, UserQueryService userQueryService) {
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService,
+    		PermissaoParceiroService permissaoParceiroService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
-        this.userQueryService = userQueryService;
+        this.permissaoParceiroService = permissaoParceiroService;
     }
 
     /**
@@ -108,21 +107,25 @@ public class UserResource {
      */
     @PostMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
-    	userDTO.getAuthorities().add(SecurityUtils.getCurrentTenantHeader());
-    	userDTO.setDatasource(SecurityUtils.getCurrentTenantHeader());
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserPermissaoDTO userPermissaoDTO) throws URISyntaxException {
+    	userPermissaoDTO.getUser().getAuthorities().add(SecurityUtils.getCurrentTenantHeader());
+    	userPermissaoDTO.getUser().setDatasource(SecurityUtils.getCurrentTenantHeader());
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-        log.debug("REST request to save User : {}", userDTO);
+        log.debug("REST request to save User : {}", userPermissaoDTO.getUser());
 
-        if (userDTO.getId() != null) {
+        if (userPermissaoDTO.getUser().getId() != null) {
             throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
             // Lowercase the user login before comparing with database
-        } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
+        } else if (userRepository.findOneByLogin(userPermissaoDTO.getUser().getLogin().toLowerCase()).isPresent()) {
             throw new LoginAlreadyUsedException();
-        } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
+        } else if (userRepository.findOneByEmailIgnoreCase(userPermissaoDTO.getUser().getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
-            User newUser = userService.createUser(userDTO);
+            User newUser = userService.createUser(userPermissaoDTO);
+            if(!userPermissaoDTO.getPermissaos().isEmpty()) {
+              	 TenantContext.setTenantSchema(SecurityUtils.getCurrentTenantHeader());
+               this.permissaoParceiroService.save(userPermissaoDTO.getPermissaos());
+               }
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                 .headers(HeaderUtil.createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
@@ -140,21 +143,26 @@ public class UserResource {
      */
     @PutMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserPermissaoDTO userPermissaoDTO) {
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-        log.debug("REST request to update User : {}", userDTO);
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
+        log.debug("REST request to update User : {}", userPermissaoDTO.getUser());
+        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userPermissaoDTO.getUser().getEmail());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(userPermissaoDTO.getUser().getId()))) {
             throw new EmailAlreadyUsedException();
         }
-        existingUser = userRepository.findOneByLogin(userDTO.getLogin().toLowerCase());
-        if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
+        existingUser = userRepository.findOneByLogin(userPermissaoDTO.getUser().getLogin().toLowerCase());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(userPermissaoDTO.getUser().getId()))) {
             throw new LoginAlreadyUsedException();
         }
-        Optional<UserDTO> updatedUser = userService.updateUser(userDTO);
-
+        Optional<UserDTO> updatedUser = userService.updateUser(userPermissaoDTO);
+    	 userPermissaoDTO.getPermissaos().forEach(dto -> {
+          	dto.setUsuario(dto.getUsuario().toLowerCase());
+          	dto.setDataCadastro(LocalDate.now());
+          });
+     	 TenantContext.setTenantSchema(SecurityUtils.getCurrentTenantHeader());
+          this.permissaoParceiroService.save(userPermissaoDTO.getPermissaos());
         return ResponseUtil.wrapOrNotFound(updatedUser,
-            HeaderUtil.createAlert(applicationName, "userManagement.updated", userDTO.getLogin()));
+            HeaderUtil.createAlert(applicationName, "userManagement.updated", userPermissaoDTO.getUser().getLogin()));
     }
 
     /**
@@ -172,19 +180,10 @@ public class UserResource {
     }
     
     @GetMapping("/users/noadmin")
-    public ResponseEntity<List<Usuario>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
-    	UserCriteria userCriteria = new UserCriteria();
-    	StringFilter ds = new StringFilter();
-    	ds.setEquals(SecurityUtils.getCurrentTenantHeader());
-    	userCriteria.setDatasource(ds);
-    	StringFilter auth = new StringFilter();
-    	auth.setNotEquals(AuthoritiesConstants.ADMIN);
-    	userCriteria.setAuthorityName(auth);
-    	List<User> users = userQueryService.findByCriteriaNotAuthority(userCriteria);
-    	List<Usuario> usuarios = new ArrayList<>();
-    	users.forEach(user -> usuarios.add(new Usuario(user.getLogin())));
-        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+    	String datasource = SecurityUtils.getCurrentTenantHeader();
+    	return new ResponseEntity<>(userService.findAllByDataSourceAndNotLogin(datasource), HttpStatus.OK);
     }
 
     /**
@@ -205,12 +204,15 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
+    public ResponseEntity<UserPermissaoDTO> getUser(@PathVariable String login) {
     	TenantContext.setTenantSchema(SecurityUtils.DEFAULT_TENANT);
         log.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(
-            userService.getUserWithAuthoritiesByLogin(login)
-                .map(UserDTO::new));
+        
+        UserDTO userDTO = userService.getUserWithAuthoritiesByLogin(login);
+        TenantContext.setTenantSchema(SecurityUtils.getCurrentTenantHeader());
+   	 List<PermissaoParceiro> list = permissaoParceiroService.findByUsuario(login);
+   	 UserPermissaoDTO userPermissaoDTO = new UserPermissaoDTO(userDTO, list);
+   	return new ResponseEntity<UserPermissaoDTO>(userPermissaoDTO,HttpStatus.OK);
     }
 
     /**

@@ -32,6 +32,7 @@ import br.com.mrcontador.service.InteligentNfDTOService;
 import br.com.mrcontador.service.InteligentQueryService;
 import br.com.mrcontador.service.InteligentService;
 import br.com.mrcontador.service.ParceiroQueryService;
+import br.com.mrcontador.service.StatsService;
 import br.com.mrcontador.service.dto.InteligentCriteria;
 import br.com.mrcontador.service.dto.InteligentNfDTO;
 import br.com.mrcontador.service.dto.InteligentStatsDTO;
@@ -57,16 +58,20 @@ public class InteligentResource {
 	private final InteligentNfDTOService inteligentNfDTOService;
 
 	private final ParceiroQueryService parceiroQueryService;
+	
+	private final StatsService statsService; 
 
 	@Value("${jhipster.clientApp.name}")
 	private String applicationName;
 
 	public InteligentResource(InteligentService inteligentService, InteligentQueryService inteligentQueryService,
-			InteligentNfDTOService inteligentNfDTOService, ParceiroQueryService parceiroQueryService) {
+			InteligentNfDTOService inteligentNfDTOService, ParceiroQueryService parceiroQueryService,
+			StatsService statsService) {
 		this.inteligentService = inteligentService;
 		this.inteligentQueryService = inteligentQueryService;
 		this.inteligentNfDTOService = inteligentNfDTOService;
 		this.parceiroQueryService = parceiroQueryService;
+		this.statsService = statsService;
 	}
 
 	@PostMapping("/inteligents")
@@ -142,6 +147,7 @@ public class InteligentResource {
 				InteligentStatsDTO dto = new InteligentStatsDTO();
 				dto.setParceiro(parceiro);
 				List<InteligentStats> stats = inteligentService.getInteligentStats(parceiro.getId());
+				dto.setCountPeriodos(inteligentService.getCountPeriodos(parceiro.getId()));
 				dto.setInteligentStats(stats);
 				list.add(dto);
 			}
@@ -155,7 +161,7 @@ public class InteligentResource {
 		log.debug("REST request to get Periodos by paceiro: {} and angencia {} ", parceiroId, agenciabancariaId);
 		List<String> periodos = inteligentService.periodos(parceiroId, agenciabancariaId);
 		return ResponseEntity.ok().body(periodos);
-	}
+	}	
 
 	/**
 	 * {@code GET  /inteligents/count} : count all the inteligents.

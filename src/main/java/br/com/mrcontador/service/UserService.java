@@ -1,6 +1,7 @@
 package br.com.mrcontador.service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
@@ -13,9 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.mrcontador.config.Constants;
 import br.com.mrcontador.domain.Authority;
@@ -24,6 +27,8 @@ import br.com.mrcontador.repository.AuthorityRepository;
 import br.com.mrcontador.repository.UserRepository;
 import br.com.mrcontador.security.SecurityUtils;
 import br.com.mrcontador.service.dto.UserDTO;
+import br.com.mrcontador.service.dto.UserPermissaoDTO;
+import br.com.mrcontador.service.mapper.UserMapper;
 import io.github.jhipster.security.RandomUtil;
 
 /**
@@ -36,6 +41,9 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    
+    private final UserMapper userMapper;
+
 
     private final PasswordEncoder passwordEncoder;
 
@@ -44,11 +52,15 @@ public class UserService {
     private final CacheManager cacheManager;
     
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, 
+    		AuthorityRepository authorityRepository, 
+    		CacheManager cacheManager, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.userMapper = userMapper;
+       
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -134,7 +146,8 @@ public class UserService {
         return true;
     }
 
-    public User createUser(UserDTO userDTO) {
+    public User createUser(UserPermissaoDTO userPermissaoDTO) {
+    	UserDTO userDTO = userPermissaoDTO.getUser();
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
@@ -164,6 +177,11 @@ public class UserService {
         }
         userRepository.save(user);
         this.clearUserCaches(user);
+        
+        userPermissaoDTO.getPermissaos().forEach(dto -> {
+        	dto.setUsuario(dto.getUsuario().toLowerCase());
+        	dto.setDataCadastro(LocalDate.now());
+        });
         log.debug("Created Information for User: {}", user);
         return user;
     }
@@ -174,7 +192,8 @@ public class UserService {
      * @param userDTO user to update.
      * @return updated user.
      */
-    public Optional<UserDTO> updateUser(UserDTO userDTO) {
+    public Optional<UserDTO> updateUser(UserPermissaoDTO userPermissaoDTO) {
+    	UserDTO userDTO = userPermissaoDTO.getUser();
     	Optional<UserDTO> o =  Optional.of(userRepository
             .findById(userDTO.getId()))
             .filter(Optional::isPresent)
@@ -209,7 +228,8 @@ public class UserService {
 
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
-            userRepository.delete(user);
+        	user.setActivated(false);
+            userRepository.save(user);
             this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
         });
@@ -248,7 +268,7 @@ public class UserService {
             .ifPresent(user -> {
                 String currentEncryptedPassword = user.getPassword();
                 if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
-                    throw new InvalidPasswordException();
+                    throw new InvalidPasswordException("password.messages.atual");
                 }
                 String encryptedPassword = passwordEncoder.encode(newPassword);
                 user.setPassword(encryptedPassword);
@@ -264,8 +284,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-    	return userRepository.findOneWithAuthoritiesByLogin(login);
+    public UserDTO getUserWithAuthoritiesByLogin(String login) {
+    	Optional<User> o = userRepository.findOneWithAuthoritiesByLogin(login);
+    	 if(o.isEmpty()) {
+         	throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+         }
+    	 return o.map(UserDTO::new).get();
     }
 
     @Transactional(readOnly = true)
@@ -295,9 +319,8 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
-    	List<String> list = authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
-    	list = list.stream().filter(auth -> !auth.startsWith(SecurityUtils.DS_PREFIX)).collect(Collectors.toList());
-        return list;
+    	List<String> list = authorityRepository.findAll().stream().map(Authority::getName).filter(auth -> !auth.startsWith(SecurityUtils.DS_PREFIX)).collect(Collectors.toList());
+    	return list;
     }
 
 
@@ -310,5 +333,9 @@ public class UserService {
     
     public Optional<User> findOneByLogin(String login){
     	return userRepository.findOneByLogin(login);
+    }
+    
+    public List<UserDTO> findAllByDataSourceAndNotLogin(String datasource){
+    	return userMapper.usersToUserDTOs(userRepository.findAllByDataSourceAndNotLogin(datasource));
     }
 }

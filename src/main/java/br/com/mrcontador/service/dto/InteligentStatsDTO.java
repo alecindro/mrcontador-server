@@ -8,6 +8,7 @@ import br.com.mrcontador.repository.InteligentRepository.InteligentStats;
 public class InteligentStatsDTO {
 	private List<InteligentStats> inteligentStats;
 	private Parceiro parceiro;
+	private Long countPeriodos;
 	
 	public List<InteligentStats> getInteligentStats() {
 		return inteligentStats;
@@ -20,6 +21,12 @@ public class InteligentStatsDTO {
 	}
 	public void setParceiro(Parceiro parceiro) {
 		this.parceiro = parceiro;
+	}
+	public Long getCountPeriodos() {
+		return countPeriodos;
+	}
+	public void setCountPeriodos(Long countPeriodos) {
+		this.countPeriodos = countPeriodos;
 	}
 	
 	
