@@ -86,9 +86,9 @@ public class PdfInter extends PdfParserExtrato {
 		for (int i = 0; i < lineHeader; i++) {
 			String line = StringUtils.normalizeSpace(lines[i]);
 			if (line.contains("Agência:")) {
-				String agencia = StringUtils.substringAfter(line, "Agência:").split(StringUtils.SPACE)[0];
+				String agencia = StringUtils.substringAfter(line, "Agência:").trim().split(StringUtils.SPACE)[0];
 				dto.setAgencia(MrContadorUtil.removeZerosFromInital(agencia.trim()));
-				String conta = StringUtils.substringAfter(line, "Conta:").split(StringUtils.SPACE)[0];
+				String conta = StringUtils.substringAfter(line, "Conta:").trim().split(StringUtils.SPACE)[0];
 				dto.setConta(MrContadorUtil.removeZerosFromInital(conta.trim()));
 			}
 			if (line.toUpperCase().contains("EXTRATO")) {

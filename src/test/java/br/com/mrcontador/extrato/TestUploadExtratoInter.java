@@ -42,22 +42,17 @@ public class TestUploadExtratoInter {
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		TestUploadExtratoInter t = new TestUploadExtratoInter();
-		String folder1 = "/home/alecindro/Documents/drcontabil/docs/ESTRATEGIA_SAUDE/EXTRATOS/01-2021.pdf";
+		String folder1 = "/home/alecindro/Downloads/06.2021.pdf";
 		File _file = new File(folder1);
 		Agenciabancaria agencia = new Agenciabancaria();
 		agencia.setAgeAgencia("0001");
-		agencia.setAgeNumero("85676578");
+		agencia.setAgeNumero("43427553");
 		Parceiro parceiro = new Parceiro();
 		parceiro.setId(1L);
-		parceiro.setParCnpjcpf("10539433000173");
+		parceiro.setParCnpjcpf("30988096000109");
 		agencia.setBanCodigobancario(BancoCodigoBancario.INTER.getCodigoBancario());
 		t.process(parceiro, agencia, new FileInputStream(_file));
-		try {
-			t.create();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	//@Test

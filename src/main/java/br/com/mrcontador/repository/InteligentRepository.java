@@ -64,7 +64,7 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
   void deleteRegra(@Param("regraId") Long regraId, @Param("parceiroId") Long parceiroId);
   
   @Query(value="select  max(i.datalancamento) as maxDate, i.periodo, count(i.id) as quantidade,  sum(case when i.associado = true then 0 else 1 end) as divergente, " + 
-  		"a.age_numero as agencia, b.ban_sigla as siglabanco, "+
+  		"a.age_numero as agencia, a.id as agenciaId, b.ban_sigla as siglabanco, "+
   		"(select COUNT(i1.id) from inteligent i1 inner join agenciabancaria a1 on i1.agenciabancaria_id = a1.id where i1.parceiro_id = :parceiroId and i1.agenciabancaria_id = :agenciabancariaId) as total from inteligent i " + 
   		"inner join agenciabancaria a on i.agenciabancaria_id = a.id " + 
   		"inner join banco b on a.banco_id = b.id " + 
@@ -81,6 +81,7 @@ public interface InteligentRepository extends JpaRepository<Inteligent, Long>, J
 	  Integer getQuantidade();
 	  Integer getDivergente();
 	  String getAgencia();
+	  Long getAgenciaId();
 	  String getSiglabanco();
 	  Long getTotal();
   }

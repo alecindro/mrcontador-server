@@ -87,7 +87,7 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 	
 	@Query(value = "select  max(e.ext_datalancamento) as maxDate, e.periodo, count(e.id) as quantidade, " + 
 			"sum(case when e.processado = true then 0 else 1 end) as divergente, " +
-			"a.age_numero as agencia, b.ban_sigla as siglabanco, "+
+			"a.age_numero as agencia,a.id as agenciaId,  b.ban_sigla as siglabanco, "+
 			"(select COUNT(i1.id) from extrato i1 inner join agenciabancaria a1 on i1.agenciabancaria_id = a1.id where i1.parceiro_id = :parceiroId and i1.agenciabancaria_id = :agenciabancariaId) as total from extrato e " + 
 			"inner join agenciabancaria a on e.agenciabancaria_id = a.id " + 
 			"inner join banco b on a.banco_id = b.id " + 
@@ -101,6 +101,7 @@ public interface ExtratoRepository extends JpaRepository<Extrato, Long>, JpaSpec
 		Integer getQuantidade();
 		Integer getDivergente();
 		String getAgencia();
+		Long getAgenciaId();
 		String getSiglabanco();
 		Long getTotal();
 	}
