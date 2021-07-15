@@ -69,7 +69,7 @@ public class PdfInter extends PdfParserExtrato {
 		data.setHistorico(lancamento);
 		data.setLancamento(Date.valueOf(LocalDate.parse(StringUtils.trim(dataLancamento), dateFormatter)));
 		data.setDocumento(MrContadorUtil.onlyNumbers(dataLancamento)+"-"+numberRow);
-		data.setValor(new BigDecimal(MrContadorUtil.onlyMoney(valor)));
+		data.setValor(MrContadorUtil.toMoney(valor));
 		data.setTipoEntrada(TipoEntrada.CREDIT);
 		if (signal.contains("-")) {
 			data.setTipoEntrada(TipoEntrada.DEBIT);
